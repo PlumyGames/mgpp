@@ -50,6 +50,8 @@ open class DexJar : DefaultTask() {
             }
             d8 = d8File.absolutePath
         }
+        val dexedJarFile = dexedJar.get()
+        dexedJarFile.parentFile.mkdirs()
         val classpaths = classpath.files + androidJarFile
         val jars = jarFiles.files
         val params = ArrayList<String>(classpaths.size * 2 + jars.size + 5)
@@ -61,7 +63,7 @@ open class DexJar : DefaultTask() {
         params.add("--min-api")
         params.add("14")
         params.add("--output")
-        params.add("\"${dexedJar.get().absolutePath}\"")
+        params.add("\"${dexedJarFile.absolutePath}\"")
         params.addAll(jars.map { "\"${it.absolutePath}\"" })
         project.exec {
             it.commandLine = params
