@@ -37,6 +37,7 @@ class MindustryJavaPlugin : Plugin<Project> {
             )
         }
         val dexJar = tasks.register<DexJar>("dexJar") {
+            dependsOn("jar")
             group = Meta.TaskGroup
             dependsOn(JavaPlugin.JAR_TASK_NAME)
             classpath.setFrom(
