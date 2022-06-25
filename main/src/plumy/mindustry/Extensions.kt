@@ -119,12 +119,6 @@ class Deploy(
     val androidSdkRoot = target.stringProp().apply {
         convention(System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: "")
     }
-    val androidJarPath = target.stringProp().apply {
-        convention("")
-    }
-    val d8Path = target.stringProp().apply {
-        convention("")
-    }
 }
 
 class Asset(

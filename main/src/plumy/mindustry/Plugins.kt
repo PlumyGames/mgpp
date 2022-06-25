@@ -39,10 +39,6 @@ class MindustryJavaPlugin : Plugin<Project> {
         val dexJar = tasks.register<DexJar>("dexJar") {
             group = Meta.TaskGroup
             dependsOn(JavaPlugin.JAR_TASK_NAME)
-            val android = ex.deploy.androidJarPath.get()
-            if (android.isNotBlank()) {
-                androidJar.set(File(android))
-            }
             classpath.setFrom(
                 configurations.compileClasspath,
                 configurations.runtimeClasspath

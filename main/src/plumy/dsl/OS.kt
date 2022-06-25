@@ -1,7 +1,7 @@
 package plumy.dsl
 
 enum class OS {
-    Unknown, Windows, Mac, Linux
+    Unknown, Windows, Linux, Mac
 }
 
 fun getOs(): OS = (System.getProperty("os.name").lowercase()).let {
