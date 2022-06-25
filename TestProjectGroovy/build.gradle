@@ -1,0 +1,61 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven {
+            url = uri("https://www.jitpack.io")
+        }
+    }
+    dependencies {
+        classpath(files("../main/build/libs/PlumyMindustryGradlePlugin-1.0.jar"))
+    }
+}
+plugins {
+    id 'java'
+}
+group 'plumy.test'
+version '0.1'
+
+apply plugin: plumy.mindustry.MindustryPlugin
+
+repositories {
+    use(plumy.mindustry.BuildScript) {
+        mindustryRepo()
+    }
+    mavenCentral()
+}
+sourceSets {
+    main {
+        java.srcDirs("src")
+        resources.srcDir("resources")
+    }
+    test {
+        java.srcDir("test")
+        resources.srcDir("resources")
+    }
+}
+mindustry {
+    assets {
+        modMeta.set ModMeta(
+            name: "test-plumy-mindustry-gradle-plugin-groovy",
+            displayName: "Test Plumy Mindustry Gradle Plugin Groovy",
+            main: "plumy.test.TestModGroovy",
+            author: "Liplum"
+        )
+    }
+}
+tasks.named("runClient") {
+    dataOnTemporary()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    use(plumy.mindustry.BuildScript) {
+        importMindustry()
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

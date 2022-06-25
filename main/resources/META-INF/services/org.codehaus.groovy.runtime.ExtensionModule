@@ -1,0 +1,4 @@
+moduleName=mgpp-extension-module
+moduleVersion=1.0
+extensionClasses=plumy.mindustry.plugin.BuildScriptKt
+#staticExtensionClasses=

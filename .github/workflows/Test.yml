@@ -1,0 +1,33 @@
+name: Push Changes Testing
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Get short commit hash
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Test mgpp
+        run: |
+          chmod +x gradlew
+          ./gradlew :test
+
+      - name: Build mgpp
+        run: |
+          chmod +x gradlew
+          ./gradlew :main:shadowJar
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: mgpp-Jar
+          path: main/build/libs/*.jar
