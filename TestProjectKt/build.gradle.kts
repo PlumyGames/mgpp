@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import plumy.mindustry.mindustry
 import plumy.mindustry.importMindustry
+import plumy.mindustry.mindustry
 import plumy.mindustry.mindustryRepo
 import plumy.mindustry.task.RunMindustryTask
 
@@ -44,19 +44,31 @@ dependencies {
     importMindustry()
 }
 mindustry {
+    mods {
+        worksWith(
+            GitHub("liplum/cyberio"),
+            GitHub("liplum/MDT-DST"),
+        )
+    }
     assets {
-        modMeta.set(
-            ModMeta(
-                name = "test-plumy-mindustry-gradle-plugin-kt",
-                displayName = "Test Plumy Mindustry Gradle Plugin Kt",
-                main = "plumy.test.TestModKt",
-                author = "Liplum"
-            )
+        modMeta(
+            name = "test-plumy-mindustry-gradle-plugin-kt",
+            displayName = "Test Plumy Mindustry Gradle Plugin Kt",
+            main = "plumy.test.TestModKt",
+            author = "Liplum"
         )
     }
 }
 tasks.withType<RunMindustryTask> {
     dataOnTemporary()
+}
+
+tasks.withType<Jar> {
+    doLast {
+        println("----------------jar----------------")
+        files(this).forEach { println(it) }
+        println("----------------jar----------------")
+    }
 }
 
 tasks.test {

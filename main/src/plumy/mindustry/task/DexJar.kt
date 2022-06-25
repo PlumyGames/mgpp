@@ -16,7 +16,7 @@ open class DexJar : DefaultTask() {
     val workingDir = project.fileProp()
         @Optional @Input get
     val dexedJar = project.fileProp()
-        @Optional @OutputFile get
+        @OutputFile get
 
     init {
         dexedJar.convention(temporaryDir.resolve("dexed.jar"))
@@ -63,8 +63,8 @@ open class DexJar : DefaultTask() {
         params.add("--min-api")
         params.add("14")
         params.add("--output")
-        params.add("\"${dexedJarFile.absolutePath}\"")
-        params.addAll(jars.map { "\"${it.absolutePath}\"" })
+        params.add(dexedJarFile.absolutePath)
+        params.addAll(jars.map { it.absolutePath })
         project.exec {
             it.commandLine = params
             it.workingDir = workingDir.get()

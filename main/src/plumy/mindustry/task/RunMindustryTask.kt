@@ -13,7 +13,7 @@ open class RunMindustryTask : DefaultTask() {
         @Optional @InputDirectory get
     val dataModsPath = project.stringProp()
         @Input get
-    val outputMods = project.configurationFileCollection()
+    val outputtedMods = project.configurationFileCollection()
         @InputFiles get
     val modsWorkWith = project.configurationFileCollection()
         @InputFiles get
@@ -39,13 +39,10 @@ open class RunMindustryTask : DefaultTask() {
         val data = dataDir.get().asFile
         data.mkdirs()
         val mods = data.resolve(dataModsPath.get())
+        delete(mods)
         mods.mkdirs()
-        delete(mods.listFiles()?.filter {
-            (it in outputMods) ||
-                    (it.isFile && it.extension.atLeastEqualsOne("jar", "zip") && it !in modsWorkWith)
-        })
         modsWorkWith.mapFilesTo(mods, overwrite = false)
-        outputMods.mapFilesTo(mods, overwrite = true)
+        outputtedMods.mapFilesTo(mods, overwrite = true)
         javaexec {
             it.mainClass.set(mainClass)
             it.classpath = classPath

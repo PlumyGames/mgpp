@@ -10,6 +10,7 @@ import org.gradle.api.plugins.PluginContainer
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
+import org.gradle.api.provider.SetProperty
 import java.io.File
 
 internal
@@ -35,6 +36,9 @@ internal inline
 fun <reified T> Project.listProp(): ListProperty<T> =
     objects.listProperty(T::class.java)
 internal inline
+fun <reified T> Project.setProp(): SetProperty<T> =
+    objects.setProperty(T::class.java)
+internal inline
 fun <reified T> Project.prop(): Property<T> =
     objects.property(T::class.java)
 internal
@@ -58,6 +62,13 @@ fun <reified T : Plugin<*>> PluginContainer.whenHas(
     func: () -> Unit,
 ) {
     if (hasPlugin(T::class.java)) func()
+}
+internal inline
+fun PluginContainer.whenHas(
+    pluginID:String,
+    func: () -> Unit,
+) {
+    if (hasPlugin(pluginID)) func()
 }
 internal
 fun Project.dirProv(file: File): Provider<Directory> {

@@ -8,20 +8,22 @@ import java.net.URL
  * Copy data from this input stream to [file].
  * @receiver Caller has responsibility to close this stream
  */
-fun InputStream.copyTo(file: File) {
+fun InputStream.copyTo(file: File): File {
     file.outputStream().use {
         this.copyTo(it)
     }
+    return file
 }
 /**
  * Copy data from this url to [file].
  * It will create the parent folder if it doesn't exist.
  */
-fun URL.copyTo(file: File) {
+fun URL.copyTo(file: File): File {
     file.parentFile.mkdirs()
     this.openStream().use {
         it.copyTo(file)
     }
+    return file
 }
 
 fun FileAt(

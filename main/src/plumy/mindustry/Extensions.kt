@@ -1,14 +1,17 @@
 @file:Suppress("RemoveRedundantBackticks")
 @file:JvmName("Extension")
+
 package plumy.mindustry
 
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.plugins.JavaPlugin
 import plumy.dsl.listProp
 import plumy.dsl.prop
 import plumy.dsl.stringProp
 import plumy.dsl.stringsProp
+import java.io.File
 
 open class MindustryExtension(
     target: Project,
@@ -79,7 +82,6 @@ open class MindustryExtension(
         fullName: String = "",
         version: String = "",
     ) = plumy.mindustry.Dependency(fullName, version)
-
     @JvmOverloads
     fun GameLocation(
         user: String = "",
@@ -103,14 +105,37 @@ class Mods(
     target: Project,
 ) {
     val extraModsFromTask = target.stringsProp().apply {
+        convention(listOf(JavaPlugin.JAR_TASK_NAME))
+    }
+    val worksWith = target.listProp<IMod>().apply {
         convention(emptyList())
     }
-    val keepMods = target.stringsProp().apply {
-        convention(emptyList())
+    /**
+     * Add some mods working with this mod.
+     */
+    fun worksWith(vararg mods: IMod) {
+        val old = worksWith.getOrElse(emptyList())
+        worksWith.set(old + mods.toList())
     }
-    val workWith = target.listProp<IMod>().apply {
-        convention(emptyList())
+
+    fun Mod(map: Map<String, Any>): IMod {
+        run {
+            val repo = map["repo"]
+            if (repo != null) {
+                return GitHubMod(repo.toString())
+            }
+        }
+        run {
+            val path = map["path"]
+            if (path != null) {
+                return LocalMod(File(path.toString()))
+            }
+        }
+        throw RuntimeException("Unknown mod info from $map")
     }
+
+    fun GitHub(repo: String) = GitHubMod(repo)
+    fun Local(path: String) = LocalMod(File(path))
 }
 
 class Deploy(
@@ -134,13 +159,15 @@ class Asset(
     /**
      * @see [plumy.mindustry.ModMeta]
      */
-    fun ModMeta(info: Map<String, Any>) =
-        plumy.mindustry.ModMeta(info)
+    fun modMeta(info: Map<String, Any>) =
+        ModMeta(info).apply {
+            modMeta.set(this)
+        }
     /**
      * @see [plumy.mindustry.ModMeta]
      */
     @JvmOverloads
-    fun ModMeta(
+    fun modMeta(
         name: String = "",
         displayName: String = "",
         author: String = "",
@@ -154,7 +181,7 @@ class Asset(
         hidden: Boolean = false,
         java: Boolean = true,
         hideBrowser: Boolean = true,
-    ) = plumy.mindustry.ModMeta(
+    ) = ModMeta(
         name,
         displayName,
         author,
@@ -168,5 +195,7 @@ class Asset(
         hidden,
         java,
         hideBrowser
-    )
+    ).apply {
+        modMeta.set(this)
+    }
 }

@@ -33,24 +33,26 @@ ___
         assets {
             // This affects only the output jar. And as default,
             // it will read ModMeta from the mod.[h]json in the root directory.
-            modMeta.set ModMeta(
-                name: "your-mod-name",
-                displayName: "Your mod",
-                main: "org.example.FooMod",
-                author: "yourself"
+            modMeta(
+                name: 'your-mod-name',
+                displayName: 'Your mod',
+                main: 'org.example.FooMod',
+                author: 'yourself'
             )
         }
         mods {
             // You can import some mods to work with this mod in here.
+            worksWith(
+                GitHub('liplum/cyberio')
+            )
         }
         deploy {
-            // You can configure the android sdk or d8 in here
-            d8Path.set "d8"
+            // You can configure the deployment task here
         }
     }
    // Use the gradle task temporary directory as the data directory of Mindustry,
    // you can isolate each different project on your computer.
-    tasks.named("runClient") {
+    tasks.named('runClient') {
         dataOnTemporary()
     }
     ```
@@ -62,19 +64,21 @@ ___
         assets {
             // This affects only the output jar. And as default,
             // it will read ModMeta from the mod.[h]json in the root directory.
-            modMeta.set(ModMeta(
+            modMeta(
                 name = "your-mod-name",
                 displayName = "Your mod",
                 main = "org.example.FooMod",
                 author = "yourself"
-            ))
+            )
         }
         mods {
             // You can import some mods to work with this mod in here.
+            worksWith(
+                GitHub("liplum/cyberio"),
+            )
         }
         deploy {
-            // You can configure the android sdk or d8 in here
-            d8Path.set("d8")
+            // You can configure the deployment task here
         }
     }
     // Use the gradle task temporary directory as the data directory of Mindustry,

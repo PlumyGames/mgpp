@@ -3,11 +3,11 @@ buildscript {
         mavenCentral()
         gradlePluginPortal()
         maven {
-            url = uri("https://www.jitpack.io")
+            url = uri('https://www.jitpack.io')
         }
     }
     dependencies {
-        classpath(files("../main/build/libs/PlumyMindustryGradlePlugin-1.0.jar"))
+        classpath(files('../main/build/libs/PlumyMindustryGradlePlugin-1.0.jar'))
     }
 }
 plugins {
@@ -26,25 +26,31 @@ repositories {
 }
 sourceSets {
     main {
-        java.srcDirs("src")
-        resources.srcDir("resources")
+        java.srcDirs('src')
+        resources.srcDir('resources')
     }
     test {
-        java.srcDir("test")
-        resources.srcDir("resources")
+        java.srcDir('test')
+        resources.srcDir('resources')
     }
 }
 mindustry {
+    mods {
+        worksWith(
+            GitHub('liplum/cyberio'),
+            GitHub('liplum/MDT-DST'),
+        )
+    }
     assets {
-        modMeta.set ModMeta(
-            name: "test-plumy-mindustry-gradle-plugin-groovy",
-            displayName: "Test Plumy Mindustry Gradle Plugin Groovy",
-            main: "plumy.test.TestModGroovy",
-            author: "Liplum"
+        modMeta(
+            name: 'test-plumy-mindustry-gradle-plugin-groovy',
+            displayName: 'Test Plumy Mindustry Gradle Plugin Groovy',
+            main: 'plumy.test.TestModGroovy',
+            author: 'Liplum'
         )
     }
 }
-tasks.named("runClient") {
+tasks.named('runClient') {
     dataOnTemporary()
 }
 
