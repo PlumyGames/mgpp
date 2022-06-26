@@ -13,95 +13,85 @@ open class MindustryExtension(
     target: Project,
 ) {
     @JvmField
-    val ArcRepo = Meta.ArcJitpackRepo
+    val Mod = ProjectType.Mod
     @JvmField
-    val MindustryMirrorRepo = Meta.MindustryJitpackMirrorRepo
-    @JvmField
-    val MindustryRepo = Meta.MindustryJitpackRepo
+    val Plugin = ProjectType.Plugin
     /**
-     * Import v135 as default for now.
-     * DO NOT trust this behavior, it may change later.
+     * Configure the mindustry and arc dependency automatically.
+     * This only works before [Project.dependencies] is called
      */
-    val arc = target.prop<IDependency>().apply {
-        convention(Dependency(Meta.ArcJitpackRepo, Meta.DefaultMindustryVersion))
+    val dependency = DependencySpec(target)
+    /**
+     * Configure the mindustry and arc dependency automatically.
+     * This only works before [Project.dependencies] is called
+     */
+    fun dependency(func: Action<DependencySpec>) {
+        func.execute(dependency)
     }
     /**
-     * Import v135 as default for now.
-     * DO NOT trust this behavior, it may change later.
+     * Configure the mindustry and arc dependency automatically.
+     * This only works before [Project.dependencies] is called
      */
-    val mindustry = target.prop<IDependency>().apply {
-        convention(Dependency(Meta.MindustryJitpackRepo, Meta.DefaultMindustryVersion))
+    inline fun dependency(func: DependencySpec.() -> Unit) {
+        dependency.func()
     }
-    val client = target.prop<GameLocation>().apply {
-        convention(
-            GameLocation(
-                user = "anuken", repo = "mindustry",
-                version = Meta.DefaultMindustryVersion,
-                release = Meta.ClientReleaseName
-            )
-        )
+
+    val client = ClientSpec(target)
+    fun client(func: Action<ClientSpec>) {
+        func.execute(client)
     }
-    val sever = target.prop<GameLocation>().apply {
-        convention(
-            GameLocation(
-                user = "anuken", repo = "mindustry",
-                version = Meta.DefaultArcVersion,
-                release = Meta.ServerReleaseName
-            )
-        )
+
+    inline fun client(func: ClientSpec.() -> Unit) {
+        client.func()
     }
+
+    val server = ServerSpec(target)
+    fun server(func: Action<ServerSpec>) {
+        func.execute(server)
+    }
+
+    inline fun server(func: ServerSpec.() -> Unit) {
+        server.func()
+    }
+
     val projectType = target.prop<ProjectType>().apply {
         convention(ProjectType.Mod)
     }
-    val mods = Mods(target)
-    fun mods(func: Action<Mods>) {
+    val mods = ModsSpec(target)
+    fun mods(func: Action<ModsSpec>) {
         func.execute(mods)
     }
 
-    inline fun mods(func: Mods.() -> Unit) {
+    inline fun mods(func: ModsSpec.() -> Unit) {
         mods.func()
     }
-    val run = Run(target)
-    fun run(func: Action<Run>) {
+
+    val run = RunSpec(target)
+    fun run(func: Action<RunSpec>) {
         func.execute(run)
     }
 
-    inline fun run(func: Run.() -> Unit) {
+    inline fun run(func: RunSpec.() -> Unit) {
         run.func()
     }
-    val assets = Asset(target)
-    fun assets(func: Action<Asset>) {
+
+    val assets = AssetSpec(target)
+    fun assets(func: Action<AssetSpec>) {
         func.execute(assets)
     }
 
-    inline fun assets(func: Asset.() -> Unit) {
+    inline fun assets(func: AssetSpec.() -> Unit) {
         assets.func()
     }
-    val deploy = Deploy(target)
-    fun deploy(func: Action<Deploy>) {
+
+    val deploy = DeploySpec(target)
+    fun deploy(func: Action<DeploySpec>) {
         func.execute(deploy)
     }
 
-    inline fun deploy(func: Deploy.() -> Unit) {
+    inline fun deploy(func: DeploySpec.() -> Unit) {
         deploy.func()
     }
-
-    fun MirrorDependency(
-        fullName: String = Meta.MindustryJitpackMirrorRepo,
-        version: String = "",
-    ) = MirrorJitpackDependency(fullName, version)
-
-    fun Dependency(
-        fullName: String = "",
-        version: String = "",
-    ) = plumy.mindustry.Dependency(fullName, version)
-
-    fun GameLocation(
-        user: String = "",
-        repo: String = "",
-        version: String = "",
-        release: String = "",
-    ) = plumy.mindustry.GameLocation(user, repo, version, release)
 }
 /**
  * Retrieves the [mindustry][MindustryExtension] extension.
@@ -114,7 +104,150 @@ val Project.`mindustry`: MindustryExtension
 fun Project.`mindustry`(configure: Action<MindustryExtension>): Unit =
     (this as ExtensionAware).extensions.configure(Meta.ExtensionName, configure)
 
-class Mods(
+class DependencySpec(
+    target: Project,
+) {
+    @JvmField
+    val ArcRepo = Meta.ArcJitpackRepo
+    @JvmField
+    val MindustryMirrorRepo = Meta.MindustryJitpackMirrorRepo
+    @JvmField
+    val MindustryRepo = Meta.MindustryJitpackRepo
+    /**
+     * Import v135 as default for now.
+     * DO NOT trust this behavior, it may change later.
+     */
+    val arc = target.prop<IDependency>().apply {
+        convention(ArcDependency())
+    }
+    /**
+     * Import v135 as default for now.
+     * DO NOT trust this behavior, it may change later.
+     */
+    val mindustry = target.prop<IDependency>().apply {
+        convention(MindustryDependency())
+    }
+
+    fun MirrorDependency(
+        version: String = "",
+    ) = MirrorJitpackDependency(Meta.MindustryJitpackMirrorRepo, version)
+
+    fun useMirror(
+        version: String = "",
+    ) {
+        mindustry.set(MirrorDependency(version))
+    }
+
+    fun mindustry(
+        version: String = "",
+    ) {
+        mindustry.set(MindustryDependency(version))
+    }
+
+    fun arc(
+        version: String = "",
+    ) {
+        arc.set(ArcDependency(version))
+    }
+
+    fun ArcDependency(
+        version: String = Meta.DefaultMindustryVersion,
+    ) = Dependency(Meta.ArcJitpackRepo, version)
+
+    fun MindustryDependency(
+        version: String = Meta.DefaultMindustryVersion,
+    ) = Dependency(Meta.MindustryJitpackRepo, version)
+
+    fun Dependency(
+        fullName: String = "",
+        version: String = "",
+    ) = plumy.mindustry.Dependency(fullName, version)
+}
+
+interface IGameLocationSpec {
+    fun GameLocation(
+        user: String = "",
+        repo: String = "",
+        version: String = "",
+        release: String = "",
+    ) = plumy.mindustry.GameLocation(user, repo, version, release)
+}
+
+class ClientSpec(
+    target: Project,
+) : IGameLocationSpec {
+    val location = target.prop<GameLocation>().apply {
+        convention(
+            GameLocation(
+                user = Meta.Anuken, repo = Meta.Mindustry,
+                version = Meta.DefaultMindustryVersion,
+                release = Meta.ClientReleaseName
+            )
+        )
+    }
+
+    fun official(
+        version: String = "",
+    ) {
+        location.set(
+            GameLocation(
+                user = Meta.Anuken, repo = Meta.Mindustry,
+                version = version,
+                release = Meta.ClientReleaseName
+            )
+        )
+    }
+
+    fun be(
+        version: String = "",
+    ) {
+        location.set(
+            GameLocation(
+                Meta.Anuken, Meta.MindustryBuilds,
+                version, "Mindustry-BE-Desktop-$version.jar"
+            )
+        )
+    }
+}
+
+class ServerSpec(
+    target: Project,
+) : IGameLocationSpec {
+    val location = target.prop<GameLocation>().apply {
+        convention(
+            GameLocation(
+                user = Meta.Anuken, repo = Meta.Mindustry,
+                version = Meta.DefaultArcVersion,
+                release = Meta.ServerReleaseName
+            )
+        )
+    }
+
+    fun official(
+        version: String = "",
+    ) {
+        location.set(
+            GameLocation(
+                user = Meta.Anuken, repo = Meta.Mindustry,
+                version = version,
+                release = Meta.ServerReleaseName
+            )
+        )
+    }
+
+    fun be(
+        version: String = "",
+    ) {
+        location.set(
+            GameLocation(
+                Meta.Anuken, Meta.MindustryBuilds,
+                version, "Mindustry-BE-Server-$version.jar"
+            )
+        )
+    }
+}
+
+class ModsSpec(
     target: Project,
 ) {
     val extraModsFromTask = target.stringsProp().apply {
@@ -177,7 +310,7 @@ class Mods(
     fun URL(url: String) = UrlMod(url)
 }
 
-class Deploy(
+class DeploySpec(
     target: Project,
 ) {
     val androidSdkRoot = target.stringProp().apply {
@@ -185,7 +318,7 @@ class Deploy(
     }
 }
 
-class Run(
+class RunSpec(
     target: Project,
 ) {
     val dataDir = target.stringProp().apply {
@@ -202,7 +335,7 @@ class Run(
     }
 }
 
-class Asset(
+class AssetSpec(
     target: Project,
 ) {
     val modMeta = target.prop<ModMeta>().apply {
@@ -212,6 +345,16 @@ class Asset(
             }
         ))
     }
+
+    fun addMeta(info: Map<String, Any>): ModMeta =
+        modMeta.get().apply {
+            this += ModMeta(info)
+        }
+
+    fun addMeta(meta: ModMeta): ModMeta =
+        modMeta.get().apply {
+            this += meta
+        }
     /**
      * @see [plumy.mindustry.ModMeta]
      */
@@ -219,24 +362,29 @@ class Asset(
         ModMeta(info).apply {
             modMeta.set(this)
         }
+
+    fun modMeta(meta: ModMeta) =
+        meta.apply {
+            modMeta.set(this)
+        }
     /**
      * @see [plumy.mindustry.ModMeta]
      */
     @JvmOverloads
     fun modMeta(
-        name: String = "",
-        displayName: String = "",
-        author: String = "",
-        description: String = "",
-        subtitle: String = "",
-        version: String = "1.0",
-        main: String = "",
-        minGameVersion: String = Meta.DefaultMinGameVersion,
-        repo: String = "",
-        dependencies: List<String> = emptyList(),
-        hidden: Boolean = false,
-        java: Boolean = true,
-        hideBrowser: Boolean = true,
+        name: String = ModMeta.default("name"),
+        displayName: String = ModMeta.default("displayName"),
+        author: String = ModMeta.default("author"),
+        description: String = ModMeta.default("description"),
+        subtitle: String = ModMeta.default("subtitle"),
+        version: String = ModMeta.default("version"),
+        main: String = ModMeta.default("main"),
+        minGameVersion: String = ModMeta.default("minGameVersion"),
+        repo: String = ModMeta.default("repo"),
+        dependencies: List<String> = ModMeta.default("dependencies"),
+        hidden: Boolean = ModMeta.default("hidden"),
+        java: Boolean = ModMeta.default("java"),
+        hideBrowser: Boolean = ModMeta.default("hideBrowser"),
     ) = ModMeta(
         name,
         displayName,

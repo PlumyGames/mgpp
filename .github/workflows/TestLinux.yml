@@ -1,4 +1,4 @@
-name: Push Changes Testing
+name: Linux Push Test
 on: [ push, pull_request ]
 
 jobs:

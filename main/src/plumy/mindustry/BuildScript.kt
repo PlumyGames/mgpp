@@ -20,8 +20,8 @@ fun Project.importMindustry() {
     val ex = extensions.getOrCreate<MindustryExtension>(
         Meta.ExtensionName
     )
-    val mdt = ex.mindustry.get()
-    val arc = ex.arc.get()
+    val mdt = ex.dependency.mindustry.get()
+    val arc = ex.dependency.arc.get()
     // Mindustry core
     mdt.whenAvailable("core", ::addMindustry)
     // Arc

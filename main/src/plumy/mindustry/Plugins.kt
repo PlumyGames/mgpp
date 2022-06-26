@@ -41,7 +41,7 @@ class MindustryJavaPlugin : Plugin<Project> {
                 configurations.runtimeClasspath
             )
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
-            jarFiles.setFrom(jar.get())
+            jarFiles.setFrom(jar)
         }
 
         tasks.register<Jar>("deploy") {
@@ -92,7 +92,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 "downloadClient",
             ) {
                 group = Meta.TaskGroup
-                ex.client.get().run {
+                ex.client.location.get().run {
                     assets.set(
                         GitHubDownload.release(
                             user, repo,
@@ -111,7 +111,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 "downloadServer",
             ) {
                 group = Meta.TaskGroup
-                ex.sever.get().run {
+                ex.server.location.get().run {
                     assets.set(
                         GitHubDownload.release(
                             user, repo,

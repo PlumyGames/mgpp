@@ -4,6 +4,7 @@ import arc.util.serialization.Json
 import arc.util.serialization.Jval
 import groovy.json.JsonOutput
 import org.hjson.JsonObject
+import org.hjson.Stringify
 import java.io.File
 import java.io.Serializable
 import kotlin.properties.ReadWriteProperty
@@ -16,19 +17,19 @@ data class ModMeta(
 ) : Serializable {
     constructor(info: Map<String, Any>) : this(HashMap(info).setDefaultValue())
     constructor(
-        name: String = "",
-        displayName: String = "",
-        author: String = "",
-        description: String = "",
-        subtitle: String = "",
-        version: String = "1.0",
-        main: String = "",
-        minGameVersion: String = Meta.DefaultMinGameVersion,
-        repo: String = "",
-        dependencies: List<String> = emptyList(),
-        hidden: Boolean = false,
-        java: Boolean = true,
-        hideBrowser: Boolean = true,
+        name: String = default("name"),
+        displayName: String = default("displayName"),
+        author: String = default("author"),
+        description: String = default("description"),
+        subtitle: String = default("subtitle"),
+        version: String = default("version"),
+        main: String = default("main"),
+        minGameVersion: String = default("minGameVersion"),
+        repo: String = default("repo"),
+        dependencies: List<String> = default("dependencies"),
+        hidden: Boolean = default("hidden"),
+        java: Boolean = default("java"),
+        hideBrowser: Boolean = default("hideBrowser"),
     ) : this(
         HashMap(
             mapOf(
@@ -50,7 +51,42 @@ data class ModMeta(
         )
     )
 
+    operator fun plusAssign(addition: ModMeta) {
+        for ((k, newV) in addition.info) {
+            val default = defaultMeta[k]
+            if (default != null) {
+                if (newV != default) {
+                    this.info[k] = newV
+                }
+            } else {
+                this.info[k] = newV
+            }
+        }
+    }
+
+    override fun toString(): String {
+        return toHjson()
+    }
+
     companion object {
+        val defaultMeta = mapOf(
+            "name" to "name",
+            "displayName" to "",
+            "author" to "",
+            "description" to "",
+            "subtitle" to "",
+            "version" to "1.0",
+            "main" to "",
+            "minGameVersion" to Meta.DefaultMinGameVersion,
+            "repo" to "",
+            "dependencies" to emptyList<String>(),
+            "hidden" to false,
+            "java" to true,
+            "hideBrowser" to false,
+        )
+        @Suppress("UNCHECKED_CAST")
+        fun <T> default(key: String): T =
+            defaultMeta[key] as T
         @JvmStatic
         fun by(vararg metas: Map.Entry<String, Any>) =
             ModMeta(metas.associate { Pair(it.key, it.value) })
@@ -68,46 +104,37 @@ data class ModMeta(
                 json.fromJson(ModMeta::class.java, Jval.read(file.readText()).toString(Jval.Jformat.plain))
             }.getOrDefault(ModMeta())
         @JvmStatic
-        fun ModMeta.toHjson(): String =
-            JsonObject.readHjson(JsonOutput.toJson(info)).toString()
+        @JvmOverloads
+        fun ModMeta.toHjson(formatter: Stringify = Stringify.HJSON): String =
+            JsonObject.readHjson(JsonOutput.toJson(info)).toString(formatter)
 
         fun MetaConfig.setDefaultValue(): MetaConfig {
-            this.putIfAbsent("name", "")
-            this.putIfAbsent("displayName", "")
-            this.putIfAbsent("author", "")
-            this.putIfAbsent("description", "")
-            this.putIfAbsent("subtitle", "")
-            this.putIfAbsent("version", "1.0")
-            this.putIfAbsent("main", "")
-            this.putIfAbsent("minGameVersion", Meta.DefaultMinGameVersion)
-            this.putIfAbsent("repo", "")
-            this.putIfAbsent("dependencies", emptyList<String>())
-            this.putIfAbsent("hidden", false)
-            this.putIfAbsent("java", true)
-            this.putIfAbsent("hideBrowser", false)
+            for ((dk, dv) in defaultMeta) {
+                this.putIfAbsent(dk, dv)
+            }
             return this
         }
     }
 }
 
-var ModMeta.name: String by meta("")
-var ModMeta.displayName: String by meta("")
-var ModMeta.author: String by meta("")
-var ModMeta.description: String by meta("")
+var ModMeta.name: String by meta()
+var ModMeta.displayName: String by meta()
+var ModMeta.author: String by meta()
+var ModMeta.description: String by meta()
 /** since Mindustry v136 */
-var ModMeta.subtitle: String by meta("")
-var ModMeta.version: String by meta("1.0")
-var ModMeta.main: String by meta("")
-var ModMeta.minGameVersion: String by meta(Meta.DefaultMinGameVersion)
-var ModMeta.repo: String by meta("")
-var ModMeta.dependencies: List<String> by meta(emptyList())
-var ModMeta.hidden: Boolean by meta(false)
-var ModMeta.java: Boolean by meta(true)
-var ModMeta.hideBrowser: Boolean by meta(false)
-inline fun <reified T : Any> meta(default: T): ReadWriteProperty<ModMeta, T> =
+var ModMeta.subtitle: String by meta()
+var ModMeta.version: String by meta()
+var ModMeta.main: String by meta()
+var ModMeta.minGameVersion: String by meta()
+var ModMeta.repo: String by meta()
+var ModMeta.dependencies: List<String> by meta()
+var ModMeta.hidden: Boolean by meta()
+var ModMeta.java: Boolean by meta()
+var ModMeta.hideBrowser: Boolean by meta()
+inline fun <reified T : Any> meta(): ReadWriteProperty<ModMeta, T> =
     object : ReadWriteProperty<ModMeta, T> {
         override fun getValue(thisRef: ModMeta, property: KProperty<*>): T =
-            thisRef.info[property.name] as? T ?: default
+            thisRef.info[property.name] as? T ?: ModMeta.default(property.name)
 
         override fun setValue(thisRef: ModMeta, property: KProperty<*>, value: T) {
             thisRef.info[property.name] = value as Any

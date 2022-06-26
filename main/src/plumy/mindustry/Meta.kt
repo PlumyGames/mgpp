@@ -9,6 +9,7 @@ object Meta {
     const val DefaultArcVersion = "v135"
     const val Anuken = "anuken"
     const val Mindustry = "mindustry"
+    const val MindustryBuilds = "MindustryBuilds"
     const val ClientReleaseName = "Mindustry.jar"
     const val ServerReleaseName = "server-release.jar"
     const val MindustryJitpackRepo = "com.github.anuken.mindustry"
