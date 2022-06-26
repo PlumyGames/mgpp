@@ -61,6 +61,8 @@ mindustry {
             main: 'plumy.test.TestModGroovy',
             author: 'Liplum'
         )
+        meta.version = "groovy 3000"
+        meta.minGameVersion = "136"
     }
 }
 /*

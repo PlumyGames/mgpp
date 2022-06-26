@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import plumy.mindustry.importMindustry
 import plumy.mindustry.mindustry
 import plumy.mindustry.mindustryRepo
-import plumy.mindustry.task.RunMindustryTask
+import plumy.mindustry.task.RunMindustry
 
 buildscript {
     repositories {
@@ -71,7 +71,7 @@ dependencies {
     importMindustry()
 }
 
-tasks.withType<RunMindustryTask> {
+tasks.withType<RunMindustry> {
     dataOnTemporary()
 }
 

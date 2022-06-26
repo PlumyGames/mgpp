@@ -50,19 +50,26 @@ data class ModMeta(
             )
         )
     )
-
+    // For Kotlin
     operator fun get(key: String): Any? =
         info[key]
-
+    // For Kotlin
     operator fun set(key: String, meta: Any) {
         info[key] = meta
     }
-
+    // For Groovy
     fun getAt(key: String): Any? =
         info[key]
-
+    // For Groovy
     fun putAt(key: String, meta: Any) {
         info[key] = meta
+    }
+    // For Groovy
+    fun propertyMissing(property: String): Any? =
+        info[property]
+    // For Groovy
+    fun propertyMissing(property: String, value: Any) {
+        info[property] = value
     }
 
     operator fun plusAssign(addition: ModMeta) {
