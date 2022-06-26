@@ -41,6 +41,9 @@ mindustry {
             repo_dst: 'liplum/MDT-DST',
         )
     }
+    run {
+        dataDir = 'temp'
+    }
     assets {
         modMeta(
             name: 'test-plumy-mindustry-gradle-plugin-groovy',
@@ -50,10 +53,14 @@ mindustry {
         )
     }
 }
+/*
+Because tasks, 'downloadClient/Sever' and 'runClient/Server', are registered after
+the project evaluation, so you shouldn't use `tasks.named('foo')` to configure it.
+As an alternative, you can use `tasks.withType(Class)` instead.
 tasks.named('runClient') {
     dataOnTemporary()
 }
-
+*/
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'

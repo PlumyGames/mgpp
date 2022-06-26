@@ -6,6 +6,7 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.bundling.Jar
 import plumy.dsl.*
 import plumy.mindustry.task.*
+import java.io.File
 
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
@@ -138,6 +139,13 @@ class MindustryAppPlugin : Plugin<Project> {
                 classPath.setFrom(downloadClient.get())
                 modsWorkWith.setFrom(resolveMods.get())
                 dataModsPath.convention("mods")
+                val dataDirEx = ex.run.dataDir.get()
+                if(dataDirEx.isNotBlank()){
+                    if(dataDirEx == "temp")
+                        dataOnTemporary()
+                    else
+                        dataDir.set(dirProv { File(dataDirEx) })
+                }
             }
             val runServer = tasks.register<RunMindustryTask>(
                 "runServer",

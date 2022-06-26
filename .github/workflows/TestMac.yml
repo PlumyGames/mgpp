@@ -2,7 +2,7 @@ name: Push Changes Testing
 on: [ push, pull_request ]
 
 jobs:
-  build-linux:
+  build-mac:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,10 +19,12 @@ jobs:
 
       - name: Test mgpp
         run: |
+          chmod +x gradlew
           ./gradlew :test
 
       - name: Build mgpp
         run: |
+          chmod +x gradlew
           ./gradlew :main:shadowJar --info
 
       - name: Set Android SDK tools
@@ -31,12 +33,14 @@ jobs:
       - name: Test Kotlin DSl
         run : |
           cd TestProjectKt
+          chmod +x gradlew
           ./gradlew :deploy --info
           cd ..
 
       - name: Test Groovy DSl
         run : |
           cd TestProjectGroovy
+          chmod +x gradlew
           ./gradlew :deploy --info
           cd ..
 

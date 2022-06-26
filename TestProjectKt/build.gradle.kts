@@ -40,9 +40,9 @@ repositories {
 }
 
 mindustry {
-    //mindustry.set(MirrorDependency(version = "d7312445a1"))
-    //arc.set(Dependency(ArcRepo, "123fbf12b9"))
-    //client.set(GameLocation(user = "anuken", repo = "MindustryBuilds", version = "22714", release = "Mindustry-BE-Desktop-22714.jar"))
+    mindustry.set(MirrorDependency(version = "d7312445a1"))
+    arc.set(Dependency(ArcRepo, "123fbf12b9"))
+    client.set(GameLocation(user = "anuken", repo = "MindustryBuilds", version = "22714", release = "Mindustry-BE-Desktop-22714.jar"))
     mods {
         worksWith(
             GitHub("liplum/cyberio"),

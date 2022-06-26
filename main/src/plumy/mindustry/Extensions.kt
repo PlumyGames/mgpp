@@ -61,7 +61,14 @@ open class MindustryExtension(
     inline fun mods(func: Mods.() -> Unit) {
         mods.func()
     }
+    val run = Run(target)
+    fun run(func: Action<Run>) {
+        func.execute(run)
+    }
 
+    inline fun run(func: Run.() -> Unit) {
+        run.func()
+    }
     val assets = Asset(target)
     fun assets(func: Action<Asset>) {
         func.execute(assets)
@@ -70,7 +77,6 @@ open class MindustryExtension(
     inline fun assets(func: Asset.() -> Unit) {
         assets.func()
     }
-
     val deploy = Deploy(target)
     fun deploy(func: Action<Deploy>) {
         func.execute(deploy)
@@ -176,6 +182,23 @@ class Deploy(
 ) {
     val androidSdkRoot = target.stringProp().apply {
         convention(System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: "")
+    }
+}
+
+class Run(
+    target: Project,
+) {
+    val dataDir = target.stringProp().apply {
+        convention("")
+    }
+    var DataDir: String
+        get() = dataDir.getOrElse("")
+        set(value) {
+            dataDir.set(value)
+        }
+
+    fun setDataTemp() {
+        dataDir.set("temp")
     }
 }
 
