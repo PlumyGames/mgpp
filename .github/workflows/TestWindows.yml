@@ -2,8 +2,8 @@ name: Push Changes Testing
 on: [ push, pull_request ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  build-windows:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
 
@@ -24,8 +24,7 @@ jobs:
 
       - name: Build mgpp
         run: |
-          chmod +x gradlew
-          ./gradlew :main:shadowJar --info
+          gradlew.bat :main:shadowJar --info
 
       - name: Set Android SDK tools
         run: echo "$ANDROID_HOME/build-tools/30.0.3" >> $GITHUB_PATH
@@ -33,15 +32,14 @@ jobs:
       - name: Test Kotlin DSl
         run : |
           cd TestProjectKt
-          chmod +x gradlew
-          ./gradlew :deploy --info
+          gradlew.bat :deploy --info
           cd ..
 
       - name: Test Groovy DSl
         run : |
           cd TestProjectGroovy
           chmod +x gradlew
-          ./gradlew :deploy --info
+          gradlew.bat :deploy --info
           cd ..
 
       - uses: actions/upload-artifact@v2

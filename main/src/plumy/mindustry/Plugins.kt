@@ -92,7 +92,7 @@ class MindustryAppPlugin : Plugin<Project> {
             group = Meta.TaskGroup
             ex.clientLocation.get().run {
                 assets.set(
-                    GitHubAsset.release(
+                    GitHubDownload.release(
                         user, repo,
                         version, releaseName
                     )
@@ -111,7 +111,7 @@ class MindustryAppPlugin : Plugin<Project> {
             group = Meta.TaskGroup
             ex.severLocation.get().run {
                 assets.set(
-                    GitHubAsset.release(
+                    GitHubDownload.release(
                         user, repo,
                         version, releaseName
                     )

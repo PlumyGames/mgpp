@@ -25,6 +25,16 @@ open class DexJar : DefaultTask() {
     }
     @TaskAction
     fun dex() {
+        val dexedJarFile = dexedJar.get()
+        dexedJarFile.parentFile.mkdirs()
+        val dexedJarPath = dexedJarFile.absolutePath
+        val jars = jarFiles.files
+        // Check space in absolute path
+        val jarToDexPaths = jars.map { it.absolutePath }.toList()
+        if(" " in dexedJarPath) throw GradleException("d8 doesn't allow a path with any space but the dexed jar's path is \"$dexedJarFile\".")
+        for (jarPath in jarToDexPaths){
+            if(" " in jarPath)  throw GradleException("d8 doesn't allow a path with any space but the path of a jar to be dexed is \"$dexedJarFile\".")
+        }
         val sdkPath = sdkRoot.get()
         val sdkRootDir = File(sdkPath)
         if (!sdkRootDir.exists()) throw GradleException("No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.")
@@ -50,10 +60,7 @@ open class DexJar : DefaultTask() {
             }
             d8 = d8File.absolutePath
         }
-        val dexedJarFile = dexedJar.get()
-        dexedJarFile.parentFile.mkdirs()
         val classpaths = classpath.files + androidJarFile
-        val jars = jarFiles.files
         val params = ArrayList<String>(classpaths.size * 2 + jars.size + 5)
         params.add(d8)
         for (classpath in classpaths) {
@@ -63,8 +70,9 @@ open class DexJar : DefaultTask() {
         params.add("--min-api")
         params.add("14")
         params.add("--output")
-        params.add(dexedJarFile.absolutePath)
-        params.addAll(jars.map { it.absolutePath })
+        // Don't add quotes here, it doesn't work on linux
+        params.add(dexedJarPath)
+        params.addAll(jarToDexPaths)
         project.exec {
             it.commandLine = params
             it.workingDir = workingDir.get()

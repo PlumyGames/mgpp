@@ -9,10 +9,10 @@ import plumy.dsl.copyTo
 import plumy.dsl.fileProp
 import plumy.dsl.prop
 import plumy.dsl.tempFi
-import plumy.mindustry.GitHubAsset
+import plumy.mindustry.IDownloadLocation
 
 open class DownloadTask : DefaultTask() {
-    val assets = project.prop<GitHubAsset>()
+    val assets = project.prop<IDownloadLocation>()
         @Input get
     val outputPath = project.fileProp()
         @Optional @OutputFile get
@@ -24,11 +24,15 @@ open class DownloadTask : DefaultTask() {
     }
     @TaskAction
     fun download() {
-        assets.get().url.copyTo(outputPath.get())
+        // Download is a very expensive task, so this should
+        val asset = assets.get()
+        logger.info("Downloading ${asset.name} from ${asset.path}. ")
+        asset.openInputStream().use { it.copyTo(outputPath.get()) }
+        logger.info("Downloaded ${asset.name}.")
     }
 }
 
-var DownloadTask.Assets: GitHubAsset?
+var DownloadTask.Assets: IDownloadLocation?
     get() = assets.orNull
     set(value) {
         assets.set(value)
