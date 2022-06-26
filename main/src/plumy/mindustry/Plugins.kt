@@ -12,9 +12,7 @@ class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         plugins.apply<MindustryAppPlugin>()
         plugins.apply<MindustryAssetPlugin>()
-        plugins.whenHas<JavaPlugin> {
-            plugins.apply<MindustryJavaPlugin>()
-        }
+        plugins.apply<MindustryJavaPlugin>()
     }
 }
 /**
@@ -25,7 +23,7 @@ class MindustryJavaPlugin : Plugin<Project> {
         val ex = extensions.getOrCreate<MindustryExtension>(
             Meta.ExtensionName
         )
-        tasks.withType<RunMindustryTask> {
+        tasks.withType<RunMindustry> {
             outputtedMods.setFrom(
                 *ex.mods.extraModsFromTask.get().map {
                     tasks.named(it)
@@ -56,6 +54,12 @@ class MindustryJavaPlugin : Plugin<Project> {
                 *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
             )
         }
+/*        val gatherAssets = tasks.register("gatherAssets") {
+        }
+
+        afterEvaluate {
+
+        }*/
     }
 }
 
@@ -69,12 +73,10 @@ class MindustryAssetPlugin : Plugin<Project> {
             modMeta.set(ex.assets.modMeta)
             outputHjson.set(temporaryDir.resolve("mod.hjson"))
         }
-        plugins.whenHas<JavaPlugin> {
-            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                dependsOn(genModHjson)
-                val outputHjson = genModHjson.get().outputHjson.get()
-                from(outputHjson)
-            }
+        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+            dependsOn(genModHjson)
+            val outputHjson = genModHjson.get().outputHjson.get()
+            from(outputHjson)
         }
     }
 }
@@ -88,50 +90,50 @@ class MindustryAppPlugin : Plugin<Project> {
                 Meta.ExtensionName
             )
             // For client side
-            val downloadClient = tasks.register<DownloadTask>(
+            val downloadClient = tasks.register<Download>(
                 "downloadClient",
             ) {
                 group = Meta.TaskGroup
                 ex.client.location.get().run {
-                    assets.set(
+                    location.set(
                         GitHubDownload.release(
                             user, repo,
                             version, release
                         )
                     )
-                    val original = outputPath.get()
+                    val original = outputFile.get()
                     val targetFile = original.parentFile.resolve(
                         "${original.nameWithoutExtension}-${user}-${repo}-${version}.${original.extension}"
                     )
-                    outputPath.set(targetFile)
+                    outputFile.set(targetFile)
                 }
             }
             // For server side
-            val downloadServer = tasks.register<DownloadTask>(
+            val downloadServer = tasks.register<Download>(
                 "downloadServer",
             ) {
                 group = Meta.TaskGroup
                 ex.server.location.get().run {
-                    assets.set(
+                    location.set(
                         GitHubDownload.release(
                             user, repo,
                             version, release
                         )
                     )
-                    val original = outputPath.get()
+                    val original = outputFile.get()
                     val targetFile = original.parentFile.resolve(
                         "${original.nameWithoutExtension}-${user}-${repo}-${version}.${original.extension}"
                     )
-                    outputPath.set(targetFile)
+                    outputFile.set(targetFile)
                 }
             }
-            val resolveMods = tasks.register<ResolveModsTask>(
+            val resolveMods = tasks.register<ResolveMods>(
                 "resolveMods"
             ) {
                 group = Meta.TaskGroup
                 mods.set(ex.mods.worksWith)
             }
-            val runClient = tasks.register<RunMindustryTask>(
+            val runClient = tasks.register<RunMindustry>(
                 "runClient",
             ) {
                 group = Meta.TaskGroup
@@ -140,14 +142,14 @@ class MindustryAppPlugin : Plugin<Project> {
                 modsWorkWith.setFrom(resolveMods.get())
                 dataModsPath.convention("mods")
                 val dataDirEx = ex.run.dataDir.get()
-                if(dataDirEx.isNotBlank()){
-                    if(dataDirEx == "temp")
+                if (dataDirEx.isNotBlank()) {
+                    if (dataDirEx == "temp")
                         dataOnTemporary()
                     else
                         dataDir.set(dirProv { File(dataDirEx) })
                 }
             }
-            val runServer = tasks.register<RunMindustryTask>(
+            val runServer = tasks.register<RunMindustry>(
                 "runServer",
             ) {
                 group = Meta.TaskGroup

@@ -8,7 +8,7 @@ import plumy.dsl.listProp
 import plumy.mindustry.IMod
 import java.io.File
 
-open class ResolveModsTask : DefaultTask() {
+open class ResolveMods : DefaultTask() {
     val mods = project.listProp<IMod>()
         @Input get
     val downloadedMos: List<File>

@@ -51,6 +51,20 @@ data class ModMeta(
         )
     )
 
+    operator fun get(key: String): Any? =
+        info[key]
+
+    operator fun set(key: String, meta: Any) {
+        info[key] = meta
+    }
+
+    fun getAt(key: String): Any? =
+        info[key]
+
+    fun putAt(key: String, meta: Any) {
+        info[key] = meta
+    }
+
     operator fun plusAssign(addition: ModMeta) {
         for ((k, newV) in addition.info) {
             val default = defaultMeta[k]

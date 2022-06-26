@@ -6,7 +6,7 @@ import org.gradle.api.tasks.*
 import plumy.dsl.*
 import plumy.mindustry.Meta
 
-open class RunMindustryTask : DefaultTask() {
+open class RunMindustry : DefaultTask() {
     val mainClass = project.stringProp()
         @Input get
     val dataDir = project.dirProp()
@@ -53,7 +53,7 @@ open class RunMindustryTask : DefaultTask() {
     }
 }
 
-var RunMindustryTask.MainClass: String
+var RunMindustry.MainClass: String
     get() = mainClass.getOrElse("")
     set(value) {
         mainClass.set(value)

@@ -31,9 +31,9 @@ open class DexJar : DefaultTask() {
         val jars = jarFiles.files
         // Check space in absolute path
         val jarToDexPaths = jars.map { it.absolutePath }.toList()
-        if(" " in dexedJarPath) throw GradleException("d8 doesn't allow a path with any space but the dexed jar's path is \"$dexedJarFile\".")
+        if(" " in dexedJarPath) throw GradleException("d8 doesn't allow a path with any space but the dexed jar's path is \"$dexedJarFile\" .")
         for (jarPath in jarToDexPaths){
-            if(" " in jarPath)  throw GradleException("d8 doesn't allow a path with any space but the path of a jar to be dexed is \"$dexedJarFile\".")
+            if(" " in jarPath)  throw GradleException("d8 doesn't allow a path with any space but the path of a jar to be dexed is \"$dexedJarFile\" .")
         }
         val sdkPath = sdkRoot.get()
         val sdkRootDir = File(sdkPath)

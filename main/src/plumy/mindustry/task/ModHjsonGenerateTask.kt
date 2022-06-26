@@ -19,5 +19,6 @@ abstract class ModHjsonGenerateTask : DefaultTask() {
         val modHjson = outputHjson.get()
         modHjson.parentFile.mkdirs()
         modHjson.writeText(modMeta.get().toHjson())
+        logger.info("ModHjson is generated at ${modHjson.absolutePath} .")
     }
 }

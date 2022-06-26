@@ -8,6 +8,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.JavaPlugin
 import plumy.dsl.*
+import java.io.File
 
 open class MindustryExtension(
     target: Project,
@@ -344,6 +345,18 @@ class AssetSpec(
                 if (it.exists()) it else target.rootDir.resolve("mod.json")
             }
         ))
+    }
+    var meta: ModMeta
+        get() = modMeta.get()
+        set(value) {
+            modMeta.set(value)
+        }
+    val assetsRoot = target.fileProp().apply {
+        convention(target.projectDir.resolve("assets"))
+    }
+
+    fun assetsAt(path: String) {
+        assetsRoot.set(File(path))
     }
 
     fun addMeta(info: Map<String, Any>): ModMeta =

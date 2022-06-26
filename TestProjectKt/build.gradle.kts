@@ -62,6 +62,7 @@ mindustry {
             main = "plumy.test.TestModKt",
             author = "Liplum"
         )
+         meta["version"] = "999"
     }
 }
 
