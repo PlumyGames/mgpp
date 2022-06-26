@@ -32,7 +32,7 @@ data class GitHubDownload(
     var url: URL,
 ) : IDownloadLocation {
     override val path: String
-        get() = url.path
+        get() = url.toString()
     companion object {
         fun release(
             user: String, repo: String,

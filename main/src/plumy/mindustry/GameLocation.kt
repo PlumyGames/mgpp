@@ -6,6 +6,6 @@ data class GameLocation(
     var user: String = "",
     var repo: String = "",
     var version: String = "",
-    var releaseName: String = "",
+    var release: String = "",
 ) : Serializable {
 }

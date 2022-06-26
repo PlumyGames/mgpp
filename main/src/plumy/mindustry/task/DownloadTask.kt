@@ -26,9 +26,9 @@ open class DownloadTask : DefaultTask() {
     fun download() {
         // Download is a very expensive task, so this should
         val asset = assets.get()
-        logger.info("Downloading ${asset.name} from ${asset.path}. ")
+        logger.info("Downloading ${asset.name} from ${asset}. ")
         asset.openInputStream().use { it.copyTo(outputPath.get()) }
-        logger.info("Downloaded ${asset.name}.")
+        logger.info("Downloaded ${asset.name} from ${asset.path}.")
     }
 }
 

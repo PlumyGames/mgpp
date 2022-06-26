@@ -12,6 +12,7 @@ object Meta {
     const val ClientReleaseName = "Mindustry.jar"
     const val ServerReleaseName = "server-release.jar"
     const val MindustryJitpackRepo = "com.github.anuken.mindustry"
+    const val MindustryJitpackMirrorRepo = "com.github.anuken.mindustryjitpack"
     const val ArcJitpackRepo = "com.github.anuken.arc"
     const val MindustryDesktopMainClass = "mindustry.desktop.DesktopLauncher"
     const val MindustrySeverMainClass = "mindustry.server.ServerLauncher"

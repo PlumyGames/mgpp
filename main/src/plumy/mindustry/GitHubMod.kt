@@ -7,32 +7,36 @@ import java.io.Serializable
 import java.net.URL
 
 interface IMod : Serializable {
-    fun resolveFile(currentDir:File)
-    fun mapLocalFile(currentDir:File): File
+    fun resolveFile(currentDir: File)
+    fun mapLocalFile(currentDir: File): File
 }
 
 data class LocalMod(
     var modFile: File = File(""),
 ) : IMod {
-    override fun resolveFile(currentDir:File) {
+    constructor(path: String) : this(File(path))
+
+    override fun resolveFile(currentDir: File) {
         modFile.copyTo(currentDir.resolve(modFile.name))
     }
 
-    override fun mapLocalFile(currentDir:File): File =
+    override fun mapLocalFile(currentDir: File): File =
         currentDir.resolve(modFile.name)
 }
 
 data class UrlMod(
     var url: URL,
 ) : IMod {
-    override fun resolveFile(currentDir:File) {
+    constructor(url: String) : this(URL(url))
+
+    override fun resolveFile(currentDir: File) {
         val path: String = url.toURI().path
         val last = path.substring(path.lastIndexOf('/') + 1)
         val name = if (last.endsWith(".jar")) last else "$last.jar"
         url.copyTo(currentDir.resolve(name))
     }
 
-    override fun mapLocalFile(currentDir:File): File {
+    override fun mapLocalFile(currentDir: File): File {
         val path: String = url.toURI().path
         val last = path.substring(path.lastIndexOf('/') + 1)
         val name = if (last.endsWith(".jar")) last else "$last.jar"
@@ -43,7 +47,7 @@ data class UrlMod(
 data class GitHubMod(
     var repo: String,
 ) : IMod {
-    override fun resolveFile(currentDir:File) {
+    override fun resolveFile(currentDir: File) {
         val releaseJson = URL("https://api.github.com/repos/$repo/releases/latest").readText()
         val json = Jval.read(releaseJson)
         val assets = json["assets"].asArray()
@@ -61,6 +65,6 @@ data class GitHubMod(
         }
     }
 
-    override fun mapLocalFile(currentDir:File): File =
+    override fun mapLocalFile(currentDir: File): File =
         currentDir.resolve(repo.replace("/", "-") + ".jar")
 }

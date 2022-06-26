@@ -81,71 +81,73 @@ class MindustryAssetPlugin : Plugin<Project> {
  * For downloading and running game.
  */
 class MindustryAppPlugin : Plugin<Project> {
-    override fun apply(target: Project) = target.func {
-        val ex = extensions.getOrCreate<MindustryExtension>(
-            Meta.ExtensionName
-        )
-        // For client side
-        val downloadClient = tasks.register<DownloadTask>(
-            "downloadClient",
-        ) {
-            group = Meta.TaskGroup
-            ex.clientLocation.get().run {
-                assets.set(
-                    GitHubDownload.release(
-                        user, repo,
-                        version, releaseName
+    override fun apply(target: Project) = target.afterEvaluate {
+        it.func {
+            val ex = extensions.getOrCreate<MindustryExtension>(
+                Meta.ExtensionName
+            )
+            // For client side
+            val downloadClient = tasks.register<DownloadTask>(
+                "downloadClient",
+            ) {
+                group = Meta.TaskGroup
+                ex.client.get().run {
+                    assets.set(
+                        GitHubDownload.release(
+                            user, repo,
+                            version, release
+                        )
                     )
-                )
-                val original = outputPath.get()
-                val targetFile = original.parentFile.resolve(
-                    "${original.nameWithoutExtension}-${user}-${repo}-${version}.${original.extension}"
-                )
-                outputPath.set(targetFile)
-            }
-        }
-        // For server side
-        val downloadServer = tasks.register<DownloadTask>(
-            "downloadServer",
-        ) {
-            group = Meta.TaskGroup
-            ex.severLocation.get().run {
-                assets.set(
-                    GitHubDownload.release(
-                        user, repo,
-                        version, releaseName
+                    val original = outputPath.get()
+                    val targetFile = original.parentFile.resolve(
+                        "${original.nameWithoutExtension}-${user}-${repo}-${version}.${original.extension}"
                     )
-                )
-                val original = outputPath.get()
-                val targetFile = original.parentFile.resolve(
-                    "${original.nameWithoutExtension}-${user}-${repo}-${version}.${original.extension}"
-                )
-                outputPath.set(targetFile)
+                    outputPath.set(targetFile)
+                }
             }
-        }
-        val resolveMods = tasks.register<ResolveModsTask>(
-            "resolveMods"
-        ) {
-            group = Meta.TaskGroup
-            mods.set(ex.mods.worksWith)
-        }
-        val runClient = tasks.register<RunMindustryTask>(
-            "runClient",
-        ) {
-            group = Meta.TaskGroup
-            mainClass.convention(Meta.MindustryDesktopMainClass)
-            classPath.setFrom(downloadClient.get())
-            modsWorkWith.setFrom(resolveMods.get())
-            dataModsPath.convention("mods")
-        }
-        val runServer = tasks.register<RunMindustryTask>(
-            "runServer",
-        ) {
-            group = Meta.TaskGroup
-            mainClass.convention(Meta.MindustrySeverMainClass)
-            classPath.setFrom(downloadServer.get())
-            modsWorkWith.setFrom(resolveMods.get())
-            dataModsPath.convention("config/mods")
+            // For server side
+            val downloadServer = tasks.register<DownloadTask>(
+                "downloadServer",
+            ) {
+                group = Meta.TaskGroup
+                ex.sever.get().run {
+                    assets.set(
+                        GitHubDownload.release(
+                            user, repo,
+                            version, release
+                        )
+                    )
+                    val original = outputPath.get()
+                    val targetFile = original.parentFile.resolve(
+                        "${original.nameWithoutExtension}-${user}-${repo}-${version}.${original.extension}"
+                    )
+                    outputPath.set(targetFile)
+                }
+            }
+            val resolveMods = tasks.register<ResolveModsTask>(
+                "resolveMods"
+            ) {
+                group = Meta.TaskGroup
+                mods.set(ex.mods.worksWith)
+            }
+            val runClient = tasks.register<RunMindustryTask>(
+                "runClient",
+            ) {
+                group = Meta.TaskGroup
+                mainClass.convention(Meta.MindustryDesktopMainClass)
+                classPath.setFrom(downloadClient.get())
+                modsWorkWith.setFrom(resolveMods.get())
+                dataModsPath.convention("mods")
+            }
+            val runServer = tasks.register<RunMindustryTask>(
+                "runServer",
+            ) {
+                group = Meta.TaskGroup
+                mainClass.convention(Meta.MindustrySeverMainClass)
+                classPath.setFrom(downloadServer.get())
+                modsWorkWith.setFrom(resolveMods.get())
+                dataModsPath.convention("config/mods")
+            }
         }
     }
 }

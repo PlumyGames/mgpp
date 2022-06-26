@@ -7,44 +7,46 @@ import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.JavaPlugin
-import plumy.dsl.listProp
-import plumy.dsl.prop
-import plumy.dsl.stringProp
-import plumy.dsl.stringsProp
-import java.io.File
+import plumy.dsl.*
 
 open class MindustryExtension(
     target: Project,
 ) {
+    @JvmField
+    val ArcRepo = Meta.ArcJitpackRepo
+    @JvmField
+    val MindustryMirrorRepo = Meta.MindustryJitpackMirrorRepo
+    @JvmField
+    val MindustryRepo = Meta.MindustryJitpackRepo
     /**
      * Import v135 as default for now.
      * DO NOT trust this behavior, it may change later.
      */
-    val arcDependency = target.prop<Dependency>().apply {
+    val arc = target.prop<IDependency>().apply {
         convention(Dependency(Meta.ArcJitpackRepo, Meta.DefaultMindustryVersion))
     }
     /**
      * Import v135 as default for now.
      * DO NOT trust this behavior, it may change later.
      */
-    val mindustryDependency = target.prop<Dependency>().apply {
+    val mindustry = target.prop<IDependency>().apply {
         convention(Dependency(Meta.MindustryJitpackRepo, Meta.DefaultMindustryVersion))
     }
-    val clientLocation = target.prop<GameLocation>().apply {
+    val client = target.prop<GameLocation>().apply {
         convention(
             GameLocation(
                 user = "anuken", repo = "mindustry",
                 version = Meta.DefaultMindustryVersion,
-                releaseName = Meta.ClientReleaseName
+                release = Meta.ClientReleaseName
             )
         )
     }
-    val severLocation = target.prop<GameLocation>().apply {
+    val sever = target.prop<GameLocation>().apply {
         convention(
             GameLocation(
                 user = "anuken", repo = "mindustry",
                 version = Meta.DefaultArcVersion,
-                releaseName = Meta.ServerReleaseName
+                release = Meta.ServerReleaseName
             )
         )
     }
@@ -77,18 +79,23 @@ open class MindustryExtension(
     inline fun deploy(func: Deploy.() -> Unit) {
         deploy.func()
     }
-    @JvmOverloads
+
+    fun MirrorDependency(
+        fullName: String = Meta.MindustryJitpackMirrorRepo,
+        version: String = "",
+    ) = MirrorJitpackDependency(fullName, version)
+
     fun Dependency(
         fullName: String = "",
         version: String = "",
     ) = plumy.mindustry.Dependency(fullName, version)
-    @JvmOverloads
+
     fun GameLocation(
         user: String = "",
         repo: String = "",
         version: String = "",
-        releaseName: String = "",
-    ) = plumy.mindustry.GameLocation(user, repo, version, releaseName)
+        release: String = "",
+    ) = plumy.mindustry.GameLocation(user, repo, version, release)
 }
 /**
  * Retrieves the [mindustry][MindustryExtension] extension.
@@ -117,6 +124,25 @@ class Mods(
         val old = worksWith.getOrElse(emptyList())
         worksWith.set(old + mods.toList())
     }
+    /**
+     * Add some mods working with this mod.
+     */
+    fun worksWith(mods: Map<String, Any>) {
+        val addition = ArrayList<IMod>(mods.size)
+        for ((typeRaw, modRaw) in mods) {
+            val mod = modRaw.toString()
+            val type = typeRaw.lowercase()
+            if (type.startsWith("local")) {
+                addition.add(LocalMod(mod))
+            } else if (type.startsWith("repo")) {
+                addition.add(GitHubMod(mod))
+            } else if (type.startsWith("url")) {
+                addition.add(UrlMod(mod))
+            }
+        }
+        val old = worksWith.getOrElse(emptyList())
+        worksWith.set(old + addition)
+    }
 
     fun Mod(map: Map<String, Any>): IMod {
         run {
@@ -128,14 +154,21 @@ class Mods(
         run {
             val path = map["path"]
             if (path != null) {
-                return LocalMod(File(path.toString()))
+                return LocalMod(path.toString())
             }
         }
-        throw RuntimeException("Unknown mod info from $map")
+        func {
+            val url = map["url"]
+            if (url != null) {
+                return UrlMod(url.toString())
+            }
+        }
+        throw RuntimeException("Unknown mod type from $map")
     }
 
     fun GitHub(repo: String) = GitHubMod(repo)
-    fun Local(path: String) = LocalMod(File(path))
+    fun Local(path: String) = LocalMod(path)
+    fun URL(url: String) = UrlMod(url)
 }
 
 class Deploy(

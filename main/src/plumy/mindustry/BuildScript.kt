@@ -1,4 +1,5 @@
 @file:JvmName("BuildScript")
+
 package plumy.mindustry
 
 import org.gradle.api.Project
@@ -19,21 +20,21 @@ fun Project.importMindustry() {
     val ex = extensions.getOrCreate<MindustryExtension>(
         Meta.ExtensionName
     )
-    val mdt = ex.mindustryDependency.get()
-    val arc = ex.arcDependency.get()
+    val mdt = ex.mindustry.get()
+    val arc = ex.arc.get()
     // Mindustry core
-    addMindustry(mdt.resolve("core"))
+    mdt.whenAvailable("core", ::addMindustry)
     // Arc
-    addMindustry(arc.resolve("arc-core"))
+    arc.whenAvailable("arc-core", ::addMindustry)
     when (ex.projectType.get()) {
         ProjectType.Mod -> {
-            addMindustry(mdt.resolve("desktop"))
-            addMindustry(mdt.resolve("server"))
+            mdt.whenAvailable("desktop", ::addMindustry)
+            mdt.whenAvailable("server", ::addMindustry)
             // This doesn't work, so disable it for now until a better solution
             //addMindustry(mdt.resolve("backend-headless"))
         }
         ProjectType.Plugin -> {
-            addMindustry(mdt.resolve("server"))
+            mdt.whenAvailable("server", ::addMindustry)
             //addMindustry(mdt.resolve("backend-headless"))
         }
         else -> {}

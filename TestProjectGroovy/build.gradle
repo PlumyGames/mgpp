@@ -37,8 +37,8 @@ sourceSets {
 mindustry {
     mods {
         worksWith(
-            GitHub('liplum/cyberio'),
-            GitHub('liplum/MDT-DST'),
+            repo_cyberio: 'liplum/cyberio',
+            repo_dst: 'liplum/MDT-DST',
         )
     }
     assets {
