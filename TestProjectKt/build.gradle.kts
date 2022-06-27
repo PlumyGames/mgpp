@@ -63,14 +63,16 @@ mindustry {
             main = "plumy.test.TestModKt",
             author = "Liplum"
         )
-         meta["version"] = "999"
+        meta["version"] = "999"
     }
 }
-
-tasks.register<AntiAlias>("antiAlias"){
+tasks.named<AntiAlias>("antiAlias") {
     sourceDirectory.set(rootDir.resolve("textures"))
     destinationDirectory.set(rootDir.resolve("AA"))
-    options.isIncremental = false
+    addFilter {
+        it.name != "sender.png"
+    }
+    //options.isIncremental = false
 }
 
 dependencies {

@@ -65,6 +65,15 @@ mindustry {
         meta.minGameVersion = "136"
     }
 }
+
+tasks.named('antiAlias') {
+    sourceDirectory = new File(rootDir, 'textures')
+    destinationDirectory = new File(rootDir, 'AA')
+    addFilter {
+        it.name != 'sender.png'
+    }
+    //options.isIncremental = false
+}
 /*
 Because tasks, 'downloadClient/Sever' and 'runClient/Server', are registered after
 the project evaluation, so you shouldn't use `tasks.named('foo')` to configure it.

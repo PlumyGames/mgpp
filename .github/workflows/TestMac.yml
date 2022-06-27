@@ -35,6 +35,7 @@ jobs:
           cd TestProjectKt
           chmod +x gradlew
           ./gradlew :deploy --info
+          ./gradlew :antiAlias --info
           cd ..
 
       - name: Test Groovy DSl
@@ -42,6 +43,7 @@ jobs:
           cd TestProjectGroovy
           chmod +x gradlew
           ./gradlew :deploy --info
+          ./gradlew :antiAlias --info
           cd ..
 
       - uses: actions/upload-artifact@v2

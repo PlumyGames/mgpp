@@ -32,12 +32,14 @@ jobs:
         run : |
           cd TestProjectKt
           .\gradlew.bat :deploy --info
+          .\gradlew.bat :antiAlias --info
           cd ..
 
       - name: Test Groovy DSl
         run : |
           cd TestProjectGroovy
           .\gradlew.bat :deploy --info
+          .\gradlew.bat :antiAlias --info
           cd ..
 
       - uses: actions/upload-artifact@v2

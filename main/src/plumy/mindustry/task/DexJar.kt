@@ -8,7 +8,9 @@ import java.io.File
 
 open class DexJar : DefaultTask() {
     val jarFiles = project.configurationFileCollection()
-        @InputFiles get
+        @InputFiles @SkipWhenEmpty
+        @PathSensitive(PathSensitivity.ABSOLUTE)
+        get
     val classpath = project.configurationFileCollection()
         @InputFiles get
     val sdkRoot = project.stringProp()

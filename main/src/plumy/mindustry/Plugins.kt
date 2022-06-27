@@ -12,7 +12,9 @@ class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         plugins.apply<MindustryAppPlugin>()
         plugins.apply<MindustryAssetPlugin>()
-        plugins.apply<MindustryJavaPlugin>()
+        plugins.whenHas<JavaPlugin> {
+            plugins.apply<MindustryJavaPlugin>()
+        }
     }
 }
 /**
@@ -67,11 +69,15 @@ class MindustryAssetPlugin : Plugin<Project> {
             modMeta.set(ex.assets.modMeta)
             outputHjson.set(temporaryDir.resolve("mod.hjson"))
         }
-        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-            dependsOn(genModHjson)
-            val outputHjson = genModHjson.get().outputHjson.get()
-            from(outputHjson)
+        plugins.whenHas<JavaPlugin> {
+            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                dependsOn(genModHjson)
+                val outputHjson = genModHjson.get().outputHjson.get()
+                from(outputHjson)
+            }
         }
+        // Register this for dynamically configure tasks without class reference in groovy.
+        tasks.register<AntiAlias>("antiAlias").get()
     }
 }
 /**
