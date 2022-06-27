@@ -41,7 +41,6 @@ repositories {
 dependencies {
     shadow("com.github.anuken.arc:arc-core:123fbf12b9")
     shadow("org.hjson:hjson:3.0.0")
-    implementation(kotlin("stdlib"))
     implementation("com.github.anuken.arc:arc-core:123fbf12b9")
     implementation("org.hjson:hjson:3.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")

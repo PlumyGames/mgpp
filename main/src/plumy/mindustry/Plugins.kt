@@ -54,12 +54,6 @@ class MindustryJavaPlugin : Plugin<Project> {
                 *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
             )
         }
-/*        val gatherAssets = tasks.register("gatherAssets") {
-        }
-
-        afterEvaluate {
-
-        }*/
     }
 }
 

@@ -1,5 +1,6 @@
 package plumy.dsl
 
+import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -65,7 +66,7 @@ fun <reified T : Plugin<*>> PluginContainer.whenHas(
 }
 internal inline
 fun PluginContainer.whenHas(
-    pluginID:String,
+    pluginID: String,
     func: () -> Unit,
 ) {
     if (hasPlugin(pluginID)) func()
@@ -78,3 +79,9 @@ internal inline
 fun Project.dirProv(crossinline prov: () -> File): Provider<Directory> {
     return layout.dir(provider { prov() })
 }
+
+inline fun <reified T> Project.new(): T =
+    objects.newInstance(T::class.java)
+
+inline fun <reified T> DefaultTask.new(): T =
+    project.new()

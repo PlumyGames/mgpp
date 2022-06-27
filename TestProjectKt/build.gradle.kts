@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import plumy.mindustry.importMindustry
 import plumy.mindustry.mindustry
 import plumy.mindustry.mindustryRepo
+import plumy.mindustry.task.AntiAlias
 import plumy.mindustry.task.RunMindustry
 
 buildscript {
@@ -64,6 +65,12 @@ mindustry {
         )
          meta["version"] = "999"
     }
+}
+
+tasks.register<AntiAlias>("antiAlias"){
+    sourceDirectory.set(rootDir.resolve("textures"))
+    destinationDirectory.set(rootDir.resolve("AA"))
+    options.isIncremental = false
 }
 
 dependencies {
