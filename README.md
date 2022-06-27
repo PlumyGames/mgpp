@@ -29,7 +29,20 @@ ___
     ```groovy
    // Groovy as DSL
     mindustry {
-        projectType.set ProjectType.Mod
+        projectType = Mod
+           dependency {
+            mindustry version: 'v135'
+            // useMirror version: 'd7312445a1'
+            arc version: '123fbf12b9'
+        }
+        client {
+            official version: 'v135' 
+            // be version: '22714'
+        }
+        server {
+            official version: 'v135'
+            // be version: '22714'
+        }
         assets {
             // This affects only the output jar. And as default,
             // it will read ModMeta from the mod.[h]json in the root directory.
@@ -41,26 +54,34 @@ ___
             )
         }
         mods {
-            // You can import some mods to work with this mod in here.
-            worksWith(
-                GitHub('liplum/cyberio')
-            )
+            worksWith {
+                // You can import some mods to work with this mod in here.
+                github 'liplum/cyberio'
+            }
         }
         deploy {
             // You can configure the deployment task here
         }
-    }
-   // Use the gradle task temporary directory as the data directory of Mindustry,
-   // you can isolate each different project on your computer.
-    tasks.named('runClient') {
-        dataOnTemporary()
     }
     ```
     ```kotlin
     // Kotlin as DSL
     import plumy.mindustry.mindustry
     mindustry {
-        projectType.set(ProjectType.Mod)
+        projectType.set(Mod)
+        dependency {
+            mindustry(version = "v135")
+            // useMirror(version = "d7312445a1")
+            arc(version = "123fbf12b9")
+        }
+        client {
+            official(version = "v135")
+            // be(version = "22714")
+        }
+        server {
+            official(version = "v135")
+            // be(version = "22714")
+        }
         assets {
             // This affects only the output jar. And as default,
             // it will read ModMeta from the mod.[h]json in the root directory.
@@ -73,18 +94,13 @@ ___
         }
         mods {
             // You can import some mods to work with this mod in here.
-            worksWith(
-                GitHub("liplum/cyberio"),
-            )
+            worksWith {
+                github("liplum/cyberio")
+            }
         }
         deploy {
             // You can configure the deployment task here
         }
-    }
-    // Use the gradle task temporary directory as the data directory of Mindustry,
-    // you can isolate each different project on your computer.
-    tasks.withType<RunMindustryTask> {
-        dataOnTemporary()
     }
     ```
 3. Import the dependencies of Mindustry.

@@ -4,6 +4,7 @@
 package plumy.mindustry
 
 import org.gradle.api.Action
+import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.JavaPlugin
@@ -139,16 +140,37 @@ class DependencySpec(
         mindustry.set(MirrorDependency(version))
     }
 
+    fun useMirror(
+        map: Map<String, Any>,
+    ) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `useMirror`")
+        useMirror(version = version)
+    }
+
     fun mindustry(
         version: String = "",
     ) {
         mindustry.set(MindustryDependency(version))
     }
 
+    fun mindustry(
+        map: Map<String, Any>,
+    ) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `mindustry`")
+        mindustry(version)
+    }
+
     fun arc(
         version: String = "",
     ) {
         arc.set(ArcDependency(version))
+    }
+
+    fun arc(
+        map: Map<String, Any>,
+    ) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `arc`")
+        arc(version = version)
     }
 
     fun ArcDependency(
@@ -209,6 +231,20 @@ class ClientSpec(
             )
         )
     }
+
+    fun official(
+        map: Map<String, Any>,
+    ) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
+        official(version)
+    }
+
+    fun be(
+        map: Map<String, Any>,
+    ) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
+        be(version)
+    }
 }
 
 class ServerSpec(
@@ -246,6 +282,20 @@ class ServerSpec(
             )
         )
     }
+
+    fun official(
+        map: Map<String, Any>,
+    ) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
+        official(version)
+    }
+
+    fun be(
+        map: Map<String, Any>,
+    ) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
+        be(version)
+    }
 }
 
 class ModsSpec(
@@ -257,31 +307,32 @@ class ModsSpec(
     val worksWith = target.listProp<IMod>().apply {
         convention(emptyList())
     }
+
+    fun worksWith(config: Runnable) {
+        config.run()
+    }
+
+    inline fun worksWith(config: () -> Unit) {
+        config()
+    }
+
+    fun github(repo: String) {
+        worksWith.add(GitHubMod(repo))
+    }
+
+    fun local(path: String) {
+        worksWith.add(LocalMod(path))
+    }
+
+    fun url(url: String) {
+        worksWith.add(UrlMod(url))
+    }
     /**
      * Add some mods working with this mod.
      */
     fun worksWith(vararg mods: IMod) {
         val old = worksWith.getOrElse(emptyList())
         worksWith.set(old + mods.toList())
-    }
-    /**
-     * Add some mods working with this mod.
-     */
-    fun worksWith(mods: Map<String, Any>) {
-        val addition = ArrayList<IMod>(mods.size)
-        for ((typeRaw, modRaw) in mods) {
-            val mod = modRaw.toString()
-            val type = typeRaw.lowercase()
-            if (type.startsWith("local")) {
-                addition.add(LocalMod(mod))
-            } else if (type.startsWith("repo")) {
-                addition.add(GitHubMod(mod))
-            } else if (type.startsWith("url")) {
-                addition.add(UrlMod(mod))
-            }
-        }
-        val old = worksWith.getOrElse(emptyList())
-        worksWith.set(old + addition)
     }
 
     fun Mod(map: Map<String, Any>): IMod {
@@ -297,7 +348,7 @@ class ModsSpec(
                 return LocalMod(path.toString())
             }
         }
-        func {
+        run {
             val url = map["url"]
             if (url != null) {
                 return UrlMod(url.toString())
@@ -308,7 +359,7 @@ class ModsSpec(
 
     fun GitHub(repo: String) = GitHubMod(repo)
     fun Local(path: String) = LocalMod(path)
-    fun URL(url: String) = UrlMod(url)
+    fun Url(url: String) = UrlMod(url)
 }
 
 class DeploySpec(

@@ -36,20 +36,19 @@ sourceSets {
 }
 mindustry {
     dependency {
-        useMirror 'd7312445a1'
-        arc '123fbf12b9'
+        useMirror version: 'd7312445a1'
+        arc version: '123fbf12b9'
     }
     client {
-        be '22714'
+        be version: '22714'
     }
     server {
-        be '22714'
+        be version: '22714'
     }
     mods {
-        worksWith(
-            repo_cyberio: 'liplum/cyberio',
-            //repo_dst: 'liplum/MDT-DST',
-        )
+        worksWith {
+            github 'liplum/cyberio'
+        }
     }
     run {
         dataDir = 'temp'

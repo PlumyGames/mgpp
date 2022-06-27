@@ -77,7 +77,9 @@ class MindustryAssetPlugin : Plugin<Project> {
             }
         }
         // Register this for dynamically configure tasks without class reference in groovy.
-        tasks.register<AntiAlias>("antiAlias").get()
+        tasks.register<AntiAlias>("antiAlias") {
+            group = Meta.TaskGroup
+        }.get()
     }
 }
 /**
@@ -85,7 +87,7 @@ class MindustryAssetPlugin : Plugin<Project> {
  */
 class MindustryAppPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.afterEvaluate {
-        it.func {
+        it.run {
             val ex = extensions.getOrCreate<MindustryExtension>(
                 Meta.ExtensionName
             )

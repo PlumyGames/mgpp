@@ -52,9 +52,15 @@ mindustry {
         be(version = "22714")
     }
     mods {
+        /* This can work
         worksWith(
             GitHub("liplum/cyberio"),
         )
+        */
+        // also you can
+        worksWith {
+            github("liplum/cyberio")
+        }
     }
     assets {
         modMeta(
@@ -63,7 +69,7 @@ mindustry {
             main = "plumy.test.TestModKt",
             author = "Liplum"
         )
-        meta["version"] = "999"
+        meta["version"] = "Kotlin 666"
     }
 }
 tasks.named<AntiAlias>("antiAlias") {
