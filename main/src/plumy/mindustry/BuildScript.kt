@@ -18,7 +18,7 @@ fun RepositoryHandler.mindustryRepo(
 
 fun Project.importMindustry() {
     val ex = extensions.getOrCreate<MindustryExtension>(
-        Meta.ExtensionName
+        MindustryPlugin.MainExtensionName
     )
     val mdt = ex.dependency.mindustry.get()
     val arc = ex.dependency.arc.get()

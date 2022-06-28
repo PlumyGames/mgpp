@@ -1,7 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import plumy.mindustry.importMindustry
-import plumy.mindustry.mindustry
-import plumy.mindustry.mindustryRepo
+import plumy.mindustry.*
 import plumy.mindustry.task.AntiAlias
 import plumy.mindustry.task.RunMindustry
 
@@ -20,10 +18,12 @@ buildscript {
 sourceSets {
     main {
         java.srcDirs("src")
+        java.srcDirs("$buildDir/generated/resourceClass")
         resources.srcDir("resources")
     }
     test {
         java.srcDir("test")
+        java.srcDirs("$buildDir/generated/resourceClass")
         resources.srcDir("resources")
     }
 }
@@ -62,19 +62,29 @@ mindustry {
             github("liplum/cyberio")
         }
     }
-    assets {
-        modMeta(
-            name = "test-plumy-mindustry-gradle-plugin-kt",
-            displayName = "Test Plumy Mindustry Gradle Plugin Kt",
-            main = "plumy.test.TestModKt",
-            author = "Liplum"
-        )
-        meta["version"] = "Kotlin 666"
+    modMeta(
+        name = "test-plumy-mindustry-gradle-plugin-kt",
+        displayName = "Test Plumy Mindustry Gradle Plugin Kt",
+        main = "plumy.test.TestModKt",
+        author = "Liplum"
+    )
+    meta["version"] = "Kotlin 666"
+    meta.minGameVersion = "136"
+}
+mindustryAsset {
+    sprites {
+        dir = rootDir.resolve("sprites")
+        genClass = true
     }
 }
+
+tasks.named("genResourceClass"){
+    dependsOn("antiAlias")
+}
+
 tasks.named<AntiAlias>("antiAlias") {
-    sourceDirectory.set(rootDir.resolve("textures"))
-    destinationDirectory.set(rootDir.resolve("AA"))
+    sourceDirectory.set(rootDir.resolve("sprites-raw"))
+    destinationDirectory.set(rootDir.resolve("sprites"))
     addFilter {
         it.name != "sender.png"
     }

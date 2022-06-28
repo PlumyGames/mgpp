@@ -4,7 +4,7 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.*
 import plumy.dsl.*
-import plumy.mindustry.Meta
+import plumy.mindustry.MindustryPlugin
 
 open class RunMindustry : DefaultTask() {
     val mainClass = project.stringProp()
@@ -48,7 +48,7 @@ open class RunMindustry : DefaultTask() {
             it.classpath = classPath
             it.standardInput = System.`in`
             it.workingDir = workingDir.get().asFile
-            it.environment[Meta.MindustryDataDirEnv] = dataDir.get().asFile.absoluteFile
+            it.environment[MindustryPlugin.MindustryDataDirEnv] = dataDir.get().asFile.absoluteFile
         }
     }
 }

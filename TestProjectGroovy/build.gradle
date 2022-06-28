@@ -53,19 +53,17 @@ mindustry {
     run {
         dataDir = 'temp'
     }
-    assets {
-        modMeta(
-            name: 'test-plumy-mindustry-gradle-plugin-groovy',
-            displayName: 'Test Plumy Mindustry Gradle Plugin Groovy',
-            main: 'plumy.test.TestModGroovy',
-            author: 'Liplum'
-        )
-        meta.version = "groovy 3000"
-        meta.minGameVersion = "136"
-    }
+    modMeta(
+        name: 'test-plumy-mindustry-gradle-plugin-groovy',
+        displayName: 'Test Plumy Mindustry Gradle Plugin Groovy',
+        main: 'plumy.test.TestModGroovy',
+        author: 'Liplum'
+    )
+    meta.version = "groovy 3000"
+    meta.minGameVersion = "136"
 }
 
-tasks.named('antiAlias') {
+antiAlias {
     sourceDirectory = new File(rootDir, 'textures')
     destinationDirectory = new File(rootDir, 'AA')
     addFilter {

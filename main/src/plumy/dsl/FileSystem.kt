@@ -26,6 +26,13 @@ fun URL.copyTo(file: File): File {
     return file
 }
 
+fun File.ensure(): File {
+    parentFile?.mkdirs()
+    return this
+}
+fun File.sub(){
+
+}
 fun FileAt(
     vararg segments: String,
 ): File = StringBuilder().run {
@@ -50,4 +57,18 @@ fun Iterable<File>.mapFilesTo(
 ) {
     folder.mkdirs()
     forEach { it.copyTo(folder.resolve(it.name), overwrite) }
+}
+
+fun File.getFilesRecursive() = ArrayList<File>().apply {
+    forEachFilesRecursive { add(it) }
+}
+
+fun File.forEachFilesRecursive(func: (File) -> Unit) {
+    if (this.isDirectory) {
+        this.listFiles()?.forEach {
+            it.forEachFilesRecursive(func)
+        }
+    } else {
+        func(this)
+    }
 }

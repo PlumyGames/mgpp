@@ -33,9 +33,9 @@ open class DexJar : DefaultTask() {
         val jars = jarFiles.files
         // Check space in absolute path
         val jarToDexPaths = jars.map { it.absolutePath }.toList()
-        if(" " in dexedJarPath) throw GradleException("d8 doesn't allow a path with any space but the dexed jar's path is \"$dexedJarFile\" .")
-        for (jarPath in jarToDexPaths){
-            if(" " in jarPath)  throw GradleException("d8 doesn't allow a path with any space but the path of a jar to be dexed is \"$dexedJarFile\" .")
+        if (" " in dexedJarPath) throw GradleException("d8 doesn't allow a path with any space but the dexed jar's path is \"$dexedJarFile\" .")
+        for (jarPath in jarToDexPaths) {
+            if (" " in jarPath) throw GradleException("d8 doesn't allow a path with any space but the path of a jar to be dexed is \"$dexedJarFile\" .")
         }
         val sdkPath = sdkRoot.get()
         val sdkRootDir = File(sdkPath)
@@ -50,7 +50,7 @@ open class DexJar : DefaultTask() {
         // Check the default d8 command
         try {
             project.exec {
-                it.commandLine = listOf(d8)
+                it.commandLine = listOf(d8, "--help")
             }
         } catch (_: Exception) {
             logger.info("d8 isn't available on your platform, the absolute path of d8 will be found and utilized.")

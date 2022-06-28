@@ -85,3 +85,7 @@ inline fun <reified T> Project.new(): T =
 
 inline fun <reified T> DefaultTask.new(): T =
     project.new()
+internal
+fun Project.afterEvaluateThis(func: Project.() -> Unit) {
+    afterEvaluate(func)
+}

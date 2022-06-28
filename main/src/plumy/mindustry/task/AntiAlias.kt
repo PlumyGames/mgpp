@@ -40,7 +40,7 @@ open class AntiAlias : DefaultTask() {
         dest.deleteRecursively()
         dest.mkdirs()
         logger.info("Full anti-alias in ${sourceDirectory.asFile.get().absolutePath}")
-        sourceDirectory.asFileTree.performAA()
+        sourceDirectory.asFileTree.toList().performAA()
     }
 
     protected fun preformIncrementalAA(inputs: InputChanges) {
@@ -55,15 +55,15 @@ open class AntiAlias : DefaultTask() {
             } else {
                 it.file
             }
-        }.performAA()
+        }.toList().performAA()
     }
     /**
      * @receiver an iterable of all source textures to be anti-aliased
      */
-    protected fun Iterable<File>.performAA() {
+    protected fun Collection<File>.performAA() {
         val sourceRoot = sourceDirectory.asFile.get()
         val destDir = destinationDirectory.asFile.get()
-        this.forEach {
+        this.stream().parallel().forEach {
             if (!it.extension.equals("png", ignoreCase = true)) {
                 logger.info("$it isn't a png.")
                 return@forEach

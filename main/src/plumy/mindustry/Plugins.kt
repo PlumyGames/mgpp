@@ -3,7 +3,9 @@ package plumy.mindustry
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
+import org.gradle.configurationcache.extensions.capitalized
 import plumy.dsl.*
 import plumy.mindustry.task.*
 import java.io.File
@@ -16,6 +18,27 @@ class MindustryPlugin : Plugin<Project> {
             plugins.apply<MindustryJavaPlugin>()
         }
     }
+
+    companion object {
+        const val MindustryTaskGroup = "mindustry"
+        const val MindustryAssetTaskGroup = "mindustry assets"
+        const val MainExtensionName = "mindustry"
+        const val AssetExtensionName = "mindustryAsset"
+        const val MindustryDataDirEnv = "MINDUSTRY_DATA_DIR"
+        const val DefaultMinGameVersion = "135"
+        const val DefaultMindustryVersion = "v135"
+        const val DefaultArcVersion = "v135"
+        const val Anuken = "anuken"
+        const val Mindustry = "mindustry"
+        const val MindustryBuilds = "MindustryBuilds"
+        const val ClientReleaseName = "Mindustry.jar"
+        const val ServerReleaseName = "server-release.jar"
+        const val MindustryJitpackRepo = "com.github.anuken.mindustry"
+        const val MindustryJitpackMirrorRepo = "com.github.anuken.mindustryjitpack"
+        const val ArcJitpackRepo = "com.github.anuken.arc"
+        const val MindustryDesktopMainClass = "mindustry.desktop.DesktopLauncher"
+        const val MindustrySeverMainClass = "mindustry.server.ServerLauncher"
+    }
 }
 /**
  * It transports the Jar task output to running task.
@@ -23,7 +46,7 @@ class MindustryPlugin : Plugin<Project> {
 class MindustryJavaPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         val ex = extensions.getOrCreate<MindustryExtension>(
-            Meta.ExtensionName
+            MindustryPlugin.MainExtensionName
         )
         tasks.withType<RunMindustry> {
             outputtedMods.setFrom(
@@ -34,7 +57,7 @@ class MindustryJavaPlugin : Plugin<Project> {
         }
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")
-            group = Meta.TaskGroup
+            group = MindustryPlugin.MindustryTaskGroup
             dependsOn(JavaPlugin.JAR_TASK_NAME)
             classpath.setFrom(
                 configurations.compileClasspath,
@@ -45,7 +68,7 @@ class MindustryJavaPlugin : Plugin<Project> {
         }
 
         tasks.register<Jar>("deploy") {
-            group = Meta.TaskGroup
+            group = MindustryPlugin.MindustryTaskGroup
             dependsOn("jar")
             dependsOn("dexJar")
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
@@ -61,12 +84,15 @@ class MindustryJavaPlugin : Plugin<Project> {
 
 class MindustryAssetPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
-        val ex = extensions.getOrCreate<MindustryExtension>(
-            Meta.ExtensionName
+        val main = extensions.getOrCreate<MindustryExtension>(
+            MindustryPlugin.MainExtensionName
+        )
+        val assets = extensions.getOrCreate<MindustryAssetExtension>(
+            MindustryPlugin.AssetExtensionName
         )
         val genModHjson = tasks.register<ModHjsonGenerateTask>("genModHjson") {
-            group = Meta.TaskGroup
-            modMeta.set(ex.assets.modMeta)
+            group = MindustryPlugin.MindustryTaskGroup
+            modMeta.set(main.modMeta)
             outputHjson.set(temporaryDir.resolve("mod.hjson"))
         }
         plugins.whenHas<JavaPlugin> {
@@ -77,25 +103,77 @@ class MindustryAssetPlugin : Plugin<Project> {
             }
         }
         // Register this for dynamically configure tasks without class reference in groovy.
+        // Eagerly configure this task in order to be added into task group in IDE
         tasks.register<AntiAlias>("antiAlias") {
-            group = Meta.TaskGroup
+            group = MindustryPlugin.MindustryTaskGroup
         }.get()
+        val genResourceClass = tasks.register<RClassGenerate>("genResourceClass") {
+            this.group = MindustryPlugin.MindustryAssetTaskGroup
+            val name = assets.qualifiedName.get()
+            if (name == "default") {
+                val (packageName, _) = main.modMeta.get().main.packageAndClassName()
+                qualifiedName.set("$packageName.R")
+            } else {
+                qualifiedName.set(name)
+            }
+        }
+        target.afterEvaluateThis {
+            // Resolve all batches
+            val group2Batches = assets.batches.get().resolveBatches()
+            var jar: TaskProvider<Jar>? = null
+            plugins.whenHas<JavaPlugin> {
+                jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
+            }
+            var genResourceClassCounter = 0
+            for ((group, batches) in group2Batches) {
+                if (batches.isEmpty()) continue
+                jar?.configure {
+                    batches.forEach { batch ->
+                        val dir = batch.dir
+                        it.from(dir.parentFile) {
+                            it.include("${dir.name}/**")
+                        }
+                    }
+                }
+                if (!batches.any { it.genClass }) continue
+                val groupPascal = group.name.lowercase().capitalized()
+                val gen = tasks.register<ResourceClassGenerate>("gen${groupPascal}Class") {
+                    this.group = MindustryPlugin.MindustryAssetTaskGroup
+                    args.put("ModName", main.modMeta.get().name)
+                    generator = assets.getGenerator(group.generator)
+                    className.set(group.className)
+                    resources.setFrom(batches.map { it.dir })
+                }
+                genResourceClass.get().apply {
+                    dependsOn(gen)
+                    classFiles.from(gen)
+                }
+                genResourceClassCounter++
+            }
+            if (genResourceClassCounter > 0) {
+                plugins.whenHas<JavaPlugin> {
+                    tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME) {
+                        it.dependsOn(genResourceClass)
+                    }
+                }
+            }
+        }
     }
 }
 /**
  * For downloading and running game.
  */
 class MindustryAppPlugin : Plugin<Project> {
-    override fun apply(target: Project) = target.afterEvaluate {
-        it.run {
-            val ex = extensions.getOrCreate<MindustryExtension>(
-                Meta.ExtensionName
-            )
+    override fun apply(target: Project) {
+        val ex = target.extensions.getOrCreate<MindustryExtension>(
+            MindustryPlugin.MainExtensionName
+        )
+        target.afterEvaluateThis {
             // For client side
             val downloadClient = tasks.register<Download>(
                 "downloadClient",
             ) {
-                group = Meta.TaskGroup
+                group = MindustryPlugin.MindustryTaskGroup
                 ex.client.location.get().run {
                     location.set(
                         GitHubDownload.release(
@@ -114,7 +192,7 @@ class MindustryAppPlugin : Plugin<Project> {
             val downloadServer = tasks.register<Download>(
                 "downloadServer",
             ) {
-                group = Meta.TaskGroup
+                group = MindustryPlugin.MindustryTaskGroup
                 ex.server.location.get().run {
                     location.set(
                         GitHubDownload.release(
@@ -132,14 +210,14 @@ class MindustryAppPlugin : Plugin<Project> {
             val resolveMods = tasks.register<ResolveMods>(
                 "resolveMods"
             ) {
-                group = Meta.TaskGroup
+                group = MindustryPlugin.MindustryTaskGroup
                 mods.set(ex.mods.worksWith)
             }
             val runClient = tasks.register<RunMindustry>(
                 "runClient",
             ) {
-                group = Meta.TaskGroup
-                mainClass.convention(Meta.MindustryDesktopMainClass)
+                group = MindustryPlugin.MindustryTaskGroup
+                mainClass.convention(MindustryPlugin.MindustryDesktopMainClass)
                 classPath.setFrom(downloadClient.get())
                 modsWorkWith.setFrom(resolveMods.get())
                 dataModsPath.convention("mods")
@@ -154,8 +232,8 @@ class MindustryAppPlugin : Plugin<Project> {
             val runServer = tasks.register<RunMindustry>(
                 "runServer",
             ) {
-                group = Meta.TaskGroup
-                mainClass.convention(Meta.MindustrySeverMainClass)
+                group = MindustryPlugin.MindustryTaskGroup
+                mainClass.convention(MindustryPlugin.MindustrySeverMainClass)
                 classPath.setFrom(downloadServer.get())
                 modsWorkWith.setFrom(resolveMods.get())
                 dataModsPath.convention("config/mods")
