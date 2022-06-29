@@ -201,6 +201,32 @@ class DependencySpec(
     }
     val arc = ArcSpec(this)
     val mindustry = MindustrySpec(this)
+    fun arc(version: String) {
+        arcDependency.set(ArcDependency(version))
+    }
+
+    fun mindustry(version: String) {
+        mindustryDependency.set(MindustryDependency(version))
+    }
+
+    fun mindustryMirror(version: String) {
+        mindustryDependency.set(MirrorDependency(version))
+    }
+
+    fun arc(map: Map<String, Any>) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc`")
+        arcDependency.set(ArcDependency(version))
+    }
+
+    fun mindustry(map: Map<String, Any>) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry`")
+        mindustryDependency.set(MindustryDependency(version))
+    }
+
+    fun mindustryMirror(map: Map<String, Any>) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustryMirror`")
+        mindustryDependency.set(MirrorDependency(version))
+    }
 
     companion object {
         @JvmStatic
@@ -229,7 +255,12 @@ class DependencySpec(
     }
 
     class ArcSpec(val dpSpec: DependencySpec) {
+
         infix fun on(version: String) {
+            dpSpec.arcDependency.set(ArcDependency(version))
+        }
+        fun on(map: Map<String, Any>) {
+            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc.on`")
             dpSpec.arcDependency.set(ArcDependency(version))
         }
     }
@@ -239,18 +270,17 @@ class DependencySpec(
             dpSpec.mindustryDependency.set(MirrorDependency(version))
         }
 
-        infix fun mirror(map: Map<String, Any>) {
-            val version = map["version"]?.toString() ?: throw GradleException("No version specified in `useMirror`")
-            mirror(version = version)
-        }
-
         infix fun on(version: String) {
             dpSpec.mindustryDependency.set(MindustryDependency(version))
         }
+        fun mirror(map: Map<String, Any>) {
+            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.mirror`")
+            dpSpec.mindustryDependency.set(MirrorDependency(version))
+        }
 
-        infix fun on(map: Map<String, Any>) {
-            val version = map["version"]?.toString() ?: throw GradleException("No version specified in `mindustry`")
-            on(version)
+        fun on(map: Map<String, Any>) {
+            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.on`")
+            dpSpec.mindustryDependency.set(MindustryDependency(version))
         }
     }
 }

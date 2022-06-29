@@ -32,7 +32,7 @@ ___
         projectType = Mod
            dependency {
             mindustry version: 'v135'
-            // useMirror version: 'd7312445a1'
+            // mirror version: 'd7312445a1'
             arc version: '123fbf12b9'
         }
         client {
@@ -66,21 +66,21 @@ ___
     ```
     ```kotlin
     // Kotlin as DSL
-    import plumy.mindustry.mindustry
+    import plumy.mindustry.*
     mindustry {
         projectType.set(Mod)
         dependency {
-            mindustry(version = "v135")
-            // useMirror(version = "d7312445a1")
-            arc(version = "123fbf12b9")
+            mindustry on "v135"
+            // mindustry mirror "d7312445a1"
+            arc on "123fbf12b9"
         }
         client {
-            official(version = "v135")
-            // be(version = "22714")
+            mindustry official "v135"
+            // mindustry be "22728"
         }
         server {
-            official(version = "v135")
-            // be(version = "22714")
+            mindustry official "v135"
+            // mindustry be "22728"
         }
         assets {
             // This affects only the output jar. And as default,
@@ -95,7 +95,7 @@ ___
         mods {
             // You can import some mods to work with this mod in here.
             worksWith {
-                github("liplum/cyberio")
+                add github "liplum/cyberio"
             }
         }
         deploy {
