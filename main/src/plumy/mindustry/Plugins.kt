@@ -4,7 +4,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.UnknownTaskException
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.configurationcache.extensions.capitalized
@@ -225,62 +224,37 @@ class MindustryAppPlugin : Plugin<Project> {
                 mods.set(ex.mods.worksWith)
             }
             val dataDirEx = ex.run.dataDir.get()
-            val runClient = tasks.register<JavaExec>("runClient") {
+            val runClient = tasks.register<RunMindustry>("runClient") {
                 group = MindustryPlugin.MindustryTaskGroup
-                dependsOn("downloadClient")
-                dependsOn
-                val dataDir = if (dataDirEx.isNotBlank() && dataDirEx != "temp")
-                    File(dataDirEx)
-                else if (dataDirEx == "temp")
-                    temporaryDir.resolve("data")
-                else // Default data directory
-                    resolveDefaultDataDir()
-                dataDir.mkdirs()
-                val mods = dataDir.resolve("mods")
-                mainClass.set("-jar")
-                standardInput = System.`in`
-                val modsWorkWith = project.files()
+                dependsOn(downloadClient)
+                dataDir.set(
+                    if (dataDirEx.isNotBlank() && dataDirEx != "temp")
+                        File(dataDirEx)
+                    else if (dataDirEx == "temp")
+                        temporaryDir.resolve("data")
+                    else // Default data directory
+                        resolveDefaultDataDir()
+                )
+                mindustryFile.setFrom(downloadClient)
                 modsWorkWith.setFrom(resolveMods)
-                val outputtedMods = project.files()
+                dataModsPath.set("mods")
                 ex.mods.extraModsFromTask.get().forEach {
                     outputtedMods.setFrom(tasks.getByName(it))
-                    dependsOn(it)
                 }
-                doFirst {
-                    mods.delete()
-                    mods.mkdirs()
-                    modsWorkWith.mapFilesTo(mods)
-                    outputtedMods.mapFilesTo(mods)
-                }
-                environment[MindustryPlugin.MindustryDataDirEnv] = dataDir.absoluteFile
-                args = listOf(downloadClient.get().outputs.files.singleFile.absolutePath)
             }
-/*            val runClient = tasks.register<RunMindustry>(
-                "runClient",
+            val runServer = tasks.register<RunMindustry>(
+                "runServer",
             ) {
                 group = MindustryPlugin.MindustryTaskGroup
-                mainClass.convention(MindustryPlugin.MindustryDesktopMainClass)
-                gameFile.setFrom(downloadClient.get())
-                modsWorkWith.setFrom(resolveMods.get())
-                dataModsPath.convention("mods")
-                val dataDirEx = ex.run.dataDir.get()
-                if (dataDirEx.isNotBlank()) {
-                    if (dataDirEx == "temp")
-                        dataOnTemporary()
-                    else
-                        dataDir.set(dirProv { File(dataDirEx) })
+                dependsOn(downloadServer)
+                mainClass.convention(MindustryPlugin.MindustrySeverMainClass)
+                mindustryFile.setFrom(downloadServer)
+                modsWorkWith.setFrom(resolveMods)
+                dataModsPath.convention("config/mods")
+                ex.mods.extraModsFromTask.get().forEach {
+                    outputtedMods.setFrom(tasks.getByName(it))
                 }
-            }*/
-            /*  val runServer = tasks.register<RunMindustry>(
-                  "runServer",
-              ) {
-                  group = MindustryPlugin.MindustryTaskGroup
-                  mainClass.convention(MindustryPlugin.MindustrySeverMainClass)
-                  gameFile.setFrom(downloadServer.get())
-                  modsWorkWith.setFrom(resolveMods.get())
-                  dataModsPath.convention("config/mods")
-              }
-          }*/
+            }
         }
     }
 }
