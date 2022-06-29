@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import plumy.mindustry.*
 import plumy.mindustry.task.AntiAlias
-import plumy.mindustry.task.RunMindustry
 
 buildscript {
     repositories {
@@ -42,24 +41,18 @@ repositories {
 
 mindustry {
     dependency {
-        useMirror(version = "d7312445a1")
-        arc(version = "123fbf12b9")
+        mindustry mirror "d7312445a1"
+        arc on "123fbf12b9"
     }
     client {
-        be(version = "22714")
+        mindustry be "22728"
     }
     server {
-        be(version = "22714")
+        mindustry be "22728"
     }
     mods {
-        /* This can work
-        worksWith(
-            GitHub("liplum/cyberio"),
-        )
-        */
-        // also you can
         worksWith {
-            github("liplum/cyberio")
+            add github "liplum/cyberio"
         }
     }
     modMeta(
@@ -74,11 +67,17 @@ mindustry {
 mindustryAsset {
     sprites {
         dir = rootDir.resolve("sprites")
-        genClass = true
+        dependsOn("antiAlias")
+    }
+    sprites {
+        dir = rootDir.resolve("sprites/data")
+        rootAt(rootDir.resolve("sprites"))
+        dependsOn("antiAlias")
+        genClass
     }
 }
 
-tasks.named("genResourceClass"){
+tasks.named("genResourceClass") {
     dependsOn("antiAlias")
 }
 
@@ -94,10 +93,6 @@ tasks.named<AntiAlias>("antiAlias") {
 dependencies {
     testImplementation(kotlin("test"))
     importMindustry()
-}
-
-tasks.withType<RunMindustry> {
-    dataOnTemporary()
 }
 
 tasks.withType<Jar> {

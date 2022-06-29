@@ -11,7 +11,7 @@ import java.io.File
 open class ResolveMods : DefaultTask() {
     val mods = project.listProp<IMod>()
         @Input get
-    val downloadedMos: List<File>
+    val downloadedMods: List<File>
         @OutputFiles get() = mods.get().map { it.mapLocalFile(temporaryDir) }
     @TaskAction
     fun resolve() {

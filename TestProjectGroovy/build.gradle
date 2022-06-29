@@ -36,14 +36,14 @@ sourceSets {
 }
 mindustry {
     dependency {
-        useMirror version: 'd7312445a1'
-        arc version: '123fbf12b9'
+        mindustry.mirror 'd7312445a1'
+        arc.on '123fbf12b9'
     }
     client {
-        be version: '22714'
+        mindustry.be '22714'
     }
     server {
-        be version: '22714'
+        mindustry.be '22714'
     }
     mods {
         worksWith {

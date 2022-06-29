@@ -2,7 +2,9 @@ package plumy.mindustry
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.UnknownTaskException
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.configurationcache.extensions.capitalized
@@ -38,6 +40,7 @@ class MindustryPlugin : Plugin<Project> {
         const val ArcJitpackRepo = "com.github.anuken.arc"
         const val MindustryDesktopMainClass = "mindustry.desktop.DesktopLauncher"
         const val MindustrySeverMainClass = "mindustry.server.ServerLauncher"
+        val DefaultEmptyFile = File("")
     }
 }
 /**
@@ -48,13 +51,6 @@ class MindustryJavaPlugin : Plugin<Project> {
         val ex = extensions.getOrCreate<MindustryExtension>(
             MindustryPlugin.MainExtensionName
         )
-        tasks.withType<RunMindustry> {
-            outputtedMods.setFrom(
-                *ex.mods.extraModsFromTask.get().map {
-                    tasks.named(it)
-                }.toTypedArray()
-            )
-        }
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")
             group = MindustryPlugin.MindustryTaskGroup
@@ -130,19 +126,27 @@ class MindustryAssetPlugin : Plugin<Project> {
                 jar?.configure {
                     batches.forEach { batch ->
                         val dir = batch.dir
-                        it.from(dir.parentFile) {
-                            it.include("${dir.name}/**")
+                        val root = batch.root
+                        if (root == MindustryPlugin.DefaultEmptyFile) {
+                            it.from(dir.parentFile) {
+                                it.include("${dir.name}/**")
+                            }
+                        } else { // relative path
+                            it.from(root) {
+                                it.include("$dir/**")
+                            }
                         }
                     }
                 }
-                if (!batches.any { it.genClass }) continue
+                if (!batches.any { it.enableGenClass }) continue
                 val groupPascal = group.name.lowercase().capitalized()
                 val gen = tasks.register<ResourceClassGenerate>("gen${groupPascal}Class") {
                     this.group = MindustryPlugin.MindustryAssetTaskGroup
+                    dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
                     args.put("ModName", main.modMeta.get().name)
                     generator = assets.getGenerator(group.generator)
                     className.set(group.className)
-                    resources.setFrom(batches.map { it.dir })
+                    resources.setFrom(batches.filter { it.enableGenClass }.map { it.dir })
                 }
                 genResourceClass.get().apply {
                     dependsOn(gen)
@@ -151,10 +155,17 @@ class MindustryAssetPlugin : Plugin<Project> {
                 genResourceClassCounter++
             }
             if (genResourceClassCounter > 0) {
-                plugins.whenHas<JavaPlugin> {
+                try {
                     tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME) {
                         it.dependsOn(genResourceClass)
                     }
+                    tasks.named("compileKotlin") {
+                        it.dependsOn(genResourceClass)
+                    }
+                    tasks.named("compileGroovy") {
+                        it.dependsOn(genResourceClass)
+                    }
+                } catch (_: UnknownTaskException) {
                 }
             }
         }
@@ -213,12 +224,43 @@ class MindustryAppPlugin : Plugin<Project> {
                 group = MindustryPlugin.MindustryTaskGroup
                 mods.set(ex.mods.worksWith)
             }
-            val runClient = tasks.register<RunMindustry>(
+            val dataDirEx = ex.run.dataDir.get()
+            val runClient = tasks.register<JavaExec>("runClient") {
+                group = MindustryPlugin.MindustryTaskGroup
+                dependsOn("downloadClient")
+                dependsOn
+                val dataDir = if (dataDirEx.isNotBlank() && dataDirEx != "temp")
+                    File(dataDirEx)
+                else if (dataDirEx == "temp")
+                    temporaryDir.resolve("data")
+                else // Default data directory
+                    resolveDefaultDataDir()
+                dataDir.mkdirs()
+                val mods = dataDir.resolve("mods")
+                mainClass.set("-jar")
+                standardInput = System.`in`
+                val modsWorkWith = project.files()
+                modsWorkWith.setFrom(resolveMods)
+                val outputtedMods = project.files()
+                ex.mods.extraModsFromTask.get().forEach {
+                    outputtedMods.setFrom(tasks.getByName(it))
+                    dependsOn(it)
+                }
+                doFirst {
+                    mods.delete()
+                    mods.mkdirs()
+                    modsWorkWith.mapFilesTo(mods)
+                    outputtedMods.mapFilesTo(mods)
+                }
+                environment[MindustryPlugin.MindustryDataDirEnv] = dataDir.absoluteFile
+                args = listOf(downloadClient.get().outputs.files.singleFile.absolutePath)
+            }
+/*            val runClient = tasks.register<RunMindustry>(
                 "runClient",
             ) {
                 group = MindustryPlugin.MindustryTaskGroup
                 mainClass.convention(MindustryPlugin.MindustryDesktopMainClass)
-                classPath.setFrom(downloadClient.get())
+                gameFile.setFrom(downloadClient.get())
                 modsWorkWith.setFrom(resolveMods.get())
                 dataModsPath.convention("mods")
                 val dataDirEx = ex.run.dataDir.get()
@@ -228,16 +270,29 @@ class MindustryAppPlugin : Plugin<Project> {
                     else
                         dataDir.set(dirProv { File(dataDirEx) })
                 }
-            }
-            val runServer = tasks.register<RunMindustry>(
-                "runServer",
-            ) {
-                group = MindustryPlugin.MindustryTaskGroup
-                mainClass.convention(MindustryPlugin.MindustrySeverMainClass)
-                classPath.setFrom(downloadServer.get())
-                modsWorkWith.setFrom(resolveMods.get())
-                dataModsPath.convention("config/mods")
-            }
+            }*/
+            /*  val runServer = tasks.register<RunMindustry>(
+                  "runServer",
+              ) {
+                  group = MindustryPlugin.MindustryTaskGroup
+                  mainClass.convention(MindustryPlugin.MindustrySeverMainClass)
+                  gameFile.setFrom(downloadServer.get())
+                  modsWorkWith.setFrom(resolveMods.get())
+                  dataModsPath.convention("config/mods")
+              }
+          }*/
         }
+    }
+}
+
+fun Project.resolveDefaultDataDir(): File {
+    return when (getOs()) {
+        OS.Unknown -> {
+            logger.warn("Can't recognize your operation system.")
+            MindustryPlugin.DefaultEmptyFile
+        }
+        OS.Windows -> FileAt(System.getenv("AppData"), "Mindustry")
+        OS.Linux -> FileAt(System.getenv("XDG_DATA_HOME") ?: System.getenv("HOME"), ".local", "share", "Mindustry")
+        OS.Mac -> FileAt(System.getenv("HOME"), "Library", "Application Support", "Mindustry")
     }
 }

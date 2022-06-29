@@ -185,6 +185,23 @@ open class MindustryExtension(
 class DependencySpec(
     target: Project,
 ) {
+    /**
+     * Import v135 as default for now.
+     * DO NOT trust this behavior, it may change later.
+     */
+    val arcDependency = target.prop<IDependency>().apply {
+        convention(ArcDependency())
+    }
+    /**
+     * Import v135 as default for now.
+     * DO NOT trust this behavior, it may change later.
+     */
+    val mindustryDependency = target.prop<IDependency>().apply {
+        convention(MindustryDependency())
+    }
+    val arc = ArcSpec(this)
+    val mindustry = MindustrySpec(this)
+
     companion object {
         @JvmStatic
         val ArcRepo = MindustryPlugin.ArcJitpackRepo
@@ -192,77 +209,50 @@ class DependencySpec(
         val MindustryMirrorRepo = MindustryPlugin.MindustryJitpackMirrorRepo
         @JvmStatic
         val MindustryRepo = MindustryPlugin.MindustryJitpackRepo
-    }
-    /**
-     * Import v135 as default for now.
-     * DO NOT trust this behavior, it may change later.
-     */
-    val arc = target.prop<IDependency>().apply {
-        convention(ArcDependency())
-    }
-    /**
-     * Import v135 as default for now.
-     * DO NOT trust this behavior, it may change later.
-     */
-    val mindustry = target.prop<IDependency>().apply {
-        convention(MindustryDependency())
-    }
-
-    fun MirrorDependency(
-        version: String = "",
-    ) = MirrorJitpackDependency(MindustryPlugin.MindustryJitpackMirrorRepo, version)
-
-    fun useMirror(
-        version: String = "",
-    ) {
-        mindustry.set(MirrorDependency(version))
+        @JvmStatic
+        fun ArcDependency(
+            version: String = MindustryPlugin.DefaultMindustryVersion,
+        ) = Dependency(MindustryPlugin.ArcJitpackRepo, version)
+        @JvmStatic
+        fun MindustryDependency(
+            version: String = MindustryPlugin.DefaultMindustryVersion,
+        ) = Dependency(MindustryPlugin.MindustryJitpackRepo, version)
+        @JvmStatic
+        fun Dependency(
+            fullName: String = "",
+            version: String = "",
+        ) = plumy.mindustry.Dependency(fullName, version)
+        @JvmStatic
+        fun MirrorDependency(
+            version: String = "",
+        ) = MirrorJitpackDependency(MindustryPlugin.MindustryJitpackMirrorRepo, version)
     }
 
-    fun useMirror(
-        map: Map<String, Any>,
-    ) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `useMirror`")
-        useMirror(version = version)
+    class ArcSpec(val dpSpec: DependencySpec) {
+        infix fun on(version: String) {
+            dpSpec.arcDependency.set(ArcDependency(version))
+        }
     }
 
-    fun mindustry(
-        version: String = "",
-    ) {
-        mindustry.set(MindustryDependency(version))
+    class MindustrySpec(val dpSpec: DependencySpec) {
+        infix fun mirror(version: String) {
+            dpSpec.mindustryDependency.set(MirrorDependency(version))
+        }
+
+        infix fun mirror(map: Map<String, Any>) {
+            val version = map["version"]?.toString() ?: throw GradleException("No version specified in `useMirror`")
+            mirror(version = version)
+        }
+
+        infix fun on(version: String) {
+            dpSpec.mindustryDependency.set(MindustryDependency(version))
+        }
+
+        infix fun on(map: Map<String, Any>) {
+            val version = map["version"]?.toString() ?: throw GradleException("No version specified in `mindustry`")
+            on(version)
+        }
     }
-
-    fun mindustry(
-        map: Map<String, Any>,
-    ) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `mindustry`")
-        mindustry(version)
-    }
-
-    fun arc(
-        version: String = "",
-    ) {
-        arc.set(ArcDependency(version))
-    }
-
-    fun arc(
-        map: Map<String, Any>,
-    ) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `arc`")
-        arc(version = version)
-    }
-
-    fun ArcDependency(
-        version: String = MindustryPlugin.DefaultMindustryVersion,
-    ) = Dependency(MindustryPlugin.ArcJitpackRepo, version)
-
-    fun MindustryDependency(
-        version: String = MindustryPlugin.DefaultMindustryVersion,
-    ) = Dependency(MindustryPlugin.MindustryJitpackRepo, version)
-
-    fun Dependency(
-        fullName: String = "",
-        version: String = "",
-    ) = plumy.mindustry.Dependency(fullName, version)
 }
 
 interface IGameLocationSpec {
@@ -272,6 +262,11 @@ interface IGameLocationSpec {
         version: String = "",
         release: String = "",
     ) = plumy.mindustry.GameLocation(user, repo, version, release)
+
+    infix fun official(version: String)
+    infix fun be(version: String)
+    infix fun official(map: Map<String, Any>)
+    infix fun be(map: Map<String, Any>)
 }
 
 class ClientSpec(
@@ -286,9 +281,11 @@ class ClientSpec(
             )
         )
     }
+    val mindustry: ClientSpec
+        get() = this
 
-    fun official(
-        version: String = "",
+    override infix fun official(
+        version: String,
     ) {
         location.set(
             GameLocation(
@@ -299,8 +296,8 @@ class ClientSpec(
         )
     }
 
-    fun be(
-        version: String = "",
+    override infix fun be(
+        version: String,
     ) {
         location.set(
             GameLocation(
@@ -310,14 +307,14 @@ class ClientSpec(
         )
     }
 
-    fun official(
+    override infix fun official(
         map: Map<String, Any>,
     ) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
         official(version)
     }
 
-    fun be(
+    override infix fun be(
         map: Map<String, Any>,
     ) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
@@ -337,9 +334,11 @@ class ServerSpec(
             )
         )
     }
+    val mindustry: ServerSpec
+        get() = this
 
-    fun official(
-        version: String = "",
+    override infix fun official(
+        version: String,
     ) {
         location.set(
             GameLocation(
@@ -350,8 +349,8 @@ class ServerSpec(
         )
     }
 
-    fun be(
-        version: String = "",
+    override infix fun be(
+        version: String,
     ) {
         location.set(
             GameLocation(
@@ -361,14 +360,14 @@ class ServerSpec(
         )
     }
 
-    fun official(
+    override infix fun official(
         map: Map<String, Any>,
     ) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
         official(version)
     }
 
-    fun be(
+    override infix fun be(
         map: Map<String, Any>,
     ) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
@@ -380,11 +379,17 @@ class ModsSpec(
     target: Project,
 ) {
     val extraModsFromTask = target.stringsProp().apply {
-        convention(listOf(JavaPlugin.JAR_TASK_NAME))
+        convention(
+            if (target.plugins.hasPlugin(JavaPlugin::class.java))
+                listOf(JavaPlugin.JAR_TASK_NAME)
+            else emptyList()
+        )
     }
     val worksWith = target.listProp<IMod>().apply {
         convention(HashSet())
     }
+    val add: ModsSpec
+        get() = this
 
     fun worksWith(config: Runnable) {
         config.run()
@@ -394,15 +399,15 @@ class ModsSpec(
         config()
     }
 
-    fun github(repo: String) {
+    infix fun github(repo: String) {
         worksWith.add(GitHubMod(repo))
     }
 
-    fun local(path: String) {
+    infix fun local(path: String) {
         worksWith.add(LocalMod(path))
     }
 
-    fun url(url: String) {
+    infix fun url(url: String) {
         worksWith.add(UrlMod(url))
     }
     /**
@@ -434,9 +439,11 @@ class ModsSpec(
         throw RuntimeException("Unknown mod type from $map")
     }
 
-    fun GitHub(repo: String) = GitHubMod(repo)
-    fun Local(path: String) = LocalMod(path)
-    fun Url(url: String) = UrlMod(url)
+    companion object {
+        fun GitHub(repo: String) = GitHubMod(repo)
+        fun Local(path: String) = LocalMod(path)
+        fun Url(url: String) = UrlMod(url)
+    }
 }
 
 class DeploySpec(
@@ -451,13 +458,17 @@ class RunSpec(
     target: Project,
 ) {
     val dataDir = target.stringProp().apply {
-        convention("")
+        convention("temp")
     }
     var DataDir: String
         get() = dataDir.getOrElse("")
         set(value) {
             dataDir.set(value)
         }
+
+    fun setDataDefault() {
+        dataDir.set("")
+    }
 
     fun setDataTemp() {
         dataDir.set("temp")

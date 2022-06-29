@@ -1,5 +1,6 @@
 package plumy.mindustry
 
+import org.gradle.api.Action
 import org.gradle.api.Project
 import plumy.dsl.listProp
 import plumy.dsl.stringProp
@@ -15,6 +16,7 @@ open class MindustryAssetExtension(
     val generators = HashMap<String, IResourceClassGenerator>(
         mapOf("DefaultSprite" to SpritesGenerator)
     )
+
     fun getGenerator(name: String) =
         generators[name] ?: IResourceClassGenerator.Empty
 
@@ -67,6 +69,51 @@ open class MindustryAssetExtension(
         batches.add(newBatch)
     }
 
+    fun sounds(
+        configBatch: Action<AssetBatch>,
+    ) {
+        val newBatch = AssetBatch().also {
+            it.group = "sounds"
+            it.className = "Sound"
+        }
+        configBatch.execute(newBatch)
+        batches.add(newBatch)
+    }
+
+    fun sprites(
+        configBatch: Action<AssetBatch>,
+    ) {
+        val newBatch = AssetBatch().also {
+            it.group = "sprites"
+            it.className = "Sprite"
+            it.generator = "DefaultSprite"
+        }
+        configBatch.execute(newBatch)
+        batches.add(newBatch)
+    }
+
+    fun bundles(
+        configBatch: Action<AssetBatch>,
+    ) {
+        val newBatch = AssetBatch().also {
+            it.group = "bundles"
+            it.className = "Bundle"
+        }
+        configBatch.execute(newBatch)
+        batches.add(newBatch)
+    }
+
+    fun shaders(
+        configBatch: Action<AssetBatch>,
+    ) {
+        val newBatch = AssetBatch().also {
+            it.group = "shaders"
+            it.className = "Shader"
+        }
+        configBatch.execute(newBatch)
+        batches.add(newBatch)
+    }
+
     inline operator fun String.invoke(
         configBatch: AssetBatch.() -> Unit,
     ) {
@@ -86,9 +133,32 @@ data class AssetBatch(
     var group: String = "",
     var className: String = "",
     var generator: String = "",
-    var genClass: Boolean = false,
+    var enableGenClass: Boolean = false,
     var dir: File = File(""),
-) : Serializable
+    var root: File = MindustryPlugin.DefaultEmptyFile,
+    var dependsOn: ArrayList<Any> = ArrayList(),
+) : Serializable {
+    fun dependsOn(task: Any) {
+        dependsOn.add(task)
+    }
+
+    fun rootAt(path: String) {
+        root = File(path)
+    }
+
+    fun rootAt(file: File) {
+        root = file
+    }
+
+    val noGenClass: Unit
+        get() {
+            enableGenClass = false
+        }
+    val genClass: Unit
+        get() {
+            enableGenClass = true
+        }
+}
 
 class AssetBatchType(
     val extension: MindustryAssetExtension,

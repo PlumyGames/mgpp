@@ -30,9 +30,7 @@ fun File.ensure(): File {
     parentFile?.mkdirs()
     return this
 }
-fun File.sub(){
 
-}
 fun FileAt(
     vararg segments: String,
 ): File = StringBuilder().run {
@@ -45,18 +43,22 @@ fun FileAt(
     File(this.toString())
 }
 
-fun File.mapTo(folder: File, overwrite: Boolean = false) {
+fun File.mapTo(folder: File, overwrite: Boolean = true) {
     val target = folder.resolve(name)
     folder.mkdirs()
     if (!target.exists() || overwrite)
-        this.copyTo(target)
+        this.copyTo(target, true)
 }
 
 fun Iterable<File>.mapFilesTo(
     folder: File, overwrite: Boolean = true,
 ) {
     folder.mkdirs()
-    forEach { it.copyTo(folder.resolve(it.name), overwrite) }
+    forEach {
+        val target = folder.resolve(it.name)
+        if (!target.exists() || overwrite)
+            it.copyTo(target, true)
+    }
 }
 
 fun File.getFilesRecursive() = ArrayList<File>().apply {

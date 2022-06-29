@@ -15,6 +15,9 @@ class TestModKt : Mod() {
 
     override fun init() {
         Log.info("TestMod inited.")
+        if (!Vars.headless) {
+            R.Sprite.load()
+        }
         Events.on(ClientLoadEvent::class.java) {
             BaseDialog("Test Mod Kt 666").apply {
                 cont.add(Image(R.Sprite.smartDistributor))
@@ -25,8 +28,6 @@ class TestModKt : Mod() {
 
     override fun loadContent() {
         Log.info("TestMod content loaded.")
-        if (!Vars.headless) {
-            R.Sprite.load()
-        }
     }
 }
+
