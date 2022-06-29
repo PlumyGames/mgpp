@@ -26,12 +26,12 @@ fun Project.`mindustry`(configure: Action<MindustryExtension>): Unit =
 /**
  * Retrieves the [mindustry][MindustryExtension] extension.
  */
-val Project.`mindustryAsset`: MindustryAssetExtension
-    get() = (this as ExtensionAware).extensions.getByName(MindustryPlugin.AssetExtensionName) as MindustryAssetExtension
+val Project.`mindustryAssets`: MindustryAssetsExtension
+    get() = (this as ExtensionAware).extensions.getByName(MindustryPlugin.AssetExtensionName) as MindustryAssetsExtension
 /**
  * Configures the [mindustry][MindustryExtension] extension.
  */
-fun Project.`mindustryAsset`(configure: Action<MindustryAssetExtension>): Unit =
+fun Project.`mindustryAssets`(configure: Action<MindustryAssetsExtension>): Unit =
     (this as ExtensionAware).extensions.configure(MindustryPlugin.AssetExtensionName, configure)
 
 open class MindustryExtension(
@@ -449,9 +449,29 @@ class ModsSpec(
 class DeploySpec(
     target: Project,
 ) {
+    val outputJarName = target.stringProp().apply {
+        convention("")
+    }
+    val jarClassifier = target.stringProp().apply {
+        convention("")
+    }
     val androidSdkRoot = target.stringProp().apply {
         convention(System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: "")
     }
+    // For Groovy
+    fun propertyMissing(property: String): Any? =
+        when (property) {
+            "outputName" -> outputJarName.get()
+            "classifier" -> jarClassifier.get()
+            else -> null
+        }
+    // For Groovy
+    fun propertyMissing(property: String, value: Any): Any? =
+        when (property) {
+            "outputName" -> outputJarName.set(value.toString())
+            "classifier" -> jarClassifier.set(value.toString())
+            else -> null
+        }
 }
 
 class RunSpec(

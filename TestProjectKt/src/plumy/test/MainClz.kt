@@ -2,6 +2,7 @@ package plumy.test
 
 import arc.Events
 import arc.scene.ui.Image
+import arc.scene.ui.layout.Table
 import arc.util.Log
 import mindustry.Vars
 import mindustry.game.EventType.ClientLoadEvent
@@ -17,10 +18,19 @@ class TestModKt : Mod() {
         Log.info("TestMod inited.")
         if (!Vars.headless) {
             R.Sprite.load()
+            R.Sound.load()
         }
         Events.on(ClientLoadEvent::class.java) {
             BaseDialog("Test Mod Kt 666").apply {
-                cont.add(Image(R.Sprite.smartDistributor))
+                cont.add(Image(R.Sprite.smartDistributor)).row()
+                cont.add(Table().apply {
+                    button("Click ME!") {
+                        R.Sound.success.play()
+                    }.width(150f)
+                    button("Aho") {
+                        R.Sound.aho.play()
+                    }.width(100f)
+                })
                 addCloseButton()
             }.show()
         }

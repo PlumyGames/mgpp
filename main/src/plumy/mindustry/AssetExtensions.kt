@@ -7,16 +7,19 @@ import plumy.dsl.stringProp
 import java.io.File
 import java.io.Serializable
 
-open class MindustryAssetExtension(
+open class MindustryAssetsExtension(
     target: Project,
 ) {
     val qualifiedName = target.stringProp().apply {
         convention("default")
     }
     val generators = HashMap<String, IResourceClassGenerator>(
-        mapOf("DefaultSprite" to SpritesGenerator)
+        mapOf(
+            "DefaultSprite" to SpritesGenerator,
+            "DefaultSound" to SoundsGenerator,
+        )
     )
-
+    val args = HashMap<String,String>()
     fun getGenerator(name: String) =
         generators[name] ?: IResourceClassGenerator.Empty
 
@@ -30,8 +33,21 @@ open class MindustryAssetExtension(
         val newBatch = AssetBatch().also {
             it.group = "sounds"
             it.className = "Sound"
+            it.generator = "DefaultSound"
         }
         newBatch.configBatch()
+        batches.add(newBatch)
+    }
+
+    fun sounds(
+        configBatch: Action<AssetBatch>,
+    ) {
+        val newBatch = AssetBatch().also {
+            it.group = "sounds"
+            it.className = "Sound"
+            it.generator = "DefaultSound"
+        }
+        configBatch.execute(newBatch)
         batches.add(newBatch)
     }
 
@@ -47,39 +63,6 @@ open class MindustryAssetExtension(
         batches.add(newBatch)
     }
 
-    inline fun bundles(
-        configBatch: AssetBatch.() -> Unit,
-    ) {
-        val newBatch = AssetBatch().also {
-            it.group = "bundles"
-            it.className = "Bundle"
-        }
-        newBatch.configBatch()
-        batches.add(newBatch)
-    }
-
-    inline fun shaders(
-        configBatch: AssetBatch.() -> Unit,
-    ) {
-        val newBatch = AssetBatch().also {
-            it.group = "shaders"
-            it.className = "Shader"
-        }
-        newBatch.configBatch()
-        batches.add(newBatch)
-    }
-
-    fun sounds(
-        configBatch: Action<AssetBatch>,
-    ) {
-        val newBatch = AssetBatch().also {
-            it.group = "sounds"
-            it.className = "Sound"
-        }
-        configBatch.execute(newBatch)
-        batches.add(newBatch)
-    }
-
     fun sprites(
         configBatch: Action<AssetBatch>,
     ) {
@@ -92,6 +75,17 @@ open class MindustryAssetExtension(
         batches.add(newBatch)
     }
 
+    inline fun bundles(
+        configBatch: AssetBatch.() -> Unit,
+    ) {
+        val newBatch = AssetBatch().also {
+            it.group = "bundles"
+            it.className = "Bundle"
+        }
+        newBatch.configBatch()
+        batches.add(newBatch)
+    }
+
     fun bundles(
         configBatch: Action<AssetBatch>,
     ) {
@@ -100,6 +94,17 @@ open class MindustryAssetExtension(
             it.className = "Bundle"
         }
         configBatch.execute(newBatch)
+        batches.add(newBatch)
+    }
+
+    inline fun shaders(
+        configBatch: AssetBatch.() -> Unit,
+    ) {
+        val newBatch = AssetBatch().also {
+            it.group = "shaders"
+            it.className = "Shader"
+        }
+        newBatch.configBatch()
         batches.add(newBatch)
     }
 
@@ -161,11 +166,23 @@ data class AssetBatch(
 }
 
 class AssetBatchType(
-    val extension: MindustryAssetExtension,
+    val extension: MindustryAssetsExtension,
     var group: String = "",
     var className: String = "",
 ) {
+    // For Kotlin
     inline operator fun invoke(
+        configBatch: AssetBatch.() -> Unit,
+    ) {
+        val newBatch = AssetBatch().also {
+            it.group = group
+            it.className = className
+        }
+        newBatch.configBatch()
+        extension.batches.add(newBatch)
+    }
+    // For Groovy
+    fun call(
         configBatch: AssetBatch.() -> Unit,
     ) {
         val newBatch = AssetBatch().also {

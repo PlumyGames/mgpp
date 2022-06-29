@@ -61,8 +61,15 @@ mindustry {
     )
     meta.version = "groovy 3000"
     meta.minGameVersion = "136"
+    deploy {
+        outputName = "TestGroovyMod"
+    }
 }
-
+mindustryAssets {
+    sprites {
+        dir = new File(rootDir, "sprites")
+    }
+}
 antiAlias {
     sourceDirectory = new File(rootDir, 'textures')
     destinationDirectory = new File(rootDir, 'AA')

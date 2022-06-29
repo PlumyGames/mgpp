@@ -45,4 +45,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: mgpp-Jar
-          path: main/build/libs/*.jar
+          path: |
+            main/build/libs/*.jar
+            TestProjectGroovy/build/tmp/deploy/*.jar
+            TestProjectKt/build/tmp/deploy/*.jar

@@ -64,7 +64,7 @@ mindustry {
     meta["version"] = "Kotlin 666"
     meta.minGameVersion = "136"
 }
-mindustryAsset {
+mindustryAssets {
     sprites {
         dir = rootDir.resolve("sprites")
         dependsOn("antiAlias")
@@ -73,6 +73,10 @@ mindustryAsset {
         dir = rootDir.resolve("sprites/data")
         rootAt(rootDir.resolve("sprites"))
         dependsOn("antiAlias")
+        genClass
+    }
+    sounds {
+        dir = rootDir.resolve("sounds")
         genClass
     }
 }

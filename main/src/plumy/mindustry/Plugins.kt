@@ -24,7 +24,7 @@ class MindustryPlugin : Plugin<Project> {
         const val MindustryTaskGroup = "mindustry"
         const val MindustryAssetTaskGroup = "mindustry assets"
         const val MainExtensionName = "mindustry"
-        const val AssetExtensionName = "mindustryAsset"
+        const val AssetExtensionName = "mindustryAssets"
         const val MindustryDataDirEnv = "MINDUSTRY_DATA_DIR"
         const val DefaultMinGameVersion = "135"
         const val DefaultMindustryVersion = "v135"
@@ -68,7 +68,14 @@ class MindustryJavaPlugin : Plugin<Project> {
             dependsOn("dexJar")
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
             destinationDirectory.set(temporaryDir)
-            archiveFileName.set("deploy.jar")
+            val modMeta = ex.modMeta.get()
+            val outputName = ex.deploy.outputJarName.get().let {
+                it.ifBlank { modMeta.name }
+            }
+            val classifier = ex.deploy.jarClassifier.get().let {
+                it.ifBlank { modMeta.version }
+            }
+            archiveFileName.set("$outputName-$classifier.jar")
             from(
                 *jar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
                 *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
@@ -82,7 +89,7 @@ class MindustryAssetPlugin : Plugin<Project> {
         val main = extensions.getOrCreate<MindustryExtension>(
             MindustryPlugin.MainExtensionName
         )
-        val assets = extensions.getOrCreate<MindustryAssetExtension>(
+        val assets = extensions.getOrCreate<MindustryAssetsExtension>(
             MindustryPlugin.AssetExtensionName
         )
         val genModHjson = tasks.register<ModHjsonGenerateTask>("genModHjson") {
@@ -143,6 +150,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                     this.group = MindustryPlugin.MindustryAssetTaskGroup
                     dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
                     args.put("ModName", main.modMeta.get().name)
+                    args.putAll(assets.args)
                     generator = assets.getGenerator(group.generator)
                     className.set(group.className)
                     resources.setFrom(batches.filter { it.enableGenClass }.map { it.dir })
