@@ -46,9 +46,9 @@ jobs:
           ./gradlew :antiAlias --info
           cd ..
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
-          name: mgpp-Jar
+          name: mgpp-snapshot-build
           path: |
             main/build/libs/*.jar
             TestProjectGroovy/build/tmp/deploy/*.jar
