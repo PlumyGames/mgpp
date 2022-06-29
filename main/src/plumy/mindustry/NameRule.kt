@@ -103,30 +103,26 @@ enum class NameRule {
 
         override fun rename(segments: List<String>): String {
             if (segments.isEmpty()) return ""
-            val sb = StringBuilder()
-            for ((i, seg) in segments.withIndex()) {
-                sb.append(seg.uppercase())
-                if (i < segments.size - 1) {
-                    sb.append('_')
-                }
-            }
-            return sb.toString()
+            return segments.joinToString("_") { it.uppercase() }
         }
     },
+    /**kebab-name-rule*/
     Kebab {
         override fun split(raw: String): List<String> =
             raw.split("-")
 
         override fun rename(segments: List<String>): String {
             if (segments.isEmpty()) return ""
-            val sb = StringBuilder()
-            for ((i, seg) in segments.withIndex()) {
-                sb.append(seg.lowercase())
-                if (i < segments.size - 1) {
-                    sb.append('-')
-                }
-            }
-            return sb.toString()
+            return segments.joinToString("-") { it.lowercase() }
+        }
+    },
+    /**dot.name.rule*/
+    Dot {
+        override fun split(raw: String): List<String> =
+            raw.split(".")
+
+        override fun rename(segments: List<String>): String {
+            return segments.joinToString(".") { it.lowercase() }
         }
     };
 
