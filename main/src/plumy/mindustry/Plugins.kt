@@ -1,7 +1,9 @@
 package plumy.mindustry
 
+import org.apache.tools.ant.taskdefs.Zip.Duplicate
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
@@ -49,6 +51,9 @@ class MindustryJavaPlugin : Plugin<Project> {
         val ex = extensions.getOrCreate<MindustryExtension>(
             MindustryPlugin.MainExtensionName
         )
+        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME){
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")
             group = MindustryPlugin.MindustryTaskGroup

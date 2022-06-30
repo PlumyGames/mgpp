@@ -5,6 +5,7 @@ import org.gradle.api.Project
 import plumy.dsl.fileProp
 import plumy.dsl.listProp
 import plumy.dsl.stringProp
+import plumy.mindustry.MindustryAssetsExtension.AssetBatchType
 import java.io.File
 import java.io.Serializable
 
@@ -28,24 +29,28 @@ open class MindustryAssetsExtension(
         convention(HashSet())
     }
     val root = AssetRootSpec()
-    val sprites = BatchType(
+    val sprites = AssetBatchType(
         group = "sprites",
         className = "Sprite",
         generator = "DefaultSprite"
     )
-    val sounds = BatchType(
+    fun sprites(config: Action<AssetBatch>) = sprites.add(config)
+    val sounds = AssetBatchType(
         group = "sounds",
         className = "Sound",
         generator = "DefaultSound"
     )
-    val shaders = BatchType(
+    fun sounds(config: Action<AssetBatch>) = sounds.add(config)
+    val shaders = AssetBatchType(
         group = "shaders",
         className = "Shader",
     )
-    val bundles = BatchType(
+    fun shaders(config: Action<AssetBatch>) = shaders.add(config)
+    val bundles = AssetBatchType(
         group = "bundles",
         className = "Bundle",
     )
+    fun bundles(config: Action<AssetBatch>) = bundles.add(config)
 
     fun rootAt(path: String) {
         assetsRoot.set(File(path))
@@ -67,16 +72,6 @@ open class MindustryAssetsExtension(
         type.config()
         return type
     }
-    fun BatchType(
-        group: String = "",
-        className: String = "",
-        generator: String = "",
-    ): AssetBatchType {
-        val type = AssetBatchType(group, className, generator).apply {
-            self = this@MindustryAssetsExtension
-        }
-        return type
-    }
 
     inner class AssetRootSpec {
         infix fun at(path: String) {
@@ -87,30 +82,51 @@ open class MindustryAssetsExtension(
             assetsRoot.set(folder)
         }
     }
-}
 
-data class AssetBatchType(
-    var group: String = "",
-    var className: String = "",
-    var generator: String = "",
-) : Serializable {
-    var self: MindustryAssetsExtension? = null
-    // For Groovy
-    fun add(
-        config: Action<AssetBatch>,
-    ) {
-        val self = self ?: return
-        val newBatch = AssetBatch(this)
-        config.execute(newBatch)
-        self.batches.add(newBatch)
-    }
-    // For Kotlin
-    inline operator fun invoke(
-        config: AssetBatch.() -> Unit,
-    ) {
-        val self = self ?: return
-        val newBatch = AssetBatch(this).apply(config)
-        self.batches.add(newBatch)
+    inner class AssetBatchType(
+        var group: String = "",
+        var className: String = "",
+        var generator: String = "",
+    ) : Serializable {
+        // For Groovy
+        fun add(
+            config: Action<AssetBatch>,
+        ) {
+            val newBatch = AssetBatch(this)
+            config.execute(newBatch)
+            batches.add(newBatch)
+        }
+        // For Kotlin
+        inline operator fun invoke(
+            config: AssetBatch.() -> Unit,
+        ) {
+            val newBatch = AssetBatch(this).apply(config)
+            batches.add(newBatch)
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as AssetBatchType
+
+            if (group != other.group) return false
+            if (className != other.className) return false
+            if (generator != other.generator) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = group.hashCode()
+            result = 31 * result + className.hashCode()
+            result = 31 * result + generator.hashCode()
+            return result
+        }
+
+        override fun toString(): String {
+            return "AssetBatchType(group='$group', className='$className', generator='$generator')"
+        }
     }
 }
 

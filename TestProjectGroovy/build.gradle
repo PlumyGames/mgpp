@@ -67,8 +67,10 @@ mindustry {
 }
 mindustryAssets {
     rootAt "$rootDir/assets"
-    sprites.add {
-        //it.dir = new File(rootDir, "sprites")
+    // you don't need this
+    sprites {
+        dir = new File(rootDir, "assets/sprites")
+        genClass // noGenClass is default
     }
 }
 antiAlias {

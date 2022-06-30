@@ -21,6 +21,11 @@ tasks.named<GroovyCompile>("compileGroovy") {
     dependsOn(compileKotlin)
     classpath += files(compileKotlin.get().destinationDirectory)
 }
+tasks.named<GroovyCompile>("compileTestGroovy") {
+    val compileKotlin = tasks.named<KotlinCompile>("compileTestKotlin")
+    dependsOn(compileKotlin)
+    classpath += files(compileKotlin.get().destinationDirectory)
+}
 val pluginName: String by project
 sourceSets {
     main {
