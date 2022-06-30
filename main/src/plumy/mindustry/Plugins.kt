@@ -1,6 +1,5 @@
 package plumy.mindustry
 
-import org.apache.tools.ant.taskdefs.Zip.Duplicate
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
@@ -51,7 +50,7 @@ class MindustryJavaPlugin : Plugin<Project> {
         val ex = extensions.getOrCreate<MindustryExtension>(
             MindustryPlugin.MainExtensionName
         )
-        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME){
+        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
             duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         }
         val dexJar = tasks.register<DexJar>("dexJar") {
@@ -104,8 +103,7 @@ class MindustryAssetPlugin : Plugin<Project> {
         plugins.whenHas<JavaPlugin> {
             tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
                 dependsOn(genModHjson)
-                val outputHjson = genModHjson.get().outputHjson.get()
-                from(outputHjson)
+                from(genModHjson)
             }
         }
         // Register this for dynamically configure tasks without class reference in groovy.
@@ -128,11 +126,13 @@ class MindustryAssetPlugin : Plugin<Project> {
             if (assetsRoot != MindustryPlugin.DefaultEmptyFile) {
                 plugins.whenHas<JavaPlugin> {
                     tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                        from(assetsRoot) {
-                            include("**")
-                        }
+                        from(assetsRoot)
                     }
                 }
+            }
+            val icon = assets.icon.get()
+            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                from(icon)
             }
             // Resolve all batches
             val group2Batches = assets.batches.get().resolveBatches()

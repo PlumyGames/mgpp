@@ -24,6 +24,9 @@ open class Download : DefaultTask() {
             tempFi(location.get().name)
         })
         overwrite.convention(false)
+        outputs.upToDateWhen {
+            outputFile.get().exists()
+        }
     }
     @TaskAction
     fun download() {

@@ -68,10 +68,10 @@ mindustry {
 mindustryAssets {
     rootAt "$rootDir/assets"
     // you don't need this
-    sprites {
+    /*sprites {
         dir = new File(rootDir, "assets/sprites")
         genClass // noGenClass is default
-    }
+    }*/
 }
 antiAlias {
     sourceDirectory = new File(rootDir, 'assets/sprites')
@@ -79,6 +79,7 @@ antiAlias {
     addFilter {
         it.name != 'sender.png'
     }
+    //incremental is default
     //options.isIncremental = false
 }
 /*

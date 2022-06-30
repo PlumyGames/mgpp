@@ -26,7 +26,7 @@ sourceSets {
         resources.srcDir("resources")
     }
 }
-apply<plumy.mindustry.MindustryPlugin>()
+apply<MindustryPlugin>()
 plugins {
     kotlin("jvm") version "1.7.0"
 }

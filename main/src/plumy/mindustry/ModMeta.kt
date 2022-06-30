@@ -71,8 +71,7 @@ data class ModMeta(
     fun propertyMissing(property: String, value: Any) {
         info[property] = value
     }
-
-    operator fun plusAssign(addition: ModMeta) {
+    fun addFrom(addition: ModMeta){
         for ((k, newV) in addition.info) {
             val default = defaultMeta[k]
             if (default != null) {
@@ -83,6 +82,9 @@ data class ModMeta(
                 this.info[k] = newV
             }
         }
+    }
+    operator fun plusAssign(addition: ModMeta) {
+        addFrom(addition)
     }
 
     override fun toString(): String {

@@ -178,7 +178,7 @@ open class MindustryExtension(
         java,
         hideBrowser
     ).apply {
-        modMeta.set(this)
+        modMeta.get() += this
     }
 }
 

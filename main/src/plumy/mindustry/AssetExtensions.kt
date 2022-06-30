@@ -28,30 +28,36 @@ open class MindustryAssetsExtension(
     val batches = target.listProp<AssetBatch>().apply {
         convention(HashSet())
     }
+    val icon = target.fileProp().apply {
+        convention(target.rootDir.resolve("icon.png"))
+    }
     val root = AssetRootSpec()
     val sprites = AssetBatchType(
         group = "sprites",
         className = "Sprite",
         generator = "DefaultSprite"
     )
+
     fun sprites(config: Action<AssetBatch>) = sprites.add(config)
     val sounds = AssetBatchType(
         group = "sounds",
         className = "Sound",
         generator = "DefaultSound"
     )
+
     fun sounds(config: Action<AssetBatch>) = sounds.add(config)
     val shaders = AssetBatchType(
         group = "shaders",
         className = "Shader",
     )
+
     fun shaders(config: Action<AssetBatch>) = shaders.add(config)
     val bundles = AssetBatchType(
         group = "bundles",
         className = "Bundle",
     )
-    fun bundles(config: Action<AssetBatch>) = bundles.add(config)
 
+    fun bundles(config: Action<AssetBatch>) = bundles.add(config)
     fun rootAt(path: String) {
         assetsRoot.set(File(path))
     }
