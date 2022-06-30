@@ -2,7 +2,6 @@ package plumy.mindustry
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.UnknownTaskException
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
@@ -120,6 +119,16 @@ class MindustryAssetPlugin : Plugin<Project> {
             }
         }
         target.afterEvaluateThis {
+            val assetsRoot = assets.assetsRoot.get()
+            if (assetsRoot != MindustryPlugin.DefaultEmptyFile) {
+                plugins.whenHas<JavaPlugin> {
+                    tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                        from(assetsRoot) {
+                            include("**")
+                        }
+                    }
+                }
+            }
             // Resolve all batches
             val group2Batches = assets.batches.get().resolveBatches()
             var jar: TaskProvider<Jar>? = null
@@ -127,7 +136,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                 jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
             }
             var genResourceClassCounter = 0
-            for ((group, batches) in group2Batches) {
+            for ((type, batches) in group2Batches) {
                 if (batches.isEmpty()) continue
                 jar?.configure {
                     batches.forEach { batch ->
@@ -145,14 +154,14 @@ class MindustryAssetPlugin : Plugin<Project> {
                     }
                 }
                 if (!batches.any { it.enableGenClass }) continue
-                val groupPascal = group.name.lowercase().capitalized()
+                val groupPascal = type.group.lowercase().capitalized()
                 val gen = tasks.register<ResourceClassGenerate>("gen${groupPascal}Class") {
                     this.group = MindustryPlugin.MindustryAssetTaskGroup
                     dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
                     args.put("ModName", main.modMeta.get().name)
                     args.putAll(assets.args)
-                    generator = assets.getGenerator(group.generator)
-                    className.set(group.className)
+                    generator = assets.getGenerator(type.generator)
+                    className.set(type.className)
                     resources.setFrom(batches.filter { it.enableGenClass }.map { it.dir })
                 }
                 genResourceClass.get().apply {
@@ -162,20 +171,30 @@ class MindustryAssetPlugin : Plugin<Project> {
                 genResourceClassCounter++
             }
             if (genResourceClassCounter > 0) {
-                try {
+                safeRun {
                     tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME) {
                         it.dependsOn(genResourceClass)
                     }
+                }
+                safeRun {
                     tasks.named("compileKotlin") {
                         it.dependsOn(genResourceClass)
                     }
+                }
+                safeRun {
                     tasks.named("compileGroovy") {
                         it.dependsOn(genResourceClass)
                     }
-                } catch (_: UnknownTaskException) {
                 }
             }
         }
+    }
+}
+
+inline fun safeRun(func: () -> Unit) {
+    try {
+        func()
+    } catch (_: Throwable) {
     }
 }
 /**

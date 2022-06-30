@@ -17,12 +17,12 @@ buildscript {
 sourceSets {
     main {
         java.srcDirs("src")
-        java.srcDirs("$buildDir/generated/resourceClass")
+        java.srcDirs("$buildDir/generated/mindustry")
         resources.srcDir("resources")
     }
     test {
         java.srcDir("test")
-        java.srcDirs("$buildDir/generated/resourceClass")
+        java.srcDirs("$buildDir/generated/mindustry")
         resources.srcDir("resources")
     }
 }

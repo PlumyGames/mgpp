@@ -3,6 +3,7 @@ package plumy.mindustry.task
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 import plumy.dsl.*
+import plumy.mindustry.MindustryPlugin
 
 open class RClassGenerate : DefaultTask() {
     val classFiles = project.configurationFileCollection()
@@ -15,7 +16,7 @@ open class RClassGenerate : DefaultTask() {
     init {
         generated.convention(project.provider {
             qualifiedName.get().qualified2FileName(
-                project.buildDir.resolve("generated").resolve("resourceClass")
+                project.buildDir.resolve("generated").resolve(MindustryPlugin.Mindustry)
             )
         })
     }

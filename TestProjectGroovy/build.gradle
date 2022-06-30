@@ -66,12 +66,13 @@ mindustry {
     }
 }
 mindustryAssets {
-    sprites {
-        dir = new File(rootDir, "sprites")
+    rootAt "$rootDir/assets"
+    sprites.add {
+        //it.dir = new File(rootDir, "sprites")
     }
 }
 antiAlias {
-    sourceDirectory = new File(rootDir, 'textures')
+    sourceDirectory = new File(rootDir, 'assets/sprites')
     destinationDirectory = new File(rootDir, 'AA')
     addFilter {
         it.name != 'sender.png'

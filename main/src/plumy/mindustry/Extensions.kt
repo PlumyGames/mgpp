@@ -199,8 +199,8 @@ class DependencySpec(
     val mindustryDependency = target.prop<IDependency>().apply {
         convention(MindustryDependency())
     }
-    val arc = ArcSpec(this)
-    val mindustry = MindustrySpec(this)
+    val arc = ArcSpec()
+    val mindustry = MindustrySpec()
     fun arc(version: String) {
         arcDependency.set(ArcDependency(version))
     }
@@ -254,33 +254,34 @@ class DependencySpec(
         ) = MirrorJitpackDependency(MindustryPlugin.MindustryJitpackMirrorRepo, version)
     }
 
-    class ArcSpec(val dpSpec: DependencySpec) {
-
+    inner class ArcSpec {
         infix fun on(version: String) {
-            dpSpec.arcDependency.set(ArcDependency(version))
+            arcDependency.set(ArcDependency(version))
         }
+
         fun on(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc.on`")
-            dpSpec.arcDependency.set(ArcDependency(version))
+            arcDependency.set(ArcDependency(version))
         }
     }
 
-    class MindustrySpec(val dpSpec: DependencySpec) {
+    inner class MindustrySpec {
         infix fun mirror(version: String) {
-            dpSpec.mindustryDependency.set(MirrorDependency(version))
+            mindustryDependency.set(MirrorDependency(version))
         }
 
         infix fun on(version: String) {
-            dpSpec.mindustryDependency.set(MindustryDependency(version))
+            mindustryDependency.set(MindustryDependency(version))
         }
+
         fun mirror(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.mirror`")
-            dpSpec.mindustryDependency.set(MirrorDependency(version))
+            mindustryDependency.set(MirrorDependency(version))
         }
 
         fun on(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.on`")
-            dpSpec.mindustryDependency.set(MindustryDependency(version))
+            mindustryDependency.set(MindustryDependency(version))
         }
     }
 }

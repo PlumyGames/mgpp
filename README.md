@@ -8,8 +8,26 @@ A Mindustry gradle plugin, named Plumy.
 ___
 </div>
 
+## Feature
+**Manage** the **Dependencies:** Importing the dependencies of arc and Mindustry automatically with configuration.
+
+**Download** the **Game:** Downloading any version of Mindustry easily.
+
+**Debug** your **Mod:** Being able to debug your mod and Mindustry with an IDE, such as IntelliJ IDEA.
+
+**Works with Other Mods:** Starting the game with your mod and others to test the compatibility or interaction.
+
+**Manage** your **Assets**: Assets will be copied into the output jar file with configuration. 
+
+**Generate Resource Class:** A class with references of assets to reduce boilerplate codes. 
+
+**Deploy** on **Android:** Deploy your mod compatible to Mindustry on Android. *[Android SDK Required]*
+
 ## Usage
 **Because this plugin was made in Kotlin, using Kotlin as your DSL is recommended.**
+
+Samples: [Groovy sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectGroovy), [Kotlin sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectKt)
+
 1. Import the plugin to the build script:
 
     ```groovy
@@ -140,3 +158,6 @@ ___
    # a jar compitable on both Desktop and Android will be outputted in ./build/tmp/deploy folder. 
    .\gradew deploy
     ```
+   
+## License
+GNU General Public License v3.0 (GPL 3.0)
