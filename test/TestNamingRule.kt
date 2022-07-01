@@ -1,5 +1,5 @@
+import io.github.liplum.mindustry.NameRule
 import org.junit.jupiter.api.Test
-import plumy.mindustry.NameRule
 
 class TestNamingRule {
     @Test

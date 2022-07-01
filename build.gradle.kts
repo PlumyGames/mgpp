@@ -48,7 +48,7 @@ gradlePlugin {
     }
 }
 pluginBundle {
-    website = "https://PlumyGame.github.io/mgpp"
+    website = "https://plumygame.github.io/mgpp/"
     vcsUrl = "https://github.com/PlumyGame/mgpp"
     tags = listOf("mindustry", "mindustry-mod", "mod")
 }

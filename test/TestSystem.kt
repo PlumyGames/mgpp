@@ -1,5 +1,5 @@
+import io.github.liplum.dsl.getOs
 import org.junit.jupiter.api.Test
-import plumy.dsl.getOs
 
 class TestSystem {
     /**

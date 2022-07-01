@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import plumy.mindustry.*
-import plumy.mindustry.task.AntiAlias
+import io.github.liplum.mindustry.*
+import io.github.liplum.mindustry.task.AntiAlias
 
 buildscript {
     repositories {

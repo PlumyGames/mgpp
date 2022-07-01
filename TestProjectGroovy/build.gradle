@@ -16,10 +16,10 @@ plugins {
 group 'plumy.test'
 version '0.1'
 
-apply plugin: plumy.mindustry.MindustryPlugin
+apply plugin: io.github.liplum.mindustry.MindustryPlugin
 
 repositories {
-    use(plumy.mindustry.BuildScript) {
+    use(io.github.liplum.mindustry.BuildScript) {
         mindustryRepo()
     }
     mavenCentral()
@@ -93,7 +93,7 @@ tasks.named('runClient') {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    use(plumy.mindustry.BuildScript) {
+    use(io.github.liplum.mindustry.BuildScript) {
         importMindustry()
     }
 }

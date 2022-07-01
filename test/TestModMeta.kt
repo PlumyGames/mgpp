@@ -1,9 +1,9 @@
+import io.github.liplum.mindustry.ModMeta
 import org.junit.jupiter.api.Test
-import plumy.mindustry.ModMeta
 
 class TestModMeta {
     @Test
-    fun `test mod meta +=`(){
+    fun `test mod meta +=`() {
         val a = ModMeta(
             name = "Test Name",
             main = "net.liplum.MainClz"

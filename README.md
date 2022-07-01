@@ -149,12 +149,12 @@ mindustryAssets {
 // Groovy as DSL
 repositories {
     mavenCentral()
-    use(plumy.mindustry.BuildScript) {
+    use(io.github.liplum.mindustry.BuildScript) {
         mindustryRepo()
     }
 }
 dependencies {
-    use(plumy.mindustry.BuildScript) {
+    use(io.github.liplum.mindustry.BuildScript) {
         importMindustry()
     }
 }
