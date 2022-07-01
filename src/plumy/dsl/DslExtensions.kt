@@ -1,6 +1,9 @@
 package plumy.dsl
 
-import org.gradle.api.*
+import org.gradle.api.DefaultTask
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.Directory
 import org.gradle.api.plugins.ExtensionContainer
@@ -9,7 +12,6 @@ import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.provider.SetProperty
-import org.gradle.api.tasks.SourceSet
 import java.io.File
 
 internal
