@@ -53,11 +53,9 @@ mindustry {
     run {
         dataDir = 'temp'
     }
-    modMeta(
+    meta << ModMeta(
         name: 'test-plumy-mindustry-gradle-plugin-groovy',
         displayName: 'Test Plumy Mindustry Gradle Plugin Groovy',
-        main: 'plumy.test.TestModGroovy',
-        author: 'Liplum'
     )
     meta.version = "groovy 3000"
     meta.minGameVersion = "136"
@@ -67,7 +65,7 @@ mindustry {
 }
 mindustryAssets {
     rootAt "$rootDir/assets"
-    // you don't need this
+    // There is no need to create a batch, if you use `rootAt 'foo/bar'`.
     /*sprites {
         dir = new File(rootDir, "assets/sprites")
         genClass // noGenClass is default
@@ -82,14 +80,7 @@ antiAlias {
     //incremental is default
     //options.isIncremental = false
 }
-/*
-Because tasks, 'downloadClient/Sever' and 'runClient/Server', are registered after
-the project evaluation, so you shouldn't use `tasks.named('foo')` to configure it.
-As an alternative, you can use `tasks.withType(Class)` instead.
-tasks.named('runClient') {
-    dataOnTemporary()
-}
-*/
+
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'

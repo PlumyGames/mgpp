@@ -1,8 +1,7 @@
 package io.github.liplum.mindustry
 
-import arc.util.serialization.Json
-import arc.util.serialization.Jval
 import groovy.json.JsonOutput
+import io.github.liplum.dsl.toMap
 import org.hjson.JsonObject
 import org.hjson.Stringify
 import java.io.File
@@ -71,20 +70,29 @@ data class ModMeta(
     fun propertyMissing(property: String, value: Any) {
         info[property] = value
     }
-    fun addFrom(addition: ModMeta){
+
+    infix fun append(addition: ModMeta) {
         for ((k, newV) in addition.info) {
             val default = defaultMeta[k]
-            if (default != null) {
+            if (default == null) {
+                // if addition has more information than default
+                this.info[k] = newV
+            } else {
                 if (newV != default) {
                     this.info[k] = newV
                 }
-            } else {
-                this.info[k] = newV
             }
         }
     }
+
+    // For Kotlin
     operator fun plusAssign(addition: ModMeta) {
-        addFrom(addition)
+        append(addition)
+    }
+
+    // For Groovy
+    fun leftShift(addition: ModMeta) {
+        append(addition)
     }
 
     override fun toString(): String {
@@ -116,15 +124,14 @@ data class ModMeta(
         @JvmStatic
         fun by(vararg metas: Pair<String, Any>) =
             ModMeta(metas.toMap())
-        internal
-        val json = Json()
+        @Suppress("UNCHECKED_CAST")
         @JvmStatic
         fun fromHjson(hjson: String): ModMeta =
-            json.fromJson(ModMeta::class.java, Jval.read(hjson).toString(Jval.Jformat.plain))
+            ModMeta(JsonObject.readHjson(hjson).toMap() as Map<String, Any>)
         @JvmStatic
         fun fromHjson(file: File): ModMeta =
             runCatching {
-                json.fromJson(ModMeta::class.java, Jval.read(file.readText()).toString(Jval.Jformat.plain))
+                fromHjson(file.readText())
             }.getOrDefault(ModMeta())
         @JvmStatic
         @JvmOverloads

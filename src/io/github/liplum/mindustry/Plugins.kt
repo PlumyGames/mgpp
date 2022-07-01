@@ -111,15 +111,18 @@ class MindustryAssetPlugin : Plugin<Project> {
         tasks.register<AntiAlias>("antiAlias") {
             group = MindustryPlugin.MindustryTaskGroup
         }.get()
-        val genResourceClass = tasks.register<RClassGenerate>("genResourceClass") {
-            this.group = MindustryPlugin.MindustryAssetTaskGroup
-            val name = assets.qualifiedName.get()
-            if (name == "default") {
-                val modMeta = main.modMeta.get()
-                val (packageName, _) = modMeta.main.packageAndClassName()
-                qualifiedName.set("$packageName.R")
-            } else {
-                qualifiedName.set(name)
+        // Doesn't register the tasks if no resource needs to generate its class.
+        val genResourceClass by lazy {
+            tasks.register<RClassGenerate>("genResourceClass") {
+                this.group = MindustryPlugin.MindustryAssetTaskGroup
+                val name = assets.qualifiedName.get()
+                if (name == "default") {
+                    val modMeta = main.modMeta.get()
+                    val (packageName, _) = modMeta.main.packageAndClassName()
+                    qualifiedName.set("$packageName.R")
+                } else {
+                    qualifiedName.set(name)
+                }
             }
         }
         target.afterEvaluateThis {

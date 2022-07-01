@@ -64,16 +64,14 @@ mindustry {
     server {
         mindustry official "v135"
     }
-    assets {
-        modMeta(
-            name = "your-mod-name",
-            displayName = "Your mod",
-            main = "org.example.FooMod",
-            author = "yourself"
-        )
-        meta["version"] = "Kotlin 666"
-        meta.minGameVersion = "136"
-    }
+    meta += ModMeta(
+        name = "your-mod-name",
+        displayName = "Your mod",
+        main = "org.example.FooMod",
+        author = "yourself"
+    )
+    meta["version"] = "Kotlin 666"
+    meta.minGameVersion = "136"
     mods {
         worksWith {
             add github "liplum/cyberio"

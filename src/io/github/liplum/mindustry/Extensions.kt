@@ -41,12 +41,8 @@ enum class ProjectType {
 open class MindustryExtension(
     target: Project,
 ) {
-    companion object {
-        @JvmStatic
-        val Mod = ProjectType.Mod
-        @JvmStatic
-        val Plugin = ProjectType.Plugin
-    }
+    val Mod = ProjectType.Mod
+    val Plugin = ProjectType.Plugin
     /**
      * Configure the mindustry and arc dependency automatically.
      * This only works before [Project.dependencies] is called
@@ -128,32 +124,12 @@ open class MindustryExtension(
             modMeta.set(value)
         }
 
-    fun addMeta(info: Map<String, Any>): ModMeta =
-        modMeta.get().apply {
-            this += ModMeta(info)
-        }
-
-    fun addMeta(meta: ModMeta): ModMeta =
-        modMeta.get().apply {
-            this += meta
-        }
+    fun ModMeta(info: Map<String, Any>) =
+        io.github.liplum.mindustry.ModMeta(info)
     /**
      * @see [io.github.liplum.mindustry.ModMeta]
      */
-    fun modMeta(info: Map<String, Any>) =
-        ModMeta(info).apply {
-            modMeta.set(this)
-        }
-
-    fun modMeta(meta: ModMeta) =
-        meta.apply {
-            modMeta.set(this)
-        }
-    /**
-     * @see [io.github.liplum.mindustry.ModMeta]
-     */
-    @JvmOverloads
-    fun modMeta(
+    fun ModMeta(
         name: String = ModMeta.default("name"),
         displayName: String = ModMeta.default("displayName"),
         author: String = ModMeta.default("author"),
@@ -167,7 +143,7 @@ open class MindustryExtension(
         hidden: Boolean = ModMeta.default("hidden"),
         java: Boolean = ModMeta.default("java"),
         hideBrowser: Boolean = ModMeta.default("hideBrowser"),
-    ) = ModMeta(
+    ) = io.github.liplum.mindustry.ModMeta(
         name,
         displayName,
         author,
@@ -181,9 +157,7 @@ open class MindustryExtension(
         hidden,
         java,
         hideBrowser
-    ).apply {
-        modMeta.get() += this
-    }
+    )
 }
 
 class DependencySpec(
@@ -232,31 +206,25 @@ class DependencySpec(
         mindustryDependency.set(MirrorDependency(version))
     }
 
-    companion object {
-        @JvmStatic
-        val ArcRepo = MindustryPlugin.ArcJitpackRepo
-        @JvmStatic
-        val MindustryMirrorRepo = MindustryPlugin.MindustryJitpackMirrorRepo
-        @JvmStatic
-        val MindustryRepo = MindustryPlugin.MindustryJitpackRepo
-        @JvmStatic
-        fun ArcDependency(
-            version: String = MindustryPlugin.DefaultMindustryVersion,
-        ) = Dependency(MindustryPlugin.ArcJitpackRepo, version)
-        @JvmStatic
-        fun MindustryDependency(
-            version: String = MindustryPlugin.DefaultMindustryVersion,
-        ) = Dependency(MindustryPlugin.MindustryJitpackRepo, version)
-        @JvmStatic
-        fun Dependency(
-            fullName: String = "",
-            version: String = "",
-        ) = io.github.liplum.mindustry.Dependency(fullName, version)
-        @JvmStatic
-        fun MirrorDependency(
-            version: String = "",
-        ) = MirrorJitpackDependency(MindustryPlugin.MindustryJitpackMirrorRepo, version)
-    }
+    val ArcRepo = MindustryPlugin.ArcJitpackRepo
+    val MindustryMirrorRepo = MindustryPlugin.MindustryJitpackMirrorRepo
+    val MindustryRepo = MindustryPlugin.MindustryJitpackRepo
+    fun ArcDependency(
+        version: String = MindustryPlugin.DefaultMindustryVersion,
+    ) = Dependency(MindustryPlugin.ArcJitpackRepo, version)
+
+    fun MindustryDependency(
+        version: String = MindustryPlugin.DefaultMindustryVersion,
+    ) = Dependency(MindustryPlugin.MindustryJitpackRepo, version)
+
+    fun Dependency(
+        fullName: String = "",
+        version: String = "",
+    ) = io.github.liplum.mindustry.Dependency(fullName, version)
+
+    fun MirrorDependency(
+        version: String = "",
+    ) = MirrorJitpackDependency(MindustryPlugin.MindustryJitpackMirrorRepo, version)
 
     inner class ArcSpec {
         infix fun on(version: String) {
@@ -474,11 +442,9 @@ class ModsSpec(
         throw RuntimeException("Unknown mod type from $map")
     }
 
-    companion object {
-        fun GitHub(repo: String) = GitHubMod(repo)
-        fun Local(path: String) = LocalMod(path)
-        fun Url(url: String) = UrlMod(url)
-    }
+    fun GitHub(repo: String) = GitHubMod(repo)
+    fun Local(path: String) = LocalMod(path)
+    fun Url(url: String) = UrlMod(url)
 }
 
 class DeploySpec(
