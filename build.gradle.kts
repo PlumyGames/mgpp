@@ -19,7 +19,7 @@ plugins {
     id("com.gradle.plugin-publish") version "0.18.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
-group = "io.github.liplum.mindustry"
+group = "io.github.liplum.mgpp"
 version = "1.0"
 repositories {
     mavenCentral()
@@ -40,10 +40,10 @@ tasks.withType<Test>().configureEach {
 gradlePlugin {
     plugins {
         create("plumyMindustryPlugin") {
-            id = "io.github.liplum.mindustry"
+            id = "io.github.liplum.mgpp"
             displayName = "mgpp"
             description = "For Mindustry modding in Java, kotlin and so on."
-            implementationClass = "plumy.mindustry.MindustryPlugin"
+            implementationClass = "io.github.liplum.mindustry.MindustryPlugin"
         }
     }
 }

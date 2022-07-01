@@ -25,10 +25,10 @@ Usages: [Groovy DSL](https://plumygame.github.io/mgpp/groovy.html), [Kotlin DSL]
 
 Samples: [Groovy Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectGroovy), [Kotlin Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectKt)
 
-### Import the Plugin
-```kotlin
+### Using the Plugin
+```groovy
 plugins {
-    // Not yet release
+    id "io.github.liplum.mgpp" version "1.0"
 }
 ```
 ___
