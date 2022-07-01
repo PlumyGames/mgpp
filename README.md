@@ -30,7 +30,7 @@ Samples: [Groovy Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProje
 Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
-    id "io.github.liplum.mgpp" version "1.0"
+    id "io.github.liplum.mgpp" version "1.0.1"
 }
 ```
 Using [legacy plugin application](https://docs.gradle.org/current/userguide/plugins.html#sec:old_plugin_application):
@@ -42,7 +42,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "io.github.liplum.mgpp:MindustryGradlePluginPlumy:1.0"
+    classpath "io.github.liplum.mgpp:MindustryGradlePluginPlumy:1.0.1"
   }
 }
 
