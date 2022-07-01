@@ -14,6 +14,7 @@ ___
 - Download the Game
 - Debug your Mod
 - Works with Other Mods
+- Separate Working Space
 - Manage your Assets
 - Generate Resource Class 
 - Deploy on Android 

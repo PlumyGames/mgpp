@@ -11,7 +11,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath(files("../build/libs/PlumyMindustryGradlePlugin-1.0.jar"))
+        classpath(files(File("../build/libs").listFiles()))
     }
 }
 sourceSets {
