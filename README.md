@@ -26,10 +26,26 @@ Usages: [Groovy DSL](https://plumygame.github.io/mgpp/groovy.html), [Kotlin DSL]
 Samples: [Groovy Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectGroovy), [Kotlin Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectKt)
 
 ### Using the Plugin
+Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 ```groovy
 plugins {
     id "io.github.liplum.mgpp" version "1.0"
 }
+```
+Using [legacy plugin application](https://docs.gradle.org/current/userguide/plugins.html#sec:old_plugin_application):
+```groovy
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "io.github.liplum.mgpp:MindustryGradlePluginPlumy:1.0"
+  }
+}
+
+apply plugin: "io.github.liplum.mgpp"
 ```
 ___
 ### Showcase
