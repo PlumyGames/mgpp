@@ -459,6 +459,17 @@ class DeploySpec(
     val androidSdkRoot = target.stringProp().apply {
         convention(System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: "")
     }
+    val enableFatJar = target.prop<Boolean>().apply {
+        convention(true)
+    }
+    val fatJar: Unit
+        get() {
+            enableFatJar.set(true)
+        }
+    val noFatJar: Unit
+        get() {
+            enableFatJar.set(false)
+        }
     // For Groovy
     fun propertyMissing(property: String): Any? =
         when (property) {

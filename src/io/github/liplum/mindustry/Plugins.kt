@@ -1,5 +1,7 @@
 package io.github.liplum.mindustry
 
+import io.github.liplum.dsl.*
+import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
@@ -7,8 +9,6 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.configurationcache.extensions.capitalized
-import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.task.*
 import java.io.File
 
 class MindustryPlugin : Plugin<Project> {
@@ -50,8 +50,17 @@ class MindustryJavaPlugin : Plugin<Project> {
         val ex = extensions.getOrCreate<MindustryExtension>(
             MindustryPlugin.MainExtensionName
         )
-        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        target.afterEvaluateThis {
+            if (ex.deploy.enableFatJar.get()) {
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+                    from(
+                        configurations.runtimeClasspath.get().map {
+                            if (it.isDirectory) it else zipTree(it)
+                        }
+                    )
+                }
+            }
         }
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")

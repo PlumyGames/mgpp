@@ -61,6 +61,8 @@ mindustry {
     meta.minGameVersion = "136"
     deploy {
         outputName = "TestGroovyMod"
+        // fatJar is default option unless you use another tool like shadowJar
+        fatJar
     }
 }
 mindustryAssets {

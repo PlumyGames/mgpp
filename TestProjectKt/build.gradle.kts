@@ -1,6 +1,6 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import io.github.liplum.mindustry.*
 import io.github.liplum.mindustry.task.AntiAlias
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     repositories {
@@ -55,7 +55,7 @@ mindustry {
             add github "liplum/cyberio"
         }
     }
-    modMeta(
+    meta += ModMeta(
         name = "test-plumy-mindustry-gradle-plugin-kt",
         displayName = "Test Plumy Mindustry Gradle Plugin Kt",
         main = "plumy.test.TestModKt",
@@ -63,6 +63,10 @@ mindustry {
     )
     meta["version"] = "Kotlin 666"
     meta.minGameVersion = "136"
+    deploy {
+        // fatJar is default option unless you use another tool like shadowJar
+        fatJar
+    }
 }
 mindustryAssets {
     sprites {
@@ -79,10 +83,6 @@ mindustryAssets {
         dir = rootDir.resolve("sounds")
         genClass
     }
-}
-
-tasks.named("genResourceClass") {
-    dependsOn("antiAlias")
 }
 
 tasks.named<AntiAlias>("antiAlias") {
