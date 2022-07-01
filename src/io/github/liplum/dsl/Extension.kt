@@ -39,8 +39,10 @@ fun String.packageName2FileName(relativeTo: File): File {
 }
 
 fun String.packageAndClassName(): Pair<String, String> {
+    if (isEmpty()) return Pair("", "")
     val beforeClzName = this.lastIndexOf(".")
-    if (beforeClzName == 0) return Pair("", "")
+    if (beforeClzName < 0) return Pair("", this)
+    if (beforeClzName == 0) return Pair("", substring(1, length))
     return Pair(substring(0, beforeClzName), substring(beforeClzName + 1, length))
 }
 

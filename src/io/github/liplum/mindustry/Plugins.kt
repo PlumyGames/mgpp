@@ -115,7 +115,8 @@ class MindustryAssetPlugin : Plugin<Project> {
             this.group = MindustryPlugin.MindustryAssetTaskGroup
             val name = assets.qualifiedName.get()
             if (name == "default") {
-                val (packageName, _) = main.modMeta.get().main.packageAndClassName()
+                val modMeta = main.modMeta.get()
+                val (packageName, _) = modMeta.main.packageAndClassName()
                 qualifiedName.set("$packageName.R")
             } else {
                 qualifiedName.set(name)
