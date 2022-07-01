@@ -5,26 +5,34 @@ plugins {
     kotlin("jvm")
     groovy
     `java-gradle-plugin`
+    id("maven-publish")
+    id("com.gradle.plugin-publish") version "0.18.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 gradlePlugin {
     plugins {
         create("plumyMindustryPlugin") {
             id = "plumy.mindustry"
-            implementationClass = "plumy.mindustry.PlumyMdtPlugin"
+            displayName = "mgpp"
+            description = "For Mindustry modding in Java, kotlin and so on."
+            implementationClass = "plumy.mindustry.MindustryPlugin"
         }
     }
 }
-
+pluginBundle {
+    website = "https://PlumyGame.github.io/mgpp"
+    vcsUrl = "https://github.com/PlumyGame/mgpp"
+    tags = listOf("mindustry", "mindustry-mod", "mod")
+}
 tasks.named<GroovyCompile>("compileGroovy") {
     val compileKotlin = tasks.named<KotlinCompile>("compileKotlin")
     dependsOn(compileKotlin)
     classpath += files(compileKotlin.get().destinationDirectory)
 }
 tasks.named<GroovyCompile>("compileTestGroovy") {
-    val compileKotlin = tasks.named<KotlinCompile>("compileTestKotlin")
-    dependsOn(compileKotlin)
-    classpath += files(compileKotlin.get().destinationDirectory)
+    val compileTestKotlin = tasks.named<KotlinCompile>("compileTestKotlin")
+    dependsOn(compileTestKotlin)
+    classpath += files(compileTestKotlin.get().destinationDirectory)
 }
 val pluginName: String by project
 sourceSets {
@@ -58,11 +66,13 @@ tasks.test {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
+
 tasks.named<Jar>("jar") {
     archiveBaseName.set(pluginName)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     includeEmptyDirs = false
 }
+
 tasks.named<ShadowJar>("shadowJar") {
     //minimize()
     configurations = listOf(project.configurations.getByName("shadow"))

@@ -8,7 +8,7 @@ buildscript {
     }
 }
 allprojects {
-    group = "plumy.mdt.plugin"
+    group = "plumy.mindustry"
     version = "1.0"
     repositories {
         mavenCentral()

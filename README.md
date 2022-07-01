@@ -9,19 +9,26 @@ ___
 </div>
 
 ## Feature
-**Manage** the **Dependencies:** Importing the dependencies of arc and Mindustry automatically with configuration.
+#### Manage the Dependencies: 
+Importing the dependencies of arc and Mindustry automatically with configuration.
 
-**Download** the **Game:** Downloading any version of Mindustry easily.
+#### Download the Game:
+Downloading any version of Mindustry easily.
 
-**Debug** your **Mod:** Being able to debug your mod and Mindustry with an IDE, such as IntelliJ IDEA.
+#### Debug your Mod: 
+Being able to debug your mod and Mindustry with an IDE, such as IntelliJ IDEA.
 
-**Works with Other Mods:** Starting the game with your mod and others to test the compatibility or interaction.
+#### Works with Other Mods: 
+Starting the game with your mod and others to test the compatibility or interaction.
 
-**Manage** your **Assets**: Assets will be copied into the output jar file with configuration. 
+#### Manage your Assets: 
+Assets will be copied into the output jar file with configuration. 
 
-**Generate Resource Class:** A class with references of assets to reduce boilerplate codes. 
+#### Generate Resource Class: 
+A class with references of assets to reduce boilerplate codes. 
 
-**Deploy** on **Android:** Deploy your mod compatible to Mindustry on Android. *[Android SDK Required]*
+#### Deploy on Android: 
+Deploy your mod compatible to Mindustry on Android. *[Android SDK Required]*
 
 ## Usage
 **Because this plugin was made in Kotlin, using Kotlin as your DSL is recommended.**
@@ -175,7 +182,7 @@ dependencies {
 .\gradew deploy
  ```
 
-## Advanced Features
+## Advanced Feature
 ### Anti-aliasing
 ```groovy
 // groovy as DSL
