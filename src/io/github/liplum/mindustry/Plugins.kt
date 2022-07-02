@@ -91,11 +91,9 @@ class MindustryJavaPlugin : Plugin<Project> {
             dependsOn(jar)
             dependsOn(dexJar)
             destinationDirectory.set(temporaryDir)
-            doFirst {
-                archiveBaseName.set(ex.deploy._baseName)
-                archiveVersion.set(ex.deploy._version)
-                archiveClassifier.set(ex.deploy._classifier)
-            }
+            archiveBaseName.set(ex.deploy._baseName)
+            archiveVersion.set(ex.deploy._version)
+            archiveClassifier.set(ex.deploy._classifier)
             from(
                 *jar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
                 *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
