@@ -77,21 +77,26 @@ class MindustryJavaPlugin : Plugin<Project> {
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
             jarFiles.setFrom(jar)
         }
-
+        val modMeta = ex.modMeta.get()
+        ex.deploy.apply {
+            baseName.convention(provider {
+                modMeta.name
+            })
+            version.convention(provider {
+                modMeta.version
+            })
+        }
         tasks.register<Jar>("deploy") {
             group = MindustryPlugin.MindustryTaskGroup
             dependsOn("jar")
             dependsOn("dexJar")
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
             destinationDirectory.set(temporaryDir)
-            val modMeta = ex.modMeta.get()
-            val outputName = ex.deploy.outputJarName.get().let {
-                it.ifBlank { modMeta.name }
+            ex.deploy.apply {
+                archiveBaseName.set(baseName)
+                archiveVersion.set(version)
+                archiveClassifier.set(classifier)
             }
-            val classifier = ex.deploy.jarClassifier.get().let {
-                it.ifBlank { modMeta.version }
-            }
-            archiveFileName.set("$outputName-$classifier.jar")
             from(
                 *jar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
                 *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),

@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 buildscript {
     repositories {
         mavenCentral()
-        gradlePluginPortal()
         maven {
             url = uri("https://www.jitpack.io")
         }
@@ -100,9 +99,6 @@ tasks.named<Jar>("jar") {
     archiveBaseName.set(pluginName)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     includeEmptyDirs = false
-    from(project.configurations.getByName("shadow").files.map{
-        if (it.extension == "jar") zipTree(it) else it
-    })
 }
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

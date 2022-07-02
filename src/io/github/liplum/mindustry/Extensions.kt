@@ -450,10 +450,13 @@ class ModsSpec(
 class DeploySpec(
     target: Project,
 ) {
-    val outputJarName = target.stringProp().apply {
+    val baseName = target.stringProp().apply {
         convention("")
     }
-    val jarClassifier = target.stringProp().apply {
+    val version = target.stringProp().apply {
+        convention("")
+    }
+    val classifier = target.stringProp().apply {
         convention("")
     }
     val androidSdkRoot = target.stringProp().apply {
@@ -469,20 +472,6 @@ class DeploySpec(
     val noFatJar: Unit
         get() {
             enableFatJar.set(false)
-        }
-    // For Groovy
-    fun propertyMissing(property: String): Any? =
-        when (property) {
-            "outputName" -> outputJarName.get()
-            "classifier" -> jarClassifier.get()
-            else -> null
-        }
-    // For Groovy
-    fun propertyMissing(property: String, value: Any): Any? =
-        when (property) {
-            "outputName" -> outputJarName.set(value.toString())
-            "classifier" -> jarClassifier.set(value.toString())
-            else -> null
         }
 }
 
