@@ -14,7 +14,7 @@ ___
 - Manage the Dependencies
 - Download the Game
 - Debug your Mod
-- Works with Other Mods
+- Work with Other Mods
 - Separate Working Space
 - Manage your Assets
 - Generate Resource Class
@@ -40,7 +40,7 @@ buildscript {
     repositories { maven { url "https://www.jitpack.io" } }
 }
 plugins {
-    id "io.github.liplum.mgpp" version "1.0.3"
+    id "io.github.liplum.mgpp" version "1.0.4"
 }
 ```
 
@@ -53,7 +53,7 @@ buildscript {
         maven { url "https://www.jitpack.io" }
     }
     dependencies {
-        classpath "io.github.liplum.mgpp:MindustryGradlePluginPlumy:1.0.3"
+        classpath "io.github.liplum.mgpp:MindustryGradlePluginPlumy:1.0.4"
     }
 }
 
@@ -72,7 +72,7 @@ import plumy.mindustry.*
 mindustry {
     dependency {
         mindustry on "v135"
-        arc on "123fbf12b9"
+        arc on "v135"
     }
     client {
         mindustry official "v135"

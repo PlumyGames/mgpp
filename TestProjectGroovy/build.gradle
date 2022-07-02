@@ -54,7 +54,7 @@ mindustry {
         dataDir = 'temp'
     }
     meta << ModMeta(
-        name: 'test-plumy-mindustry-gradle-plugin-groovy',
+        name: 'mgpp-groovy',
         displayName: 'Test Plumy Mindustry Gradle Plugin Groovy',
     )
     meta.version = 'groovy 3000'
