@@ -35,7 +35,7 @@ open class DexJar : DefaultTask() {
         val jarToDexPaths = jars.map { it.absolutePath }.toList()
         if (" " in dexedJarPath) throw GradleException("d8 doesn't allow a path with any space but the dexed jar's path is \"$dexedJarFile\" .")
         for (jarPath in jarToDexPaths) {
-            if (" " in jarPath) throw GradleException("d8 doesn't allow a path with any space but the path of a jar to be dexed is \"$dexedJarFile\" .")
+            if (" " in jarPath) throw GradleException("d8 doesn't allow a path with any space but the path of a jar to be dexed is \"$jarPath\" .")
         }
         val sdkPath = sdkRoot.get()
         val sdkRootDir = File(sdkPath)
