@@ -24,11 +24,11 @@ ___
 
 **Because this plugin was made in Kotlin, using Kotlin as your DSL is recommended.**
 
-Usages: [Groovy DSL](https://plumygame.github.io/mgpp/groovy.html)
-, [Kotlin DSL](https://plumygame.github.io/mgpp/kotlin.html)
-
-Samples: [Groovy Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectGroovy)
-, [Kotlin Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectKt)
+| Pages         | Instances                                                                                                                                                      |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Usages        | [Groovy DSL](https://plumygame.github.io/mgpp/groovy.html), [Kotlin DSL](https://plumygame.github.io/mgpp/kotlin.html)                                         |
+| Samples       | [Groovy Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectGroovy), [Kotlin Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectKt) |
+| Mod Templates | [MDT Mod Template](https://github.com/liplum/MdtModTemplate)                                                                                                   |
 
 ### Using the Plugin
 
