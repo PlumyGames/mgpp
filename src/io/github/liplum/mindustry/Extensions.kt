@@ -41,7 +41,9 @@ enum class ProjectType {
 open class MindustryExtension(
     target: Project,
 ) {
+    @JvmField
     val Mod = ProjectType.Mod
+    @JvmField
     val Plugin = ProjectType.Plugin
     /**
      * Configure the mindustry and arc dependency automatically.
@@ -381,13 +383,14 @@ class ServerSpec(
 class ModsSpec(
     target: Project,
 ) {
-    val extraModsFromTask = target.stringsProp().apply {
-        convention(
-            if (target.plugins.hasPlugin(JavaPlugin::class.java))
-                listOf(JavaPlugin.JAR_TASK_NAME)
-            else emptyList()
-        )
+    val _extraModsFromTask = target.stringsProp().apply {
+        convention(listOf(JavaPlugin.JAR_TASK_NAME))
     }
+    var extraModsFromTask: List<String>
+        get() = _extraModsFromTask.getOrElse(emptyList())
+        set(value) {
+            _extraModsFromTask.set(value)
+        }
     val worksWith = target.listProp<IMod>().apply {
         convention(HashSet())
     }
@@ -450,18 +453,41 @@ class ModsSpec(
 class DeploySpec(
     target: Project,
 ) {
-    val baseName = target.stringProp().apply {
+    @JvmField
+    val _baseName = target.stringProp().apply {
         convention("")
     }
-    val version = target.stringProp().apply {
+    var baseName: String
+        get() = _baseName.getOrElse("")
+        set(value) {
+            _baseName.set(value)
+        }
+    @JvmField
+    val _version = target.stringProp().apply {
         convention("")
     }
-    val classifier = target.stringProp().apply {
+    var version: String
+        get() = _version.getOrElse("")
+        set(value) {
+            _version.set(value)
+        }
+    @JvmField
+    val _classifier = target.stringProp().apply {
         convention("")
     }
-    val androidSdkRoot = target.stringProp().apply {
+    var classifier: String
+        get() = _classifier.getOrElse("")
+        set(value) {
+            _classifier.set(value)
+        }
+    val _androidSdkRoot = target.stringProp().apply {
         convention(System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: "")
     }
+    var androidSdkRoot: String
+        get() = _androidSdkRoot.getOrElse("")
+        set(value) {
+            _androidSdkRoot.set(value)
+        }
     val enableFatJar = target.prop<Boolean>().apply {
         convention(true)
     }
@@ -478,20 +504,20 @@ class DeploySpec(
 class RunSpec(
     target: Project,
 ) {
-    val dataDir = target.stringProp().apply {
+    val _dataDir = target.stringProp().apply {
         convention("temp")
     }
-    var DataDir: String
-        get() = dataDir.getOrElse("")
+    var dataDir: String
+        get() = _dataDir.getOrElse("")
         set(value) {
-            dataDir.set(value)
+            _dataDir.set(value)
         }
 
     fun setDataDefault() {
-        dataDir.set("")
+        _dataDir.set("")
     }
 
     fun setDataTemp() {
-        dataDir.set("temp")
+        _dataDir.set("temp")
     }
 }

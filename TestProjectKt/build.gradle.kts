@@ -1,6 +1,5 @@
 import io.github.liplum.mindustry.*
 import io.github.liplum.mindustry.task.AntiAlias
-import org.jetbrains.kotlin.gradle.plugin.mpp.pm20.archivesName
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -65,6 +64,8 @@ mindustry {
     meta["version"] = "Kotlin 666"
     meta.minGameVersion = "136"
     deploy {
+        baseName = "KotlinMod"
+        version = "666"
         // fatJar is default option unless you use another tool like shadowJar
         fatJar
     }

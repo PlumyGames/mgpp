@@ -69,7 +69,6 @@ Configure the plugin in build.gradle.kts.
 import plumy.mindustry.*
 
 mindustry {
-    projectType.set(Mod)
     dependency {
         mindustry on "v135"
         arc on "123fbf12b9"
@@ -94,8 +93,8 @@ mindustry {
         }
     }
     deploy {
-        outputJarName.set("TestKotlinMod")
-        jarClassifier.set("1.0.0")
+        baseName = "TestKotlinMod"
+        version = "1.0.0"
     }
 }
 mindustryAssets {

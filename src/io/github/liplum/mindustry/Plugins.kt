@@ -76,26 +76,25 @@ class MindustryJavaPlugin : Plugin<Project> {
             )
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
             jarFiles.setFrom(jar)
+            sdkRoot.set(ex.deploy._androidSdkRoot)
         }
         val modMeta = ex.modMeta.get()
-        ex.deploy.apply {
-            baseName.convention(provider {
-                modMeta.name
-            })
-            version.convention(provider {
-                modMeta.version
-            })
-        }
+        ex.deploy._baseName.convention(provider {
+            modMeta.name
+        })
+        ex.deploy._version.convention(provider {
+            modMeta.version
+        })
         tasks.register<Jar>("deploy") {
             group = MindustryPlugin.MindustryTaskGroup
-            dependsOn("jar")
-            dependsOn("dexJar")
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
+            dependsOn(jar)
+            dependsOn(dexJar)
             destinationDirectory.set(temporaryDir)
-            ex.deploy.apply {
-                archiveBaseName.set(baseName)
-                archiveVersion.set(version)
-                archiveClassifier.set(classifier)
+            doFirst {
+                archiveBaseName.set(ex.deploy._baseName)
+                archiveVersion.set(ex.deploy._version)
+                archiveClassifier.set(ex.deploy._classifier)
             }
             from(
                 *jar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
@@ -270,7 +269,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 group = MindustryPlugin.MindustryTaskGroup
                 mods.set(ex.mods.worksWith)
             }
-            val dataDirEx = ex.run.dataDir.get()
+            val dataDirEx = ex.run._dataDir.get()
             val runClient = tasks.register<RunMindustry>("runClient") {
                 group = MindustryPlugin.MindustryTaskGroup
                 dependsOn(downloadClient)
@@ -285,7 +284,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 mindustryFile.setFrom(downloadClient)
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.set("mods")
-                ex.mods.extraModsFromTask.get().forEach {
+                ex.mods._extraModsFromTask.get().forEach {
                     outputtedMods.setFrom(tasks.getByName(it))
                 }
             }
@@ -298,7 +297,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 mindustryFile.setFrom(downloadServer)
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.convention("config/mods")
-                ex.mods.extraModsFromTask.get().forEach {
+                ex.mods._extraModsFromTask.get().forEach {
                     outputtedMods.setFrom(tasks.getByName(it))
                 }
             }

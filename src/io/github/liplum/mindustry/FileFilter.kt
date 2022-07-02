@@ -1,48 +1,44 @@
-package io.github.liplum.mindustry;
+package io.github.liplum.mindustry
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.HashSet;
+import java.io.File
 
-@FunctionalInterface
-public interface FileFilter {
-    boolean isAccept(File file);
-
-    FileFilter always = file -> true;
-
-    class Set implements FileFilter {
-        public HashSet<FileFilter> set = new HashSet<>();
-
-        public void add(FileFilter filter) {
-            set.add(filter);
+fun interface FileFilter {
+    fun isAccept(file: File): Boolean
+    class Set : FileFilter {
+        var set = HashSet<FileFilter>()
+        fun add(filter: FileFilter) {
+            set.add(filter)
         }
 
-        public boolean remove(FileFilter filter) {
-            return set.remove(filter);
+        fun remove(filter: FileFilter): Boolean {
+            return set.remove(filter)
         }
 
-        public void plusAssign(FileFilter filter) {
-            set.add(filter);
+        operator fun plusAssign(filter: FileFilter) {
+            set.add(filter)
         }
 
-        public void minusAssign(FileFilter filter) {
-            set.remove(filter);
+        operator fun minusAssign(filter: FileFilter) {
+            set.remove(filter)
         }
 
-        public void clear() {
-            set.clear();
+        fun clear() {
+            set.clear()
         }
 
-        public boolean contains(FileFilter filter) {
-            return set.contains(filter);
+        operator fun contains(filter: FileFilter): Boolean {
+            return set.contains(filter)
         }
 
-        @Override
-        public boolean isAccept(File file) {
-            for (FileFilter filter : set) {
-                if (!filter.isAccept(file)) return false;
+        override fun isAccept(file: File): Boolean {
+            for (filter in set) {
+                if (!filter.isAccept(file)) return false
             }
-            return true;
+            return true
         }
+    }
+
+    companion object {
+        val always = FileFilter { true }
     }
 }
