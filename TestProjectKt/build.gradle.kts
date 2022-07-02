@@ -14,6 +14,7 @@ buildscript {
         classpath(files(File("../build/libs").listFiles()))
     }
 }
+
 sourceSets {
     main {
         java.srcDirs("src")

@@ -1,7 +1,7 @@
 <div align="center">
 
-# [Mindustry Gradle Plugin](https://plumygame.github.io/mgpp/) [![Plumy](GFX/Discord.png)](https://discord.gg/3Hrep3WtUz)
-
+# [Mindustry Gradle Plugin](https://plumygame.github.io/mgpp/)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/io.github.liplum.mgpp?color=02303a&label=Gradle%20Plugin&logo=Gradle&style=for-the-badge)](https://plugins.gradle.org/plugin/io.github.liplum.mgpp)
 [![Discord](https://img.shields.io/discord/937228972041842718?color=%23529b69&label=Discord&logo=Discord&style=for-the-badge)](https://discord.gg/3Hrep3WtUz)
 
 A Mindustry gradle plugin, named Plumy.
