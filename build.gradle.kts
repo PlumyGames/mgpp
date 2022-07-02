@@ -100,6 +100,9 @@ tasks.named<Jar>("jar") {
     archiveBaseName.set(pluginName)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     includeEmptyDirs = false
+    from(project.configurations.getByName("shadow").files.map{
+        if (it.extension == "jar") zipTree(it) else it
+    })
 }
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

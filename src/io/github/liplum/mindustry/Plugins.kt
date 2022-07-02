@@ -6,18 +6,21 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.configurationcache.extensions.capitalized
 import java.io.File
 
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
+        try {
+            plugins.apply<JavaPlugin>()
+        } catch (e: Exception) {
+            logger.warn("Your project doesn't support java plugin, so mgpp was disabled.", e)
+            return@func
+        }
         plugins.apply<MindustryAppPlugin>()
         plugins.apply<MindustryAssetPlugin>()
-        plugins.whenHas<JavaPlugin> {
-            plugins.apply<MindustryJavaPlugin>()
-        }
+        plugins.apply<MindustryJavaPlugin>()
     }
 
     companion object {
@@ -39,6 +42,7 @@ class MindustryPlugin : Plugin<Project> {
         const val ArcJitpackRepo = "com.github.anuken.arc"
         const val MindustryDesktopMainClass = "mindustry.desktop.DesktopLauncher"
         const val MindustrySeverMainClass = "mindustry.server.ServerLauncher"
+        @JvmStatic
         val DefaultEmptyFile = File("")
     }
 }
@@ -109,11 +113,9 @@ class MindustryAssetPlugin : Plugin<Project> {
             modMeta.set(main.modMeta)
             outputHjson.set(temporaryDir.resolve("mod.hjson"))
         }
-        plugins.whenHas<JavaPlugin> {
-            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                dependsOn(genModHjson)
-                from(genModHjson)
-            }
+        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+            dependsOn(genModHjson)
+            from(genModHjson)
         }
         // Register this for dynamically configure tasks without class reference in groovy.
         // Eagerly configure this task in order to be added into task group in IDE
@@ -137,10 +139,8 @@ class MindustryAssetPlugin : Plugin<Project> {
         target.afterEvaluateThis {
             val assetsRoot = assets.assetsRoot.get()
             if (assetsRoot != MindustryPlugin.DefaultEmptyFile) {
-                plugins.whenHas<JavaPlugin> {
-                    tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                        from(assetsRoot)
-                    }
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    from(assetsRoot)
                 }
             }
             val icon = assets.icon.get()
@@ -149,14 +149,11 @@ class MindustryAssetPlugin : Plugin<Project> {
             }
             // Resolve all batches
             val group2Batches = assets.batches.get().resolveBatches()
-            var jar: TaskProvider<Jar>? = null
-            plugins.whenHas<JavaPlugin> {
-                jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
-            }
+            val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
             var genResourceClassCounter = 0
             for ((type, batches) in group2Batches) {
                 if (batches.isEmpty()) continue
-                jar?.configure {
+                jar.configure {
                     batches.forEach { batch ->
                         val dir = batch.dir
                         val root = batch.root
