@@ -20,6 +20,7 @@ ___
 - Generate Resource Class
 - Deploy on Android
 
+Please check the [homepage](https://plumygame.github.io/mgpp/) to obtain more information.
 ## Usages
 
 **Because this plugin was made in Kotlin, using Kotlin as your DSL is recommended.**
