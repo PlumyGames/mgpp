@@ -40,7 +40,7 @@ buildscript {
     repositories { maven { url "https://www.jitpack.io" } }
 }
 plugins {
-    id "io.github.liplum.mgpp" version "1.0.4"
+    id "io.github.liplum.mgpp" version "1.0.5"
 }
 ```
 
@@ -53,7 +53,7 @@ buildscript {
         maven { url "https://www.jitpack.io" }
     }
     dependencies {
-        classpath "io.github.liplum.mgpp:MindustryGradlePluginPlumy:1.0.4"
+        classpath "io.github.liplum.mgpp:MindustryGradlePluginPlumy:1.0.5"
     }
 }
 

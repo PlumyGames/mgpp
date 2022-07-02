@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -17,7 +16,6 @@ plugins {
     `java-gradle-plugin`
     id("maven-publish")
     id("com.gradle.plugin-publish") version "0.18.0"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 group = "io.github.liplum.mgpp"
 val mgppVersion: String by project
@@ -81,8 +79,6 @@ repositories {
 }
 val arcVersion: String by project
 dependencies {
-    shadow("com.github.anuken.arc:arc-core:$arcVersion")
-    shadow("org.hjson:hjson:3.0.0")
     implementation("com.github.anuken.arc:arc-core:$arcVersion")
     implementation("org.hjson:hjson:3.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
@@ -100,15 +96,16 @@ tasks.named<Jar>("jar") {
     archiveBaseName.set(pluginName)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     includeEmptyDirs = false
+    from(
+        configurations.runtimeClasspath.get().mapNotNull {
+            if (it.isFile && it.extension == "jar"
+                && ("arc-core" in it.name || "hjson" in it.name))
+                zipTree(it)
+            else null
+        }
+    )
+    from(sourceSets.main.get().allSource)
 }
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-tasks.named<ShadowJar>("shadowJar") {
-    //minimize()
-    configurations = listOf(project.configurations.getByName("shadow"))
-    archiveBaseName.set(pluginName)
-    archiveClassifier.set("")
-    archiveVersion.set(project.version.toString())
 }

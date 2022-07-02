@@ -139,7 +139,8 @@ data class TaskMod(
 
     val casualName = task.replace(":", "-").trim('-')
     override fun resolveFile(project: Project, currentDir: File): File {
-        val output = project.tasks.getByName(task).outputs.files.singleFile
+        val sourceTask = project.tasks.getByPath(task)
+        val output = sourceTask.outputs.files.singleFile
         return currentDir.resolve("FromTask-$casualName.zip").apply {
             output.copyTo(this, overwrite = true)
         }
