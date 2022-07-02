@@ -7,7 +7,7 @@ import java.io.Serializable
 import java.net.URL
 
 interface IMod : Serializable {
-    fun resolveFile(currentDir: File)
+    fun resolveFile(currentDir: File): File
     fun mapLocalFile(currentDir: File): File
 }
 
@@ -16,9 +16,10 @@ data class LocalMod(
 ) : IMod {
     constructor(path: String) : this(File(path))
 
-    override fun resolveFile(currentDir: File) {
-        modFile.copyTo(currentDir.resolve(modFile.name))
-    }
+    override fun resolveFile(currentDir: File): File =
+        currentDir.resolve(modFile.name).apply {
+            modFile.copyTo(this)
+        }
 
     override fun mapLocalFile(currentDir: File): File =
         currentDir.resolve(modFile.name)
@@ -29,11 +30,13 @@ data class UrlMod(
 ) : IMod {
     constructor(url: String) : this(URL(url))
 
-    override fun resolveFile(currentDir: File) {
+    override fun resolveFile(currentDir: File): File {
         val path: String = url.toURI().path
         val last = path.substring(path.lastIndexOf('/') + 1)
         val name = if (last.endsWith(".jar")) last else "$last.jar"
-        url.copyTo(currentDir.resolve(name))
+        return currentDir.resolve(name).apply {
+            url.copyTo(this)
+        }
     }
 
     override fun mapLocalFile(currentDir: File): File {
@@ -47,7 +50,7 @@ data class UrlMod(
 data class GitHubMod(
     var repo: String,
 ) : IMod {
-    override fun resolveFile(currentDir: File) {
+    override fun resolveFile(currentDir: File): File {
         val releaseJson = URL("https://api.github.com/repos/$repo/releases/latest").readText()
         val json = Jval.read(releaseJson)
         val assets = json["assets"].asArray()
@@ -60,6 +63,7 @@ data class GitHubMod(
             val url = asset.getString("browser_download_url")
             val modFile = currentDir.resolve(repo.replace("/", "-") + ".jar")
             URL(url).copyTo(modFile)
+            return modFile
         } else {
             throw RuntimeException("Can't find the mod.")
         }
