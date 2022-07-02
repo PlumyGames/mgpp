@@ -409,6 +409,38 @@ class ModsSpec(
         worksWith.add(GitHubMod(repo))
     }
 
+    infix fun json(repo: String) = GitHubPlainMod(repo).apply {
+        worksWith.add(this)
+    }
+
+    infix fun hjson(repo: String) = GitHubPlainMod(repo).apply {
+        worksWith.add(this)
+    }
+
+    infix fun js(repo: String) = GitHubPlainMod(repo).apply {
+        worksWith.add(this)
+    }
+
+    infix fun java(repo: String) {
+        worksWith.add(GitHubJvmMod(repo))
+    }
+
+    infix fun kotlin(repo: String) {
+        worksWith.add(GitHubJvmMod(repo))
+    }
+
+    infix fun groovy(repo: String) {
+        worksWith.add(GitHubJvmMod(repo))
+    }
+
+    infix fun scala(repo: String) {
+        worksWith.add(GitHubJvmMod(repo))
+    }
+
+    infix fun closure(repo: String) {
+        worksWith.add(GitHubJvmMod(repo))
+    }
+
     infix fun local(path: String) {
         worksWith.add(LocalMod(path))
     }
@@ -416,38 +448,16 @@ class ModsSpec(
     infix fun url(url: String) {
         worksWith.add(UrlMod(url))
     }
+
+    infix fun fromTask(task: String) {
+        worksWith.add(TaskMod(task))
+    }
     /**
      * Add some mods working with this mod.
      */
     fun worksWith(vararg mods: IMod) {
         worksWith.addAll(mods.toList())
     }
-
-    fun Mod(map: Map<String, Any>): IMod {
-        run {
-            val repo = map["repo"]
-            if (repo != null) {
-                return GitHubMod(repo.toString())
-            }
-        }
-        run {
-            val path = map["path"]
-            if (path != null) {
-                return LocalMod(path.toString())
-            }
-        }
-        run {
-            val url = map["url"]
-            if (url != null) {
-                return UrlMod(url.toString())
-            }
-        }
-        throw RuntimeException("Unknown mod type from $map")
-    }
-
-    fun GitHub(repo: String) = GitHubMod(repo)
-    fun Local(path: String) = LocalMod(path)
-    fun Url(url: String) = UrlMod(url)
 }
 
 class DeploySpec(

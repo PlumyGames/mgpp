@@ -266,6 +266,7 @@ class MindustryAppPlugin : Plugin<Project> {
             ) {
                 group = MindustryPlugin.MindustryTaskGroup
                 mods.set(ex.mods.worksWith)
+                ex.mods.worksWith.get().forEach { it.preProcess(this) }
             }
             val dataDirEx = ex.run._dataDir.get()
             val runClient = tasks.register<RunMindustry>("runClient") {

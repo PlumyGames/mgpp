@@ -39,6 +39,17 @@ repositories {
     mindustryRepo()
     mavenCentral()
 }
+open class TestOutputTask : DefaultTask() {
+    val outputFile = project.objects.property<File>()
+        @OutputFile get
+    @TaskAction
+    fun test() {
+    }
+}
+// Only for testing TaskMod(taskName)
+tasks.register<TestOutputTask>("iconMaker") {
+    outputFile.set(rootDir.resolve("icon.png"))
+}
 
 mindustry {
     dependency {
@@ -53,7 +64,9 @@ mindustry {
     }
     mods {
         worksWith {
-            add github "liplum/cyberio"
+            add kotlin "liplum/cyberio"
+            add hjson "BlueWolf3682/Exotic-Mod"// branch "0.8"
+            add fromTask "iconMaker"
         }
     }
     meta += ModMeta(
@@ -71,6 +84,7 @@ mindustry {
         fatJar
     }
 }
+
 mindustryAssets {
     sprites {
         dir = rootDir.resolve("sprites")
