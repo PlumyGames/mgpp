@@ -41,7 +41,7 @@ mindustry {
     }
     mods {
         worksWith {
-             //add fromTask ":core:jar"
+             add fromTask ":core:jar"
         }
     }
 }

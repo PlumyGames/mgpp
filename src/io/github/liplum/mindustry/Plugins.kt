@@ -284,7 +284,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.set("mods")
                 ex.mods._extraModsFromTask.get().forEach {
-                    outputtedMods.from(tasks.getByName(it))
+                    outputtedMods.from(tasks.getByPath(it))
                 }
             }
             val runServer = tasks.register<RunMindustry>(
