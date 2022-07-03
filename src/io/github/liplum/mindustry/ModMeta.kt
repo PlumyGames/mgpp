@@ -12,8 +12,9 @@ import kotlin.reflect.KProperty
 typealias MetaConfig = HashMap<String, Any>
 
 data class ModMeta(
-    val info: MetaConfig = HashMap(),
+    val info: MetaConfig,
 ) : Serializable {
+    constructor() : this(HashMap<String, Any>().setDefaultValue())
     constructor(info: Map<String, Any>) : this(HashMap(info).setDefaultValue())
     constructor(
         name: String = default("name"),
@@ -84,12 +85,10 @@ data class ModMeta(
             }
         }
     }
-
     // For Kotlin
     operator fun plusAssign(addition: ModMeta) {
         append(addition)
     }
-
     // For Groovy
     fun leftShift(addition: ModMeta) {
         append(addition)

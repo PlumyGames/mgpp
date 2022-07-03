@@ -1,6 +1,7 @@
 @file:Suppress("SpellCheckingInspection")
 
 import io.github.liplum.mindustry.*
+
 plugins {
     java
     id("io.github.liplum.mgpp") version "1.0.7"
@@ -41,9 +42,15 @@ mindustry {
     }
     mods {
         worksWith {
-             add fromTask ":core:jar"
+            add fromTask ":core:jar"
         }
     }
+    meta += ModMeta(
+        name = "main",
+        displayName = "Main Mod",
+        minGameVersion = "136",
+        main = "plumy.test.MainMod"
+    )
 }
 mindustryAssets {
     root at "$projectDir/assets"

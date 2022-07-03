@@ -31,6 +31,12 @@ mindustry {
         mindustry mirror "d7312445a1"
         arc on "123fbf12b9"
     }
+    meta += ModMeta(
+        name = "core",
+        displayName = "Core Mod",
+        minGameVersion = "136",
+        main = "plumy.test.CoreMod"
+    )
 }
 dependencies {
     importMindustry()

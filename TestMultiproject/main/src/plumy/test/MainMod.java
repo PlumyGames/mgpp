@@ -4,33 +4,33 @@ import arc.util.CommandHandler;
 import arc.util.Log;
 import mindustry.mod.Mod;
 
-public class ModClass extends Mod {
-    public ModClass() {
+public class MainMod extends Mod {
+    public MainMod() {
         super();
-        Log.info("ModClass.ctor.");
+        Log.info("MainMod.ctor.");
     }
 
     @Override
     public void init() {
         super.init();
-        Log.info("ModClass.init");
+        Log.info("MainMod.init");
     }
 
     @Override
     public void loadContent() {
         super.loadContent();
-        Log.info("ModClass.loadContent");
+        Log.info("MainMod.loadContent");
     }
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
         super.registerServerCommands(handler);
-        Log.info("ModClass.registerServerCommands");
+        Log.info("MainMod.registerServerCommands");
     }
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
         super.registerClientCommands(handler);
-        Log.info("ModClass.registerClientCommands");
+        Log.info("MainMod.registerClientCommands");
     }
 }
