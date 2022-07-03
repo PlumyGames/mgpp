@@ -7,7 +7,7 @@ class TestNamingRule {
         NameRule.Pascal.split("ImPascalNameRule") match listOf("Im", "Pascal", "Name", "Rule")
         NameRule.Camel.split("camelNameRule") match listOf("camel", "Name", "Rule")
         NameRule.Snake.split("here_is_a_python") match listOf("here", "is", "a", "python")
-        NameRule.AllCaps.split("CPP_CONVENTION") match listOf("CPP", "CONVENTION")
+        NameRule.AllCaps.split("CPP_CONVENTION") match listOf("cpp", "convention")
         NameRule.Kebab.split("yummy-kebab") match listOf("yummy", "kebab")
         NameRule.Domain.split("dot.net") match listOf("dot", "net")
     }

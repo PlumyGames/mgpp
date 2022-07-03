@@ -121,8 +121,8 @@ abstract class NameRule(
         /**
          * snake_name_rule
          *
-         * Split -> It will split them by underline.
-         * `java_La_ngSt_rIng` -> `["java","La","ngSt","rIng"]`
+         * Split -> It will split them by underline and convert them to lowercase.
+         * `java_La_ngSt_rIng` -> `["java","la","ngst","ring"]`
          *
          * Rename-> It will keep all letters lowercase
          * `["JaVa","lang","String"]` -> "java_lang_string"
@@ -130,7 +130,7 @@ abstract class NameRule(
         @JvmStatic
         val Snake = object : NameRule("Snake") {
             override fun split(raw: String): List<String> =
-                raw.split("_")
+                raw.split("_").map { it.lowercase() }
 
             override fun rename(segments: List<String>): String =
                 if (segments.isEmpty()) ""
@@ -139,8 +139,8 @@ abstract class NameRule(
         /**
          * ALL_CAPS_NAME_RULE
          *
-         * Split -> It will split them by underline.
-         * `JAVA_LA_NgST_RING` -> `["JAVA","LA","NgST","RING"]`
+         * Split -> It will split them by underline and convert them to lowercase.
+         * `JAVA_LA_NgST_RING` -> `["java","la","ngst","ring"]`
          *
          * Rename-> It will keep the all letters uppercase
          * `["JaVa","lang","String"]` -> "JAVA_LANG_STRING"
@@ -148,7 +148,7 @@ abstract class NameRule(
         @JvmStatic
         val AllCaps = object : NameRule("AllCaps") {
             override fun split(raw: String): List<String> =
-                raw.split("_")
+                raw.split("_").map { it.lowercase() }
 
             override fun rename(segments: List<String>): String =
                 if (segments.isEmpty()) ""
@@ -157,8 +157,8 @@ abstract class NameRule(
         /**
          * kebab-name-rule
          *
-         * Split -> It will split them by hyphen.
-         * `JAvA-LA-NgST-RiNG` -> `["JAvA","LA","NgST","RiNG"]`
+         * Split -> It will split them by hyphen and convert them to lowercase.
+         * `JAvA-LA-NgST-RiNG` -> `["java","la","ngst","ring"]`
          *
          * Rename-> It will keep the all letters lowercase
          * `["JaVa","lang","String"]` -> "java-lang-string"
@@ -166,7 +166,7 @@ abstract class NameRule(
         @JvmStatic
         val Kebab = object : NameRule("Kebab") {
             override fun split(raw: String): List<String> =
-                raw.split("-")
+                raw.split("-").map { it.lowercase() }
 
             override fun rename(segments: List<String>): String =
                 if (segments.isEmpty()) ""
