@@ -219,7 +219,7 @@ inline fun safeRun(func: () -> Unit) {
  * For downloading and running game.
  */
 class MindustryAppPlugin : Plugin<Project> {
-    override fun apply(target: Project)  {
+    override fun apply(target: Project) {
         val ex = target.extensions.getOrCreate<MindustryExtension>(
             MindustryPlugin.MainExtensionName
         )
@@ -297,6 +297,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.convention("config/mods")
                 ex.mods._extraModsFromTask.get().forEach {
+                    dependsOn(tasks.getByPath(it))
                     outputtedMods.from(tasks.getByPath(it))
                 }
             }

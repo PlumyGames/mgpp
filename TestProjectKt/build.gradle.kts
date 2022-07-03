@@ -2,24 +2,9 @@ import io.github.liplum.mindustry.*
 import io.github.liplum.mindustry.task.AntiAlias
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-        maven {
-            url = uri("https://www.jitpack.io")
-        }
-    }
-    dependencies {
-        classpath(
-            files(
-                (File("../build/libs").listFiles().let {
-                    if (it == null) emptyArray<File>()
-                    else it.sortedByDescending { f -> f.name }[0]
-                })
-            )
-        )
-    }
+plugins {
+    kotlin("jvm") version "1.7.0"
+    id("io.github.liplum.mgpp") version "1.0.7"
 }
 
 sourceSets {
@@ -33,10 +18,6 @@ sourceSets {
         java.srcDirs("$buildDir/generated/mindustry")
         resources.srcDir("resources")
     }
-}
-apply<MindustryPlugin>()
-plugins {
-    kotlin("jvm") version "1.7.0"
 }
 
 group = "net.liplum"

@@ -23,7 +23,7 @@ jobs:
 
       - name: Build mgpp
         run: |
-          .\gradlew.bat :jar --info
+          .\gradlew.bat :publishToMavenLocal --info
 
       - name: Set Android SDK tools
         run: echo "$ANDROID_HOME/build-tools/30.0.3" >> $GITHUB_PATH
@@ -42,6 +42,12 @@ jobs:
           .\gradlew.bat :antiAlias --info
           cd ..
 
+      - name: Test Multi-Project
+        run : |
+          cd TestMultiproject
+          .\gradlew.bat :deploy --info
+          cd ..
+
       - uses: actions/upload-artifact@v3
         with:
           name: mgpp-snapshot-build
@@ -49,3 +55,4 @@ jobs:
             build/libs/*.jar
             TestProjectGroovy/build/tmp/deploy/*.jar
             TestProjectKt/build/tmp/deploy/*.jar
+            TestMultiproject/build/tmp/deploy/*.jar

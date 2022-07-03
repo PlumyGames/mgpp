@@ -1,22 +1,9 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-        maven {
-            url = uri('https://www.jitpack.io')
-        }
-    }
-    dependencies {
-        classpath(files(new File('../build/libs').listFiles()))
-    }
-}
 plugins {
     id 'java'
+    id "io.github.liplum.mgpp" version "1.0.7"
 }
 group 'plumy.test'
 version '0.1'
-
-apply plugin: io.github.liplum.mindustry.MindustryPlugin
 
 repositories {
     use(io.github.liplum.mindustry.BuildScript) {
