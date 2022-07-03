@@ -51,15 +51,11 @@ pluginBundle {
     vcsUrl = "https://github.com/PlumyGame/mgpp"
     tags = listOf("mindustry", "mindustry-mod", "mod")
 }
-tasks.named<GroovyCompile>("compileGroovy") {
-    val compileKotlin = tasks.named<KotlinCompile>("compileKotlin")
-    dependsOn(compileKotlin)
-    classpath += files(compileKotlin.get().destinationDirectory)
+tasks.compileGroovy {
+    classpath = sourceSets.main.get().compileClasspath
 }
-tasks.named<GroovyCompile>("compileTestGroovy") {
-    val compileTestKotlin = tasks.named<KotlinCompile>("compileTestKotlin")
-    dependsOn(compileTestKotlin)
-    classpath += files(compileTestKotlin.get().destinationDirectory)
+tasks.compileKotlin {
+    classpath += files(sourceSets.main.get().groovy.classesDirectory)
 }
 val pluginName: String by project
 sourceSets {

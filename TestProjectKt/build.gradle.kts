@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.0"
-    id("io.github.liplum.mgpp") version "1.0.7"
+    id("io.github.liplum.mgpp") version "1.0.8"
 }
 
 sourceSets {

@@ -1,3 +1,5 @@
+@file:Suppress("RemoveRedundantBackticks")
+
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
@@ -6,6 +8,8 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.TaskContainer
+import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.configurationcache.extensions.capitalized
 import java.io.File
@@ -21,6 +25,7 @@ class MindustryPlugin : Plugin<Project> {
         plugins.apply<MindustryAppPlugin>()
         plugins.apply<MindustryAssetPlugin>()
         plugins.apply<MindustryJavaPlugin>()
+        GroovyBridge.attach(target)
     }
 
     companion object {
@@ -54,37 +59,18 @@ class MindustryJavaPlugin : Plugin<Project> {
         val ex = extensions.getOrCreate<MindustryExtension>(
             MindustryPlugin.MainExtensionName
         )
-        target.afterEvaluateThis {
-            if (ex.deploy.enableFatJar.get()) {
-                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-                    from(
-                        configurations.runtimeClasspath.get().map {
-                            if (it.isDirectory) it else zipTree(it)
-                        }
-                    )
-                }
-            }
-        }
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")
             group = MindustryPlugin.MindustryTaskGroup
             dependsOn(JavaPlugin.JAR_TASK_NAME)
-            classpath.setFrom(
+            classpath.from(
                 configurations.compileClasspath,
                 configurations.runtimeClasspath
             )
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
-            jarFiles.setFrom(jar)
+            jarFiles.from(jar)
             sdkRoot.set(ex.deploy._androidSdkRoot)
         }
-        val modMeta = ex.modMeta.get()
-        ex.deploy._baseName.convention(provider {
-            modMeta.name
-        })
-        ex.deploy._version.convention(provider {
-            modMeta.version
-        })
         tasks.register<Jar>("deploy") {
             group = MindustryPlugin.MindustryTaskGroup
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
@@ -99,8 +85,39 @@ class MindustryJavaPlugin : Plugin<Project> {
                 *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
             )
         }
+        target.afterEvaluateThis {
+            if (ex.deploy.enableFatJar.get()) {
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+                    from(
+                        configurations.runtimeClasspath.get().map {
+                            if (it.isDirectory) it else zipTree(it)
+                        }
+                    )
+                }
+            }
+        }
+        val modMeta = ex.modMeta.get()
+        ex.deploy._baseName.convention(provider {
+            modMeta.name
+        })
+        ex.deploy._version.convention(provider {
+            modMeta.version
+        })
     }
 }
+
+/**
+ * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
+ */
+val TaskContainer.`dexJar`: TaskProvider<DexJar>
+    get() = named<DexJar>("dexJar")
+
+/**
+ * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
+ */
+val TaskContainer.`deploy`: TaskProvider<Jar>
+    get() = named<Jar>("deploy")
 
 class MindustryAssetPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
@@ -110,7 +127,7 @@ class MindustryAssetPlugin : Plugin<Project> {
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(
             MindustryPlugin.AssetExtensionName
         )
-        val genModHjson = tasks.register<ModHjsonGenerateTask>("genModHjson") {
+        val genModHjson = tasks.register<ModHjsonGenerate>("genModHjson") {
             group = MindustryPlugin.MindustryTaskGroup
             modMeta.set(main.modMeta)
             outputHjson.set(temporaryDir.resolve("mod.hjson"))
@@ -209,6 +226,18 @@ class MindustryAssetPlugin : Plugin<Project> {
     }
 }
 
+/**
+ * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
+ */
+val TaskContainer.`antiAlias`: TaskProvider<AntiAlias>
+    get() = named<AntiAlias>("antiAlias")
+
+/**
+ * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
+ */
+val TaskContainer.`genModHjson`: TaskProvider<ModHjsonGenerate>
+    get() = named<ModHjsonGenerate>("genModHjson")
+
 inline fun safeRun(func: () -> Unit) {
     try {
         func()
@@ -304,6 +333,12 @@ class MindustryAppPlugin : Plugin<Project> {
         }
     }
 }
+
+/**
+ * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
+ */
+val TaskContainer.`resolveMods`: TaskProvider<ResolveMods>
+    get() = named<ResolveMods>("resolveMods")
 
 fun Project.resolveDefaultDataDir(): File {
     return when (getOs()) {

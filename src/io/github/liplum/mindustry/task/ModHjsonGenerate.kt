@@ -9,7 +9,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
-abstract class ModHjsonGenerateTask : DefaultTask() {
+abstract class ModHjsonGenerate : DefaultTask() {
     abstract val modMeta: Property<ModMeta>
         @Input get
     abstract val outputHjson: FileProp

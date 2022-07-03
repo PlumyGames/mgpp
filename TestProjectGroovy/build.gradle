@@ -1,14 +1,12 @@
 plugins {
     id 'java'
-    id "io.github.liplum.mgpp" version "1.0.7"
+    id "io.github.liplum.mgpp" version "1.0.8"
 }
 group 'plumy.test'
 version '0.1'
 
 repositories {
-    use(io.github.liplum.mindustry.BuildScript) {
-        mindustryRepo()
-    }
+    mindustryRepo()
     mavenCentral()
 }
 sourceSets {
@@ -47,7 +45,7 @@ mindustry {
     meta.version = 'groovy 3000'
     meta.minGameVersion = '136'
     deploy {
-        baseName =  'TestGroovyMod'
+        baseName = 'TestGroovyMod'
         version = '3.14159'
         // fatJar is default option unless you use another tool like shadowJar
         fatJar
@@ -74,9 +72,7 @@ antiAlias {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    use(io.github.liplum.mindustry.BuildScript) {
-        importMindustry()
-    }
+    importMindustry()
 }
 
 test {
