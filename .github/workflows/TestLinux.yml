@@ -50,7 +50,7 @@ jobs:
         run : |
           cd TestMultiproject
           chmod +x gradlew
-          ./gradlew :deploy --info
+          ./gradlew :main:deploy --info
           cd ..
 
       - uses: actions/upload-artifact@v3

@@ -45,7 +45,7 @@ jobs:
       - name: Test Multi-Project
         run : |
           cd TestMultiproject
-          .\gradlew.bat :deploy --info
+          .\gradlew.bat :main:deploy --info
           cd ..
 
       - uses: actions/upload-artifact@v3

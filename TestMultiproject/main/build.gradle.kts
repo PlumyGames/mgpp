@@ -41,7 +41,7 @@ mindustry {
     }
     mods {
         worksWith {
-             //add fromTask ":js:zip"
+             //add fromTask ":core:jar"
         }
     }
 }
