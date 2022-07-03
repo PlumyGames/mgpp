@@ -176,8 +176,9 @@ class MindustryAssetPlugin : Plugin<Project> {
                     this.group = MindustryPlugin.MindustryAssetTaskGroup
                     dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
                     args.put("ModName", main.modMeta.get().name)
+                    args.put("NameRule", type.nameRule.name)
                     args.putAll(assets.args)
-                    generator = assets.getGenerator(type.generator)
+                    generator.set(type.generator)
                     className.set(type.className)
                     resources.setFrom(batches.filter { it.enableGenClass }.map { it.dir })
                 }

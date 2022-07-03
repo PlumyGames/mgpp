@@ -1,11 +1,30 @@
 package io.github.liplum.mindustry
 
-import io.github.liplum.dsl.*
+import io.github.liplum.dsl.fileProp
+import io.github.liplum.dsl.listProp
+import io.github.liplum.dsl.stringProp
 import io.github.liplum.mindustry.MindustryAssetsExtension.AssetBatchType
 import org.gradle.api.Action
 import org.gradle.api.Project
 import java.io.File
 import java.io.Serializable
+
+object ResourceClassGeneratorRegistry {
+    @JvmStatic
+    val all = HashMap<String, IResourceClassGenerator>(
+        mapOf(
+            "DefaultSprite" to SpritesGenerator,
+            "DefaultSound" to SoundsGenerator,
+        )
+    )
+
+    operator fun get(name: String): IResourceClassGenerator =
+        all[name] ?: IResourceClassGenerator.Empty
+
+    operator fun set(name: String, gen: IResourceClassGenerator) {
+        all[name] = gen
+    }
+}
 
 open class MindustryAssetsExtension(
     target: Project,
@@ -16,12 +35,7 @@ open class MindustryAssetsExtension(
     val qualifiedName = target.stringProp().apply {
         convention("default")
     }
-    val generators = HashMap<String, IResourceClassGenerator>(
-        mapOf(
-            "DefaultSprite" to SpritesGenerator,
-            "DefaultSound" to SoundsGenerator,
-        )
-    )
+    val generators = ResourceClassGeneratorRegistry.all
     val args = HashMap<String, String>()
     val batches = target.listProp<AssetBatch>().apply {
         convention(HashSet())
@@ -61,7 +75,11 @@ open class MindustryAssetsExtension(
     }
 
     fun getGenerator(name: String) =
-        generators[name] ?: IResourceClassGenerator.Empty
+        ResourceClassGeneratorRegistry[name]
+
+    fun setGenerator(name: String, gen: IResourceClassGenerator) {
+        ResourceClassGeneratorRegistry[name] = gen
+    }
 
     inline operator fun String.invoke(
         config: AssetBatchType.() -> Unit,
@@ -91,6 +109,7 @@ open class MindustryAssetsExtension(
         var group: String = "",
         var className: String = "",
         var generator: String = "",
+        var nameRule: NameRule = NameRule.Kebab,
     ) : Serializable {
         // For Groovy
         fun add(
@@ -132,6 +151,13 @@ open class MindustryAssetsExtension(
             return "AssetBatchType(group='$group', className='$className', generator='$generator')"
         }
     }
+
+    val Pascal = NameRule.Pascal
+    val Camel = NameRule.Camel
+    val Snake = NameRule.Snake
+    val AllCaps = NameRule.AllCaps
+    val Kebab = NameRule.Kebab
+    val Domain = NameRule.Domain
 }
 
 data class AssetBatch(
