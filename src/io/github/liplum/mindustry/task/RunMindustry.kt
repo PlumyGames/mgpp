@@ -1,8 +1,11 @@
 package io.github.liplum.mindustry.task
 
-import org.gradle.api.tasks.*
 import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.*
+import io.github.liplum.mindustry.MindustryPlugin
+import org.gradle.api.tasks.*
+import kotlin.collections.joinToString
+import kotlin.collections.listOf
+import kotlin.collections.set
 
 open class RunMindustry : JavaExec() {
     val mindustryFile = project.configurationFileCollection()
@@ -29,7 +32,11 @@ open class RunMindustry : JavaExec() {
         val mods = data.resolve(dataModsPath.get())
         mods.delete()
         mods.mkdirs()
-        modsWorkWith.mapFilesTo(mods)
+        val workWith = modsWorkWith.files
+        workWith.mapFilesTo(mods)
+        logger.info("Copied mods working with[${workWith.joinToString(","){it.name}}] into task $name")
+        val output = outputtedMods.files
+        logger.info("Copied outputted mods[${output.joinToString(","){it.name}}] into task $name")
         outputtedMods.mapFilesTo(mods)
         standardInput = System.`in`
         args = listOf(mindustryFile.singleFile.absolutePath)

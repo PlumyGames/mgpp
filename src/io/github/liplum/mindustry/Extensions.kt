@@ -384,7 +384,7 @@ class ModsSpec(
     target: Project,
 ) {
     val _extraModsFromTask = target.stringsProp().apply {
-        convention(listOf(JavaPlugin.JAR_TASK_NAME))
+        add(JavaPlugin.JAR_TASK_NAME)
     }
     var extraModsFromTask: List<String>
         get() = _extraModsFromTask.getOrElse(emptyList())
@@ -450,7 +450,7 @@ class ModsSpec(
     }
 
     infix fun fromTask(task: String) {
-        worksWith.add(TaskMod(task))
+        _extraModsFromTask.add(task)
     }
     /**
      * Add some mods working with this mod.

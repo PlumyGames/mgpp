@@ -106,7 +106,7 @@ tasks.named<Jar>("jar") {
             else null
         }
     )
-    from(sourceSets.main.get().allSource)
+    //from(sourceSets.main.get().allSource)
 }
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

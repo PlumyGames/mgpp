@@ -285,7 +285,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.set("mods")
                 ex.mods._extraModsFromTask.get().forEach {
-                    outputtedMods.setFrom(tasks.getByName(it))
+                    outputtedMods.from(tasks.getByName(it))
                 }
             }
             val runServer = tasks.register<RunMindustry>(
@@ -298,7 +298,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.convention("config/mods")
                 ex.mods._extraModsFromTask.get().forEach {
-                    outputtedMods.setFrom(tasks.getByName(it))
+                    outputtedMods.from(tasks.getByPath(it))
                 }
             }
         }
