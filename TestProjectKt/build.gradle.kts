@@ -11,7 +11,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath(files(File("../build/libs").listFiles()))
+        classpath(
+            files(
+                (File("../build/libs").listFiles().let {
+                    if (it == null) emptyArray<File>()
+                    else it.sortedByDescending { f -> f.name }[0]
+                })
+            )
+        )
     }
 }
 
@@ -65,7 +72,7 @@ mindustry {
     mods {
         worksWith {
             add kotlin "liplum/cyberio"
-            add hjson "BlueWolf3682/Exotic-Mod"// branch "0.8"
+            add hjson "BlueWolf3682/Exotic-Mod" branch "0.8"
             add fromTask "iconMaker"
         }
     }

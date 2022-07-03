@@ -2,14 +2,13 @@ package io.github.liplum.mindustry
 
 import arc.util.serialization.Jval
 import io.github.liplum.dsl.copyTo
-import io.github.liplum.mindustry.task.ResolveMods
+import io.github.liplum.dsl.linkString
 import org.gradle.api.Project
 import java.io.File
 import java.io.Serializable
 import java.net.URL
 
 interface IMod : Serializable {
-    fun preProcess(resolveMods: ResolveMods) {}
     fun resolveFile(project: Project, currentDir: File): File
     fun mapLocalFile(project: Project, currentDir: File): File
 }
@@ -33,21 +32,20 @@ data class UrlMod(
 ) : IMod {
     constructor(url: String) : this(URL(url))
 
-    override fun resolveFile(project: Project, currentDir: File): File {
-        val path: String = url.toURI().path
-        val last = path.substring(path.lastIndexOf('/') + 1)
-        val name = if (last.endsWith(".jar")) last else "$last.jar"
-        return currentDir.resolve(name).apply {
+    val fileName: String
+        get() {
+            val path: String = url.toURI().path
+            val last = path.substring(path.lastIndexOf('/') + 1)
+            return if (last.endsWith(".jar")) last else "$last.jar"
+        }
+
+    override fun resolveFile(project: Project, currentDir: File): File =
+        currentDir.resolve(fileName).apply {
             url.copyTo(this)
         }
-    }
 
-    override fun mapLocalFile(project: Project, currentDir: File): File {
-        val path: String = url.toURI().path
-        val last = path.substring(path.lastIndexOf('/') + 1)
-        val name = if (last.endsWith(".jar")) last else "$last.jar"
-        return currentDir.resolve(name)
-    }
+    override fun mapLocalFile(project: Project, currentDir: File): File =
+        currentDir.resolve(fileName)
 }
 
 fun String.isJvmMod() = this == "Java" || this == "Kotlin" ||
@@ -72,18 +70,34 @@ fun importJvmMod(repo: String, dest: File) {
 }
 
 fun importPlainMod(repo: String, branch: String, dest: File) {
-    val url = "https://api.github.com/repos/$repo/zipball/$branch:"
+    //val url= "https://github.com/$repo/archive/refs/heads/$branch.zip"
+    val url = "https://api.github.com/repos/$repo/zipball/$branch"
+    /*
+    Http.get(url) { loc ->
+        val trueLocation = loc.getHeader("Location")
+        if (trueLocation != null) {
+            Http.get(trueLocation) { trueLoc ->
+                trueLoc.resultAsStream.copyTo(dest)
+            }
+        } else {
+            loc.resultAsStream.copyTo(dest)
+        }
+    }*/
     URL(url).copyTo(dest)
 }
 
+fun String.repo2Path() = this.replace("/", "-")
 data class GitHubMod(
     var repo: String,
 ) : IMod {
+    val fileName: String
+        get() = repo.repo2Path() + ".zip"
+
     override fun resolveFile(project: Project, currentDir: File): File {
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
         val json = Jval.read(jsonText)
         val lan = json.getString("language")
-        val modFile = currentDir.resolve(repo.replace("/", "-") + ".zip")
+        val modFile = currentDir.resolve(fileName)
         if (lan.isJvmMod()) {
             importJvmMod(repo, modFile)
         } else {
@@ -94,59 +108,44 @@ data class GitHubMod(
     }
 
     override fun mapLocalFile(project: Project, currentDir: File): File =
-        currentDir.resolve(repo.replace("/", "-") + ".zip")
+        currentDir.resolve(fileName)
 }
 
 data class GitHubJvmMod(
     var repo: String,
 ) : IMod {
+    val fileName: String
+        get() = repo.repo2Path() + ".jar"
+
     override fun resolveFile(project: Project, currentDir: File): File {
-        val modFile = currentDir.resolve(repo.replace("/", "-") + ".jar")
+        val modFile = currentDir.resolve(fileName)
         importJvmMod(repo, modFile)
         return modFile
     }
 
     override fun mapLocalFile(project: Project, currentDir: File): File =
-        currentDir.resolve(repo.replace("/", "-") + ".jar")
+        currentDir.resolve(fileName)
 }
 
 data class GitHubPlainMod(
     var repo: String, var branch: String = "",
 ) : IMod {
+    val fileName: String
+        get() = linkString(separator = "-", repo.repo2Path(), branch) + ".zip"
+
     override fun resolveFile(project: Project, currentDir: File): File {
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
         val json = Jval.read(jsonText)
         val branch = branch.ifBlank { json.getString("default_branch") }
-        val modFile = currentDir.resolve(repo.replace("/", "-") + ".zip")
+        val modFile = currentDir.resolve(fileName)
         importPlainMod(repo, branch, modFile)
         return modFile
     }
 
     override fun mapLocalFile(project: Project, currentDir: File): File =
-        currentDir.resolve(repo.replace("/", "-") + ".zip")
+        currentDir.resolve(fileName)
 
     infix fun branch(branch: String) {
         this.branch = branch
-    }
-}
-
-data class TaskMod(
-    var task: String,
-) : IMod {
-    override fun preProcess(resolveMods: ResolveMods) {
-        resolveMods.dependsOn(task)
-    }
-
-    val casualName = task.replace(":", "-").trim('-')
-    override fun resolveFile(project: Project, currentDir: File): File {
-        val sourceTask = project.tasks.getByPath(task)
-        val output = sourceTask.outputs.files.singleFile
-        return currentDir.resolve("FromTask-$casualName.zip").apply {
-            output.copyTo(this, overwrite = true)
-        }
-    }
-
-    override fun mapLocalFile(project: Project, currentDir: File): File {
-        return currentDir.resolve("FromTask-$casualName.zip")
     }
 }

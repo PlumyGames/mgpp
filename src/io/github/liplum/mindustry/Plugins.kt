@@ -219,10 +219,16 @@ inline fun safeRun(func: () -> Unit) {
  * For downloading and running game.
  */
 class MindustryAppPlugin : Plugin<Project> {
-    override fun apply(target: Project) {
+    override fun apply(target: Project)  {
         val ex = target.extensions.getOrCreate<MindustryExtension>(
             MindustryPlugin.MainExtensionName
         )
+        val resolveMods = target.tasks.register<ResolveMods>(
+            "resolveMods"
+        ) {
+            group = MindustryPlugin.MindustryTaskGroup
+            mods.set(ex.mods.worksWith)
+        }
         target.afterEvaluateThis {
             // For client side
             val downloadClient = tasks.register<Download>(
@@ -261,13 +267,6 @@ class MindustryAppPlugin : Plugin<Project> {
                     )
                     outputFile.set(targetFile)
                 }
-            }
-            val resolveMods = tasks.register<ResolveMods>(
-                "resolveMods"
-            ) {
-                group = MindustryPlugin.MindustryTaskGroup
-                mods.set(ex.mods.worksWith)
-                ex.mods.worksWith.get().forEach { it.preProcess(this) }
             }
             val dataDirEx = ex.run._dataDir.get()
             val runClient = tasks.register<RunMindustry>("runClient") {

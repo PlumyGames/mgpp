@@ -8,6 +8,7 @@ import mindustry.Vars
 import mindustry.game.EventType.ClientLoadEvent
 import mindustry.mod.Mod
 import mindustry.ui.dialogs.BaseDialog
+import mindustry.ui.dialogs.ModsDialog
 
 class TestModKt : Mod() {
     init {

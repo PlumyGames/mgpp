@@ -1,3 +1,4 @@
+import io.github.liplum.dsl.linkString
 import io.github.liplum.dsl.packageAndClassName
 import org.junit.jupiter.api.Test
 
@@ -16,8 +17,16 @@ class TestString {
     }
 
     infix fun String.match(b: QN) =
-        this.packageAndClassName() == b
+        assert(this.packageAndClassName() == b)
 
     infix fun String.o(clz: String): QN =
         QN(this, clz)
+
+    fun `test link string`() {
+        "net-liplum" match listOf("net", "liplum")
+        "net-liplum-mindustry" match listOf("net", "", "liplum", "", "mindustry")
+    }
+
+    infix fun String.match(strings: List<String>) =
+        assert(this == linkString("-", strings))
 }

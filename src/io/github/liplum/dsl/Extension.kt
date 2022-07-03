@@ -68,3 +68,18 @@ operator fun String.times(times: Int) =
 operator fun StringBuilder.plusAssign(c: Char) {
     this.append(c)
 }
+
+fun linkString(separator: String, vararg strings: String) =
+    linkString(separator, strings.toList())
+
+fun linkString(separator: String , strings: List<String>): String {
+    val sb = StringBuilder()
+    for ((i, str) in strings.withIndex()) {
+        if (str.isBlank()) continue
+        if (i != 0) {
+            sb.append(separator)
+        }
+        sb.append(str)
+    }
+    return sb.toString()
+}
