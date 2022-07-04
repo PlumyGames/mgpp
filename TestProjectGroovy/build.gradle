@@ -28,8 +28,8 @@ dependencies {
 
 mindustry {
     dependency {
-        // mindustryMirror version: 'd7312445a1'
-        mindustryMirror version: latest
+        mindustryMirror version: 'd7312445a1'
+        // mindustryMirror version: latest
         arc version: '123fbf12b9'
     }
     client {

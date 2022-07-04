@@ -47,11 +47,11 @@ tasks.register<TestOutputTask>("iconMaker") {
 
 mindustry {
     dependency {
-        mindustry mirror latest
+        // mindustry mirror latest
         // mindustry on "v135"
-        // mindustry mirror "d7312445a1"
-        arc on latest
-        //arc on "123fbf12b9"
+        mindustry mirror "d7312445a1"
+        arc on "123fbf12b9"
+        // arc on latest
     }
     client {
         mindustry be latest

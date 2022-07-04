@@ -199,7 +199,9 @@ class DependencySpec(
     fun mindustry(version: String) {
         mindustryDependency.set(MindustryDependency(version))
     }
-
+    /**
+     * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+     */
     fun mindustryMirror(version: String) {
         mindustryDependency.set(MirrorDependency(version))
     }
@@ -221,7 +223,9 @@ class DependencySpec(
             mindustry(version)
         }
     }
-
+    /**
+     * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+     */
     fun mindustryMirror(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustryMirror`")
         if (version == "latest") {
@@ -241,7 +245,11 @@ class DependencySpec(
             mindustryMirror(version = Mgpp.DefaultMindustryVersion)
         }
     }
-
+    /**
+     * Fetch the latest [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+     *
+     * **Not Recommended**, it may not work due to a network issue or jitpack not yet to build this version
+     */
     fun mindustryMirrorLatest() {
         try {
             val url = URL(Mgpp.MindustryJitpackLatestCommit)
@@ -283,7 +291,9 @@ class DependencySpec(
         fullName: String = "",
         version: String = "",
     ) = io.github.liplum.mindustry.Dependency(fullName, version)
-
+    /**
+     * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+     */
     fun MirrorDependency(
         version: String = "",
     ) = MirrorJitpackDependency(Mgpp.MindustryJitpackMirrorRepo, version)
@@ -307,6 +317,9 @@ class DependencySpec(
     }
 
     inner class MindustrySpec {
+        /**
+         * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+         */
         infix fun mirror(version: String) {
             mindustryDependency.set(MirrorDependency(version))
         }
@@ -321,14 +334,18 @@ class DependencySpec(
             else
                 throw GradleException("Unknown game notation of mindustry $notation")
         }
-
+        /**
+         * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+         */
         infix fun mirror(notation: IMgppNotation) {
             if (notation === LatestNotation)
                 mindustryMirrorLatest()
             else
                 throw GradleException("Unknown game notation of mindustry $notation")
         }
-
+        /**
+         * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+         */
         fun mirror(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.mirror`")
             mindustryDependency.set(MirrorDependency(version))
@@ -383,6 +400,7 @@ interface IGameLocationSpec {
 
     fun Official(version: String): GameLocation
     fun BE(version: String): GameLocation
+
     fun LatestOfficial(): GameLocation {
         return try {
             val url = URL(Mgpp.OfficialReleaseURL)
