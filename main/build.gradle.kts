@@ -90,6 +90,8 @@ tasks.named<Jar>("jar") {
         }
     )
 }
+// NOTE: All artifacts must have the same name.
+// If you are using multi-project for plugin publishing, please ensure all `Jar` tasks have the same name.
 tasks.withType<Jar> {
     archiveBaseName.set(pluginName)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
