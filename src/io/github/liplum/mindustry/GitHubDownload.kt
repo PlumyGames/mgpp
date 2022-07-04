@@ -34,6 +34,7 @@ data class GitHubDownload(
     override val path: String
         get() = url.toString()
     companion object {
+        @JvmStatic
         fun release(
             user: String, repo: String,
             version: String,

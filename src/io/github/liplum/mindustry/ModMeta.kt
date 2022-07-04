@@ -99,6 +99,7 @@ data class ModMeta(
     }
 
     companion object {
+        @JvmStatic
         val defaultMeta = mapOf(
             "name" to "name",
             "displayName" to "",
@@ -115,6 +116,7 @@ data class ModMeta(
             "hideBrowser" to false,
         )
         @Suppress("UNCHECKED_CAST")
+        @JvmStatic
         fun <T> default(key: String): T =
             defaultMeta[key] as T
         @JvmStatic
@@ -137,6 +139,7 @@ data class ModMeta(
         fun ModMeta.toHjson(formatter: Stringify = Stringify.HJSON): String =
             JsonObject.readHjson(JsonOutput.toJson(info)).toString(formatter)
 
+        @JvmStatic
         fun MetaConfig.setDefaultValue(): MetaConfig {
             for ((dk, dv) in defaultMeta) {
                 this.putIfAbsent(dk, dv)

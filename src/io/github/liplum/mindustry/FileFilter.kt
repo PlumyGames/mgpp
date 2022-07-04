@@ -39,6 +39,7 @@ fun interface FileFilter {
     }
 
     companion object {
+        @JvmStatic
         val always = FileFilter { true }
     }
 }

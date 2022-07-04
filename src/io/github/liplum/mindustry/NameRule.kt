@@ -39,6 +39,7 @@ abstract class NameRule(
         @JvmStatic
         private val allNameRules = HashMap<String, NameRule>()
         @JvmOverloads
+        @JvmStatic
         fun valueOf(name: String, ignoreCase: Boolean = true): NameRule? =
             if (ignoreCase) allNameRules.values.find { it.name.equals(name, true) }
             else allNameRules[name]
