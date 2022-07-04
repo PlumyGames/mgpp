@@ -20,12 +20,12 @@ jobs:
       - name: Test mgpp
         run: |
           chmod +x gradlew
-          ./gradlew :test
+          ./gradlew :main:test
 
       - name: Build mgpp
         run: |
           chmod +x gradlew
-          ./gradlew :publishToMavenLocal --info
+          ./gradlew :main:publishToMavenLocal --info
 
       - name: Set Android SDK tools
         run: echo "$ANDROID_HOME/build-tools/30.0.3" >> $GITHUB_PATH
