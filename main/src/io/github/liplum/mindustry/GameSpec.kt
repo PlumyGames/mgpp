@@ -8,47 +8,80 @@ import org.gradle.api.provider.Property
 import java.net.URL
 
 interface IGameSpec {
+    /**
+     * The location of a game on GitHub
+     */
     val location: Property<GameLocation>
+    /**
+     * Whether to keep other versions when a new version is downloaded.
+     */
     val keepOtherVersion: Property<Boolean>
+    /**
+     * Clean all other versions when a new version is downloaded.
+     */
     val clearUp: Unit
         get() = keepOtherVersion.set(true)
+    /**
+     * Keep other versions when a new version is downloaded.
+     */
     val keepOthers: Unit
         get() = keepOtherVersion.set(false)
     val target: Project
+    /**
+     * @see [io.github.liplum.mindustry.GameLocation]
+     */
     fun GameLocation(
         user: String = "",
         repo: String = "",
         version: String = "",
         release: String = "",
     ) = io.github.liplum.mindustry.GameLocation(user, repo, version, release)
-
+    /**
+     * A notation represents the latest version
+     */
     val latest: LatestNotation
         get() = LatestNotation
-
+    /**
+     * Download official edition from [MindustryPlugin.OfficialReleaseURL]
+     */
     infix fun official(version: String) {
         location.set(Official(version))
     }
-
+    /**
+     * Download bleeding-edge from [MindustryPlugin.BEReleaseURL]
+     */
     infix fun be(version: String) {
         location.set(BE(version))
     }
-
+    /**
+     * Download official edition from [MindustryPlugin.OfficialReleaseURL]
+     */
     infix fun official(notation: IMgppNotation) {
         if (notation === LatestNotation)
             this.location.set(LatestOfficial())
         else
             throw GradleException("Unknown game notation of official $notation")
     }
-
+    /**
+     * Download bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     */
     infix fun be(latest: IMgppNotation) {
         if (latest === LatestNotation)
             this.location.set(LatestBE())
         else
             throw GradleException("Unknown game notation of be $latest")
     }
-
+    /**
+     * Create a [GameLocation] of official edition from [MindustryPlugin.OfficialReleaseURL]
+     */
     fun Official(version: String): GameLocation
+    /**
+     * Create a [GameLocation] of bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     */
     fun BE(version: String): GameLocation
+    /**
+     * Create a [GameLocation] of the latest official edition from [MindustryPlugin.OfficialReleaseURL]
+     */
     fun LatestOfficial(): GameLocation {
         return try {
             val url = URL(MindustryPlugin.OfficialReleaseURL)
@@ -68,7 +101,9 @@ interface IGameSpec {
             Official(MindustryPlugin.DefaultMindustryVersion)
         }
     }
-
+    /**
+     * Create a [GameLocation] of the latest bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     */
     fun LatestBE(): GameLocation {
         try {
             val url = URL(MindustryPlugin.BEReleaseURL)
@@ -88,7 +123,9 @@ interface IGameSpec {
             return BE(MindustryPlugin.DefaultMindustryBEVersion)
         }
     }
-
+    /**
+     * Download official edition from [MindustryPlugin.OfficialReleaseURL]
+     */
     infix fun official(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
         if (version == "latest") {
@@ -97,7 +134,9 @@ interface IGameSpec {
             official(version)
         }
     }
-
+    /**
+     * Create a [GameLocation] of bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     */
     infix fun be(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
         if (version == "latest") {

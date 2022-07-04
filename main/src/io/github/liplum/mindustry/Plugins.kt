@@ -29,29 +29,109 @@ class MindustryPlugin : Plugin<Project> {
     }
 
     companion object {
+        /**
+         * A task group for main tasks, named `mindustry`
+         */
         const val MindustryTaskGroup = "mindustry"
+        /**
+         * A task group for tasks related to [MindustryAssetsExtension], named `mindustry assets`
+         */
         const val MindustryAssetTaskGroup = "mindustry assets"
+        /**
+         * The name of [MindustryExtension]
+         */
         const val MainExtensionName = "mindustry"
+        /**
+         * The name of [MindustryAssetsExtension]
+         */
         const val AssetExtensionName = "mindustryAssets"
+        /**
+         * The environment variable, as a folder, for Mindustry client to store data
+         */
         const val MindustryDataDirEnv = "MINDUSTRY_DATA_DIR"
+        /**
+         * The default minGameVersion in `mod.(h)json`.
+         *
+         * **Note:** You shouldn't pretend this version and work based on it.
+         */
         const val DefaultMinGameVersion = "135"
+        /**
+         * [The default Mindustry version](https://github.com/Anuken/Mindustry/releases/tag/v135)
+         *
+         * **Note:** You shouldn't pretend this version and work based on it.
+         */
         const val DefaultMindustryVersion = "v135"
+        /**
+         * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases/tag/22767)
+         *
+         * **Note:** You shouldn't pretend this version and work based on it.
+         */
         const val DefaultMindustryBEVersion = "22767"
+        /**
+         * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v135.2)
+         *
+         * **Note:** You shouldn't pretend this version and work based on it.
+         */
         const val DefaultArcVersion = "v135"
-        const val OfficialReleaseURL = "https://api.github.com/repos/Anuken/Mindustry/releases/latest"
+        /**
+         * [Mindustry official repo](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+         */
+        const val OfficialReleaseURL = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+        /**
+         * [Mindustry bleeding edge repo](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+         */
         const val BEReleaseURL = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+        /**
+         * [A cat](https://github.com/Anuken)
+         */
         const val Anuken = "anuken"
+        /**
+         * [Mindustry game](https://github.com/Anuken/Mindustry)
+         */
         const val Mindustry = "mindustry"
+        /**
+         * [Mindustry bleeding egde](https://github.com/Anuken/MindustryBuilds)
+         */
         const val MindustryBuilds = "MindustryBuilds"
+        /**
+         * [The name convention of client release](https://github.com/Anuken/Mindustry/releases)
+         */
         const val ClientReleaseName = "Mindustry.jar"
+        /**
+         * [The name convention of server release](https://github.com/Anuken/Mindustry/releases)
+         */
         const val ServerReleaseName = "server-release.jar"
+        /**
+         * (The Mindustry repo on Jitpack)[https://github.com/anuken/mindustry]
+         */
         const val MindustryJitpackRepo = "com.github.anuken.mindustry"
+        /**
+         * (The mirror repo of Mindustry on Jitpack)[https://github.com/anuken/mindustryjitpack]
+         */
         const val MindustryJitpackMirrorRepo = "com.github.anuken.mindustryjitpack"
+        /**
+         * (The GitHub API to fetch the latest commit of mirror)[https://github.com/Anuken/MindustryJitpack/commits/main]
+         */
         const val MindustryJitpackLatestCommit = "https://api.github.com/repos/Anuken/MindustryJitpack/commits/main"
+        /**
+         * (The GitHub API to fetch the latest commit of arc)[https://github.com/Anuken/Arc/commits/master]
+         */
         const val ArcLatestCommit = "https://api.github.com/repos/Anuken/Arc/commits/master"
+        /**
+         * (The Arc repo on Jitpack)[https://github.com/anuken/arc]
+         */
         const val ArcJitpackRepo = "com.github.anuken.arc"
+        /**
+         * The main class of desktop launcher.
+         */
         const val MindustryDesktopMainClass = "mindustry.desktop.DesktopLauncher"
+        /**
+         * The main class of server launcher.
+         */
         const val MindustrySeverMainClass = "mindustry.server.ServerLauncher"
+        /**
+         * An empty folder for null-check
+         */
         @JvmStatic
         val DefaultEmptyFile = File("")
     }
@@ -198,6 +278,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                     args.put("ModName", main._modMeta.get().name)
                     args.put("NameRule", type.nameRule.name)
                     args.putAll(assets.args)
+                    args.putAll(type.args)
                     generator.set(type.generator)
                     className.set(type.className)
                     resources.setFrom(batches.filter { it.enableGenClass }.map { it.dir })

@@ -31,21 +31,27 @@ class DependencySpec(
     val mindustry = MindustrySpec()
     val latest: LatestNotation
         get() = LatestNotation
-
+    /**
+     * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
+     */
     fun arc(version: String) {
         arcDependency.set(ArcDependency(version))
     }
-
+    /**
+     * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
+     */
     fun mindustry(version: String) {
         mindustryDependency.set(MindustryDependency(version))
     }
     /**
-     * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+     * Fetch the Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
      */
     fun mindustryMirror(version: String) {
         mindustryDependency.set(MirrorDependency(version))
     }
-
+    /**
+     * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
+     */
     fun arc(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc`")
         if (version == "latest") {
@@ -54,7 +60,9 @@ class DependencySpec(
             arc(version)
         }
     }
-
+    /**
+     * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
+     */
     fun mindustry(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry`")
         if (version == "latest") {
@@ -74,7 +82,9 @@ class DependencySpec(
             mindustryMirror(version)
         }
     }
-
+    /**
+     * Fetch the latest Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
+     */
     fun mindustryLatest() {
         try {
             val url = URL(MindustryPlugin.OfficialReleaseURL)
@@ -103,7 +113,9 @@ class DependencySpec(
             mindustryMirror(version = "-SNAPSHOT")
         }
     }
-
+    /**
+     * Fetch the latest Arc from [arc jitpack](https://github.com/Anuken/Arc).
+     */
     fun arcLatest() {
         try {
             val url = URL(MindustryPlugin.ArcLatestCommit)
@@ -120,43 +132,65 @@ class DependencySpec(
     val ArcRepo = MindustryPlugin.ArcJitpackRepo
     val MindustryMirrorRepo = MindustryPlugin.MindustryJitpackMirrorRepo
     val MindustryRepo = MindustryPlugin.MindustryJitpackRepo
+    /**
+     * Declare an Arc dependency from [arc jitpack](https://github.com/Anuken/Arc).
+     */
     fun ArcDependency(
         version: String = MindustryPlugin.DefaultMindustryVersion,
     ) = Dependency(MindustryPlugin.ArcJitpackRepo, version)
-
+    /**
+     * Declare a Mindustry dependency from [mindustry jitpack](https://github.com/Anuken/Mindustry).
+     */
     fun MindustryDependency(
         version: String = MindustryPlugin.DefaultMindustryVersion,
     ) = Dependency(MindustryPlugin.MindustryJitpackRepo, version)
-
+    /**
+     * Declare a dependency.
+     */
     fun Dependency(
         fullName: String = "",
         version: String = "",
     ) = io.github.liplum.mindustry.Dependency(fullName, version)
     /**
-     * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+     * Declare a Mindustry dependency from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
      */
     fun MirrorDependency(
         version: String = "",
     ) = MirrorJitpackDependency(MindustryPlugin.MindustryJitpackMirrorRepo, version)
-
+    /**
+     * To configure Arc dependency
+     */
     inner class ArcSpec {
+        /**
+         * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
+         */
         infix fun on(version: String) {
             arcDependency.set(ArcDependency(version))
         }
-
+        /**
+         * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
+         */
         infix fun on(notation: IMgppNotation) {
             if (notation === LatestNotation)
                 arcLatest()
             else
                 throw GradleException("Unknown game notation of mindustry $notation")
         }
-
+        /**
+         * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
+         */
         fun on(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc.on`")
-            arcDependency.set(ArcDependency(version))
+            if (version == "latest") {
+                on(LatestNotation)
+            } else {
+                on(version)
+            }
         }
     }
-
+    /**
+     * To configure Mindustry dependency
+     */
     inner class MindustrySpec {
         /**
          * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
@@ -164,11 +198,15 @@ class DependencySpec(
         infix fun mirror(version: String) {
             mindustryDependency.set(MirrorDependency(version))
         }
-
+        /**
+         * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
+         */
         infix fun on(version: String) {
             mindustryDependency.set(MindustryDependency(version))
         }
-
+        /**
+         * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
+         */
         infix fun on(notation: IMgppNotation) {
             if (notation === LatestNotation)
                 mindustryLatest()
@@ -176,7 +214,18 @@ class DependencySpec(
                 throw GradleException("Unknown game notation of mindustry $notation")
         }
         /**
-         * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+         * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
+         */
+        fun on(map: Map<String, Any>) {
+            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.on`")
+            if (version == "latest") {
+                on(LatestNotation)
+            } else {
+                on(version)
+            }
+        }
+        /**
+         * Fetch the Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
          */
         infix fun mirror(notation: IMgppNotation) {
             if (notation === LatestNotation)
@@ -185,16 +234,15 @@ class DependencySpec(
                 throw GradleException("Unknown game notation of mindustry $notation")
         }
         /**
-         * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
+         * Fetch the Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
          */
         fun mirror(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.mirror`")
-            mindustryDependency.set(MirrorDependency(version))
-        }
-
-        fun on(map: Map<String, Any>) {
-            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.on`")
-            mindustryDependency.set(MindustryDependency(version))
+            if (version == "latest") {
+                mirror(LatestNotation)
+            } else {
+                mirror(version)
+            }
         }
     }
 }

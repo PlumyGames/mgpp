@@ -5,16 +5,27 @@ import java.io.InputStream
 import java.io.Serializable
 import java.net.URL
 
+/**
+ * An abstract download location, which only can open an input stream for reading
+ */
 interface IDownloadLocation : Serializable {
     /**
      * Open an input stream for reading.
      * The caller has the responsibility to close this.
      */
     fun openInputStream(): InputStream
+    /**
+     * The name of download location.
+     */
     val name: String
-    val path:String
+    /**
+     * The path of download location.
+     */
+    val path: String
 }
-
+/**
+ * A local download from disk
+ */
 data class LocalDownload(
     var localFile: File,
 ) : IDownloadLocation {
@@ -26,13 +37,16 @@ data class LocalDownload(
     override fun openInputStream(): InputStream =
         localFile.inputStream()
 }
-
+/**
+ * A download from any GitHub url
+ */
 data class GitHubDownload(
     override var name: String,
     var url: URL,
 ) : IDownloadLocation {
     override val path: String
         get() = url.toString()
+
     companion object {
         @JvmStatic
         fun release(
@@ -44,23 +58,7 @@ data class GitHubDownload(
             URL("https://github.com/$user/$repo/releases/download/$version/$assetName")
         )
     }
+
     override fun openInputStream(): InputStream =
         url.openStream()
-}
-
-inline fun GitHubDownload(
-    user: String, repo: String,
-    spec: GitHubDownloadSpec.() -> Unit,
-) {
-    GitHubDownloadSpec(user, repo).spec()
-}
-
-class GitHubDownloadSpec(
-    val user: String,
-    val repo: String,
-) {
-    fun release(
-        version: String,
-        assetName: String,
-    ) = GitHubDownload.release(user, repo, version, assetName)
 }

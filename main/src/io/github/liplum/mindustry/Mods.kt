@@ -8,11 +8,16 @@ import java.io.File
 import java.io.Serializable
 import java.net.URL
 
+/**
+ * An abstract file representing a mod.
+ */
 interface IMod : Serializable {
     fun resolveFile(project: Project, currentDir: File): File
     fun mapLocalFile(project: Project, currentDir: File): File
 }
-
+/**
+ * A local mod from disk.
+ */
 data class LocalMod(
     var modFile: File = File(""),
 ) : IMod {
@@ -26,7 +31,9 @@ data class LocalMod(
     override fun mapLocalFile(project: Project, currentDir: File): File =
         currentDir.resolve(modFile.name)
 }
-
+/**
+ * A mod from a url.
+ */
 data class UrlMod(
     var url: URL,
 ) : IMod {
@@ -87,7 +94,13 @@ fun importPlainMod(repo: String, branch: String, dest: File) {
 }
 
 fun String.repo2Path() = this.replace("/", "-")
+/**
+ * A mod on GitHub.
+ */
 data class GitHubMod(
+    /**
+     * like "PlumyGame/mgpp"
+     */
     var repo: String,
 ) : IMod {
     val fileName: String

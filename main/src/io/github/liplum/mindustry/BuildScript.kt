@@ -10,13 +10,26 @@ import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import java.net.HttpURLConnection
 import java.net.URI
 import java.net.URL
-
+import org.gradle.api.artifacts.dsl.DependencyHandler
+/**
+ * Declare a maven repository of what Mindustry used.
+ *
+ * You can call this in [RepositoryHandler] closure
+ */
 fun RepositoryHandler.mindustryRepo(
 ): MavenArtifactRepository = maven { repo ->
     repo.name = "mindustry-center"
     repo.url = URI("https://www.jitpack.io")
 }
-
+/**
+ * Import the dependencies of Mindustry.
+ * It will take those into account:
+ * - [MindustryExtension.projectType]
+ * - [DependencySpec.mindustry]
+ * - [DependencySpec.arc]
+ *
+ * You can call this in [DependencyHandler] closure
+ */
 fun Project.importMindustry() = afterEvaluateThis {
     val ex = extensions.getOrCreate<MindustryExtension>(
         Mgpp.MainExtensionName

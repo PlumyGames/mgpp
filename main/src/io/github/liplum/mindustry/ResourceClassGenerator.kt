@@ -14,7 +14,7 @@ interface IResourceClassGenerator {
     }
 }
 
-object SpritesGenerator : IResourceClassGenerator {
+object DefaultSpritesGenerator : IResourceClassGenerator {
     override fun generateClass(
         resources: Collection<File>,
         args: Map<String, String>,
@@ -44,7 +44,7 @@ object SpritesGenerator : IResourceClassGenerator {
     }
 }
 
-object SoundsGenerator : IResourceClassGenerator {
+object DefaultSoundsGenerator : IResourceClassGenerator {
     override fun generateClass(
         resources: Collection<File>,
         args: Map<String,

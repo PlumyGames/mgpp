@@ -48,8 +48,14 @@ object LatestNotation : IMgppNotation {
 open class MindustryExtension(
     target: Project,
 ) {
+    /**
+     * @see ProjectType.Mod
+     */
     @JvmField
     val Mod = ProjectType.Mod
+    /**
+     * @see ProjectType.Plugin
+     */
     @JvmField
     val Plugin = ProjectType.Plugin
     /**

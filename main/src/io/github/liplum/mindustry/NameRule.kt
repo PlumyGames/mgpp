@@ -193,7 +193,9 @@ abstract class NameRule(
         }
     }
 }
-
+/**
+ * `abcDef` -> `AbcDef`
+ */
 fun String.uppercaseHead(): String =
     when {
         isEmpty() -> ""
@@ -204,7 +206,9 @@ fun String.uppercaseHead(): String =
             }
         }
     }
-
+/**
+ * `ABcDEf` -> `aBcDEf`
+ */
 fun String.lowercaseHead(): String =
     when {
         isEmpty() -> ""

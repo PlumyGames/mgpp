@@ -10,6 +10,9 @@ import kotlin.math.min
 
 fun Pixmap.getRGB(ix: Int, iy: Int): Int =
     getRaw(max(min(ix, width - 1), 0), max(min(iy, height - 1), 0))
+/**
+ * This algorithm comes from [Mindustry tools](https://github.com/Anuken/Mindustry/blob/master/tools/build.gradle#L31).
+ */
 @Suppress("LocalVariableName")
 fun antiAliasing(from: File, to: File) {
     val image = Pixmap(Fi(from))

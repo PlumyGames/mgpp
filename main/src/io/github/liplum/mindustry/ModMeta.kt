@@ -11,6 +11,9 @@ import kotlin.reflect.KProperty
 
 typealias MetaConfig = HashMap<String, Any>
 
+/**
+ * It represents the `mod.(h)json`.
+ */
 data class ModMeta(
     val info: MetaConfig,
 ) : Serializable {
@@ -71,7 +74,10 @@ data class ModMeta(
     fun propertyMissing(property: String, value: Any) {
         info[property] = value
     }
-
+    /**
+     * Append the [addition].
+     * It will only append any pair that's not default.
+     */
     infix fun append(addition: ModMeta) {
         for ((k, newV) in addition.info) {
             val default = defaultMeta[k]
@@ -85,15 +91,23 @@ data class ModMeta(
             }
         }
     }
+    /**
+     * [ModMeta.append]
+     */
     // For Kotlin
     operator fun plusAssign(addition: ModMeta) {
         append(addition)
     }
+    /**
+     * [ModMeta.append]
+     */
     // For Groovy
     fun leftShift(addition: ModMeta) {
         append(addition)
     }
-
+    /**
+     * [ModMeta.toHjson]
+     */
     override fun toString(): String {
         return toHjson()
     }
@@ -138,7 +152,6 @@ data class ModMeta(
         @JvmOverloads
         fun ModMeta.toHjson(formatter: Stringify = Stringify.HJSON): String =
             JsonObject.readHjson(JsonOutput.toJson(info)).toString(formatter)
-
         @JvmStatic
         fun MetaConfig.setDefaultValue(): MetaConfig {
             for ((dk, dv) in defaultMeta) {
