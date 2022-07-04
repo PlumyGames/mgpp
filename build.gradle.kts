@@ -76,7 +76,7 @@ repositories {
 val arcVersion: String by project
 dependencies {
     compileOnly("com.github.anuken.arc:arc-core:$arcVersion")
-    compileOnly("org.hjson:hjson:3.0.0")
+    implementation("org.hjson:hjson:3.0.0")
     testImplementation("com.github.anuken.arc:arc-core:$arcVersion")
     testImplementation("org.hjson:hjson:3.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
@@ -97,7 +97,7 @@ tasks.named<Jar>("jar") {
     from(
         configurations.compileClasspath.get().mapNotNull {
             if (it.isFile && it.extension == "jar"
-                && ("arc-core" in it.name || "hjson" in it.name))
+                && ("arc-core" in it.name))
                 zipTree(it)
             else null
         }
