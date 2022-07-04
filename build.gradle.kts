@@ -107,3 +107,18 @@ tasks.named<Jar>("jar") {
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
+val sourcesJar by tasks.creating(Jar::class) {
+    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
+}
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+            afterEvaluate {
+                artifact(sourcesJar)
+            }
+        }
+    }
+}
