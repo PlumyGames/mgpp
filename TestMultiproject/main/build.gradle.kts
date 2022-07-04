@@ -10,7 +10,6 @@ repositories {
     mindustryRepo()
     mavenCentral()
 }
-apply<MindustryPlugin>()
 sourceSets {
     main {
         java.srcDirs("src")
@@ -20,6 +19,12 @@ sourceSets {
         java.srcDir("test")
         resources.srcDir("resources")
     }
+}
+dependencies {
+    implementation(project(":core"))
+    importMindustry()
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testImplementation("com.github.liplum:TestUtils:v0.1")
 }
 
 version = "1.0"
@@ -54,10 +59,4 @@ mindustry {
 }
 mindustryAssets {
     root at "$projectDir/assets"
-}
-dependencies {
-    implementation(project(":core"))
-    importMindustry()
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testImplementation("com.github.liplum:TestUtils:v0.1")
 }

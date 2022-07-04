@@ -2,6 +2,7 @@
 
 package io.github.liplum.mindustry
 
+import io.github.liplum.dsl.afterEvaluateThis
 import io.github.liplum.dsl.getOrCreate
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.RepositoryHandler
@@ -16,7 +17,7 @@ fun RepositoryHandler.mindustryRepo(
     repo.url = URI("https://www.jitpack.io")
 }
 
-fun Project.importMindustry() {
+fun Project.importMindustry() = afterEvaluateThis {
     val ex = extensions.getOrCreate<MindustryExtension>(
         MindustryPlugin.MainExtensionName
     )

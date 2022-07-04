@@ -8,6 +8,11 @@ repositories {
     mindustryRepo()
     mavenCentral()
 }
+dependencies {
+    importMindustry()
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testImplementation("com.github.liplum:TestUtils:v0.1")
+}
 sourceSets {
     main {
         java.srcDirs("src")
@@ -38,8 +43,4 @@ mindustry {
         main = "plumy.test.CoreMod"
     )
 }
-dependencies {
-    importMindustry()
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    testImplementation("com.github.liplum:TestUtils:v0.1")
-}
+

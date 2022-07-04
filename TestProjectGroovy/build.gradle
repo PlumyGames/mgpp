@@ -19,6 +19,13 @@ sourceSets {
         resources.srcDir('resources')
     }
 }
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    importMindustry()
+}
+
 mindustry {
     dependency {
         mindustryMirror version: 'd7312445a1'
@@ -67,12 +74,6 @@ antiAlias {
     }
     //incremental is default
     //options.isIncremental = false
-}
-
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    importMindustry()
 }
 
 test {

@@ -27,6 +27,12 @@ repositories {
     mindustryRepo()
     mavenCentral()
 }
+
+dependencies {
+    testImplementation(kotlin("test"))
+    importMindustry()
+}
+
 open class TestOutputTask : DefaultTask() {
     val outputFile = project.objects.property<File>()
         @OutputFile get
@@ -97,11 +103,6 @@ tasks.named<AntiAlias>("antiAlias") {
         it.name != "sender.png"
     }
     //options.isIncremental = false
-}
-
-dependencies {
-    testImplementation(kotlin("test"))
-    importMindustry()
 }
 
 tasks.withType<Jar> {
