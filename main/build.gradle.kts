@@ -96,24 +96,8 @@ tasks.withType<Jar> {
     archiveBaseName.set(pluginName)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-val sourcesJar by tasks.creating(Jar::class) {
-    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
-    archiveClassifier.set("sources")
-    from(sourceSets["main"].allSource)
-}
-val javadocJar by tasks.creating(Jar::class) {
-    dependsOn(JavaPlugin.JAVADOC_TASK_NAME)
-    archiveClassifier.set("javadoc")
-    from(tasks.named("javadoc"))
-}
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-            afterEvaluate {
-                artifact(sourcesJar)
-                artifact(javadocJar)
-            }
-        }
-    }
+
+java {
+    withSourcesJar()
+    withJavadocJar()
 }
