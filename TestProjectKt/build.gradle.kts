@@ -52,6 +52,8 @@ mindustry {
     }
     client {
         mindustry be latest
+        // clearUp as default, it will delete other versions when download a new one
+        // keepOthers will keep them
     }
     server {
         //mindustry be "22728"

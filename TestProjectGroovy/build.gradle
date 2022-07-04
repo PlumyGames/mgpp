@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id "io.github.liplum.mgpp" version "1.0.8"
+    id "io.github.liplum.mgpp" version "1.0.9"
 }
 group 'plumy.test'
 version '0.1'
@@ -32,7 +32,10 @@ mindustry {
         arc version: '123fbf12b9'
     }
     client {
-        be version: '22714'
+        be version: latest
+        // be version: '22714'
+        // clearUp as default, it will delete other versions when download a new one
+        // keepOthers will keep them
     }
     server {
         be version: '22714'

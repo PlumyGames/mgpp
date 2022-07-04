@@ -107,7 +107,7 @@ data class ModMeta(
             "subtitle" to "",
             "version" to "1.0",
             "main" to "",
-            "minGameVersion" to MGPP.DefaultMinGameVersion,
+            "minGameVersion" to Mgpp.DefaultMinGameVersion,
             "repo" to "",
             "dependencies" to emptyList<String>(),
             "hidden" to false,

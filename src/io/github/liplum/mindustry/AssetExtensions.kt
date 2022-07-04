@@ -30,7 +30,7 @@ open class MindustryAssetsExtension(
     target: Project,
 ) {
     val assetsRoot = target.fileProp().apply {
-        convention(MGPP.DefaultEmptyFile)
+        convention(Mgpp.DefaultEmptyFile)
     }
     val qualifiedName = target.stringProp().apply {
         convention("default")
@@ -164,7 +164,7 @@ data class AssetBatch(
     var type: AssetBatchType,
     var enableGenClass: Boolean = false,
     var dir: File = File(""),
-    var root: File = MGPP.DefaultEmptyFile,
+    var root: File = Mgpp.DefaultEmptyFile,
     var dependsOn: ArrayList<Any> = ArrayList(),
 ) : Serializable {
     fun dependsOn(task: Any) {
