@@ -11,9 +11,9 @@ import org.gradle.api.tasks.TaskAction
 open class Download : DefaultTask() {
     val location = project.prop<IDownloadLocation>()
         @Input get
-    val overwrite = project.prop<Boolean>()
+    val overwrite = project.boolProp()
         @Optional @Input get
-    val keepOthers = project.prop<Boolean>()
+    val keepOthers = project.boolProp()
         @Optional @Input get
     val outputFileName = project.stringProp()
         @Input @Optional get

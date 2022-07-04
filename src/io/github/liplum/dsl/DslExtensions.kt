@@ -21,6 +21,12 @@ fun Task.deleteTempDir() {
 internal
 fun Task.tempFi(name: String) =
     temporaryDir.resolve(name)
+internal
+fun Project.proDir(name: String) =
+    projectDir.resolve(name)
+internal
+fun Project.rootDir(name: String) =
+    rootDir.resolve(name)
 internal inline
 fun <reified T> ExtensionContainer.getOrCreate(
     extensionName: String,
@@ -30,6 +36,9 @@ fun <reified T> ExtensionContainer.getOrCreate(
 internal
 fun Project.stringProp(): StringProp =
     objects.property(String::class.java)
+internal
+fun Project.boolProp(): BoolProp =
+    objects.property(Boolean::class.java)
 internal
 fun Project.stringsProp(): StringsProp =
     objects.listProperty(String::class.java)

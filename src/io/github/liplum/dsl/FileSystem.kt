@@ -74,3 +74,40 @@ fun File.forEachFilesRecursive(func: (File) -> Unit) {
         func(this)
     }
 }
+
+fun File.findFileInOrder(vararg files: File): File {
+    if (this.exists()) return this
+    for ((i, file) in files.withIndex()) {
+        return if (file.exists()) file
+        else if (i >= files.size - 1) file
+        else continue
+    }
+    return files.last()
+}
+fun findFileInOrder(vararg files: File): File {
+    for ((i, file) in files.withIndex()) {
+        return if (file.exists()) file
+        else if (i >= files.size - 1) file
+        else continue
+    }
+    return files.last()
+}
+fun File.findFileInOrder(vararg files: () -> File): File {
+    if (this.exists()) return this
+    for ((i, file) in files.withIndex()) {
+        val f = file()
+        return if (f.exists()) f
+        else if (i >= files.size - 1) f
+        else continue
+    }
+    return files.last()()
+}
+fun findFileInOrder(vararg files: () -> File): File {
+    for ((i, file) in files.withIndex()) {
+        val f = file()
+        return if (f.exists()) f
+        else if (i >= files.size - 1) f
+        else continue
+    }
+    return files.last()()
+}

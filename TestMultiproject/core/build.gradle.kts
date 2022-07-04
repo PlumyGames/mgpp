@@ -2,7 +2,7 @@
 import io.github.liplum.mindustry.*
 plugins {
     java
-    id("io.github.liplum.mgpp") version "1.0.9"
+    id("io.github.liplum.mgpp") version "1.0.10"
 }
 repositories {
     mindustryRepo()

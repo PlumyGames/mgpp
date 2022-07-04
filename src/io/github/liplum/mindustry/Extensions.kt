@@ -3,18 +3,13 @@
 
 package io.github.liplum.mindustry
 
-import arc.util.serialization.Jval
-import io.github.liplum.dsl.listProp
+import io.github.liplum.dsl.findFileInOrder
+import io.github.liplum.dsl.proDir
 import io.github.liplum.dsl.prop
-import io.github.liplum.dsl.stringProp
-import io.github.liplum.dsl.stringsProp
+import io.github.liplum.dsl.rootDir
 import org.gradle.api.Action
-import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
-import org.gradle.api.plugins.JavaPlugin
-import org.gradle.api.provider.Property
-import java.net.URL
 
 /**
  * Retrieves the [mindustry][MindustryExtension] extension.
@@ -27,25 +22,29 @@ val Project.`mindustry`: MindustryExtension
 fun Project.`mindustry`(configure: Action<MindustryExtension>): Unit =
     (this as ExtensionAware).extensions.configure(Mgpp.MainExtensionName, configure)
 /**
- * Retrieves the [mindustry][MindustryExtension] extension.
+ * The project type.
  */
-val Project.`mindustryAssets`: MindustryAssetsExtension
-    get() = (this as ExtensionAware).extensions.getByName(Mgpp.AssetExtensionName) as MindustryAssetsExtension
-/**
- * Configures the [mindustry][MindustryExtension] extension.
- */
-fun Project.`mindustryAssets`(configure: Action<MindustryAssetsExtension>): Unit =
-    (this as ExtensionAware).extensions.configure(Mgpp.AssetExtensionName, configure)
-
 enum class ProjectType {
-    Mod, Plugin
+    /**
+     * For a mod, it will import all essential dependencies of Mindustry.
+     */
+    Mod,
+    /**
+     * For a plugin, it will only import server-related dependencies of Mindustry.
+     */
+    Plugin
 }
 
 interface IMgppNotation
 object LatestNotation : IMgppNotation {
     override fun toString() = "latest"
 }
-
+/**
+ * The main extension of [Mgpp].
+ * It provides many configurations for Mindustry modding development:
+ * - [meta]: the `mod.(h)json` that will be included in the `:jar` task.
+ * You can modify this, but it only affects the output file.
+ */
 open class MindustryExtension(
     target: Project,
 ) {
@@ -54,86 +53,128 @@ open class MindustryExtension(
     @JvmField
     val Plugin = ProjectType.Plugin
     /**
-     * Configure the mindustry and arc dependency automatically.
-     * This only works before [Project.dependencies] is called
+     * The project type will influence dependency resolution.
      */
-    val dependency = DependencySpec(target)
-    /**
-     * Configure the mindustry and arc dependency automatically.
-     * This only works before [Project.dependencies] is called
-     */
-    fun dependency(func: Action<DependencySpec>) {
-        func.execute(dependency)
-    }
-    /**
-     * Configure the mindustry and arc dependency automatically.
-     * This only works before [Project.dependencies] is called
-     */
-    inline fun dependency(func: DependencySpec.() -> Unit) {
-        dependency.func()
-    }
-
-    val client = ClientSpec(target)
-    fun client(func: Action<ClientSpec>) {
-        func.execute(client)
-    }
-
-    inline fun client(func: ClientSpec.() -> Unit) {
-        client.func()
-    }
-
-    val server = ServerSpec(target)
-    fun server(func: Action<ServerSpec>) {
-        func.execute(server)
-    }
-
-    inline fun server(func: ServerSpec.() -> Unit) {
-        server.func()
-    }
-
     val projectType = target.prop<ProjectType>().apply {
         convention(ProjectType.Mod)
     }
-    val mods = ModsSpec(target)
+    @JvmField
+    val _dependency = DependencySpec(target)
+    /**
+     * Configure the mindustry and arc dependency.
+     * You should call [mindustryRepo] and [importMindustry] to apply the configuration.
+     */
+    fun dependency(func: Action<DependencySpec>) {
+        func.execute(_dependency)
+    }
+    /**
+     * Configure the mindustry and arc dependency.
+     * You should call [mindustryRepo] and [importMindustry] to apply the configuration.
+     */
+    inline fun dependency(func: DependencySpec.() -> Unit) {
+        _dependency.func()
+    }
+    @JvmField
+    val _client = ClientSpec(target)
+    /**
+     * Configure the client to run and debug your mod on
+     */
+    fun client(func: Action<ClientSpec>) {
+        func.execute(_client)
+    }
+    /**
+     * Configure the client to run and debug your mod on
+     */
+    inline fun client(func: ClientSpec.() -> Unit) {
+        _client.func()
+    }
+    @JvmField
+    val _server = ServerSpec(target)
+    /**
+     * Configure the server to run and debug your mod on
+     */
+    fun server(func: Action<ServerSpec>) {
+        func.execute(_server)
+    }
+    /**
+     * Configure the server to run and debug your mod on
+     */
+    inline fun server(func: ServerSpec.() -> Unit) {
+        _server.func()
+    }
+    @JvmField
+    val _mods = ModsSpec(target)
+    /**
+     * Configure what mod you want to work with.
+     */
     fun mods(func: Action<ModsSpec>) {
-        func.execute(mods)
+        func.execute(_mods)
     }
-
+    /**
+     * Configure what mod you want to work with.
+     */
     inline fun mods(func: ModsSpec.() -> Unit) {
-        mods.func()
+        _mods.func()
     }
-
-    val run = RunSpec(target)
+    @JvmField
+    val _run = RunSpec(target)
+    /**
+     * Configure how to run and debug the game.
+     */
     fun run(func: Action<RunSpec>) {
-        func.execute(run)
+        func.execute(_run)
     }
-
+    /**
+     * Configure how to run and debug the game.
+     */
     inline fun run(func: RunSpec.() -> Unit) {
-        run.func()
+        _run.func()
     }
-
-    val deploy = DeploySpec(target)
+    @JvmField
+    val _deploy = DeploySpec(target)
+    /**
+     * Configure how to deploy your artifacts.
+     */
     fun deploy(func: Action<DeploySpec>) {
-        func.execute(deploy)
+        func.execute(_deploy)
     }
-
+    /**
+     * Configure how to deploy your artifacts.
+     */
     inline fun deploy(func: DeploySpec.() -> Unit) {
-        deploy.func()
+        _deploy.func()
     }
-
-    val modMeta = target.prop<ModMeta>().apply {
-        convention(ModMeta.fromHjson(
-            target.rootDir.resolve("mod.hjson").let {
-                if (it.exists()) it else target.rootDir.resolve("mod.json")
-            }
-        ))
-    }
-    var meta: ModMeta
-        get() = modMeta.get()
-        set(value) {
-            modMeta.set(value)
+    @JvmField
+    val _modMeta = target.prop<ModMeta>().apply {
+        target.run {
+            convention(
+                ModMeta.fromHjson(
+                    findFileInOrder(
+                        proDir("mod.hjson"),
+                        proDir("mod.json"),
+                        rootDir("mod.hjson"),
+                        rootDir("mod.json")
+                    )
+                )
+            )
         }
-
+    }
+    /**
+     * Configure `mod.hjson` for output purpose.
+     * It will automatically fetch the `mod.(h)json` from the following paths in order:
+     * 1. [Project.getProjectDir]/mod.hjson
+     * 2. [Project.getProjectDir]/mod.json
+     * 3. [Project.getRootProject]/mod.hjson
+     * 4. [Project.getRootProject]/mod.json
+     */
+    var meta: ModMeta
+        get() = _modMeta.get()
+        set(value) {
+            _modMeta.set(value)
+        }
+    /**
+     * @see [io.github.liplum.mindustry.ModMeta]
+     */
     fun ModMeta(info: Map<String, Any>) =
         io.github.liplum.mindustry.ModMeta(info)
     /**
@@ -168,502 +209,4 @@ open class MindustryExtension(
         java,
         hideBrowser
     )
-}
-
-class DependencySpec(
-    val target: Project,
-) {
-    /**
-     * Import v135 as default for now.
-     * DO NOT trust this behavior, it may change later.
-     */
-    val arcDependency = target.prop<IDependency>().apply {
-        convention(ArcDependency())
-    }
-    /**
-     * Import v135 as default for now.
-     * DO NOT trust this behavior, it may change later.
-     */
-    val mindustryDependency = target.prop<IDependency>().apply {
-        convention(MindustryDependency())
-    }
-    val arc = ArcSpec()
-    val mindustry = MindustrySpec()
-    val latest: LatestNotation
-        get() = LatestNotation
-
-    fun arc(version: String) {
-        arcDependency.set(ArcDependency(version))
-    }
-
-    fun mindustry(version: String) {
-        mindustryDependency.set(MindustryDependency(version))
-    }
-    /**
-     * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
-     */
-    fun mindustryMirror(version: String) {
-        mindustryDependency.set(MirrorDependency(version))
-    }
-
-    fun arc(map: Map<String, Any>) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc`")
-        if (version == "latest") {
-            arcLatest()
-        } else {
-            arc(version)
-        }
-    }
-
-    fun mindustry(map: Map<String, Any>) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry`")
-        if (version == "latest") {
-            mindustryLatest()
-        } else {
-            mindustry(version)
-        }
-    }
-    /**
-     * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
-     */
-    fun mindustryMirror(map: Map<String, Any>) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustryMirror`")
-        if (version == "latest") {
-            mindustryMirrorLatest()
-        } else {
-            mindustryMirror(version)
-        }
-    }
-    fun mindustryLatest() {
-        try {
-            val url = URL(Mgpp.OfficialReleaseURL)
-            val json = Jval.read(url.readText())
-            val version = json.getString("tag_name")
-            mindustry(version = version)
-        } catch (e: Exception) {
-            target.logger.warn("Can't fetch the exact latest version of mindustry, so use ${Mgpp.DefaultMindustryVersion} instead")
-            mindustryMirror(version = Mgpp.DefaultMindustryVersion)
-        }
-    }
-    /**
-     * Fetch the latest [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
-     *
-     * **Not Recommended**, it may not work due to a network issue or jitpack not yet to build this version
-     */
-    fun mindustryMirrorLatest() {
-        try {
-            val url = URL(Mgpp.MindustryJitpackLatestCommit)
-            val json = Jval.read(url.readText())
-            val fullSha = json.getString("sha")
-            val shortSha = fullSha.subSequence(0, 10).toString()
-            mindustryMirror(version = shortSha)
-        } catch (e: Exception) {
-            target.logger.warn("Can't fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
-            mindustryMirror(version = "-SNAPSHOT")
-        }
-    }
-
-    fun arcLatest() {
-        try {
-            val url = URL(Mgpp.ArcLatestCommit)
-            val json = Jval.read(url.readText())
-            val fullSha = json.getString("sha")
-            val shortSha = fullSha.subSequence(0, 10).toString()
-            arc(version = shortSha)
-        } catch (e: Exception) {
-            target.logger.warn("Can't fetch the exact latest version of arc, so use -SNAPSHOT instead")
-            arc(version = "-SNAPSHOT")
-        }
-    }
-
-    val ArcRepo = Mgpp.ArcJitpackRepo
-    val MindustryMirrorRepo = Mgpp.MindustryJitpackMirrorRepo
-    val MindustryRepo = Mgpp.MindustryJitpackRepo
-    fun ArcDependency(
-        version: String = Mgpp.DefaultMindustryVersion,
-    ) = Dependency(Mgpp.ArcJitpackRepo, version)
-
-    fun MindustryDependency(
-        version: String = Mgpp.DefaultMindustryVersion,
-    ) = Dependency(Mgpp.MindustryJitpackRepo, version)
-
-    fun Dependency(
-        fullName: String = "",
-        version: String = "",
-    ) = io.github.liplum.mindustry.Dependency(fullName, version)
-    /**
-     * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
-     */
-    fun MirrorDependency(
-        version: String = "",
-    ) = MirrorJitpackDependency(Mgpp.MindustryJitpackMirrorRepo, version)
-
-    inner class ArcSpec {
-        infix fun on(version: String) {
-            arcDependency.set(ArcDependency(version))
-        }
-
-        infix fun on(notation: IMgppNotation) {
-            if (notation === LatestNotation)
-                arcLatest()
-            else
-                throw GradleException("Unknown game notation of mindustry $notation")
-        }
-
-        fun on(map: Map<String, Any>) {
-            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc.on`")
-            arcDependency.set(ArcDependency(version))
-        }
-    }
-
-    inner class MindustrySpec {
-        /**
-         * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
-         */
-        infix fun mirror(version: String) {
-            mindustryDependency.set(MirrorDependency(version))
-        }
-
-        infix fun on(version: String) {
-            mindustryDependency.set(MindustryDependency(version))
-        }
-
-        infix fun on(notation: IMgppNotation) {
-            if (notation === LatestNotation)
-                mindustryLatest()
-            else
-                throw GradleException("Unknown game notation of mindustry $notation")
-        }
-        /**
-         * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
-         */
-        infix fun mirror(notation: IMgppNotation) {
-            if (notation === LatestNotation)
-                mindustryMirrorLatest()
-            else
-                throw GradleException("Unknown game notation of mindustry $notation")
-        }
-        /**
-         * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
-         */
-        fun mirror(map: Map<String, Any>) {
-            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.mirror`")
-            mindustryDependency.set(MirrorDependency(version))
-        }
-
-        fun on(map: Map<String, Any>) {
-            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.on`")
-            mindustryDependency.set(MindustryDependency(version))
-        }
-    }
-}
-
-interface IGameLocationSpec {
-    val location: Property<GameLocation>
-    val keepOtherVersion: Property<Boolean>
-    val clearUp: Unit
-        get() = keepOtherVersion.set(true)
-    val keepOthers: Unit
-        get() = keepOtherVersion.set(false)
-    val target: Project
-    fun GameLocation(
-        user: String = "",
-        repo: String = "",
-        version: String = "",
-        release: String = "",
-    ) = io.github.liplum.mindustry.GameLocation(user, repo, version, release)
-
-    val latest: LatestNotation
-        get() = LatestNotation
-
-    infix fun official(version: String) {
-        location.set(Official(version))
-    }
-
-    infix fun be(version: String) {
-        location.set(BE(version))
-    }
-
-    infix fun official(notation: IMgppNotation) {
-        if (notation === LatestNotation)
-            this.location.set(LatestOfficial())
-        else
-            throw GradleException("Unknown game notation of official $notation")
-    }
-
-    infix fun be(latest: IMgppNotation) {
-        if (latest === LatestNotation)
-            this.location.set(LatestBE())
-        else
-            throw GradleException("Unknown game notation of be $latest")
-    }
-
-    fun Official(version: String): GameLocation
-    fun BE(version: String): GameLocation
-
-    fun LatestOfficial(): GameLocation {
-        return try {
-            val url = URL(Mgpp.OfficialReleaseURL)
-            val json = Jval.read(url.readText())
-            val version = json.getString("tag_name").let {
-                if (it == null) {
-                    target.logger.warn("Can't fetch latest official.")
-                    Mgpp.DefaultMindustryVersion
-                } else it
-            }
-            Official(version)
-        } catch (e: Exception) {
-            target.logger.warn(
-                "Can't fetch latest official version, so use ${Mgpp.DefaultMindustryVersion} as default instead.",
-                e
-            )
-            Official(Mgpp.DefaultMindustryVersion)
-        }
-    }
-
-    fun LatestBE(): GameLocation {
-        try {
-            val url = URL(Mgpp.BEReleaseURL)
-            val json = Jval.read(url.readText())
-            val version = json.getString("tag_name").let {
-                if (it == null) {
-                    target.logger.warn("Can't fetch latest be.")
-                    Mgpp.DefaultMindustryBEVersion
-                } else it
-            }
-            return BE(version)
-        } catch (e: Exception) {
-            target.logger.warn(
-                "Can't fetch latest be version, so use ${Mgpp.DefaultMindustryBEVersion} as default instead.",
-                e
-            )
-            return BE(Mgpp.DefaultMindustryBEVersion)
-        }
-    }
-
-    infix fun official(map: Map<String, Any>) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
-        if (version == "latest") {
-            official(LatestNotation)
-        } else {
-            official(version)
-        }
-    }
-
-    infix fun be(map: Map<String, Any>) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
-        if (version == "latest") {
-            be(LatestNotation)
-        } else {
-            be(version)
-        }
-    }
-}
-
-class ClientSpec(
-    override val target: Project,
-) : IGameLocationSpec {
-    override val keepOtherVersion = target.prop<Boolean>().apply {
-        convention(false)
-    }
-    override val location = target.prop<GameLocation>().apply {
-        convention(Official(version = Mgpp.DefaultMindustryVersion))
-    }
-    val mindustry: ClientSpec
-        get() = this
-
-    override infix fun Official(
-        version: String,
-    ) = GameLocation(
-        user = Mgpp.Anuken, repo = Mgpp.Mindustry,
-        version = version,
-        release = Mgpp.ClientReleaseName
-    )
-
-    override infix fun BE(
-        version: String,
-    ) = GameLocation(
-        Mgpp.Anuken, Mgpp.MindustryBuilds,
-        version, "Mindustry-BE-Desktop-$version.jar"
-    )
-}
-
-class ServerSpec(
-    override val target: Project,
-) : IGameLocationSpec {
-    override val keepOtherVersion = target.prop<Boolean>().apply {
-        convention(false)
-    }
-    override val location = target.prop<GameLocation>().apply {
-        convention(Official(version = Mgpp.DefaultMindustryVersion))
-    }
-    val mindustry: ServerSpec
-        get() = this
-
-    override fun Official(
-        version: String,
-    ) = GameLocation(
-        user = Mgpp.Anuken, repo = Mgpp.Mindustry,
-        version = version,
-        release = Mgpp.ServerReleaseName
-    )
-
-    override fun BE(
-        version: String,
-    ) = GameLocation(
-        Mgpp.Anuken, Mgpp.MindustryBuilds,
-        version, "Mindustry-BE-Server-$version.jar"
-    )
-}
-
-class ModsSpec(
-    target: Project,
-) {
-    val _extraModsFromTask = target.stringsProp().apply {
-        add(JavaPlugin.JAR_TASK_NAME)
-    }
-    var extraModsFromTask: List<String>
-        get() = _extraModsFromTask.getOrElse(emptyList())
-        set(value) {
-            _extraModsFromTask.set(value)
-        }
-    val worksWith = target.listProp<IMod>().apply {
-        convention(HashSet())
-    }
-    val add: ModsSpec
-        get() = this
-
-    fun worksWith(config: Runnable) {
-        config.run()
-    }
-
-    inline fun worksWith(config: () -> Unit) {
-        config()
-    }
-
-    infix fun github(repo: String) {
-        worksWith.add(GitHubMod(repo))
-    }
-
-    infix fun json(repo: String) = GitHubPlainMod(repo).apply {
-        worksWith.add(this)
-    }
-
-    infix fun hjson(repo: String) = GitHubPlainMod(repo).apply {
-        worksWith.add(this)
-    }
-
-    infix fun js(repo: String) = GitHubPlainMod(repo).apply {
-        worksWith.add(this)
-    }
-
-    infix fun java(repo: String) {
-        worksWith.add(GitHubJvmMod(repo))
-    }
-
-    infix fun kotlin(repo: String) {
-        worksWith.add(GitHubJvmMod(repo))
-    }
-
-    infix fun groovy(repo: String) {
-        worksWith.add(GitHubJvmMod(repo))
-    }
-
-    infix fun scala(repo: String) {
-        worksWith.add(GitHubJvmMod(repo))
-    }
-
-    infix fun closure(repo: String) {
-        worksWith.add(GitHubJvmMod(repo))
-    }
-
-    infix fun local(path: String) {
-        worksWith.add(LocalMod(path))
-    }
-
-    infix fun url(url: String) {
-        worksWith.add(UrlMod(url))
-    }
-
-    infix fun fromTask(task: String) {
-        _extraModsFromTask.add(task)
-    }
-    /**
-     * Add some mods working with this mod.
-     */
-    fun worksWith(vararg mods: IMod) {
-        worksWith.addAll(mods.toList())
-    }
-}
-
-class DeploySpec(
-    target: Project,
-) {
-    @JvmField
-    val _baseName = target.stringProp().apply {
-        convention("")
-    }
-    var baseName: String
-        get() = _baseName.getOrElse("")
-        set(value) {
-            _baseName.set(value)
-        }
-    @JvmField
-    val _version = target.stringProp().apply {
-        convention("")
-    }
-    var version: String
-        get() = _version.getOrElse("")
-        set(value) {
-            _version.set(value)
-        }
-    @JvmField
-    val _classifier = target.stringProp().apply {
-        convention("")
-    }
-    var classifier: String
-        get() = _classifier.getOrElse("")
-        set(value) {
-            _classifier.set(value)
-        }
-    val _androidSdkRoot = target.stringProp().apply {
-        convention(System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: "")
-    }
-    var androidSdkRoot: String
-        get() = _androidSdkRoot.getOrElse("")
-        set(value) {
-            _androidSdkRoot.set(value)
-        }
-    val enableFatJar = target.prop<Boolean>().apply {
-        convention(true)
-    }
-    val fatJar: Unit
-        get() {
-            enableFatJar.set(true)
-        }
-    val noFatJar: Unit
-        get() {
-            enableFatJar.set(false)
-        }
-}
-
-class RunSpec(
-    target: Project,
-) {
-    val _dataDir = target.stringProp().apply {
-        convention("temp")
-    }
-    var dataDir: String
-        get() = _dataDir.getOrElse("")
-        set(value) {
-            _dataDir.set(value)
-        }
-
-    fun setDataDefault() {
-        _dataDir.set("")
-    }
-
-    fun setDataTemp() {
-        _dataDir.set("temp")
-    }
 }

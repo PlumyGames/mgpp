@@ -6,6 +6,7 @@ import org.gradle.api.provider.Property
 import java.io.File
 
 typealias StringProp = Property<String>
+typealias BoolProp = Property<Boolean>
 typealias StringsProp = ListProperty<String>
 typealias DirProp = DirectoryProperty
 typealias FileProp = Property<File>

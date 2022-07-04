@@ -1,3 +1,5 @@
+@file:Suppress("RemoveRedundantBackticks")
+@file:JvmName("AssetsExtension")
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.fileProp
@@ -6,8 +8,19 @@ import io.github.liplum.dsl.stringProp
 import io.github.liplum.mindustry.MindustryAssetsExtension.AssetBatchType
 import org.gradle.api.Action
 import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
 import java.io.File
 import java.io.Serializable
+/**
+ * Retrieves the [mindustry][MindustryExtension] extension.
+ */
+val Project.`mindustryAssets`: MindustryAssetsExtension
+    get() = (this as ExtensionAware).extensions.getByName(Mgpp.AssetExtensionName) as MindustryAssetsExtension
+/**
+ * Configures the [mindustry][MindustryExtension] extension.
+ */
+fun Project.`mindustryAssets`(configure: Action<MindustryAssetsExtension>): Unit =
+    (this as ExtensionAware).extensions.configure(Mgpp.AssetExtensionName, configure)
 
 object ResourceClassGeneratorRegistry {
     @JvmStatic

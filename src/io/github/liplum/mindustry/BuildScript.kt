@@ -21,8 +21,8 @@ fun Project.importMindustry() = afterEvaluateThis {
     val ex = extensions.getOrCreate<MindustryExtension>(
         Mgpp.MainExtensionName
     )
-    val mdt = ex.dependency.mindustryDependency.get()
-    val arc = ex.dependency.arcDependency.get()
+    val mdt = ex._dependency.mindustryDependency.get()
+    val arc = ex._dependency.arcDependency.get()
     // Mindustry core
     mdt.whenAvailable("core", ::addMindustry)
     // Arc

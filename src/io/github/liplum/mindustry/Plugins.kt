@@ -74,7 +74,7 @@ class MindustryJavaPlugin : Plugin<Project> {
             )
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
             jarFiles.from(jar)
-            sdkRoot.set(ex.deploy._androidSdkRoot)
+            sdkRoot.set(ex._deploy._androidSdkRoot)
         }
         tasks.register<Jar>("deploy") {
             group = Mgpp.MindustryTaskGroup
@@ -82,16 +82,16 @@ class MindustryJavaPlugin : Plugin<Project> {
             dependsOn(jar)
             dependsOn(dexJar)
             destinationDirectory.set(temporaryDir)
-            archiveBaseName.set(ex.deploy._baseName)
-            archiveVersion.set(ex.deploy._version)
-            archiveClassifier.set(ex.deploy._classifier)
+            archiveBaseName.set(ex._deploy._baseName)
+            archiveVersion.set(ex._deploy._version)
+            archiveClassifier.set(ex._deploy._classifier)
             from(
                 *jar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
                 *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
             )
         }
         target.afterEvaluateThis {
-            if (ex.deploy.enableFatJar.get()) {
+            if (ex._deploy.enableFatJar.get()) {
                 tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
                     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                     from(
@@ -102,11 +102,11 @@ class MindustryJavaPlugin : Plugin<Project> {
                 }
             }
         }
-        val modMeta = ex.modMeta.get()
-        ex.deploy._baseName.convention(provider {
+        val modMeta = ex._modMeta.get()
+        ex._deploy._baseName.convention(provider {
             modMeta.name
         })
-        ex.deploy._version.convention(provider {
+        ex._deploy._version.convention(provider {
             modMeta.version
         })
     }
@@ -132,7 +132,7 @@ class MindustryAssetPlugin : Plugin<Project> {
         )
         val genModHjson = tasks.register<ModHjsonGenerate>("genModHjson") {
             group = Mgpp.MindustryTaskGroup
-            modMeta.set(main.modMeta)
+            modMeta.set(main._modMeta)
             outputHjson.set(temporaryDir.resolve("mod.hjson"))
         }
         tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
@@ -150,7 +150,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                 this.group = Mgpp.MindustryAssetTaskGroup
                 val name = assets.qualifiedName.get()
                 if (name == "default") {
-                    val modMeta = main.modMeta.get()
+                    val modMeta = main._modMeta.get()
                     val (packageName, _) = modMeta.main.packageAndClassName()
                     qualifiedName.set("$packageName.R")
                 } else {
@@ -195,7 +195,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                 val gen = tasks.register<ResourceClassGenerate>("gen${groupPascal}Class") {
                     this.group = Mgpp.MindustryAssetTaskGroup
                     dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
-                    args.put("ModName", main.modMeta.get().name)
+                    args.put("ModName", main._modMeta.get().name)
                     args.put("NameRule", type.nameRule.name)
                     args.putAll(assets.args)
                     generator.set(type.generator)
@@ -257,7 +257,7 @@ class MindustryAppPlugin : Plugin<Project> {
             "resolveMods"
         ) {
             group = Mgpp.MindustryTaskGroup
-            mods.set(ex.mods.worksWith)
+            mods.set(ex._mods.worksWith)
         }
         target.afterEvaluateThis {
             // For client side
@@ -265,8 +265,8 @@ class MindustryAppPlugin : Plugin<Project> {
                 "downloadClient",
             ) {
                 group = Mgpp.MindustryTaskGroup
-                keepOthers.set(ex.client.keepOtherVersion)
-                ex.client.location.get().run {
+                keepOthers.set(ex._client.keepOtherVersion)
+                ex._client.location.get().run {
                     val downloadLocation = GitHubDownload.release(
                         user, repo,
                         version, release
@@ -282,8 +282,8 @@ class MindustryAppPlugin : Plugin<Project> {
                 "downloadServer",
             ) {
                 group = Mgpp.MindustryTaskGroup
-                keepOthers.set(ex.client.keepOtherVersion)
-                ex.server.location.get().run {
+                keepOthers.set(ex._client.keepOtherVersion)
+                ex._server.location.get().run {
                     val downloadLocation = GitHubDownload.release(
                         user, repo,
                         version, release
@@ -294,10 +294,10 @@ class MindustryAppPlugin : Plugin<Project> {
                     )
                 }
             }
-            val dataDirEx = ex.run._dataDir.get()
             val runClient = tasks.register<RunMindustry>("runClient") {
                 group = Mgpp.MindustryTaskGroup
                 dependsOn(downloadClient)
+                val dataDirEx = ex._run._dataDir.get()
                 dataDir.set(
                     if (dataDirEx.isNotBlank() && dataDirEx != "temp")
                         File(dataDirEx)
@@ -309,7 +309,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 mindustryFile.setFrom(downloadClient)
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.set("mods")
-                ex.mods._extraModsFromTask.get().forEach {
+                ex._mods._extraModsFromTask.get().forEach {
                     outputtedMods.from(tasks.getByPath(it))
                 }
             }
@@ -322,7 +322,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 mindustryFile.setFrom(downloadServer)
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.convention("config/mods")
-                ex.mods._extraModsFromTask.get().forEach {
+                ex._mods._extraModsFromTask.get().forEach {
                     dependsOn(tasks.getByPath(it))
                     outputtedMods.from(tasks.getByPath(it))
                 }
