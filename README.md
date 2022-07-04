@@ -31,27 +31,27 @@ Please make sure to always upgrade MGPP to the latest version [![Gradle Plugin P
     Groovy as DSL
 </summary>
 
-Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
-```groovy
-plugins {
-    id "io.github.liplum.mgpp" version "<version>"
-}
-```
-Using [legacy plugin application](https://docs.gradle.org/current/userguide/plugins.html#sec:old_plugin_application):
-```groovy
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
+- Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
+    ```groovy
+    plugins {
+        id "io.github.liplum.mgpp" version "<version>"
+    }
+    ```
+- Using [legacy plugin application](https://docs.gradle.org/current/userguide/plugins.html#sec:old_plugin_application):
+    ```groovy
+    buildscript {
+        repositories {
+            maven {
+                url "https://plugins.gradle.org/m2/"
+            }
+        }
+        dependencies {
+            classpath "io.github.liplum.mgpp:MindustryGradlePluginPlumy:<version>"
         }
     }
-    dependencies {
-        classpath "io.github.liplum.mgpp:MindustryGradlePluginPlumy:<version>"
-    }
-}
-
-apply plugin: "io.github.liplum.mgpp"
-```
+    
+    apply plugin: "io.github.liplum.mgpp"
+    ```
 
 </details>
 <details>
@@ -59,25 +59,25 @@ apply plugin: "io.github.liplum.mgpp"
     Kotlin as DSL
 </summary>
 
-Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
-```kotlin
-plugins {
-  id("io.github.liplum.mgpp") version "<version>"
-}
-```
-Using [legacy plugin application](https://docs.gradle.org/current/userguide/plugins.html#sec:old_plugin_application):
-```kotlin
-buildscript {
-    repositories {
-        maven { url = uri("https://plugins.gradle.org/m2/") }
+- Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
+    ```kotlin
+    plugins {
+      id("io.github.liplum.mgpp") version "<version>"
     }
-    dependencies {
-        classpath("io.github.liplum.mgpp:MindustryGradlePluginPlumy:<version>")
+    ```
+- Using [legacy plugin application](https://docs.gradle.org/current/userguide/plugins.html#sec:old_plugin_application):
+    ```kotlin
+    buildscript {
+        repositories {
+            maven { url = uri("https://plugins.gradle.org/m2/") }
+        }
+        dependencies {
+            classpath("io.github.liplum.mgpp:MindustryGradlePluginPlumy:<version>")
+        }
     }
-}
-
-apply(plugin = "io.github.liplum.mgpp")
-```
+    
+    apply(plugin = "io.github.liplum.mgpp")
+    ```
 
 </details>
 
