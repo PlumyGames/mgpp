@@ -3,6 +3,7 @@
 
 package io.github.liplum.mindustry
 
+import arc.util.serialization.Jval
 import io.github.liplum.dsl.listProp
 import io.github.liplum.dsl.prop
 import io.github.liplum.dsl.stringProp
@@ -12,27 +13,29 @@ import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.provider.Property
+import java.net.URL
 
 /**
  * Retrieves the [mindustry][MindustryExtension] extension.
  */
 val Project.`mindustry`: MindustryExtension
-    get() = (this as ExtensionAware).extensions.getByName(MindustryPlugin.MainExtensionName) as MindustryExtension
+    get() = (this as ExtensionAware).extensions.getByName(MGPP.MainExtensionName) as MindustryExtension
 /**
  * Configures the [mindustry][MindustryExtension] extension.
  */
 fun Project.`mindustry`(configure: Action<MindustryExtension>): Unit =
-    (this as ExtensionAware).extensions.configure(MindustryPlugin.MainExtensionName, configure)
+    (this as ExtensionAware).extensions.configure(MGPP.MainExtensionName, configure)
 /**
  * Retrieves the [mindustry][MindustryExtension] extension.
  */
 val Project.`mindustryAssets`: MindustryAssetsExtension
-    get() = (this as ExtensionAware).extensions.getByName(MindustryPlugin.AssetExtensionName) as MindustryAssetsExtension
+    get() = (this as ExtensionAware).extensions.getByName(MGPP.AssetExtensionName) as MindustryAssetsExtension
 /**
  * Configures the [mindustry][MindustryExtension] extension.
  */
 fun Project.`mindustryAssets`(configure: Action<MindustryAssetsExtension>): Unit =
-    (this as ExtensionAware).extensions.configure(MindustryPlugin.AssetExtensionName, configure)
+    (this as ExtensionAware).extensions.configure(MGPP.AssetExtensionName, configure)
 
 enum class ProjectType {
     Mod, Plugin
@@ -208,16 +211,16 @@ class DependencySpec(
         mindustryDependency.set(MirrorDependency(version))
     }
 
-    val ArcRepo = MindustryPlugin.ArcJitpackRepo
-    val MindustryMirrorRepo = MindustryPlugin.MindustryJitpackMirrorRepo
-    val MindustryRepo = MindustryPlugin.MindustryJitpackRepo
+    val ArcRepo = MGPP.ArcJitpackRepo
+    val MindustryMirrorRepo = MGPP.MindustryJitpackMirrorRepo
+    val MindustryRepo = MGPP.MindustryJitpackRepo
     fun ArcDependency(
-        version: String = MindustryPlugin.DefaultMindustryVersion,
-    ) = Dependency(MindustryPlugin.ArcJitpackRepo, version)
+        version: String = MGPP.DefaultMindustryVersion,
+    ) = Dependency(MGPP.ArcJitpackRepo, version)
 
     fun MindustryDependency(
-        version: String = MindustryPlugin.DefaultMindustryVersion,
-    ) = Dependency(MindustryPlugin.MindustryJitpackRepo, version)
+        version: String = MGPP.DefaultMindustryVersion,
+    ) = Dependency(MGPP.MindustryJitpackRepo, version)
 
     fun Dependency(
         fullName: String = "",
@@ -226,7 +229,7 @@ class DependencySpec(
 
     fun MirrorDependency(
         version: String = "",
-    ) = MirrorJitpackDependency(MindustryPlugin.MindustryJitpackMirrorRepo, version)
+    ) = MirrorJitpackDependency(MGPP.MindustryJitpackMirrorRepo, version)
 
     inner class ArcSpec {
         infix fun on(version: String) {
@@ -260,7 +263,16 @@ class DependencySpec(
     }
 }
 
+interface IGameLocationNotation
+object LatestGameNotation : IGameLocationNotation
 interface IGameLocationSpec {
+    val location: Property<GameLocation>
+    val keepOtherVersion: Property<Boolean>
+    val clearUp: Unit
+        get() = keepOtherVersion.set(true)
+    val keepOthers: Unit
+        get() = keepOtherVersion.set(false)
+    val target:Project
     fun GameLocation(
         user: String = "",
         repo: String = "",
@@ -268,116 +280,137 @@ interface IGameLocationSpec {
         release: String = "",
     ) = io.github.liplum.mindustry.GameLocation(user, repo, version, release)
 
-    infix fun official(version: String)
-    infix fun be(version: String)
-    infix fun official(map: Map<String, Any>)
-    infix fun be(map: Map<String, Any>)
+    val latest: LatestGameNotation
+        get() = LatestGameNotation
+
+    infix fun official(version: String) {
+        location.set(Official(version))
+    }
+
+    infix fun be(version: String) {
+        location.set(BE(version))
+    }
+
+    infix fun official(latest: IGameLocationNotation) {
+        if (latest === LatestGameNotation)
+            this.location.set(LatestOfficial())
+        else
+            throw GradleException("Unknown game notation of official $latest")
+    }
+
+    infix fun be(latest: IGameLocationNotation) {
+        if (latest === LatestGameNotation)
+            this.location.set(LatestBE())
+        else
+            throw GradleException("Unknown game notation of be $latest")
+    }
+
+    fun Official(version: String): GameLocation
+    fun BE(version: String): GameLocation
+    fun LatestOfficial(): GameLocation {
+        return try {
+            val url = URL(MGPP.OfficialReleaseURL)
+            val json = Jval.read(url.readText())
+            val version = json.getString("tag_name").let {
+                if (it == null) {
+                    target.logger.warn("Can't fetch latest official.")
+                    MGPP.DefaultMindustryVersion
+                } else it
+            }
+            Official(version)
+        } catch (e: Exception) {
+            target.logger.warn(
+                "Can't fetch latest official version, so use ${MGPP.DefaultMindustryVersion} as default instead.",
+                e
+            )
+            Official(MGPP.DefaultMindustryVersion)
+        }
+    }
+
+    fun LatestBE(): GameLocation {
+        try {
+            val url = URL(MGPP.BEReleaseURL)
+            val json = Jval.read(url.readText())
+            val version = json.getString("tag_name").let {
+                if (it == null) {
+                    target.logger.warn("Can't fetch latest be.")
+                    MGPP.DefaultMindustryBEVersion
+                } else it
+            }
+            return BE(version)
+        } catch (e: Exception) {
+            target.logger.warn(
+                "Can't fetch latest be version, so use ${MGPP.DefaultMindustryBEVersion} as default instead.",
+                e
+            )
+            return BE(MGPP.DefaultMindustryBEVersion)
+        }
+    }
+    infix fun official(map: Map<String, Any>) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
+        official(version)
+    }
+
+    infix fun be(map: Map<String, Any>) {
+        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
+        be(version)
+    }
 }
 
 class ClientSpec(
-    target: Project,
+    override val target: Project,
 ) : IGameLocationSpec {
-    val location = target.prop<GameLocation>().apply {
-        convention(
-            GameLocation(
-                user = MindustryPlugin.Anuken, repo = MindustryPlugin.Mindustry,
-                version = MindustryPlugin.DefaultMindustryVersion,
-                release = MindustryPlugin.ClientReleaseName
-            )
-        )
+    override val keepOtherVersion = target.prop<Boolean>().apply {
+        convention(false)
+    }
+    override val location = target.prop<GameLocation>().apply {
+        convention(Official(version = MGPP.DefaultMindustryVersion))
     }
     val mindustry: ClientSpec
         get() = this
 
-    override infix fun official(
+    override infix fun Official(
         version: String,
-    ) {
-        location.set(
-            GameLocation(
-                user = MindustryPlugin.Anuken, repo = MindustryPlugin.Mindustry,
-                version = version,
-                release = MindustryPlugin.ClientReleaseName
-            )
-        )
-    }
+    ) = GameLocation(
+        user = MGPP.Anuken, repo = MGPP.Mindustry,
+        version = version,
+        release = MGPP.ClientReleaseName
+    )
 
-    override infix fun be(
+    override infix fun BE(
         version: String,
-    ) {
-        location.set(
-            GameLocation(
-                MindustryPlugin.Anuken, MindustryPlugin.MindustryBuilds,
-                version, "Mindustry-BE-Desktop-$version.jar"
-            )
-        )
-    }
-
-    override infix fun official(
-        map: Map<String, Any>,
-    ) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
-        official(version)
-    }
-
-    override infix fun be(
-        map: Map<String, Any>,
-    ) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
-        be(version)
-    }
+    ) = GameLocation(
+        MGPP.Anuken, MGPP.MindustryBuilds,
+        version, "Mindustry-BE-Desktop-$version.jar"
+    )
 }
 
 class ServerSpec(
-    target: Project,
+    override val target: Project,
 ) : IGameLocationSpec {
-    val location = target.prop<GameLocation>().apply {
-        convention(
-            GameLocation(
-                user = MindustryPlugin.Anuken, repo = MindustryPlugin.Mindustry,
-                version = MindustryPlugin.DefaultArcVersion,
-                release = MindustryPlugin.ServerReleaseName
-            )
-        )
+    override val keepOtherVersion = target.prop<Boolean>().apply {
+        convention(false)
+    }
+    override val location = target.prop<GameLocation>().apply {
+        convention(Official(version = MGPP.DefaultMindustryVersion))
     }
     val mindustry: ServerSpec
         get() = this
 
-    override infix fun official(
+    override fun Official(
         version: String,
-    ) {
-        location.set(
-            GameLocation(
-                user = MindustryPlugin.Anuken, repo = MindustryPlugin.Mindustry,
-                version = version,
-                release = MindustryPlugin.ServerReleaseName
-            )
-        )
-    }
+    ) = GameLocation(
+        user = MGPP.Anuken, repo = MGPP.Mindustry,
+        version = version,
+        release = MGPP.ServerReleaseName
+    )
 
-    override infix fun be(
+    override fun BE(
         version: String,
-    ) {
-        location.set(
-            GameLocation(
-                MindustryPlugin.Anuken, MindustryPlugin.MindustryBuilds,
-                version, "Mindustry-BE-Server-$version.jar"
-            )
-        )
-    }
-
-    override infix fun official(
-        map: Map<String, Any>,
-    ) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
-        official(version)
-    }
-
-    override infix fun be(
-        map: Map<String, Any>,
-    ) {
-        val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
-        be(version)
-    }
+    ) = GameLocation(
+        MGPP.Anuken, MGPP.MindustryBuilds,
+        version, "Mindustry-BE-Server-$version.jar"
+    )
 }
 
 class ModsSpec(

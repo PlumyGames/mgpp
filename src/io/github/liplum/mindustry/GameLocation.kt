@@ -7,5 +7,4 @@ data class GameLocation(
     var repo: String = "",
     var version: String = "",
     var release: String = "",
-) : Serializable {
-}
+) : Serializable

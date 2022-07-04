@@ -107,7 +107,7 @@ data class ModMeta(
             "subtitle" to "",
             "version" to "1.0",
             "main" to "",
-            "minGameVersion" to MindustryPlugin.DefaultMinGameVersion,
+            "minGameVersion" to MGPP.DefaultMinGameVersion,
             "repo" to "",
             "dependencies" to emptyList<String>(),
             "hidden" to false,

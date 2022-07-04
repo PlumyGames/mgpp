@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.0"
-    id("io.github.liplum.mgpp") version "1.0.8"
+    id("io.github.liplum.mgpp") version "1.0.9"
 }
 
 sourceSets {
@@ -51,10 +51,11 @@ mindustry {
         arc on "123fbf12b9"
     }
     client {
-        mindustry be "22728"
+        mindustry be latest
     }
     server {
-        mindustry be "22728"
+        //mindustry be "22728"
+        mindustry official latest
     }
     mods {
         worksWith {

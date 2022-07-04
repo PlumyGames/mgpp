@@ -1,7 +1,7 @@
 package io.github.liplum.mindustry.task
 
 import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.MindustryPlugin
+import io.github.liplum.mindustry.MGPP
 import org.gradle.api.tasks.*
 import kotlin.collections.joinToString
 import kotlin.collections.listOf
@@ -40,7 +40,7 @@ open class RunMindustry : JavaExec() {
         outputtedMods.mapFilesTo(mods)
         standardInput = System.`in`
         args = listOf(mindustryFile.singleFile.absolutePath)
-        environment[MindustryPlugin.MindustryDataDirEnv] = data.absoluteFile
+        environment[MGPP.MindustryDataDirEnv] = data.absoluteFile
         workingDir = data
         // run Mindustry
         super.exec()

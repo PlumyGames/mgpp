@@ -16,7 +16,7 @@ open class RClassGenerate : DefaultTask() {
     init {
         generated.convention(project.provider {
             qualifiedName.get().qualified2FileName(
-                project.buildDir.resolve("generated").resolve(MindustryPlugin.Mindustry)
+                project.buildDir.resolve("generated").resolve(MGPP.Mindustry)
             )
         })
     }
