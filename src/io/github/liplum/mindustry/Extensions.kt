@@ -45,6 +45,7 @@ interface IMgppNotation
 object LatestNotation : IMgppNotation {
     override fun toString() = "latest"
 }
+
 open class MindustryExtension(
     target: Project,
 ) {
@@ -170,7 +171,7 @@ open class MindustryExtension(
 }
 
 class DependencySpec(
-    target: Project,
+    val target: Project,
 ) {
     /**
      * Import v135 as default for now.
@@ -188,6 +189,9 @@ class DependencySpec(
     }
     val arc = ArcSpec()
     val mindustry = MindustrySpec()
+    val latest: LatestNotation
+        get() = LatestNotation
+
     fun arc(version: String) {
         arcDependency.set(ArcDependency(version))
     }
@@ -202,17 +206,66 @@ class DependencySpec(
 
     fun arc(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc`")
-        arcDependency.set(ArcDependency(version))
+        if (version == "latest") {
+            arcLatest()
+        } else {
+            arc(version)
+        }
     }
 
     fun mindustry(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry`")
-        mindustryDependency.set(MindustryDependency(version))
+        if (version == "latest") {
+            mindustryLatest()
+        } else {
+            mindustry(version)
+        }
     }
 
     fun mindustryMirror(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustryMirror`")
-        mindustryDependency.set(MirrorDependency(version))
+        if (version == "latest") {
+            mindustryMirrorLatest()
+        } else {
+            mindustryMirror(version)
+        }
+    }
+    fun mindustryLatest() {
+        try {
+            val url = URL(Mgpp.OfficialReleaseURL)
+            val json = Jval.read(url.readText())
+            val version = json.getString("tag_name")
+            mindustry(version = version)
+        } catch (e: Exception) {
+            target.logger.warn("Can't fetch the exact latest version of mindustry, so use ${Mgpp.DefaultMindustryVersion} instead")
+            mindustryMirror(version = Mgpp.DefaultMindustryVersion)
+        }
+    }
+
+    fun mindustryMirrorLatest() {
+        try {
+            val url = URL(Mgpp.MindustryJitpackLatestCommit)
+            val json = Jval.read(url.readText())
+            val fullSha = json.getString("sha")
+            val shortSha = fullSha.subSequence(0, 10).toString()
+            mindustryMirror(version = shortSha)
+        } catch (e: Exception) {
+            target.logger.warn("Can't fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
+            mindustryMirror(version = "-SNAPSHOT")
+        }
+    }
+
+    fun arcLatest() {
+        try {
+            val url = URL(Mgpp.ArcLatestCommit)
+            val json = Jval.read(url.readText())
+            val fullSha = json.getString("sha")
+            val shortSha = fullSha.subSequence(0, 10).toString()
+            arc(version = shortSha)
+        } catch (e: Exception) {
+            target.logger.warn("Can't fetch the exact latest version of arc, so use -SNAPSHOT instead")
+            arc(version = "-SNAPSHOT")
+        }
     }
 
     val ArcRepo = Mgpp.ArcJitpackRepo
@@ -240,6 +293,13 @@ class DependencySpec(
             arcDependency.set(ArcDependency(version))
         }
 
+        infix fun on(notation: IMgppNotation) {
+            if (notation === LatestNotation)
+                arcLatest()
+            else
+                throw GradleException("Unknown game notation of mindustry $notation")
+        }
+
         fun on(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc.on`")
             arcDependency.set(ArcDependency(version))
@@ -253,6 +313,20 @@ class DependencySpec(
 
         infix fun on(version: String) {
             mindustryDependency.set(MindustryDependency(version))
+        }
+
+        infix fun on(notation: IMgppNotation) {
+            if (notation === LatestNotation)
+                mindustryLatest()
+            else
+                throw GradleException("Unknown game notation of mindustry $notation")
+        }
+
+        infix fun mirror(notation: IMgppNotation) {
+            if (notation === LatestNotation)
+                mindustryMirrorLatest()
+            else
+                throw GradleException("Unknown game notation of mindustry $notation")
         }
 
         fun mirror(map: Map<String, Any>) {
@@ -293,11 +367,11 @@ interface IGameLocationSpec {
         location.set(BE(version))
     }
 
-    infix fun official(latest: IMgppNotation) {
-        if (latest === LatestNotation)
+    infix fun official(notation: IMgppNotation) {
+        if (notation === LatestNotation)
             this.location.set(LatestOfficial())
         else
-            throw GradleException("Unknown game notation of official $latest")
+            throw GradleException("Unknown game notation of official $notation")
     }
 
     infix fun be(latest: IMgppNotation) {

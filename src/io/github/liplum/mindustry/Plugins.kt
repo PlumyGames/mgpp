@@ -48,6 +48,7 @@ class MindustryPlugin : Plugin<Project> {
         const val MindustryJitpackRepo = "com.github.anuken.mindustry"
         const val MindustryJitpackMirrorRepo = "com.github.anuken.mindustryjitpack"
         const val MindustryJitpackLatestCommit = "https://api.github.com/repos/Anuken/MindustryJitpack/commits/main"
+        const val ArcLatestCommit = "https://api.github.com/repos/Anuken/Arc/commits/master"
         const val ArcJitpackRepo = "com.github.anuken.arc"
         const val MindustryDesktopMainClass = "mindustry.desktop.DesktopLauncher"
         const val MindustrySeverMainClass = "mindustry.server.ServerLauncher"
