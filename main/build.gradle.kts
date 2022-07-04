@@ -78,7 +78,6 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.named<Jar>("jar") {
-    archiveBaseName.set(pluginName)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     includeEmptyDirs = false
     from(
@@ -92,6 +91,7 @@ tasks.named<Jar>("jar") {
     )
 }
 tasks.withType<Jar> {
+    archiveBaseName.set(pluginName)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 val sourcesJar by tasks.creating(Jar::class) {

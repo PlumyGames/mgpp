@@ -87,13 +87,13 @@ class DependencySpec(
      */
     fun mindustryLatest() {
         try {
-            val url = URL(MindustryPlugin.OfficialReleaseURL)
+            val url = URL(Mgpp.OfficialReleaseURL)
             val json = Jval.read(url.readText())
             val version = json.getString("tag_name")
             mindustry(version = version)
         } catch (e: Exception) {
-            target.logger.warn("Can't fetch the exact latest version of mindustry, so use ${MindustryPlugin.DefaultMindustryVersion} instead")
-            mindustryMirror(version = MindustryPlugin.DefaultMindustryVersion)
+            target.logger.warn("Can't fetch the exact latest version of mindustry, so use ${Mgpp.DefaultMindustryVersion} instead")
+            mindustryMirror(version = Mgpp.DefaultMindustryVersion)
         }
     }
     /**
@@ -103,7 +103,7 @@ class DependencySpec(
      */
     fun mindustryMirrorLatest() {
         try {
-            val url = URL(MindustryPlugin.MindustryJitpackLatestCommit)
+            val url = URL(Mgpp.MindustryJitpackLatestCommit)
             val json = Jval.read(url.readText())
             val fullSha = json.getString("sha")
             val shortSha = fullSha.subSequence(0, 10).toString()
@@ -118,7 +118,7 @@ class DependencySpec(
      */
     fun arcLatest() {
         try {
-            val url = URL(MindustryPlugin.ArcLatestCommit)
+            val url = URL(Mgpp.ArcLatestCommit)
             val json = Jval.read(url.readText())
             val fullSha = json.getString("sha")
             val shortSha = fullSha.subSequence(0, 10).toString()
@@ -129,21 +129,21 @@ class DependencySpec(
         }
     }
 
-    val ArcRepo = MindustryPlugin.ArcJitpackRepo
-    val MindustryMirrorRepo = MindustryPlugin.MindustryJitpackMirrorRepo
-    val MindustryRepo = MindustryPlugin.MindustryJitpackRepo
+    val ArcRepo = Mgpp.ArcJitpackRepo
+    val MindustryMirrorRepo = Mgpp.MindustryJitpackMirrorRepo
+    val MindustryRepo = Mgpp.MindustryJitpackRepo
     /**
      * Declare an Arc dependency from [arc jitpack](https://github.com/Anuken/Arc).
      */
     fun ArcDependency(
-        version: String = MindustryPlugin.DefaultMindustryVersion,
-    ) = Dependency(MindustryPlugin.ArcJitpackRepo, version)
+        version: String = Mgpp.DefaultMindustryVersion,
+    ) = Dependency(Mgpp.ArcJitpackRepo, version)
     /**
      * Declare a Mindustry dependency from [mindustry jitpack](https://github.com/Anuken/Mindustry).
      */
     fun MindustryDependency(
-        version: String = MindustryPlugin.DefaultMindustryVersion,
-    ) = Dependency(MindustryPlugin.MindustryJitpackRepo, version)
+        version: String = Mgpp.DefaultMindustryVersion,
+    ) = Dependency(Mgpp.MindustryJitpackRepo, version)
     /**
      * Declare a dependency.
      */
@@ -156,7 +156,7 @@ class DependencySpec(
      */
     fun MirrorDependency(
         version: String = "",
-    ) = MirrorJitpackDependency(MindustryPlugin.MindustryJitpackMirrorRepo, version)
+    ) = MirrorJitpackDependency(Mgpp.MindustryJitpackMirrorRepo, version)
     /**
      * To configure Arc dependency
      */

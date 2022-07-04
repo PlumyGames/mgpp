@@ -84,21 +84,21 @@ interface IGameSpec {
      */
     fun LatestOfficial(): GameLocation {
         return try {
-            val url = URL(MindustryPlugin.OfficialReleaseURL)
+            val url = URL(Mgpp.OfficialReleaseURL)
             val json = Jval.read(url.readText())
             val version = json.getString("tag_name").let {
                 if (it == null) {
                     target.logger.warn("Can't fetch latest official.")
-                    MindustryPlugin.DefaultMindustryVersion
+                    Mgpp.DefaultMindustryVersion
                 } else it
             }
             Official(version)
         } catch (e: Exception) {
             target.logger.warn(
-                "Can't fetch latest official version, so use ${MindustryPlugin.DefaultMindustryVersion} as default instead.",
+                "Can't fetch latest official version, so use ${Mgpp.DefaultMindustryVersion} as default instead.",
                 e
             )
-            Official(MindustryPlugin.DefaultMindustryVersion)
+            Official(Mgpp.DefaultMindustryVersion)
         }
     }
     /**
@@ -106,21 +106,21 @@ interface IGameSpec {
      */
     fun LatestBE(): GameLocation {
         try {
-            val url = URL(MindustryPlugin.BEReleaseURL)
+            val url = URL(Mgpp.BEReleaseURL)
             val json = Jval.read(url.readText())
             val version = json.getString("tag_name").let {
                 if (it == null) {
                     target.logger.warn("Can't fetch latest be.")
-                    MindustryPlugin.DefaultMindustryBEVersion
+                    Mgpp.DefaultMindustryBEVersion
                 } else it
             }
             return BE(version)
         } catch (e: Exception) {
             target.logger.warn(
-                "Can't fetch latest be version, so use ${MindustryPlugin.DefaultMindustryBEVersion} as default instead.",
+                "Can't fetch latest be version, so use ${Mgpp.DefaultMindustryBEVersion} as default instead.",
                 e
             )
-            return BE(MindustryPlugin.DefaultMindustryBEVersion)
+            return BE(Mgpp.DefaultMindustryBEVersion)
         }
     }
     /**
@@ -157,7 +157,7 @@ class ClientSpec(
         convention(false)
     }
     override val location = target.prop<GameLocation>().apply {
-        convention(Official(version = MindustryPlugin.DefaultMindustryVersion))
+        convention(Official(version = Mgpp.DefaultMindustryVersion))
     }
     val mindustry: ClientSpec
         get() = this
@@ -165,15 +165,15 @@ class ClientSpec(
     override infix fun Official(
         version: String,
     ) = GameLocation(
-        user = MindustryPlugin.Anuken, repo = MindustryPlugin.Mindustry,
+        user = Mgpp.Anuken, repo = Mgpp.Mindustry,
         version = version,
-        release = MindustryPlugin.ClientReleaseName
+        release = Mgpp.ClientReleaseName
     )
 
     override infix fun BE(
         version: String,
     ) = GameLocation(
-        MindustryPlugin.Anuken, MindustryPlugin.MindustryBuilds,
+        Mgpp.Anuken, Mgpp.MindustryBuilds,
         version, "Mindustry-BE-Desktop-$version.jar"
     )
 }
@@ -188,7 +188,7 @@ class ServerSpec(
         convention(false)
     }
     override val location = target.prop<GameLocation>().apply {
-        convention(Official(version = MindustryPlugin.DefaultMindustryVersion))
+        convention(Official(version = Mgpp.DefaultMindustryVersion))
     }
     val mindustry: ServerSpec
         get() = this
@@ -196,15 +196,15 @@ class ServerSpec(
     override fun Official(
         version: String,
     ) = GameLocation(
-        user = MindustryPlugin.Anuken, repo = MindustryPlugin.Mindustry,
+        user = Mgpp.Anuken, repo = Mgpp.Mindustry,
         version = version,
-        release = MindustryPlugin.ServerReleaseName
+        release = Mgpp.ServerReleaseName
     )
 
     override fun BE(
         version: String,
     ) = GameLocation(
-        MindustryPlugin.Anuken, MindustryPlugin.MindustryBuilds,
+        Mgpp.Anuken, Mgpp.MindustryBuilds,
         version, "Mindustry-BE-Server-$version.jar"
     )
 }
