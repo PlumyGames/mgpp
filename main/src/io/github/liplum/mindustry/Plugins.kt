@@ -276,7 +276,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                     this.group = Mgpp.MindustryAssetTaskGroup
                     dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
                     args.put("ModName", main._modMeta.get().name)
-                    args.put("NameRule", type.nameRule.name)
+                    args.put("ResourceNameRule", type.nameRule.name)
                     args.putAll(assets.args)
                     args.putAll(type.args)
                     generator.set(type.generator)

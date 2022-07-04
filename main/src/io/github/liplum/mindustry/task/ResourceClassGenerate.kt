@@ -1,6 +1,7 @@
 package io.github.liplum.mindustry.task
 
 import io.github.liplum.dsl.*
+import io.github.liplum.mindustry.GenerateContext
 import io.github.liplum.mindustry.IResourceClassGenerator
 import io.github.liplum.mindustry.ResourceClassGeneratorRegistry
 import org.gradle.api.DefaultTask
@@ -42,7 +43,13 @@ open class ResourceClassGenerate : DefaultTask() {
             val args = args.get()
             val className = className.get()
             file += "public static final class $className {\n"
-            gen.generateClass(resources.files, args, file)
+            val context = GenerateContext(
+                name = className,
+                logger = logger,
+                resources = resources.files,
+                args = args,
+                file = file)
+            gen.generateClass(context)
             file += "}\n"
         }
     }
