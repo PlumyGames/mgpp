@@ -21,7 +21,67 @@ ___
 - Deploy on Android
 
 Please check the [homepage](https://plumygame.github.io/mgpp/) to obtain more information.
-## Usages
+
+### How to Use
+
+Please make sure to always upgrade MGPP to the latest version [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/io.github.liplum.mgpp?color=02303a&label=&logo=Gradle&style=for-the-badge)](https://plugins.gradle.org/plugin/io.github.liplum.mgpp).
+
+<details open>
+<summary>
+    Groovy as DSL
+</summary>
+
+Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
+```groovy
+plugins {
+    id "io.github.liplum.mgpp" version "<version>"
+}
+```
+Using [legacy plugin application](https://docs.gradle.org/current/userguide/plugins.html#sec:old_plugin_application):
+```groovy
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.github.liplum.mgpp:MindustryGradlePluginPlumy:<version>"
+    }
+}
+
+apply plugin: "io.github.liplum.mgpp"
+```
+
+</details>
+<details>
+<summary>
+    Kotlin as DSL
+</summary>
+
+Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
+```kotlin
+plugins {
+  id("io.github.liplum.mgpp") version "<version>"
+}
+```
+Using [legacy plugin application](https://docs.gradle.org/current/userguide/plugins.html#sec:old_plugin_application):
+```kotlin
+buildscript {
+    repositories {
+        maven { url = uri("https://plugins.gradle.org/m2/") }
+    }
+    dependencies {
+        classpath("io.github.liplum.mgpp:MindustryGradlePluginPlumy:<version>")
+    }
+}
+
+apply(plugin = "io.github.liplum.mgpp")
+```
+
+</details>
+
+## Documentation
 
 **Because this plugin was made in Kotlin, using Kotlin as your DSL is recommended.**
 
