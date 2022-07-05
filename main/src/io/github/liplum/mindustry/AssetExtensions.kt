@@ -3,13 +3,10 @@
 
 package io.github.liplum.mindustry
 
-import io.github.liplum.dsl.fileProp
-import io.github.liplum.dsl.listProp
-import io.github.liplum.dsl.rootDir
-import io.github.liplum.dsl.stringProp
+import io.github.liplum.dsl.*
 import io.github.liplum.mindustry.MindustryAssetsExtension.AssetBatchType
-import io.github.liplum.mindustry.task.ResourceClassGenerate
 import io.github.liplum.mindustry.task.RClassGenerate
+import io.github.liplum.mindustry.task.ResourceClassGenerate
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -106,7 +103,12 @@ open class MindustryAssetsExtension(
      * [Project.getRootDir]/icon.png as default
      */
     val icon = target.fileProp().apply {
-        convention(target.rootDir("icon.png"))
+        convention(
+            findFileInOrder(
+                target.proDir("icon.png"),
+                target.rootDir("icon.png")
+            )
+        )
     }
     /**
      * A spec for configuring [assetsRoot].

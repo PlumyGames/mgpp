@@ -56,7 +56,7 @@ interface IGameSpec {
     /**
      * Download official edition from [MindustryPlugin.OfficialReleaseURL]
      */
-    infix fun official(notation: IMgppNotation) {
+    infix fun official(notation: INotation) {
         if (notation === LatestNotation)
             this.location.set(LatestOfficial())
         else
@@ -65,7 +65,7 @@ interface IGameSpec {
     /**
      * Download bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
      */
-    infix fun be(latest: IMgppNotation) {
+    infix fun be(latest: INotation) {
         if (latest === LatestNotation)
             this.location.set(LatestBE())
         else

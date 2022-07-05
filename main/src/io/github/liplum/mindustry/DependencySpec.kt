@@ -170,7 +170,7 @@ class DependencySpec(
         /**
          * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
          */
-        infix fun on(notation: IMgppNotation) {
+        infix fun on(notation: INotation) {
             if (notation === LatestNotation)
                 arcLatest()
             else
@@ -207,7 +207,7 @@ class DependencySpec(
         /**
          * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
          */
-        infix fun on(notation: IMgppNotation) {
+        infix fun on(notation: INotation) {
             if (notation === LatestNotation)
                 mindustryLatest()
             else
@@ -227,7 +227,7 @@ class DependencySpec(
         /**
          * Fetch the Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
          */
-        infix fun mirror(notation: IMgppNotation) {
+        infix fun mirror(notation: INotation) {
             if (notation === LatestNotation)
                 mindustryMirrorLatest()
             else

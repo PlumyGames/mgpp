@@ -34,11 +34,6 @@ enum class ProjectType {
      */
     Plugin
 }
-
-interface IMgppNotation
-object LatestNotation : IMgppNotation {
-    override fun toString() = "latest"
-}
 /**
  * The main extension of [Mgpp].
  * It provides many configurations for Mindustry modding development:
