@@ -7,7 +7,7 @@ abstract class NameRule(
     val name: String,
 ) {
     init {
-        allNameRules[name] = this
+        allNameRules[name.lowercase()] = this
     }
     /**
      * Split the raw name from some parts by this name rule.
@@ -38,11 +38,9 @@ abstract class NameRule(
     companion object {
         @JvmStatic
         private val allNameRules = HashMap<String, NameRule>()
-        @JvmOverloads
         @JvmStatic
-        fun valueOf(name: String, ignoreCase: Boolean = true): NameRule? =
-            if (ignoreCase) allNameRules.values.find { it.name.equals(name, true) }
-            else allNameRules[name]
+        fun valueOf(name: String): NameRule? =
+            allNameRules[name.lowercase()]
         /**
          * PascalNameRule
          *
@@ -53,7 +51,7 @@ abstract class NameRule(
          * `["JaVa","lang","string"]` -> JaVaLangString
          */
         @JvmStatic
-        val Pascal = object : NameRule("Pascal") {
+        val Pascal = object : NameRule("pascal") {
             override fun split(raw: String): List<String> {
                 if (raw.isEmpty()) return emptyList()
                 if (raw.length == 1) return listOf(raw)
@@ -90,7 +88,7 @@ abstract class NameRule(
          * `["JaVa","lang","string"]` -> JaVaLangString
          */
         @JvmStatic
-        val Camel = object : NameRule("Camel") {
+        val Camel = object : NameRule("camel") {
             override fun split(raw: String): List<String> {
                 if (raw.isEmpty()) return emptyList()
                 if (raw.length == 1) return listOf(raw)
@@ -129,7 +127,7 @@ abstract class NameRule(
          * `["JaVa","lang","String"]` -> "java_lang_string"
          */
         @JvmStatic
-        val Snake = object : NameRule("Snake") {
+        val Snake = object : NameRule("snake") {
             override fun split(raw: String): List<String> =
                 raw.split("_").map { it.lowercase() }
 
@@ -147,7 +145,7 @@ abstract class NameRule(
          * `["JaVa","lang","String"]` -> "JAVA_LANG_STRING"
          */
         @JvmStatic
-        val AllCaps = object : NameRule("AllCaps") {
+        val AllCaps = object : NameRule("allcaps") {
             override fun split(raw: String): List<String> =
                 raw.split("_").map { it.lowercase() }
 
@@ -165,7 +163,7 @@ abstract class NameRule(
          * `["JaVa","lang","String"]` -> "java-lang-string"
          */
         @JvmStatic
-        val Kebab = object : NameRule("Kebab") {
+        val Kebab = object : NameRule("kebab") {
             override fun split(raw: String): List<String> =
                 raw.split("-").map { it.lowercase() }
 
@@ -183,7 +181,7 @@ abstract class NameRule(
          * `["JaVa","lang","String"]` -> "jaVa.lang.String"
          */
         @JvmStatic
-        val Domain = object : NameRule("Domain") {
+        val Domain = object : NameRule("domain") {
             override fun split(raw: String): List<String> =
                 raw.split(".")
 

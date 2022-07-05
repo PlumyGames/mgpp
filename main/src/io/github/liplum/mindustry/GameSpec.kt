@@ -37,7 +37,15 @@ interface IGameSpec {
         release: String = "",
     ) = io.github.liplum.mindustry.GameLocation(user, repo, version, release)
     /**
-     * A notation represents the latest version
+     * A notation represents the latest version.
+     * ## Usages
+     * ```
+     * client {
+     *     mindustry be latest
+     * }
+     *
+     * This is not recommended, it might work if you faced the API limit of GitHub.
+     * ```
      */
     val latest: LatestNotation
         get() = LatestNotation

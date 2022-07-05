@@ -24,6 +24,7 @@ data class ModMeta(
         displayName: String = default("displayName"),
         author: String = default("author"),
         description: String = default("description"),
+        /** since Mindustry v136 */
         subtitle: String = default("subtitle"),
         version: String = default("version"),
         main: String = default("main"),
@@ -40,7 +41,6 @@ data class ModMeta(
                 "displayName" to displayName,
                 "author" to author,
                 "description" to description,
-                /** since Mindustry v136 */
                 "subtitle" to subtitle,
                 "version" to version,
                 "main" to main,
