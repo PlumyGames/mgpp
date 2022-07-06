@@ -34,6 +34,7 @@ data class ModMeta(
         hidden: Boolean = default("hidden"),
         java: Boolean = default("java"),
         hideBrowser: Boolean = default("hideBrowser"),
+        keepOutlines:Boolean = default("keepOutlines")
     ) : this(
         HashMap(
             mapOf(
@@ -50,6 +51,7 @@ data class ModMeta(
                 "hidden" to hidden,
                 "java" to java,
                 "hideBrowser" to hideBrowser,
+                "keepOutlines" to keepOutlines,
             )
         )
     )
@@ -128,6 +130,7 @@ data class ModMeta(
             "hidden" to false,
             "java" to true,
             "hideBrowser" to false,
+            "keepOutlines" to false,
         )
         @Suppress("UNCHECKED_CAST")
         @JvmStatic
