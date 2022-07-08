@@ -13,7 +13,9 @@ import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.configurationcache.extensions.capitalized
 import java.io.File
+
 typealias Mgpp = MindustryPlugin
+
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         try {
@@ -334,6 +336,13 @@ class MindustryAppPlugin : Plugin<Project> {
         val ex = target.extensions.getOrCreate<MindustryExtension>(
             Mgpp.MainExtensionName
         )
+        target.parent?.let {
+            it.plugins.whenHas<MindustryPlugin> {
+                val parentEx = it.extensions.getOrCreate<MindustryExtension>(Mgpp.MainExtensionName)
+                ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
+                ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
+            }
+        }
         val resolveMods = target.tasks.register<ResolveMods>(
             "resolveMods"
         ) {
@@ -347,33 +356,16 @@ class MindustryAppPlugin : Plugin<Project> {
             ) {
                 group = Mgpp.MindustryTaskGroup
                 keepOthers.set(ex._client.keepOtherVersion)
-                ex._client.location.get().run {
-                    val downloadLocation = GitHubDownload.release(
-                        user, repo,
-                        version, release
-                    )
-                    location.set(downloadLocation)
-                    outputFileName.set(
-                        "${downloadLocation.name.removeSuffix(".jar")}-${user}-${repo}-${version}.jar"
-                    )
-                }
+                location.set(ex._client.location)
             }
+            arrayOf(Any()).any { it == 1 }
             // For server side
             val downloadServer = tasks.register<Download>(
                 "downloadServer",
             ) {
                 group = Mgpp.MindustryTaskGroup
                 keepOthers.set(ex._client.keepOtherVersion)
-                ex._server.location.get().run {
-                    val downloadLocation = GitHubDownload.release(
-                        user, repo,
-                        version, release
-                    )
-                    location.set(downloadLocation)
-                    outputFileName.set(
-                        "${downloadLocation.name.removeSuffix(".jar")}-${user}-${repo}-${version}.jar"
-                    )
-                }
+                location.set(ex._server.location)
             }
             val runClient = tasks.register<RunMindustry>("runClient") {
                 group = Mgpp.MindustryTaskGroup

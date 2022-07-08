@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.0"
-    id("io.github.liplum.mgpp") version "1.0.12"
+    id("io.github.liplum.mgpp") version "1.0.13"
 }
 
 sourceSets {
@@ -55,8 +55,9 @@ mindustry {
     }
     client {
         mindustry be latest
-        // clearUp as default, it will delete other versions when download a new one
-        // keepOthers will keep them
+        //mindustry fromLocal "F:/Mindustry/Mindustry-BE-Desktop-22799.jar" named "22799.jar"
+        // `clearUp` as default, it will delete other versions when download a new one
+        // `keepOthers` will keep them
     }
     server {
         //mindustry be "22728"

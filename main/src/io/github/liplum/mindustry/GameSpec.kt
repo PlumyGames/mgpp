@@ -5,13 +5,15 @@ import io.github.liplum.dsl.prop
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
+import java.io.File
 import java.net.URL
 
 interface IGameSpec {
     /**
      * The location of a game on GitHub
      */
-    val location: Property<GameLocation>
+    @InheritFromParent
+    val location: Property<IGameLocation>
     /**
      * Whether to keep other versions when a new version is downloaded.
      */
@@ -28,14 +30,22 @@ interface IGameSpec {
         get() = keepOtherVersion.set(false)
     val target: Project
     /**
-     * @see [io.github.liplum.mindustry.GameLocation]
+     * @see [GitHubGameLocation]
      */
     fun GameLocation(
         user: String = "",
         repo: String = "",
         version: String = "",
         release: String = "",
-    ) = io.github.liplum.mindustry.GameLocation(user, repo, version, release)
+    ) = GitHubGameLocation(user, repo, version, release)
+    /**
+     * @see [LocalGameLocation]
+     */
+    fun LocalLocation(file: File) = LocalGameLocation(file)
+    /**
+     * @see [LocalGameLocation]
+     */
+    fun LocalLocation(path: String) = LocalGameLocation(File(path))
     /**
      * A notation represents the latest version.
      * ## Usages
@@ -52,45 +62,63 @@ interface IGameSpec {
     /**
      * Download official edition from [MindustryPlugin.OfficialReleaseURL]
      */
-    infix fun official(version: String) {
-        location.set(Official(version))
-    }
+    infix fun official(version: String): GitHubGameLocation =
+        Official(version).apply {
+            location.set(this)
+        }
     /**
      * Download bleeding-edge from [MindustryPlugin.BEReleaseURL]
      */
-    infix fun be(version: String) {
-        location.set(BE(version))
-    }
+    infix fun be(version: String): GitHubGameLocation =
+        BE(version).apply {
+            location.set(this)
+        }
     /**
      * Download official edition from [MindustryPlugin.OfficialReleaseURL]
      */
-    infix fun official(notation: INotation) {
-        if (notation === LatestNotation)
-            this.location.set(LatestOfficial())
-        else
-            throw GradleException("Unknown game notation of official $notation")
-    }
+    infix fun official(notation: INotation): GitHubGameLocation =
+        LatestOfficial().apply {
+            if (notation === LatestNotation)
+                location.set(this)
+            else
+                throw GradleException("Unknown game notation of official $notation")
+        }
     /**
      * Download bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
      */
-    infix fun be(latest: INotation) {
-        if (latest === LatestNotation)
-            this.location.set(LatestBE())
-        else
-            throw GradleException("Unknown game notation of be $latest")
-    }
+    infix fun be(latest: INotation): GitHubGameLocation =
+        LatestBE().apply {
+            if (latest === LatestNotation)
+                location.set(this)
+            else
+                throw GradleException("Unknown game notation of be $latest")
+        }
     /**
-     * Create a [GameLocation] of official edition from [MindustryPlugin.OfficialReleaseURL]
+     * Copy the game from local [file]
      */
-    fun Official(version: String): GameLocation
+    infix fun fromLocal(file: File): LocalGameLocation =
+        LocalLocation(file).apply {
+            location.set(this)
+        }
     /**
-     * Create a [GameLocation] of bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     * Copy the game from local file at [path]
      */
-    fun BE(version: String): GameLocation
+    infix fun fromLocal(path: String): LocalGameLocation =
+        LocalLocation(path).apply {
+            location.set(this)
+        }
     /**
-     * Create a [GameLocation] of the latest official edition from [MindustryPlugin.OfficialReleaseURL]
+     * Create a [GitHubGameLocation] of official edition from [MindustryPlugin.OfficialReleaseURL]
      */
-    fun LatestOfficial(): GameLocation {
+    fun Official(version: String): GitHubGameLocation
+    /**
+     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     */
+    fun BE(version: String): GitHubGameLocation
+    /**
+     * Create a [GitHubGameLocation] of the latest official edition from [MindustryPlugin.OfficialReleaseURL]
+     */
+    fun LatestOfficial(): GitHubGameLocation {
         return try {
             val url = URL(Mgpp.OfficialReleaseURL)
             val json = Jval.read(url.readText())
@@ -110,9 +138,9 @@ interface IGameSpec {
         }
     }
     /**
-     * Create a [GameLocation] of the latest bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     * Create a [GitHubGameLocation] of the latest bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
      */
-    fun LatestBE(): GameLocation {
+    fun LatestBE(): GitHubGameLocation {
         try {
             val url = URL(Mgpp.BEReleaseURL)
             val json = Jval.read(url.readText())
@@ -134,20 +162,20 @@ interface IGameSpec {
     /**
      * Download official edition from [MindustryPlugin.OfficialReleaseURL]
      */
-    infix fun official(map: Map<String, Any>) {
+    infix fun official(map: Map<String, Any>): GitHubGameLocation {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
-        if (version == "latest") {
+        return if (version == "latest") {
             official(LatestNotation)
         } else {
             official(version)
         }
     }
     /**
-     * Create a [GameLocation] of bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
      */
-    infix fun be(map: Map<String, Any>) {
+    infix fun be(map: Map<String, Any>): GitHubGameLocation {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
-        if (version == "latest") {
+        return if (version == "latest") {
             be(LatestNotation)
         } else {
             be(version)
@@ -164,7 +192,7 @@ class ClientSpec(
     override val keepOtherVersion = target.prop<Boolean>().apply {
         convention(false)
     }
-    override val location = target.prop<GameLocation>().apply {
+    override val location = target.prop<IGameLocation>().apply {
         convention(Official(version = Mgpp.DefaultMindustryVersion))
     }
     val mindustry: ClientSpec
@@ -195,7 +223,7 @@ class ServerSpec(
     override val keepOtherVersion = target.prop<Boolean>().apply {
         convention(false)
     }
-    override val location = target.prop<GameLocation>().apply {
+    override val location = target.prop<IGameLocation>().apply {
         convention(Official(version = Mgpp.DefaultMindustryVersion))
     }
     val mindustry: ServerSpec

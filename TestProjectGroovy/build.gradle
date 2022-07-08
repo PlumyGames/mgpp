@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id "io.github.liplum.mgpp" version "1.0.12"
+    id "io.github.liplum.mgpp" version "1.0.13"
 }
 group 'plumy.test'
 version '0.1'
@@ -33,10 +33,11 @@ mindustry {
         arc version: '123fbf12b9'
     }
     client {
+        // fromLocal "F:/Mindustry/Mindustry-BE-Desktop-22799.jar" named "22799.jar"
         be version: latest
         // be version: '22714'
-        // clearUp as default, it will delete other versions when download a new one
-        // keepOthers will keep them
+        // `clearUp` as default, it will delete other versions when download a new one
+        // `keepOthers` will keep them
     }
     server {
         be version: '22714'

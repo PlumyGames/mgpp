@@ -17,13 +17,18 @@ class DependencySpec(
      * Import v135 as default for now.
      * DO NOT trust this behavior, it may change later.
      */
+    @InheritFromParent
+    @DefaultValue("on \"v135\"")
     val arcDependency = target.prop<IDependency>().apply {
         convention(ArcDependency())
     }
     /**
-     * Import v135 as default for now.
-     * DO NOT trust this behavior, it may change later.
+     * The dependency notation of Mindustry.
+     *
+     * Default: official "v135"
      */
+    @InheritFromParent
+    @DefaultValue("on \"v135\"")
     val mindustryDependency = target.prop<IDependency>().apply {
         convention(MindustryDependency())
     }
