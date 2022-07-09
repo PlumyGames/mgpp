@@ -5,8 +5,8 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
 import io.github.liplum.mindustry.MindustryAssetsExtension.AssetBatchType
-import io.github.liplum.mindustry.task.RClassGenerate
-import io.github.liplum.mindustry.task.ResourceClassGenerate
+import io.github.liplum.mindustry.task.GenerateRClass
+import io.github.liplum.mindustry.task.GenerateResourceClass
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -68,7 +68,7 @@ open class MindustryAssetsExtension(
     val generators = ResourceClassGeneratorRegistry.all
     /**
      * The arguments used for generating.
-     * @see ResourceClassGenerate.args
+     * @see GenerateResourceClass.args
      */
     val args = HashMap<String, String>()
     val batches = target.listProp<AssetBatch>().apply {
@@ -345,8 +345,8 @@ data class AssetBatch(
      * disable as default
      *
      * **Note:**
-     * - If any [AssetBatch] of this [type] enabled generating, it'll register a [ResourceClassGenerate] task, named `gen(AssetType)Class`.
-     * - If no [AssetBatch] enabled this, [RClassGenerate] won't be registered.
+     * - If any [AssetBatch] of this [type] enabled generating, it'll register a [GenerateResourceClass] task, named `gen(AssetType)Class`.
+     * - If no [AssetBatch] enabled this, [GenerateRClass] won't be registered.
      */
     var enableGenClass: Boolean = false,
     /**

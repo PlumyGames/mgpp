@@ -5,7 +5,7 @@ import org.gradle.api.tasks.*
 import io.github.liplum.dsl.*
 import io.github.liplum.mindustry.*
 
-open class RClassGenerate : DefaultTask() {
+open class GenerateRClass : DefaultTask() {
     val classFiles = project.configurationFileCollection()
         @InputFiles @SkipWhenEmpty @IgnoreEmptyDirectories get
     val qualifiedName = project.stringProp()

@@ -314,7 +314,7 @@ class MindustryAssetPlugin : Plugin<Project> {
         plugins.whenHas<JavaPlugin> {
             @DisableIfWithout("java")
             val genResourceClass by lazy {
-                tasks.register<RClassGenerate>("genResourceClass") {
+                tasks.register<GenerateRClass>("genResourceClass") {
                     this.group = Mgpp.MindustryAssetTaskGroup
                     val name = assets.qualifiedName.get()
                     if (name == "default") {
@@ -361,7 +361,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                     if (!batches.any { it.enableGenClass }) continue
                     val groupPascal = type.group.lowercase().capitalized()
                     @DisableIfWithout("java")
-                    val gen = tasks.register<ResourceClassGenerate>("gen${groupPascal}Class") {
+                    val gen = tasks.register<GenerateResourceClass>("gen${groupPascal}Class") {
                         this.group = Mgpp.MindustryAssetTaskGroup
                         dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
                         args.put("ModName", main._modMeta.get().name)

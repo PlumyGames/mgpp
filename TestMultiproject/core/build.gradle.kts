@@ -8,6 +8,7 @@ repositories {
     mindustryRepo()
     mavenCentral()
 }
+
 dependencies {
     importMindustry()
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")

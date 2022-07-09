@@ -5,16 +5,14 @@ import io.github.liplum.mindustry.GenerateContext
 import io.github.liplum.mindustry.IResourceClassGenerator
 import io.github.liplum.mindustry.ResourceClassGeneratorRegistry
 import org.gradle.api.DefaultTask
-import org.gradle.api.provider.MapProperty
 import org.gradle.api.tasks.*
 
-open class ResourceClassGenerate : DefaultTask() {
+open class GenerateResourceClass : DefaultTask() {
     val resources = project.configurationFileCollection()
         @InputFiles get
     val className = project.stringProp()
         @Input get
-    val args: MapProperty<String, String> =
-        project.objects.mapProperty(String::class.java, String::class.java)
+    val args = project.mapProp<String, String>()
         @Input @Optional get
     val generator = project.stringProp()
         @Input @Optional get
@@ -31,11 +29,10 @@ open class ResourceClassGenerate : DefaultTask() {
         val gen = if (!generator.isPresent || generator.get().isBlank()) {
             logger.warn("Doesn't find any generator of ${this.name}, please at least specify one.")
             IResourceClassGenerator.Empty
-        }
-        else {
+        } else {
             val generatorName = generator.getOrElse("")
             ResourceClassGeneratorRegistry[generatorName].apply {
-                if(this == IResourceClassGenerator.Empty)
+                if (this == IResourceClassGenerator.Empty)
                     logger.warn("Can't find ${generatorName}, please check the typo")
             }
         }
@@ -48,7 +45,8 @@ open class ResourceClassGenerate : DefaultTask() {
                 logger = logger,
                 resources = resources.files,
                 args = args,
-                file = file)
+                file = file
+            )
             gen.generateClass(context)
             file += "}\n"
         }

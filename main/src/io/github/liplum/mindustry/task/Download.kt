@@ -47,10 +47,3 @@ open class Download : DefaultTask() {
         }
     }
 }
-
-var Download.Assets: IGameLocation?
-    get() = location.orNull
-    set(value) {
-        location.set(value)
-    }
-

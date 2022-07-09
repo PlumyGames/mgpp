@@ -1,18 +1,18 @@
 package io.github.liplum.mindustry.task
 
-import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.*
+import io.github.liplum.dsl.fileProp
+import io.github.liplum.dsl.prop
+import io.github.liplum.mindustry.ModMeta
 import io.github.liplum.mindustry.ModMeta.Companion.toHjson
 import org.gradle.api.DefaultTask
-import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
-abstract class ModHjsonGenerate : DefaultTask() {
-    abstract val modMeta: Property<ModMeta>
+open class ModHjsonGenerate : DefaultTask() {
+    val modMeta = project.prop<ModMeta>()
         @Input get
-    abstract val outputHjson: FileProp
+    val outputHjson = project.fileProp()
         @OutputFile get
     @TaskAction
     fun generate() {

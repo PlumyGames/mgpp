@@ -8,10 +8,7 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.Directory
 import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.api.plugins.PluginContainer
-import org.gradle.api.provider.ListProperty
-import org.gradle.api.provider.Property
-import org.gradle.api.provider.Provider
-import org.gradle.api.provider.SetProperty
+import org.gradle.api.provider.*
 import java.io.File
 
 internal
@@ -45,6 +42,9 @@ fun Project.stringsProp(): StringsProp =
 internal inline
 fun <reified T> Project.listProp(): ListProperty<T> =
     objects.listProperty(T::class.java)
+internal inline
+fun <reified TK, reified TV> Project.mapProp(): MapProperty<TK, TV> =
+    project.objects.mapProperty(TK::class.java, TV::class.java)
 internal inline
 fun <reified T> Project.setProp(): SetProperty<T> =
     objects.setProperty(T::class.java)
