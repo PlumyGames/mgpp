@@ -34,8 +34,27 @@ class DependencySpec(
     }
     val arc = ArcSpec()
     val mindustry = MindustrySpec()
+    /**
+     * A notation represents the latest version.
+     * ## Usages
+     * ```
+     * mindustry be latest
+     * ```
+     * This is not recommended, it might not work if you faced the API limit of GitHub.
+     */
     val latest: LatestNotation
         get() = LatestNotation
+    /**
+     * A notation represents the latest release.
+     * ## Usages
+     * ```
+     * mindustry on latestRelease
+     * arc on latestRelease
+     * ```
+     * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
+     */
+    val latestRelease: LatestReleaseNotation
+        get() = LatestReleaseNotation
     /**
      * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
      */
@@ -60,7 +79,7 @@ class DependencySpec(
     fun arc(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc`")
         if (version == "latest") {
-            arcLatest()
+            arcLatestCommit()
         } else {
             arc(version)
         }
@@ -71,7 +90,7 @@ class DependencySpec(
     fun mindustry(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry`")
         if (version == "latest") {
-            mindustryLatest()
+            mindustryLatestRelease()
         } else {
             mindustry(version)
         }
@@ -82,56 +101,86 @@ class DependencySpec(
     fun mindustryMirror(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustryMirror`")
         if (version == "latest") {
-            mindustryMirrorLatest()
+            mindustryMirrorLatestCommit()
         } else {
             mindustryMirror(version)
         }
     }
     /**
      * Fetch the latest Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
+     *
+     * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
      */
-    fun mindustryLatest() {
-        try {
-            val url = URL(Mgpp.OfficialReleaseURL)
-            val json = Jval.read(url.readText())
-            val version = json.getString("tag_name")
-            mindustry(version = version)
-        } catch (e: Exception) {
-            target.logger.warn("Can't fetch the exact latest version of mindustry, so use ${Mgpp.DefaultMindustryVersion} instead")
-            mindustryMirror(version = Mgpp.DefaultMindustryVersion)
+    fun mindustryLatestRelease() {
+        val latestVersion = target.getLatestVersion("mindustry-release-dependency") {
+            try {
+                val url = URL(Mgpp.MindustryOfficialReleaseURL)
+                val json = Jval.read(url.readText())
+                return@getLatestVersion json.getString("tag_name")
+            } catch (e: Exception) {
+                target.logger.warn("Can't fetch the exact latest version of mindustry, so use ${Mgpp.DefaultMindustryVersion} instead")
+                return@getLatestVersion Mgpp.DefaultMindustryVersion
+            }
         }
+        mindustry(latestVersion)
     }
     /**
      * Fetch the latest [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
      *
-     * **Not Recommended**, it may not work due to a network issue or jitpack not yet to build this version
+     * **Not Recommended** It may not work due to a network issue or jitpack not yet to build this version
      */
-    fun mindustryMirrorLatest() {
-        try {
-            val url = URL(Mgpp.MindustryJitpackLatestCommit)
-            val json = Jval.read(url.readText())
-            val fullSha = json.getString("sha")
-            val shortSha = fullSha.subSequence(0, 10).toString()
-            mindustryMirror(version = shortSha)
-        } catch (e: Exception) {
-            target.logger.warn("Can't fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
-            mindustryMirror(version = "-SNAPSHOT")
+    fun mindustryMirrorLatestCommit() {
+        val latestVersion = target.getLatestVersion("mindustry-mirror-commit-dependency") {
+            try {
+                val url = URL(Mgpp.MindustryJitpackLatestCommit)
+                val json = Jval.read(url.readText())
+                val fullSha = json.getString("sha")
+                return@getLatestVersion fullSha.subSequence(0, 10).toString()
+            } catch (e: Exception) {
+                target.logger.warn("Can't fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
+                return@getLatestVersion "-SNAPSHOT"
+            }
         }
+        mindustryMirror(latestVersion)
     }
     /**
      * Fetch the latest Arc from [arc jitpack](https://github.com/Anuken/Arc).
+     *
+     * **Not Recommended** It may not work due to a network issue or jitpack not yet to build this version
      */
-    fun arcLatest() {
-        try {
-            val url = URL(Mgpp.ArcLatestCommit)
-            val json = Jval.read(url.readText())
-            val fullSha = json.getString("sha")
-            val shortSha = fullSha.subSequence(0, 10).toString()
-            arc(version = shortSha)
-        } catch (e: Exception) {
-            target.logger.warn("Can't fetch the exact latest version of arc, so use -SNAPSHOT instead")
-            arc(version = "-SNAPSHOT")
+    fun arcLatestCommit() {
+        val latestVersion = target.getLatestVersion("arc-commit-dependency") {
+            try {
+                val url = URL(Mgpp.ArcLatestCommit)
+                val json = Jval.read(url.readText())
+                val fullSha = json.getString("sha")
+                return@getLatestVersion fullSha.subSequence(0, 10).toString()
+            } catch (e: Exception) {
+                target.logger.warn("Can't fetch the exact latest version of arc, so use -SNAPSHOT instead")
+                return@getLatestVersion "-SNAPSHOT"
+            }
         }
+        arc(latestVersion)
+    }
+    /**
+     * Fetch the latest Arc from [arc jitpack](https://github.com/Anuken/Arc).
+     *
+     * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
+     */
+    fun arcLatestTag() {
+        val latestVersion = target.getLatestVersion("arc-tag-dependency") {
+            try {
+                val url = URL(Mgpp.ArcTagURL)
+                val json = Jval.read(url.readText())
+                val all = json.asArray()
+                val latestTag = all.get(0) // the latest tag
+                return@getLatestVersion latestTag.getString("name")
+            } catch (e: Exception) {
+                target.logger.warn("Can't fetch the exact latest version of arc, so use ${Mgpp.DefaultArcVersion} instead")
+                return@getLatestVersion Mgpp.DefaultArcVersion
+            }
+        }
+        arc(latestVersion)
     }
 
     val ArcRepo = Mgpp.ArcJitpackRepo
@@ -177,7 +226,9 @@ class DependencySpec(
          */
         infix fun on(notation: INotation) {
             if (notation === LatestNotation)
-                arcLatest()
+                arcLatestCommit()
+            else if (notation === LatestReleaseNotation)
+                arcLatestTag()
             else
                 throw GradleException("Unknown game notation of mindustry $notation")
         }
@@ -186,10 +237,10 @@ class DependencySpec(
          */
         fun on(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc.on`")
-            if (version == "latest") {
-                on(LatestNotation)
-            } else {
-                on(version)
+            when (version) {
+                "latest" -> on(LatestNotation)
+                "latest-release" -> on(LatestReleaseNotation)
+                else -> on(version)
             }
         }
     }
@@ -213,8 +264,8 @@ class DependencySpec(
          * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
          */
         infix fun on(notation: INotation) {
-            if (notation === LatestNotation)
-                mindustryLatest()
+            if (notation === LatestNotation || notation === LatestReleaseNotation)
+                mindustryLatestRelease()
             else
                 throw GradleException("Unknown game notation of mindustry $notation")
         }
@@ -223,10 +274,10 @@ class DependencySpec(
          */
         fun on(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.on`")
-            if (version == "latest") {
-                on(LatestNotation)
-            } else {
-                on(version)
+            when (version) {
+                "latest" -> on(LatestNotation)
+                "latest-release" -> on(LatestReleaseNotation)
+                else -> on(version)
             }
         }
         /**
@@ -234,19 +285,18 @@ class DependencySpec(
          */
         infix fun mirror(notation: INotation) {
             if (notation === LatestNotation)
-                mindustryMirrorLatest()
+                mindustryMirrorLatestCommit()
             else
-                throw GradleException("Unknown game notation of mindustry $notation")
+                throw GradleException("Unknown game notation of mindustry mirror $notation")
         }
         /**
          * Fetch the Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
          */
         fun mirror(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.mirror`")
-            if (version == "latest") {
-                mirror(LatestNotation)
-            } else {
-                mirror(version)
+            when (version) {
+                "latest" -> mirror(LatestNotation)
+                else -> mirror(version)
             }
         }
     }

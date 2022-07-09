@@ -54,6 +54,16 @@ open class MindustryExtension(
     @JvmField
     val Plugin = ProjectType.Plugin
     /**
+     * The check time(sec) for latest version.
+     *
+     * 1 hour as default.
+     */
+    var outOfDateTime: Int
+        get() = (Mgpp.outOfDataTime / 1000).toInt()
+        set(value) {
+            Mgpp.outOfDataTime = value * 1000L
+        }
+    /**
      * The project type will influence dependency resolution.
      */
     val projectType = target.prop<ProjectType>().apply {

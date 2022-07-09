@@ -11,7 +11,7 @@ mindustry {
         arc on "123fbf12b9"
     }
     client {
-        mindustry be "22803"
+        mindustry be latest
     }
     server {
         mindustry be "22803"

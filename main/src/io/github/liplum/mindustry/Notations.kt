@@ -4,6 +4,9 @@ interface INotation
 object LatestNotation : INotation {
     override fun toString() = "latest"
 }
+object LatestReleaseNotation : INotation {
+    override fun toString() = "latest-release"
+}
 
 object ProjectNotation : INotation {
     override fun toString() = "project"

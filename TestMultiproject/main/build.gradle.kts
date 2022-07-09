@@ -35,6 +35,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 mindustry {
+    client {
+        mindustry be latest
+    }
     mods {
         worksWith {
             add fromTask ":core:jar"

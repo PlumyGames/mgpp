@@ -64,6 +64,7 @@ val arcVersion: String by project
 dependencies {
     compileOnly("com.github.anuken.arc:arc-core:$arcVersion")
     implementation("org.hjson:hjson:3.0.0")
+    implementation("com.google.code.gson:gson:2.9.0")
     testImplementation("com.github.anuken.arc:arc-core:$arcVersion")
     testImplementation("org.hjson:hjson:3.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")

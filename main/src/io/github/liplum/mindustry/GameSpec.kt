@@ -8,16 +8,19 @@ import org.gradle.api.provider.Property
 import java.io.File
 import java.net.URL
 
-interface IGameSpec {
+abstract class GameSpecBase(
+    val target: Project,
+    val type: String,
+) {
     /**
      * The location of a game on GitHub
      */
     @InheritFromParent
-    val location: Property<IGameLocation>
+    abstract val location: Property<IGameLocation>
     /**
      * Whether to keep other versions when a new version is downloaded.
      */
-    val keepOtherVersion: Property<Boolean>
+    abstract val keepOtherVersion: Property<Boolean>
     /**
      * Clean all other versions when a new version is downloaded.
      */
@@ -28,7 +31,6 @@ interface IGameSpec {
      */
     val keepOthers: Unit
         get() = keepOtherVersion.set(false)
-    val target: Project
     /**
      * @see [GitHubGameLocation]
      */
@@ -53,28 +55,27 @@ interface IGameSpec {
      * client {
      *     mindustry be latest
      * }
-     *
-     * This is not recommended, it might work if you faced the API limit of GitHub.
      * ```
+     * **Not Recommended** It might not work if you faced the API limit of GitHub.
      */
     val latest: LatestNotation
         get() = LatestNotation
     /**
-     * Download official edition from [MindustryPlugin.OfficialReleaseURL]
+     * Download official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
     infix fun official(version: String): GitHubGameLocation =
         Official(version).apply {
             location.set(this)
         }
     /**
-     * Download bleeding-edge from [MindustryPlugin.BEReleaseURL]
+     * Download bleeding-edge from [MindustryPlugin.MindustryBEReleaseURL]
      */
     infix fun be(version: String): GitHubGameLocation =
         BE(version).apply {
             location.set(this)
         }
     /**
-     * Download official edition from [MindustryPlugin.OfficialReleaseURL]
+     * Download official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
     infix fun official(notation: INotation): GitHubGameLocation =
         LatestOfficial().apply {
@@ -84,7 +85,7 @@ interface IGameSpec {
                 throw GradleException("Unknown game notation of official $notation")
         }
     /**
-     * Download bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     * Download bleeding-edge from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
     infix fun be(latest: INotation): GitHubGameLocation =
         LatestBE().apply {
@@ -108,59 +109,69 @@ interface IGameSpec {
             location.set(this)
         }
     /**
-     * Create a [GitHubGameLocation] of official edition from [MindustryPlugin.OfficialReleaseURL]
+     * Create a [GitHubGameLocation] of official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
-    fun Official(version: String): GitHubGameLocation
+    abstract fun Official(version: String): GitHubGameLocation
     /**
-     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
-    fun BE(version: String): GitHubGameLocation
+    abstract fun BE(version: String): GitHubGameLocation
     /**
-     * Create a [GitHubGameLocation] of the latest official edition from [MindustryPlugin.OfficialReleaseURL]
+     * Create a [GitHubGameLocation] of the latest official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
+     *
+     * **Not Recommended** It may not work due to a network issue or GitHub API access limitation.
      */
     fun LatestOfficial(): GitHubGameLocation {
-        return try {
-            val url = URL(Mgpp.OfficialReleaseURL)
-            val json = Jval.read(url.readText())
-            val version = json.getString("tag_name").let {
-                if (it == null) {
-                    target.logger.warn("Can't fetch latest official.")
-                    Mgpp.DefaultMindustryVersion
-                } else it
+        val latestVersion = target.getLatestVersion("mindustry-$type-official") {
+            try {
+                val url = URL(Mgpp.MindustryOfficialReleaseURL)
+                val json = Jval.read(url.readText())
+                val version = json.getString("tag_name").let {
+                    if (it == null) {
+                        target.logger.warn("Can't fetch latest official.")
+                        Mgpp.DefaultMindustryVersion
+                    } else it
+                }
+                return@getLatestVersion version
+            } catch (e: Exception) {
+                target.logger.warn(
+                    "Can't fetch latest official version, so use ${Mgpp.DefaultMindustryVersion} as default instead.",
+                    e
+                )
+                return@getLatestVersion Mgpp.DefaultMindustryVersion
             }
-            Official(version)
-        } catch (e: Exception) {
-            target.logger.warn(
-                "Can't fetch latest official version, so use ${Mgpp.DefaultMindustryVersion} as default instead.",
-                e
-            )
-            Official(Mgpp.DefaultMindustryVersion)
         }
+        return Official(latestVersion)
     }
     /**
-     * Create a [GitHubGameLocation] of the latest bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     * Create a [GitHubGameLocation] of the latest bleeding-edge from [MindustryPlugin.MindustryOfficialReleaseURL]
+     *
+     * **Not Recommended** It may not work due to a network issue or GitHub API access limitation.
      */
     fun LatestBE(): GitHubGameLocation {
-        try {
-            val url = URL(Mgpp.BEReleaseURL)
-            val json = Jval.read(url.readText())
-            val version = json.getString("tag_name").let {
-                if (it == null) {
-                    target.logger.warn("Can't fetch latest be.")
-                    Mgpp.DefaultMindustryBEVersion
-                } else it
+        val latestVersion = target.getLatestVersion("mindustry-$type-be") {
+            try {
+                val url = URL(Mgpp.MindustryBEReleaseURL)
+                val json = Jval.read(url.readText())
+                val version = json.getString("tag_name").let {
+                    if (it == null) {
+                        target.logger.warn("Can't fetch latest be.")
+                        Mgpp.DefaultMindustryBEVersion
+                    } else it
+                }
+                return@getLatestVersion version
+            } catch (e: Exception) {
+                target.logger.warn(
+                    "Can't fetch latest be version, so use ${Mgpp.DefaultMindustryBEVersion} as default instead.",
+                    e
+                )
+                return@getLatestVersion Mgpp.DefaultMindustryBEVersion
             }
-            return BE(version)
-        } catch (e: Exception) {
-            target.logger.warn(
-                "Can't fetch latest be version, so use ${Mgpp.DefaultMindustryBEVersion} as default instead.",
-                e
-            )
-            return BE(Mgpp.DefaultMindustryBEVersion)
         }
+        return BE(latestVersion)
     }
     /**
-     * Download official edition from [MindustryPlugin.OfficialReleaseURL]
+     * Download official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
     infix fun official(map: Map<String, Any>): GitHubGameLocation {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
@@ -171,7 +182,7 @@ interface IGameSpec {
         }
     }
     /**
-     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.OfficialReleaseURL]
+     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
     infix fun be(map: Map<String, Any>): GitHubGameLocation {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
@@ -184,11 +195,11 @@ interface IGameSpec {
 }
 /**
  * You can set up the client which you want to run and debug your mod on.
- * @see IGameSpec
+ * @see GameSpecBase
  */
 class ClientSpec(
-    override val target: Project,
-) : IGameSpec {
+    target: Project,
+) : GameSpecBase(target, "client") {
     override val keepOtherVersion = target.prop<Boolean>().apply {
         convention(false)
     }
@@ -216,11 +227,11 @@ class ClientSpec(
 }
 /**
  * You can set up the server which you want to run and debug your mod on.
- * @see IGameSpec
+ * @see GameSpecBase
  */
 class ServerSpec(
-    override val target: Project,
-) : IGameSpec {
+    target: Project,
+) : GameSpecBase(target, "server") {
     override val keepOtherVersion = target.prop<Boolean>().apply {
         convention(false)
     }

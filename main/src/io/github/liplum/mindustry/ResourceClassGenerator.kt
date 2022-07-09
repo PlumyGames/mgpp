@@ -99,29 +99,3 @@ object DefaultSoundsGenerator : IResourceClassGenerator {
         file += loadFuncBlock.toString()
     }
 }
-
-object DefaultBundleGenerator : IResourceClassGenerator {
-    override fun generateClass(context: IGenerateContext) = context.func {
-        val naming = args["TargetNameRule"]?.let { NameRule.valueOf(it) } ?: NameRule.Camel
-        val rNaming = args["ResourceNameRule"]?.let { NameRule.valueOf(it) } ?: NameRule.Domain
-        val loadFunc = args["LoadFunctionName"] ?: "load"
-        val arcCore = args["Class[arc.Core]"] ?: "arc.Core"
-        val defaultBundleFileName = args["DefaultBundleFileName"] ?: "bundle.properties"
-        val properties = resources.flatMap { it.getFilesRecursive() }.find {
-            it.name == defaultBundleFileName
-        }
-        if (properties == null) {
-            logger.info("[RGenerate]No source for $name")
-        }
-        val loadFuncBlock = StringBuffer().apply {
-            append("public static void $loadFunc(){\n")
-        }
-        // Gen
-        if(properties!= null){
-
-        }
-        loadFuncBlock.append("}\n")
-        file += loadFuncBlock.toString()
-    }
-}
-

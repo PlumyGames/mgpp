@@ -10,6 +10,9 @@ version = "1.0"
 group = "net.liplum"
 
 mindustry {
+    client {
+        mindustry be latest
+    }
     meta += ModMeta(
         name = "js",
         displayName = "Js Mod",

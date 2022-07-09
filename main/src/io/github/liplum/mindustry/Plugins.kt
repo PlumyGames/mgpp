@@ -46,6 +46,18 @@ class MindustryPlugin : Plugin<Project> {
 
     companion object {
         /**
+         * The default check time(ms) for latest version.
+         *
+         * 1 hour as default.
+         */
+        const val defaultOutOfDataTime = 1000L * 60 * 60
+        /**
+         * The check time(ms) for latest version.
+         *
+         * 1 hour as default.
+         */
+        var outOfDataTime = defaultOutOfDataTime
+        /**
          * A task group for main tasks, named `mindustry`
          */
         const val MindustryTaskGroup = "mindustry"
@@ -82,7 +94,7 @@ class MindustryPlugin : Plugin<Project> {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryBEVersion = "22803"
+        const val DefaultMindustryBEVersion = "22804"
         /**
          * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v135.2)
          *
@@ -92,11 +104,15 @@ class MindustryPlugin : Plugin<Project> {
         /**
          * [Mindustry official repo](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
          */
-        const val OfficialReleaseURL = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+        const val MindustryOfficialReleaseURL = "https://api.github.com/repos/Anuken/Mindustry/releases/latest"
         /**
          * [Mindustry bleeding edge repo](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
          */
-        const val BEReleaseURL = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+        const val MindustryBEReleaseURL = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+        /**
+         * [Arc tags](https://github.com/Anuken/Arc/tags)
+         */
+        const val ArcTagURL = "https://api.github.com/repos/Anuken/arc/tags"
         /**
          * [A cat](https://github.com/Anuken)
          */
@@ -106,7 +122,7 @@ class MindustryPlugin : Plugin<Project> {
          */
         const val Mindustry = "mindustry"
         /**
-         * [Mindustry bleeding egde](https://github.com/Anuken/MindustryBuilds)
+         * [Mindustry bleeding-edge](https://github.com/Anuken/MindustryBuilds)
          */
         const val MindustryBuilds = "MindustryBuilds"
         /**
