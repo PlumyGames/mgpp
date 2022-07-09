@@ -52,6 +52,7 @@ class DeploySpec(
         set(value) {
             _classifier.set(value)
         }
+    @InheritFromParent
     val _androidSdkRoot = target.stringProp().apply {
         convention(System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: "")
     }
@@ -60,6 +61,7 @@ class DeploySpec(
      *
      * It will check environment variable `ANDROID_HOME` or `ANDROID_SDK_ROOT` as default.
      */
+    @InheritFromParent
     var androidSdkRoot: String
         get() = _androidSdkRoot.getOrElse("")
         set(value) {

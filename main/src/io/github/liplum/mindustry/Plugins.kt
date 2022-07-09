@@ -18,15 +18,29 @@ typealias Mgpp = MindustryPlugin
 
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
-        try {
-            plugins.apply<JavaPlugin>()
-        } catch (e: Exception) {
-            logger.warn("Your project doesn't support java plugin, so mgpp was disabled.", e)
-            return@func
+        val ex = target.extensions.getOrCreate<MindustryExtension>(
+            Mgpp.MainExtensionName
+        )
+        /**
+         * Handle [InheritFromParent].
+         * Because they're initialized at the [Plugin.apply] phase, the user-code will overwrite them if it's possible.
+         */
+        target.parent?.let {
+            it.plugins.whenHas<MindustryPlugin> {
+                val parentEx = it.extensions.getOrCreate<MindustryExtension>(Mgpp.MainExtensionName)
+                ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
+                ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
+                ex._client.location.set(parentEx._client.location)
+                ex._server.location.set(parentEx._server.location)
+                ex._run._dataDir.set(parentEx._run._dataDir)
+                ex._deploy._androidSdkRoot.set(parentEx._deploy._androidSdkRoot)
+            }
         }
         plugins.apply<MindustryAppPlugin>()
         plugins.apply<MindustryAssetPlugin>()
-        plugins.apply<MindustryJavaPlugin>()
+        plugins.whenHas<JavaPlugin> {
+            plugins.apply<MindustryJavaPlugin>()
+        }
         GroovyBridge.attach(target)
     }
 
@@ -68,7 +82,7 @@ class MindustryPlugin : Plugin<Project> {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryBEVersion = "22767"
+        const val DefaultMindustryBEVersion = "22803"
         /**
          * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v135.2)
          *
@@ -136,6 +150,74 @@ class MindustryPlugin : Plugin<Project> {
          */
         @JvmStatic
         val DefaultEmptyFile = File("")
+    }
+}
+/**
+ * For downloading and running game.
+ */
+class MindustryAppPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        val ex = target.extensions.getOrCreate<MindustryExtension>(
+            Mgpp.MainExtensionName
+        )
+        val resolveMods = target.tasks.register<ResolveMods>(
+            "resolveMods"
+        ) {
+            group = Mgpp.MindustryTaskGroup
+            mods.set(ex._mods.worksWith)
+        }
+        target.afterEvaluateThis {
+            // For client side
+            val downloadClient = tasks.register<Download>(
+                "downloadClient",
+            ) {
+                group = Mgpp.MindustryTaskGroup
+                keepOthers.set(ex._client.keepOtherVersion)
+                location.set(ex._client.location)
+            }
+            arrayOf(Any()).any { it == 1 }
+            // For server side
+            val downloadServer = tasks.register<Download>(
+                "downloadServer",
+            ) {
+                group = Mgpp.MindustryTaskGroup
+                keepOthers.set(ex._client.keepOtherVersion)
+                location.set(ex._server.location)
+            }
+            val runClient = tasks.register<RunMindustry>("runClient") {
+                group = Mgpp.MindustryTaskGroup
+                dependsOn(downloadClient)
+                val dataDirEx = ex._run._dataDir.get()
+                dataDir.set(
+                    if (dataDirEx.isNotBlank() && dataDirEx != "temp")
+                        File(dataDirEx)
+                    else if (dataDirEx == "temp")
+                        temporaryDir.resolve("data")
+                    else // Default data directory
+                        resolveDefaultDataDir()
+                )
+                mindustryFile.setFrom(downloadClient)
+                modsWorkWith.setFrom(resolveMods)
+                dataModsPath.set("mods")
+                ex._mods._extraModsFromTask.get().forEach {
+                    outputtedMods.from(tasks.getByPath(it))
+                }
+            }
+            val runServer = tasks.register<RunMindustry>(
+                "runServer",
+            ) {
+                group = Mgpp.MindustryTaskGroup
+                dependsOn(downloadServer)
+                mainClass.convention(Mgpp.MindustrySeverMainClass)
+                mindustryFile.setFrom(downloadServer)
+                modsWorkWith.setFrom(resolveMods)
+                dataModsPath.convention("config/mods")
+                ex._mods._extraModsFromTask.get().forEach {
+                    dependsOn(tasks.getByPath(it))
+                    outputtedMods.from(tasks.getByPath(it))
+                }
+            }
+        }
     }
 }
 /**
@@ -212,99 +294,105 @@ class MindustryAssetPlugin : Plugin<Project> {
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(
             Mgpp.AssetExtensionName
         )
-        val genModHjson = tasks.register<ModHjsonGenerate>("genModHjson") {
-            group = Mgpp.MindustryTaskGroup
-            modMeta.set(main._modMeta)
-            outputHjson.set(temporaryDir.resolve("mod.hjson"))
-        }
-        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-            dependsOn(genModHjson)
-            from(genModHjson)
-        }
         // Register this for dynamically configure tasks without class reference in groovy.
         // Eagerly configure this task in order to be added into task group in IDE
         tasks.register<AntiAlias>("antiAlias") {
             group = Mgpp.MindustryTaskGroup
         }.get()
-        // Doesn't register the tasks if no resource needs to generate its class.
-        val genResourceClass by lazy {
-            tasks.register<RClassGenerate>("genResourceClass") {
-                this.group = Mgpp.MindustryAssetTaskGroup
-                val name = assets.qualifiedName.get()
-                if (name == "default") {
-                    val modMeta = main._modMeta.get()
-                    val (packageName, _) = modMeta.main.packageAndClassName()
-                    qualifiedName.set("$packageName.R")
-                } else {
-                    qualifiedName.set(name)
-                }
+        val genModHjson = tasks.register<ModHjsonGenerate>("genModHjson") {
+            group = Mgpp.MindustryTaskGroup
+            modMeta.set(main._modMeta)
+            outputHjson.set(temporaryDir.resolve("mod.hjson"))
+        }
+        plugins.whenHas<JavaPlugin> {
+            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                dependsOn(genModHjson)
+                from(genModHjson)
             }
         }
-        target.afterEvaluateThis {
-            val assetsRoot = assets.assetsRoot.get()
-            if (assetsRoot != Mgpp.DefaultEmptyFile) {
-                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                    from(assetsRoot)
+        // Doesn't register the tasks if no resource needs to generate its class.
+        plugins.whenHas<JavaPlugin> {
+            @DisableIfWithout("java")
+            val genResourceClass by lazy {
+                tasks.register<RClassGenerate>("genResourceClass") {
+                    this.group = Mgpp.MindustryAssetTaskGroup
+                    val name = assets.qualifiedName.get()
+                    if (name == "default") {
+                        val modMeta = main._modMeta.get()
+                        val (packageName, _) = modMeta.main.packageAndClassName()
+                        qualifiedName.set("$packageName.R")
+                    } else {
+                        qualifiedName.set(name)
+                    }
                 }
             }
-            val icon = assets.icon.get()
-            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                from(icon)
-            }
-            // Resolve all batches
-            val group2Batches = assets.batches.get().resolveBatches()
-            val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
-            var genResourceClassCounter = 0
-            for ((type, batches) in group2Batches) {
-                if (batches.isEmpty()) continue
-                jar.configure {
-                    batches.forEach { batch ->
-                        val dir = batch.dir
-                        val root = batch.root
-                        if (root == Mgpp.DefaultEmptyFile) {
-                            it.from(dir.parentFile) {
-                                it.include("${dir.name}/**")
-                            }
-                        } else { // relative path
-                            it.from(root) {
-                                it.include("$dir/**")
+            target.afterEvaluateThis {
+                val assetsRoot = assets.assetsRoot.get()
+                if (assetsRoot != Mgpp.DefaultEmptyFile) {
+                    tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                        from(assetsRoot)
+                    }
+                }
+                val icon = assets.icon.get()
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    from(icon)
+                }
+                // Resolve all batches
+                val group2Batches = assets.batches.get().resolveBatches()
+                val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
+                var genResourceClassCounter = 0
+                for ((type, batches) in group2Batches) {
+                    if (batches.isEmpty()) continue
+                    jar.configure {
+                        batches.forEach { batch ->
+                            val dir = batch.dir
+                            val root = batch.root
+                            if (root == Mgpp.DefaultEmptyFile) {
+                                it.from(dir.parentFile) {
+                                    it.include("${dir.name}/**")
+                                }
+                            } else { // relative path
+                                it.from(root) {
+                                    it.include("$dir/**")
+                                }
                             }
                         }
                     }
-                }
-                if (!batches.any { it.enableGenClass }) continue
-                val groupPascal = type.group.lowercase().capitalized()
-                val gen = tasks.register<ResourceClassGenerate>("gen${groupPascal}Class") {
-                    this.group = Mgpp.MindustryAssetTaskGroup
-                    dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
-                    args.put("ModName", main._modMeta.get().name)
-                    args.put("ResourceNameRule", type.nameRule.name)
-                    args.putAll(assets.args)
-                    args.putAll(type.args)
-                    generator.set(type.generator)
-                    className.set(type.className)
-                    resources.setFrom(batches.filter { it.enableGenClass }.map { it.dir })
-                }
-                genResourceClass.get().apply {
-                    dependsOn(gen)
-                    classFiles.from(gen)
-                }
-                genResourceClassCounter++
-            }
-            if (genResourceClassCounter > 0) {
-                safeRun {
-                    tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME) {
-                        it.dependsOn(genResourceClass)
+                    if (!batches.any { it.enableGenClass }) continue
+                    val groupPascal = type.group.lowercase().capitalized()
+                    @DisableIfWithout("java")
+                    val gen = tasks.register<ResourceClassGenerate>("gen${groupPascal}Class") {
+                        this.group = Mgpp.MindustryAssetTaskGroup
+                        dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
+                        args.put("ModName", main._modMeta.get().name)
+                        args.put("ResourceNameRule", type.nameRule.name)
+                        args.putAll(assets.args)
+                        args.putAll(type.args)
+                        generator.set(type.generator)
+                        className.set(type.className)
+                        resources.setFrom(batches.filter { it.enableGenClass }.map { it.dir })
                     }
-                }
-                safeRun {
-                    tasks.named("compileKotlin") {
-                        it.dependsOn(genResourceClass)
+                    genResourceClass.get().apply {
+                        dependsOn(gen)
+                        classFiles.from(gen)
                     }
+                    genResourceClassCounter++
                 }
-                safeRun {
-                    tasks.named("compileGroovy") {
-                        it.dependsOn(genResourceClass)
+                if (genResourceClassCounter > 0) {
+                    safeRun {
+                        tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME) {
+                            it.dependsOn(genResourceClass)
+                        }
+                    }
+                    safeRun {
+                        tasks.named("compileKotlin") {
+                            it.dependsOn(genResourceClass)
+                        }
+                    }
+                    safeRun {
+                        tasks.named("compileGroovy") {
+                            it.dependsOn(genResourceClass)
+                        }
                     }
                 }
             }
@@ -312,12 +400,12 @@ class MindustryAssetPlugin : Plugin<Project> {
     }
 }
 /**
- * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
+ * Provides the existing [antiAlias][AntiAlias] task.
  */
 val TaskContainer.`antiAlias`: TaskProvider<AntiAlias>
     get() = named<AntiAlias>("antiAlias")
 /**
- * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
+ * Provides the existing [genModHjson][ModHjsonGenerate] task.
  */
 val TaskContainer.`genModHjson`: TaskProvider<ModHjsonGenerate>
     get() = named<ModHjsonGenerate>("genModHjson")
@@ -329,82 +417,7 @@ inline fun safeRun(func: () -> Unit) {
     }
 }
 /**
- * For downloading and running game.
- */
-class MindustryAppPlugin : Plugin<Project> {
-    override fun apply(target: Project) {
-        val ex = target.extensions.getOrCreate<MindustryExtension>(
-            Mgpp.MainExtensionName
-        )
-        target.parent?.let {
-            it.plugins.whenHas<MindustryPlugin> {
-                val parentEx = it.extensions.getOrCreate<MindustryExtension>(Mgpp.MainExtensionName)
-                ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
-                ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
-            }
-        }
-        val resolveMods = target.tasks.register<ResolveMods>(
-            "resolveMods"
-        ) {
-            group = Mgpp.MindustryTaskGroup
-            mods.set(ex._mods.worksWith)
-        }
-        target.afterEvaluateThis {
-            // For client side
-            val downloadClient = tasks.register<Download>(
-                "downloadClient",
-            ) {
-                group = Mgpp.MindustryTaskGroup
-                keepOthers.set(ex._client.keepOtherVersion)
-                location.set(ex._client.location)
-            }
-            arrayOf(Any()).any { it == 1 }
-            // For server side
-            val downloadServer = tasks.register<Download>(
-                "downloadServer",
-            ) {
-                group = Mgpp.MindustryTaskGroup
-                keepOthers.set(ex._client.keepOtherVersion)
-                location.set(ex._server.location)
-            }
-            val runClient = tasks.register<RunMindustry>("runClient") {
-                group = Mgpp.MindustryTaskGroup
-                dependsOn(downloadClient)
-                val dataDirEx = ex._run._dataDir.get()
-                dataDir.set(
-                    if (dataDirEx.isNotBlank() && dataDirEx != "temp")
-                        File(dataDirEx)
-                    else if (dataDirEx == "temp")
-                        temporaryDir.resolve("data")
-                    else // Default data directory
-                        resolveDefaultDataDir()
-                )
-                mindustryFile.setFrom(downloadClient)
-                modsWorkWith.setFrom(resolveMods)
-                dataModsPath.set("mods")
-                ex._mods._extraModsFromTask.get().forEach {
-                    outputtedMods.from(tasks.getByPath(it))
-                }
-            }
-            val runServer = tasks.register<RunMindustry>(
-                "runServer",
-            ) {
-                group = Mgpp.MindustryTaskGroup
-                dependsOn(downloadServer)
-                mainClass.convention(Mgpp.MindustrySeverMainClass)
-                mindustryFile.setFrom(downloadServer)
-                modsWorkWith.setFrom(resolveMods)
-                dataModsPath.convention("config/mods")
-                ex._mods._extraModsFromTask.get().forEach {
-                    dependsOn(tasks.getByPath(it))
-                    outputtedMods.from(tasks.getByPath(it))
-                }
-            }
-        }
-    }
-}
-/**
- * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
+ * Provides the existing [resolveMods][ResolveMods] task.
  */
 val TaskContainer.`resolveMods`: TaskProvider<ResolveMods>
     get() = named<ResolveMods>("resolveMods")

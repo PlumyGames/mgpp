@@ -2,6 +2,7 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.listProp
 import io.github.liplum.dsl.stringsProp
+import io.github.liplum.dsl.whenHas
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 
@@ -13,7 +14,9 @@ class ModsSpec(
     target: Project,
 ) {
     val _extraModsFromTask = target.stringsProp().apply {
-        add(JavaPlugin.JAR_TASK_NAME)
+        target.plugins.whenHas<JavaPlugin> {
+            add(JavaPlugin.JAR_TASK_NAME)
+        }
     }
     /**
      * The mods form outputs of another task.

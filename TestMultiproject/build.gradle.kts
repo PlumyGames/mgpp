@@ -10,4 +10,10 @@ mindustry {
         mindustry mirror "d7312445a1"
         arc on "123fbf12b9"
     }
+    client {
+        mindustry be "22803"
+    }
+    server {
+        mindustry be "22803"
+    }
 }

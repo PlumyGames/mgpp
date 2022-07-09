@@ -192,6 +192,7 @@ class ClientSpec(
     override val keepOtherVersion = target.prop<Boolean>().apply {
         convention(false)
     }
+    @InheritFromParent
     override val location = target.prop<IGameLocation>().apply {
         convention(Official(version = Mgpp.DefaultMindustryVersion))
     }
@@ -223,6 +224,7 @@ class ServerSpec(
     override val keepOtherVersion = target.prop<Boolean>().apply {
         convention(false)
     }
+    @InheritFromParent
     override val location = target.prop<IGameLocation>().apply {
         convention(Official(version = Mgpp.DefaultMindustryVersion))
     }

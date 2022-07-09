@@ -6,6 +6,5 @@ pluginManagement {
     }
 }
 include(
-    "main", "core"
+    "main", "core", "js"
 )
-

@@ -32,10 +32,6 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 mindustry {
-    dependency {
-        mindustry mirror "d7312445a1"
-        arc on "123fbf12b9"
-    }
     meta += ModMeta(
         name = "core",
         displayName = "Core Mod",

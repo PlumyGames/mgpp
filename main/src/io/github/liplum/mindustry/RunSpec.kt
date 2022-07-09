@@ -10,6 +10,7 @@ import io.github.liplum.mindustry.task.RunMindustry
 class RunSpec(
     target: Project,
 ) {
+    @InheritFromParent
     val _dataDir = target.stringProp().apply {
         convention("temp")
     }
@@ -18,6 +19,7 @@ class RunSpec(
      *
      * It will be set to the [RunMindustry.getTemporaryDir] as default
      */
+    @InheritFromParent
     var dataDir: String
         get() = _dataDir.getOrElse("temp")
         set(value) {
