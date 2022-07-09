@@ -94,7 +94,7 @@ class MindustryPlugin : Plugin<Project> {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryBEVersion = "22804"
+        const val DefaultMindustryBEVersion = "22806"
         /**
          * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v135.2)
          *
@@ -114,7 +114,7 @@ class MindustryPlugin : Plugin<Project> {
          */
         const val ArcTagURL = "https://api.github.com/repos/Anuken/arc/tags"
         /**
-         * [A cat](https://github.com/Anuken)
+         * [An *Anime* cat](https://github.com/Anuken)
          */
         const val Anuken = "anuken"
         /**
@@ -182,27 +182,27 @@ class MindustryAppPlugin : Plugin<Project> {
             group = Mgpp.MindustryTaskGroup
             mods.set(ex._mods.worksWith)
         }
+        // For client side
+        val downloadClient = target.tasks.register<Download>(
+            "downloadClient",
+        ) {
+            group = Mgpp.MindustryTaskGroup
+            keepOthers.set(ex._client.keepOtherVersion)
+            location.set(ex._client.location)
+        }
+        // For server side
+        val downloadServer = target.tasks.register<Download>(
+            "downloadServer",
+        ) {
+            group = Mgpp.MindustryTaskGroup
+            keepOthers.set(ex._client.keepOtherVersion)
+            location.set(ex._server.location)
+        }
         target.afterEvaluateThis {
-            // For client side
-            val downloadClient = tasks.register<Download>(
-                "downloadClient",
-            ) {
-                group = Mgpp.MindustryTaskGroup
-                keepOthers.set(ex._client.keepOtherVersion)
-                location.set(ex._client.location)
-            }
-            arrayOf(Any()).any { it == 1 }
-            // For server side
-            val downloadServer = tasks.register<Download>(
-                "downloadServer",
-            ) {
-                group = Mgpp.MindustryTaskGroup
-                keepOthers.set(ex._client.keepOtherVersion)
-                location.set(ex._server.location)
-            }
             val runClient = tasks.register<RunMindustry>("runClient") {
                 group = Mgpp.MindustryTaskGroup
                 dependsOn(downloadClient)
+                mainClass.convention(Mgpp.MindustryDesktopMainClass)
                 val dataDirEx = ex._run._dataDir.get()
                 dataDir.set(
                     if (dataDirEx.isNotBlank() && dataDirEx != "temp")
