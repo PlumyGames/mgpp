@@ -208,7 +208,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 forciblyClear.set(ex._run.forciblyClear)
                 val dataDirConfig = project.localProperties.getProperty("mgpp.run.dataDir") ?: ex._run._dataDir.get()
                 dataDir.set(
-                    if (dataDirConfig != "default" && dataDirConfig     != "temp")
+                    if (dataDirConfig != "default" && dataDirConfig != "temp")
                         File(dataDirConfig)
                     else if (dataDirConfig == "temp")
                         temporaryDir.resolve("data")

@@ -126,6 +126,9 @@ class ModsSpec(
     }
     /**
      * Add a local mod form disk.
+     *
+     * **Suggestion** To use a relative path and embed the mod into project directory
+     * would be better for git or collaboration.
      * @param path of that mod
      */
     infix fun local(path: String) {

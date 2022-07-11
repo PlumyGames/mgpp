@@ -49,6 +49,11 @@ abstract class GameSpecBase(
      * @see [LocalGameLocation]
      */
     fun LocalLocation(path: String) = LocalGameLocation(File(path))
+    /**
+     * Get a local game location from the value of "mgpp.$type.location" in `local.properties`
+     *
+     * type: `client` or `server`
+     */
     fun LocalPropertyLocation(): IGameLocation {
         val key = "mgpp.$type.location"
         val value = target.localProperties.getProperty(key)
@@ -61,15 +66,25 @@ abstract class GameSpecBase(
     /**
      * A notation represents the latest version.
      * ## Usages
-     * ```
+     * ```kotlin
      * client {
      *     mindustry be latest
+     *     mindustry official latest
      * }
      * ```
      * **Not Recommended** It might not work if you faced the API limit of GitHub.
      */
     val latest: LatestNotation
         get() = LatestNotation
+    /**
+     * A notation represents the `local.properties`
+     * ## Usages
+     * ```kotlin
+     * client {
+     *      mindustry from localProperties
+     * }
+     * ```
+     */
     val localProperties: LocalPropertiesNotation
         get() = LocalPropertiesNotation
     /**
@@ -88,6 +103,8 @@ abstract class GameSpecBase(
         }
     /**
      * Download official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * ## Supported notations:
+     * - [latest]: set the [location] to the latest official
      */
     infix fun official(notation: INotation): GitHubGameLocation =
         LatestOfficial().apply {
@@ -98,6 +115,8 @@ abstract class GameSpecBase(
         }
     /**
      * Download bleeding-edge from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * ## Supported notations:
+     * - [latest]: set the [location] to the latest bleeding-edge
      */
     infix fun be(latest: INotation): GitHubGameLocation =
         LatestBE().apply {
@@ -108,6 +127,11 @@ abstract class GameSpecBase(
         }
     /**
      * Copy the game from local [file]
+     *
+     * **Suggestion** To use a relative path would be better for git or collaboration.
+     * Don't embed the whole game into project directory.
+     *
+     * **Also** You could try [fromLocalProperties] to set a different game location for everyone.
      */
     infix fun fromLocal(file: File): LocalGameLocation =
         LocalLocation(file).apply {
@@ -115,17 +139,28 @@ abstract class GameSpecBase(
         }
     /**
      * Copy the game from local file at [path]
+     *
+     * **Suggestion** To use a relative path would be better for git or collaboration.
+     * Don't embed the whole game into project directory.
      */
     infix fun fromLocal(path: String): LocalGameLocation =
         LocalLocation(path).apply {
             location.set(this)
         }
-
+    /**
+     * Set [location] to a local game by the value of "mgpp.$type.location" in `local.properties`
+     *
+     * type: `client` or `server`
+     * @see [LocalPropertyLocation]
+     */
     fun fromLocalProperties(): IGameLocation =
         LocalPropertyLocation().apply {
             location.set(this)
         }
-
+    /**
+     * ## Supported notations:
+     * - [localProperties]: see [fromLocalProperties]
+     */
     infix fun from(notation: INotation) {
         if (notation === LocalPropertiesNotation)
             fromLocalProperties()
@@ -196,6 +231,8 @@ abstract class GameSpecBase(
     }
     /**
      * Download official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * ## Supported notations:
+     * - [latest]: set the [location] to the latest official
      */
     infix fun official(map: Map<String, Any>): GitHubGameLocation {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
@@ -206,6 +243,8 @@ abstract class GameSpecBase(
     }
     /**
      * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * ## Supported notations:
+     * - [latest]: set the [location] to the latest bleeding-edge
      */
     infix fun be(map: Map<String, Any>): GitHubGameLocation {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
