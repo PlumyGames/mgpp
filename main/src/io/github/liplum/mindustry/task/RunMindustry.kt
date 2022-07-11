@@ -10,6 +10,8 @@ open class RunMindustry : JavaExec() {
         @InputFiles get
     val dataDir = project.dirProp()
         @Optional @Input get
+    val forciblyClear = project.boolProp()
+        @Optional @Input get
     val dataModsPath = project.stringProp()
         @Input get
     val outputtedMods = project.configurationFileCollection()
@@ -19,6 +21,7 @@ open class RunMindustry : JavaExec() {
 
     init {
         mainClass.set("-jar")
+        forciblyClear.convention(false)
         dataDir.convention(project.dirProv {
             temporaryDir.resolve("data")
         })
@@ -28,7 +31,9 @@ open class RunMindustry : JavaExec() {
         val data = dataDir.asFile.get()
         data.mkdirs()
         val mods = data.resolve(dataModsPath.get())
-        mods.delete()
+        if (forciblyClear.get()) {
+            mods.deleteRecursively()
+        }
         mods.mkdirs()
         val workWith = modsWorkWith.files
         workWith.mapFilesTo(mods)

@@ -33,6 +33,7 @@ class MindustryPlugin : Plugin<Project> {
                 ex._client.location.set(parentEx._client.location)
                 ex._server.location.set(parentEx._server.location)
                 ex._run._dataDir.set(parentEx._run._dataDir)
+                ex._run._forciblyClear.set(parentEx._run._forciblyClear)
                 ex._deploy._androidSdkRoot.set(parentEx._deploy._androidSdkRoot)
             }
         }
@@ -204,6 +205,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 dependsOn(downloadClient)
                 mainClass.convention(Mgpp.MindustryDesktopMainClass)
                 val dataDirEx = ex._run._dataDir.get()
+                forciblyClear.set(ex._run.forciblyClear)
                 dataDir.set(
                     if (dataDirEx.isNotBlank() && dataDirEx != "temp")
                         File(dataDirEx)
@@ -224,6 +226,7 @@ class MindustryAppPlugin : Plugin<Project> {
             ) {
                 group = Mgpp.MindustryTaskGroup
                 dependsOn(downloadServer)
+                forciblyClear.set(ex._run.forciblyClear)
                 mainClass.convention(Mgpp.MindustrySeverMainClass)
                 mindustryFile.setFrom(downloadServer)
                 modsWorkWith.setFrom(resolveMods)

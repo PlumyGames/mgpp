@@ -13,7 +13,8 @@ annotation class InheritFromParent
  * It represents the default value of this property.
  */
 @Target(
-    AnnotationTarget.FIELD
+    AnnotationTarget.FIELD,
+    AnnotationTarget.PROPERTY
 )
 @MustBeDocumented
 annotation class DefaultValue(
