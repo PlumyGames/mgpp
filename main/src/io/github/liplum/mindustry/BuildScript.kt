@@ -5,12 +5,13 @@ package io.github.liplum.mindustry
 import io.github.liplum.dsl.afterEvaluateThis
 import io.github.liplum.dsl.getOrCreate
 import org.gradle.api.Project
+import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import java.net.HttpURLConnection
 import java.net.URI
 import java.net.URL
-import org.gradle.api.artifacts.dsl.DependencyHandler
+
 /**
  * Declare a maven repository of what Mindustry used.
  *
@@ -49,6 +50,42 @@ fun Project.importMindustry() = afterEvaluateThis {
         }
         ProjectType.Plugin -> {
             mdt.whenAvailable("server", ::addMindustry)
+            //addMindustry(mdt.resolve("backend-headless"))
+        }
+        else -> {}
+    }
+}
+/**
+ * Import the dependencies of Mindustry.
+ * It will take those into account:
+ * - [MindustryExtension.projectType]
+ * - [DependencySpec.mindustry]
+ * - [DependencySpec.arc]
+ *
+ * You can call this in [DependencyHandler] closure
+ */
+fun Project.importMindustry(configurationName: String) = afterEvaluateThis {
+    val ex = extensions.getOrCreate<MindustryExtension>(
+        Mgpp.MainExtensionName
+    )
+    val mdt = ex._dependency.mindustryDependency.get()
+    val arc = ex._dependency.arcDependency.get()
+    fun addSpecificDependency(dependencyNotation: String) {
+        addDependency(configurationName, dependencyNotation)
+    }
+    // Mindustry core
+    mdt.whenAvailable("core", ::addSpecificDependency)
+    // Arc
+    arc.whenAvailable("arc-core", ::addSpecificDependency)
+    when (ex.projectType.get()) {
+        ProjectType.Mod -> {
+            mdt.whenAvailable("desktop", ::addSpecificDependency)
+            mdt.whenAvailable("server", ::addSpecificDependency)
+            // This doesn't work, so disable it for now until a better solution
+            //addMindustry(mdt.resolve("backend-headless"))
+        }
+        ProjectType.Plugin -> {
+            mdt.whenAvailable("server", ::addSpecificDependency)
             //addMindustry(mdt.resolve("backend-headless"))
         }
         else -> {}

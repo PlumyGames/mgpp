@@ -13,6 +13,7 @@ class RunSpec(
 ) {
     @InheritFromParent
     @DefaultValue("temp")
+    @LocalProperty("mgpp.run.dataDir")
     val _dataDir = target.stringProp().apply {
         convention("temp")
     }
@@ -23,6 +24,7 @@ class RunSpec(
      */
     @InheritFromParent
     @DefaultValue("temp")
+    @LocalProperty("mgpp.run.dataDir")
     var dataDir: String
         get() = _dataDir.getOrElse("temp")
         set(value) {
@@ -70,7 +72,7 @@ class RunSpec(
      */
     val useDefaultDataDir: Unit
         get() {
-            _dataDir.set("")
+            _dataDir.set("default")
         }
     /**
      * Set the [dataDir] to the [RunMindustry.getTemporaryDir].
@@ -89,7 +91,7 @@ class RunSpec(
      * @see [resolveDefaultDataDir]
      */
     fun setDataDefault() {
-        _dataDir.set("")
+        _dataDir.set("default")
     }
     /**
      * Set the [dataDir] to the [RunMindustry.getTemporaryDir].

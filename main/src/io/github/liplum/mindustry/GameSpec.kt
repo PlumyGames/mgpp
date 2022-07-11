@@ -2,6 +2,7 @@ package io.github.liplum.mindustry
 
 import arc.util.serialization.Jval
 import io.github.liplum.dsl.prop
+import io.github.liplum.mindustry.LocalProperties.localProperties
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
@@ -48,6 +49,15 @@ abstract class GameSpecBase(
      * @see [LocalGameLocation]
      */
     fun LocalLocation(path: String) = LocalGameLocation(File(path))
+    fun LocalPropertyLocation(): IGameLocation {
+        val key = "mgpp.$type.location"
+        val value = target.localProperties.getProperty(key)
+        return if (value != null) LocalLocation(value)
+        else {
+            target.logger.warn("$key isn't in the local.properties.")
+            Official(Mgpp.DefaultMindustryVersion)
+        }
+    }
     /**
      * A notation represents the latest version.
      * ## Usages
@@ -60,6 +70,8 @@ abstract class GameSpecBase(
      */
     val latest: LatestNotation
         get() = LatestNotation
+    val localProperties: LocalPropertiesNotation
+        get() = LocalPropertiesNotation
     /**
      * Download official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
@@ -108,6 +120,18 @@ abstract class GameSpecBase(
         LocalLocation(path).apply {
             location.set(this)
         }
+
+    fun fromLocalProperties(): IGameLocation =
+        LocalPropertyLocation().apply {
+            location.set(this)
+        }
+
+    infix fun from(notation: INotation) {
+        if (notation === LocalPropertiesNotation)
+            fromLocalProperties()
+        else
+            throw GradleException("Unknown $type notation of mindustry $notation")
+    }
     /**
      * Create a [GitHubGameLocation] of official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
@@ -175,10 +199,9 @@ abstract class GameSpecBase(
      */
     infix fun official(map: Map<String, Any>): GitHubGameLocation {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
-        return if (version == "latest") {
-            official(LatestNotation)
-        } else {
-            official(version)
+        return when (version) {
+            LatestNotation.toString() -> official(LatestNotation)
+            else -> official(version)
         }
     }
     /**
@@ -186,10 +209,9 @@ abstract class GameSpecBase(
      */
     infix fun be(map: Map<String, Any>): GitHubGameLocation {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
-        return if (version == "latest") {
-            be(LatestNotation)
-        } else {
-            be(version)
+        return when (version) {
+            LatestNotation.toString() -> be(LatestNotation)
+            else -> be(version)
         }
     }
 }
@@ -204,6 +226,7 @@ class ClientSpec(
         convention(false)
     }
     @InheritFromParent
+    @LocalProperty("mgpp.client.location")
     override val location = target.prop<IGameLocation>().apply {
         convention(Official(version = Mgpp.DefaultMindustryVersion))
     }
@@ -236,6 +259,7 @@ class ServerSpec(
         convention(false)
     }
     @InheritFromParent
+    @LocalProperty("mgpp.server.location")
     override val location = target.prop<IGameLocation>().apply {
         convention(Official(version = Mgpp.DefaultMindustryVersion))
     }

@@ -33,8 +33,9 @@ mindustry {
         arc version: '123fbf12b9'
     }
     client {
-        // fromLocal "F:/Mindustry/Mindustry-BE-Desktop-22799.jar" named "22799.jar"
         be version: latest
+        // fromLocal "F:/Mindustry/Mindustry-BE-Desktop-22799.jar" named "22799.jar"
+        // from localProperties
         // be version: '22714'
         // `clearUp` as default, it will delete other versions when download a new one
         // `keepOthers` will keep them

@@ -20,10 +20,24 @@ annotation class InheritFromParent
 annotation class DefaultValue(
     val default: String,
 )
+/**
+ * It indicates this property will be overwritten from `local.properties` with [key]
+ */
+@Target(
+    AnnotationTarget.FIELD,
+    AnnotationTarget.PROPERTY
+)
+annotation class LocalProperty(
+    val key: String,
+)
+/**
+ * It indicates this task won't be registered when [plugin] isn't applied.
+ */
+@Retention(AnnotationRetention.SOURCE)
 @Target(
     AnnotationTarget.LOCAL_VARIABLE,
     AnnotationTarget.FIELD,
-    AnnotationTarget.PROPERTY
+    AnnotationTarget.PROPERTY, AnnotationTarget.EXPRESSION
 )
 @MustBeDocumented
 annotation class DisableIfWithout(

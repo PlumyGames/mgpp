@@ -78,10 +78,9 @@ class DependencySpec(
      */
     fun arc(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc`")
-        if (version == "latest") {
-            arcLatestCommit()
-        } else {
-            arc(version)
+        when (version) {
+            LatestNotation.toString() -> arcLatestCommit()
+            else -> arc(version)
         }
     }
     /**
@@ -89,10 +88,9 @@ class DependencySpec(
      */
     fun mindustry(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry`")
-        if (version == "latest") {
-            mindustryLatestRelease()
-        } else {
-            mindustry(version)
+        when (version) {
+            LatestNotation.toString() -> mindustryLatestRelease()
+            else -> mindustry(version)
         }
     }
     /**
@@ -100,10 +98,9 @@ class DependencySpec(
      */
     fun mindustryMirror(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustryMirror`")
-        if (version == "latest") {
-            mindustryMirrorLatestCommit()
-        } else {
-            mindustryMirror(version)
+        when (version) {
+            LatestNotation.toString() -> mindustryMirrorLatestCommit()
+            else -> mindustryMirror(version)
         }
     }
     /**
@@ -230,7 +227,7 @@ class DependencySpec(
             else if (notation === LatestReleaseNotation)
                 arcLatestTag()
             else
-                throw GradleException("Unknown game notation of mindustry $notation")
+                throw GradleException("Unknown dependency notation of mindustry $notation")
         }
         /**
          * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
@@ -238,8 +235,8 @@ class DependencySpec(
         fun on(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc.on`")
             when (version) {
-                "latest" -> on(LatestNotation)
-                "latest-release" -> on(LatestReleaseNotation)
+                LatestNotation.toString() -> on(LatestNotation)
+                LatestReleaseNotation.toString() -> on(LatestReleaseNotation)
                 else -> on(version)
             }
         }
@@ -267,7 +264,7 @@ class DependencySpec(
             if (notation === LatestNotation || notation === LatestReleaseNotation)
                 mindustryLatestRelease()
             else
-                throw GradleException("Unknown game notation of mindustry $notation")
+                throw GradleException("Unknown dependency notation of mindustry $notation")
         }
         /**
          * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
@@ -275,8 +272,8 @@ class DependencySpec(
         fun on(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.on`")
             when (version) {
-                "latest" -> on(LatestNotation)
-                "latest-release" -> on(LatestReleaseNotation)
+                LatestNotation.toString() -> on(LatestNotation)
+                LatestReleaseNotation.toString() -> on(LatestReleaseNotation)
                 else -> on(version)
             }
         }
@@ -287,7 +284,7 @@ class DependencySpec(
             if (notation === LatestNotation)
                 mindustryMirrorLatestCommit()
             else
-                throw GradleException("Unknown game notation of mindustry mirror $notation")
+                throw GradleException("Unknown dependency notation of mindustry mirror $notation")
         }
         /**
          * Fetch the Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
@@ -295,7 +292,7 @@ class DependencySpec(
         fun mirror(map: Map<String, Any>) {
             val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.mirror`")
             when (version) {
-                "latest" -> mirror(LatestNotation)
+                LatestNotation.toString() -> mirror(LatestNotation)
                 else -> mirror(version)
             }
         }

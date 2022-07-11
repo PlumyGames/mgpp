@@ -3,6 +3,7 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
+import io.github.liplum.mindustry.LocalProperties.localProperties
 import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -204,12 +205,12 @@ class MindustryAppPlugin : Plugin<Project> {
                 group = Mgpp.MindustryTaskGroup
                 dependsOn(downloadClient)
                 mainClass.convention(Mgpp.MindustryDesktopMainClass)
-                val dataDirEx = ex._run._dataDir.get()
                 forciblyClear.set(ex._run.forciblyClear)
+                val dataDirConfig = project.localProperties.getProperty("mgpp.run.dataDir") ?: ex._run._dataDir.get()
                 dataDir.set(
-                    if (dataDirEx.isNotBlank() && dataDirEx != "temp")
-                        File(dataDirEx)
-                    else if (dataDirEx == "temp")
+                    if (dataDirConfig != "default" && dataDirConfig != "temp")
+                        File(dataDirConfig)
+                    else if (dataDirConfig == "temp")
                         temporaryDir.resolve("data")
                     else // Default data directory
                         resolveDefaultDataDir()
@@ -247,6 +248,7 @@ class MindustryJavaPlugin : Plugin<Project> {
         val ex = extensions.getOrCreate<MindustryExtension>(
             Mgpp.MainExtensionName
         )
+        @DisableIfWithout("java")
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")
             group = Mgpp.MindustryTaskGroup
@@ -259,6 +261,7 @@ class MindustryJavaPlugin : Plugin<Project> {
             jarFiles.from(jar)
             sdkRoot.set(ex._deploy._androidSdkRoot)
         }
+        @DisableIfWithout("java")
         tasks.register<Jar>("deploy") {
             group = Mgpp.MindustryTaskGroup
             val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)

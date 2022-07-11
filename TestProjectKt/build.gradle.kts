@@ -54,6 +54,7 @@ mindustry {
     }
     client {
         mindustry be latest
+        //mindustry from localProperties
         //mindustry fromLocal "F:/Mindustry/Mindustry-BE-Desktop-22799.jar" named "22799.jar"
         // `clearUp` as default, it will delete other versions when download a new one
         // `keepOthers` will keep them

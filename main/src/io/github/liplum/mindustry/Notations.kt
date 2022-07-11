@@ -8,6 +8,10 @@ object LatestReleaseNotation : INotation {
     override fun toString() = "latest-release"
 }
 
+object LocalPropertiesNotation:INotation{
+    override fun toString() = "local-properties"
+}
+
 object ProjectNotation : INotation {
     override fun toString() = "project"
 }
