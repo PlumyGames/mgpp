@@ -29,21 +29,21 @@ jobs:
         run: echo "$ANDROID_HOME/build-tools/30.0.3" >> $GITHUB_PATH
 
       - name: Test Kotlin DSl
-        run : |
+        run: |
           cd TestProjectKt
           .\gradlew.bat :deploy --info
           .\gradlew.bat :antiAlias --info
           cd ..
 
       - name: Test Groovy DSl
-        run : |
+        run: |
           cd TestProjectGroovy
           .\gradlew.bat :deploy --info
           .\gradlew.bat :antiAlias --info
           cd ..
 
       - name: Test Multi-Project
-        run : |
+        run: |
           cd TestMultiproject
           .\gradlew.bat :main:deploy --info
           cd ..

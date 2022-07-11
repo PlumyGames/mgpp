@@ -1,5 +1,7 @@
 @file:Suppress("SpellCheckingInspection")
+
 import io.github.liplum.mindustry.*
+
 plugins {
     java
     id("io.github.liplum.mgpp")

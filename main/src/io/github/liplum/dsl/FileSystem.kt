@@ -84,6 +84,7 @@ fun File.findFileInOrder(vararg files: File): File {
     }
     return files.last()
 }
+
 fun findFileInOrder(vararg files: File): File {
     for ((i, file) in files.withIndex()) {
         return if (file.exists()) file
@@ -92,6 +93,7 @@ fun findFileInOrder(vararg files: File): File {
     }
     return files.last()
 }
+
 fun File.findFileInOrder(vararg files: () -> File): File {
     if (this.exists()) return this
     for ((i, file) in files.withIndex()) {
@@ -102,6 +104,7 @@ fun File.findFileInOrder(vararg files: () -> File): File {
     }
     return files.last()()
 }
+
 fun findFileInOrder(vararg files: () -> File): File {
     for ((i, file) in files.withIndex()) {
         val f = file()

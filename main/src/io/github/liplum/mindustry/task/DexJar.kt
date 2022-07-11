@@ -1,9 +1,9 @@
 package io.github.liplum.mindustry.task
 
+import io.github.liplum.dsl.*
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.*
-import io.github.liplum.dsl.*
 import java.io.File
 
 open class DexJar : DefaultTask() {

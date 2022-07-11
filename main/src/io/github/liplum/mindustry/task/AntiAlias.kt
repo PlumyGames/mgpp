@@ -1,5 +1,9 @@
 package io.github.liplum.mindustry.task
 
+import io.github.liplum.dsl.dirProp
+import io.github.liplum.dsl.new
+import io.github.liplum.mindustry.FileFilter
+import io.github.liplum.mindustry.antiAliasing
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileType
@@ -8,8 +12,6 @@ import org.gradle.api.tasks.compile.AbstractOptions
 import org.gradle.work.ChangeType
 import org.gradle.work.Incremental
 import org.gradle.work.InputChanges
-import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.*
 import java.io.File
 
 open class AntiAlias : DefaultTask() {

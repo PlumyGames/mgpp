@@ -6,7 +6,7 @@ import java.io.Serializable
 interface IGameLocation : Serializable {
     var fileName: String
     fun toDownloadLocation(): IDownloadLocation
-    infix fun named(name: String):IGameLocation{
+    infix fun named(name: String): IGameLocation {
         fileName = name
         return this
     }

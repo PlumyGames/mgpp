@@ -4,10 +4,10 @@ import org.hjson.JsonType
 import org.hjson.JsonValue
 import kotlin.math.roundToInt
 
-fun JsonValue.toList():List<Any?> =
+fun JsonValue.toList(): List<Any?> =
     this.convert() as? List<Any?> ?: emptyList()
 @Suppress("UNCHECKED_CAST")
-fun JsonValue.toMap() : Map<String, Any?> =
+fun JsonValue.toMap(): Map<String, Any?> =
     this.convert() as? Map<String, Any?> ?: emptyMap()
 
 fun JsonValue.convert(): Any? {

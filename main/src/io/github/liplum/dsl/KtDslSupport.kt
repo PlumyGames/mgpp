@@ -82,7 +82,6 @@ val Project.`sourceSets`: SourceSetContainer
 internal
 fun Project.`sourceSets`(configure: Action<SourceSetContainer>): Unit =
     (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("sourceSets", configure)
-
 /**
  * Provides the existing [main][org.gradle.api.tasks.SourceSet] element.
  */

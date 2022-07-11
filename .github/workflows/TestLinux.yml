@@ -31,7 +31,7 @@ jobs:
         run: echo "$ANDROID_HOME/build-tools/30.0.3" >> $GITHUB_PATH
 
       - name: Test Kotlin DSl
-        run : |
+        run: |
           cd TestProjectKt
           chmod +x gradlew
           ./gradlew :deploy --info
@@ -39,7 +39,7 @@ jobs:
           cd ..
 
       - name: Test Groovy DSl
-        run : |
+        run: |
           cd TestProjectGroovy
           chmod +x gradlew
           ./gradlew :deploy --info
@@ -47,7 +47,7 @@ jobs:
           cd ..
 
       - name: Test Multi-Project
-        run : |
+        run: |
           cd TestMultiproject
           chmod +x gradlew
           ./gradlew :main:deploy --info

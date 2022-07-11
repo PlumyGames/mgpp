@@ -34,7 +34,7 @@ data class ModMeta(
         hidden: Boolean = default("hidden"),
         java: Boolean = default("java"),
         hideBrowser: Boolean = default("hideBrowser"),
-        keepOutlines:Boolean = default("keepOutlines")
+        keepOutlines: Boolean = default("keepOutlines"),
     ) : this(
         HashMap(
             mapOf(

@@ -1,9 +1,9 @@
 package io.github.liplum.mindustry.task
 
+import io.github.liplum.dsl.*
+import io.github.liplum.mindustry.Mgpp
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
-import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.*
 
 open class GenerateRClass : DefaultTask() {
     val classFiles = project.configurationFileCollection()
