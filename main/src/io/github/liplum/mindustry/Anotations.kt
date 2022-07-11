@@ -1,5 +1,7 @@
 package io.github.liplum.mindustry
 
+import org.gradle.api.Project
+
 /**
  * It indicates this property will inherit value from its parent project as default.
  */
@@ -21,14 +23,34 @@ annotation class DefaultValue(
     val default: String,
 )
 /**
- * It indicates this property will be overwritten from `local.properties` with [key]
+ * It indicates this property with [key] will be overwritten from `local.properties` file in the project's root directory
  */
 @Target(
     AnnotationTarget.FIELD,
     AnnotationTarget.PROPERTY
 )
 annotation class LocalProperty(
+    /**
+     * The key in `local.properties` file
+     */
     val key: String,
+)
+/**
+ * It indicates this property will read default value from [Project.getProperties]
+ */
+@Target(
+    AnnotationTarget.FIELD,
+    AnnotationTarget.PROPERTY
+)
+annotation class PropertyAsDefault(
+    /**
+     * The key in [Project.getProperties]
+     */
+    val key: String,
+    /**
+     * If the key doesn't exist, this value will be truly default.
+     */
+    val default: String,
 )
 /**
  * It indicates this task won't be registered when [plugin] isn't applied.
@@ -41,5 +63,8 @@ annotation class LocalProperty(
 )
 @MustBeDocumented
 annotation class DisableIfWithout(
+    /**
+     * When which plugin isn't applied, the task won't be registered.
+     */
     val plugin: String,
 )

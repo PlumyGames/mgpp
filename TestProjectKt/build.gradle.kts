@@ -82,7 +82,7 @@ mindustry {
         baseName = "KotlinMod"
         version = "666"
         // fatJar is default option unless you use another tool like shadowJar
-        fatJar
+        // fatJar
     }
 }
 

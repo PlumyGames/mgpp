@@ -70,10 +70,14 @@ class DeploySpec(
     /**
      * Whether to make a fat jar, which contains all dependencies from classpath.
      *
-     * `enable` as default
+     * Basically, `enabled` as default.
      */
+    @PropertyAsDefault("mgpp.deploy.enableFatJar", "true")
     val enableFatJar = target.prop<Boolean>().apply {
-        convention(true)
+        val enableFatJarGlobal =
+            !target.properties.getOrDefault("mgpp.deploy.enableFatJar", "true").toString()
+                .equals("false", ignoreCase = true)
+        convention(enableFatJarGlobal)
     }
     /**
      * Enable the fat jar.
