@@ -34,6 +34,8 @@ jobs:
           ls mgppDoc -a
           cd mgppDoc
           git add .
+          git config --global user.email "cli@github.com"
+          git config --global user.name "Github Actions"
           git commit --allow-empty -m "${GITHUB_SHA}"
           git push https://Liplum:${{ secrets.API_TOKEN_GITHUB }}@github.com/PlumyGame/mgppDoc
 

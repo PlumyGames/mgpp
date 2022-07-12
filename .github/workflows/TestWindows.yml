@@ -49,4 +49,3 @@ jobs:
             main/build/libs/*.jar
             TestProjectGroovy/build/tmp/deploy/*.jar
             TestProjectKt/build/tmp/deploy/*.jar
-            TestMultiproject/build/tmp/deploy/*.jar
