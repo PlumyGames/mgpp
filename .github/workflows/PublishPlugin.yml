@@ -2,8 +2,9 @@ name: Publish Plugin
 on: [ push ]
 
 jobs:
-  build-linux:
+  publish-and-doc:
     runs-on: ubuntu-latest
+    if: ${{ startsWith(github.event.head_commit.message,'[publish]') }}
     steps:
       - uses: actions/checkout@v2
 
@@ -28,10 +29,7 @@ jobs:
         run: |
           cd ../
           git clone --depth 1 https://github.com/PlumyGame/mgppDoc.git
-          ls -a
-          ls mgppDoc -a
           cp -r ./mgpp/main/build/dokka/html/* ./mgppDoc
-          ls mgppDoc -a
           cd mgppDoc
           git add .
           git config --global user.email "cli@github.com"

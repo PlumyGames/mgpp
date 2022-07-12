@@ -136,23 +136,23 @@ class MindustryPlugin : Plugin<Project> {
          */
         const val ServerReleaseName = "server-release.jar"
         /**
-         * (The Mindustry repo on Jitpack)[https://github.com/anuken/mindustry]
+         * [The Mindustry repo on Jitpack](https://github.com/anuken/mindustry)
          */
         const val MindustryJitpackRepo = "com.github.anuken.mindustry"
         /**
-         * (The mirror repo of Mindustry on Jitpack)[https://github.com/anuken/mindustryjitpack]
+         * [The mirror repo of Mindustry on Jitpack](https://github.com/anuken/mindustryjitpack)
          */
         const val MindustryJitpackMirrorRepo = "com.github.anuken.mindustryjitpack"
         /**
-         * (The GitHub API to fetch the latest commit of mirror)[https://github.com/Anuken/MindustryJitpack/commits/main]
+         * [The GitHub API to fetch the latest commit of mirror](https://github.com/Anuken/MindustryJitpack/commits/main)
          */
         const val MindustryJitpackLatestCommit = "https://api.github.com/repos/Anuken/MindustryJitpack/commits/main"
         /**
-         * (The GitHub API to fetch the latest commit of arc)[https://github.com/Anuken/Arc/commits/master]
+         * [The GitHub API to fetch the latest commit of arc](https://github.com/Anuken/Arc/commits/master)
          */
         const val ArcLatestCommit = "https://api.github.com/repos/Anuken/Arc/commits/master"
         /**
-         * (The Arc repo on Jitpack)[https://github.com/anuken/arc]
+         * [The Arc repo on Jitpack](https://github.com/anuken/arc)
          */
         const val ArcJitpackRepo = "com.github.anuken.arc"
         /**
