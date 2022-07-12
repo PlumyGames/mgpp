@@ -54,6 +54,14 @@ mindustry {
     }
     client {
         mindustry be latest
+        /*
+        mindustry from GameLocation(
+            user = "mindustry-antigrief",
+            repo = "mindustry-client",
+            version = "v8.0.0",
+            release = "erekir-client.jar"
+        )
+        */
         //mindustry from localProperties
         //mindustry fromLocal "F:/Mindustry/Mindustry-BE-Desktop-22799.jar" named "22799.jar"
         // `clearUp` as default, it will delete other versions when download a new one

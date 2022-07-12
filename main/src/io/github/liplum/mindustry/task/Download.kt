@@ -39,7 +39,7 @@ open class Download : DefaultTask() {
             }
         }
         if (!output.exists() || overwrite.get()) {
-            logger.info("Downloading $asset from ${asset.fileName}. ")
+            logger.info("Downloading $asset from ${asset.fileName} .")
             downloadTask.openInputStream().use { it.copyTo(output) }
             logger.info("Downloaded ${asset.fileName}}.")
         } else {

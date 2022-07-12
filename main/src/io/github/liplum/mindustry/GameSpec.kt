@@ -40,7 +40,33 @@ abstract class GameSpecBase(
         repo: String = "",
         version: String = "",
         release: String = "",
+    ) = GitHubLocation(user, repo, version, release)
+    /**
+     * @see [GitHubGameLocation]
+     */
+    fun GameLocation(
+        map: Map<String, String>,
+    ) = GitHubLocation(map)
+    /**
+     * @see [GitHubGameLocation]
+     */
+    fun GitHubLocation(
+        user: String = "",
+        repo: String = "",
+        version: String = "",
+        release: String = "",
     ) = GitHubGameLocation(user, repo, version, release)
+    /**
+     * @see [GitHubGameLocation]
+     */
+    fun GitHubLocation(
+        map: Map<String, String>,
+    ) = GitHubGameLocation(
+        user = map["user"] ?: "",
+        repo = map["repo"] ?: "",
+        version = map["version"] ?: "",
+        release = map["release"] ?: "",
+    )
     /**
      * @see [LocalGameLocation]
      */
@@ -87,6 +113,13 @@ abstract class GameSpecBase(
      */
     val localProperties: LocalPropertiesNotation
         get() = LocalPropertiesNotation
+    /**
+     * Set the [location] to [game]
+     */
+    infix fun <T> from(game: T): T where T : IGameLocation =
+        game.apply {
+            location.set(this)
+        }
     /**
      * Download official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
@@ -274,7 +307,7 @@ class ClientSpec(
 
     override infix fun Official(
         version: String,
-    ) = GameLocation(
+    ) = GitHubLocation(
         user = Mgpp.Anuken, repo = Mgpp.Mindustry,
         version = version,
         release = Mgpp.ClientReleaseName
@@ -282,7 +315,7 @@ class ClientSpec(
 
     override infix fun BE(
         version: String,
-    ) = GameLocation(
+    ) = GitHubLocation(
         Mgpp.Anuken, Mgpp.MindustryBuilds,
         version, "Mindustry-BE-Desktop-$version.jar"
     )
@@ -307,7 +340,7 @@ class ServerSpec(
 
     override fun Official(
         version: String,
-    ) = GameLocation(
+    ) = GitHubLocation(
         user = Mgpp.Anuken, repo = Mgpp.Mindustry,
         version = version,
         release = Mgpp.ServerReleaseName
@@ -315,7 +348,7 @@ class ServerSpec(
 
     override fun BE(
         version: String,
-    ) = GameLocation(
+    ) = GitHubLocation(
         Mgpp.Anuken, Mgpp.MindustryBuilds,
         version, "Mindustry-BE-Server-$version.jar"
     )
