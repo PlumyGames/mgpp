@@ -305,7 +305,7 @@ class ClientSpec(
     val mindustry: ClientSpec
         get() = this
 
-    override infix fun Official(
+    override fun Official(
         version: String,
     ) = GitHubLocation(
         user = Mgpp.Anuken, repo = Mgpp.Mindustry,
@@ -313,11 +313,18 @@ class ClientSpec(
         release = Mgpp.ClientReleaseName
     )
 
-    override infix fun BE(
+    override fun BE(
         version: String,
     ) = GitHubLocation(
         Mgpp.Anuken, Mgpp.MindustryBuilds,
         version, "Mindustry-BE-Desktop-$version.jar"
+    )
+    fun Foo(
+        version: String,
+        release: String,
+    ) = GitHubLocation(
+        Mgpp.AntiGrief, Mgpp.FooClient,
+        version, release
     )
 }
 /**

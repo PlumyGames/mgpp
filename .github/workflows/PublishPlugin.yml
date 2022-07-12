@@ -4,7 +4,9 @@ on: [ push ]
 jobs:
   publish-and-doc:
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.event.head_commit.message,'[publish]') }}
+    if: |
+      startsWith(github.event.head_commit.message,'[publish]') &&
+      github.repository == 'PlumyGame/mgpp'
     steps:
       - uses: actions/checkout@v2
 
@@ -19,13 +21,11 @@ jobs:
         run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Build dokka doc
-        if: ${{ github.repository == 'PlumyGame/mgpp' }}
         run: |
           chmod +x gradlew
           ./gradlew :main:dokkaHtml
 
       - name: Update document
-        if: ${{ github.repository == 'PlumyGame/mgpp' }}
         run: |
           cd ../
           git clone --depth 1 https://github.com/PlumyGame/mgppDoc.git

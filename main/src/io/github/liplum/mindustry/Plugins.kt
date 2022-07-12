@@ -170,6 +170,14 @@ class MindustryPlugin : Plugin<Project> {
          */
         @JvmStatic
         val DefaultEmptyFile = File("")
+        /**
+         * The [organization](https://github.com/mindustry-antigrief) of Foo's Client
+         */
+        const val AntiGrief = "mindustry-antigrief"
+        /**
+         * The [Foo's Client repo](https://github.com/mindustry-antigrief/mindustry-client)
+         */
+        const val FooClient = "mindustry-client"
     }
 }
 /**
