@@ -17,9 +17,6 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Get short commit hash
-        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-
       - name: Build dokka doc
         run: |
           chmod +x gradlew
@@ -34,6 +31,6 @@ jobs:
           git add .
           git config --global user.email "cli@github.com"
           git config --global user.name "Github Actions"
-          git commit --allow-empty -m "${GITHUB_SHA}"
+          git commit --allow-empty -m "${{ github.event.head_commit.message }}"
           git push https://Liplum:${{ secrets.API_TOKEN_GITHUB }}@github.com/PlumyGame/mgppDoc
 

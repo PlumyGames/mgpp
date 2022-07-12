@@ -319,12 +319,20 @@ class ClientSpec(
         Mgpp.Anuken, Mgpp.MindustryBuilds,
         version, "Mindustry-BE-Desktop-$version.jar"
     )
+
     fun Foo(
         version: String,
         release: String,
     ) = GitHubLocation(
         Mgpp.AntiGrief, Mgpp.FooClient,
         version, release
+    )
+
+    fun Foo(
+        map: Map<String, String>,
+    ) = Foo(
+        version = map["version"] ?: "",
+        release = map["release"] ?: "",
     )
 }
 /**
