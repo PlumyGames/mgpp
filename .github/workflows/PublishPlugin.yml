@@ -1,0 +1,38 @@
+name: Publish Plugin
+on: [ push ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Get short commit hash
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Build dokka doc
+        if: ${{ github.repository == 'PlumyGame/mgpp' }}
+        run: |
+          chmod +x gradlew
+          ./gradlew :main:dokkaHtml
+
+      - name: Update document
+        if: ${{ github.repository == 'PlumyGame/mgpp' }}
+        run: |
+          cd ../
+          mkdir mgppdoc
+          git clone --depth 1 https://github.com/PlumyGame/mgppDoc.git
+          cp -r ./mgpp/main/build/dokka/html/* ./mgppdoc
+          cd mgppdoc
+          ls
+          git add .
+          git commit --allow-empty -m "${GITHUB_SHA}"
+          git push https://Liplum:${{ secrets.API_TOKEN_GITHUB }}@github.com/PlumyGame/mgppDoc
+
