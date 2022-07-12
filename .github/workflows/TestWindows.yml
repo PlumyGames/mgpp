@@ -42,12 +42,6 @@ jobs:
           .\gradlew.bat :antiAlias --info
           cd ..
 
-      - name: Test Multi-Project
-        run: |
-          cd TestMultiproject
-          .\gradlew.bat :main:deploy --info
-          cd ..
-
       - uses: actions/upload-artifact@v3
         with:
           name: mgpp-snapshot-build

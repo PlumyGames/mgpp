@@ -27,10 +27,12 @@ jobs:
         if: ${{ github.repository == 'PlumyGame/mgpp' }}
         run: |
           cd ../
-          mkdir mgppdoc
           git clone --depth 1 https://github.com/PlumyGame/mgppDoc.git
+          ls -a
+          ls mgppDoc -a
           cp -r ./mgpp/main/build/dokka/html/* ./mgppDoc
-          cd mgppdoc
+          ls mgppDoc -a
+          cd mgppDoc
           git add .
           git commit --allow-empty -m "${GITHUB_SHA}"
           git push https://Liplum:${{ secrets.API_TOKEN_GITHUB }}@github.com/PlumyGame/mgppDoc
