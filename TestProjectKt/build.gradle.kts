@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.0"
-    id("io.github.liplum.mgpp") version "1.1.0"
+    id("io.github.liplum.mgpp") version "1.1.1"
 }
 
 sourceSets {
@@ -66,7 +66,7 @@ mindustry {
     mods {
         worksWith {
             add kotlin "liplum/cyberio"
-            add hjson "BlueWolf3682/Exotic-Mod" branch "0.8"
+            // add hjson "BlueWolf3682/Exotic-Mod" branch "0.8"
             add fromTask "iconMaker"
         }
     }
@@ -83,6 +83,9 @@ mindustry {
         version = "666"
         // fatJar is default option unless you use another tool like shadowJar
         // fatJar
+    }
+    run {
+        useDefaultDataDir
     }
 }
 

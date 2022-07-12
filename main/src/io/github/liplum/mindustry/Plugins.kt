@@ -14,11 +14,13 @@ import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.configurationcache.extensions.capitalized
 import java.io.File
+import kotlin.math.log
 
 typealias Mgpp = MindustryPlugin
 
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
+        LocalProperties.clearCache(this)
         val ex = target.extensions.getOrCreate<MindustryExtension>(
             Mgpp.MainExtensionName
         )
@@ -207,14 +209,14 @@ class MindustryAppPlugin : Plugin<Project> {
                 mainClass.convention(Mgpp.MindustryDesktopMainClass)
                 forciblyClear.set(ex._run.forciblyClear)
                 val dataDirConfig = project.localProperties.getProperty("mgpp.run.dataDir") ?: ex._run._dataDir.get()
-                dataDir.set(
-                    if (dataDirConfig != "default" && dataDirConfig != "temp")
-                        File(dataDirConfig)
-                    else if (dataDirConfig == "temp")
-                        temporaryDir.resolve("data")
-                    else // Default data directory
-                        resolveDefaultDataDir()
-                )
+                val resolvedDataDir = if (dataDirConfig != "default" && dataDirConfig != "temp")
+                    File(dataDirConfig)
+                else if (dataDirConfig == "temp")
+                    temporaryDir.resolve("data")
+                else // Default data directory
+                    resolveDefaultDataDir()
+                logger.info("Data directory of $name is $resolvedDataDir .")
+                dataDir.set(resolvedDataDir)
                 mindustryFile.setFrom(downloadClient)
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.set("mods")
