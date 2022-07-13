@@ -33,8 +33,15 @@ nav:
 
   - Mindustry:
     - Overview: mindustry/overview.md
+    - Dependency: mindustry/dependency.md
+    - Client: mindustry/client.md
+    - Server: mindustry/server.md
+    - Mods: mindustry/mods.md
+    - Run: mindustry/run.md
+    - Deploy: mindustry/deploy.md
+    - Stuff: mindustry/stuff.md
 
-  - Assets:
+  - Mindustry Assets:
     - Overview: assets/overview.md
 
   - Task:

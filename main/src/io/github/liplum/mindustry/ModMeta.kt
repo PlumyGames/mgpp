@@ -179,6 +179,8 @@ var ModMeta.dependencies: List<String> by meta()
 var ModMeta.hidden: Boolean by meta()
 var ModMeta.java: Boolean by meta()
 var ModMeta.hideBrowser: Boolean by meta()
+/** since Mindustry v136 */
+var ModMeta.keepOutlines: Boolean by meta()
 inline fun <reified T : Any> meta(): ReadWriteProperty<ModMeta, T> =
     object : ReadWriteProperty<ModMeta, T> {
         override fun getValue(thisRef: ModMeta, property: KProperty<*>): T =

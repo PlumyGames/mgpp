@@ -63,12 +63,17 @@ open class MindustryExtension(
         set(value) {
             Mgpp.outOfDataTime = value * 1000L
         }
+    val _projectType = target.prop<ProjectType>().apply {
+        convention(ProjectType.Mod)
+    }
     /**
      * The project type will influence dependency resolution.
      */
-    val projectType = target.prop<ProjectType>().apply {
-        convention(ProjectType.Mod)
-    }
+    var projectType: ProjectType
+        get() = _projectType.getOrElse(ProjectType.Mod)
+        set(value) {
+            _projectType.set(value)
+        }
     @JvmField
     val _dependency = DependencySpec(target)
     /**
@@ -204,20 +209,20 @@ open class MindustryExtension(
         dependencies: List<String> = ModMeta.default("dependencies"),
         hidden: Boolean = ModMeta.default("hidden"),
         java: Boolean = ModMeta.default("java"),
-        hideBrowser: Boolean = ModMeta.default("hideBrowser"),
+        keepOutlines: Boolean = ModMeta.default("keepOutlines"),
     ) = io.github.liplum.mindustry.ModMeta(
-        name,
-        displayName,
-        author,
-        description,
-        subtitle,
-        version,
-        main,
-        minGameVersion,
-        repo,
-        dependencies,
-        hidden,
-        java,
-        hideBrowser
+        name = name,
+        displayName = displayName,
+        author = author,
+        description = description,
+        subtitle = subtitle,
+        version = version,
+        main = main,
+        minGameVersion = minGameVersion,
+        repo = repo,
+        dependencies = dependencies,
+        hidden = hidden,
+        java = java,
+        keepOutlines = keepOutlines
     )
 }

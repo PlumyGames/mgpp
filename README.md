@@ -6,7 +6,6 @@
 [![Discord](https://img.shields.io/discord/937228972041842718?color=%23529b69&label=Discord&logo=Discord&style=for-the-badge)](https://discord.gg/3Hrep3WtUz)
 
 A Mindustry gradle plugin, named Plumy.
-[Homepage](https://plumygame.github.io/mgpp/)
 ___
 </div>
 

@@ -25,7 +25,7 @@ fun RepositoryHandler.mindustryRepo(
 /**
  * Import the dependencies of Mindustry.
  * It will take those into account:
- * - [MindustryExtension.projectType]
+ * - [MindustryExtension._projectType]
  * - [DependencySpec.mindustry]
  * - [DependencySpec.arc]
  *
@@ -41,7 +41,7 @@ fun Project.importMindustry() = afterEvaluateThis {
     mdt.whenAvailable("core", ::addMindustry)
     // Arc
     arc.whenAvailable("arc-core", ::addMindustry)
-    when (ex.projectType.get()) {
+    when (ex._projectType.get()) {
         ProjectType.Mod -> {
             mdt.whenAvailable("desktop", ::addMindustry)
             mdt.whenAvailable("server", ::addMindustry)
@@ -58,7 +58,7 @@ fun Project.importMindustry() = afterEvaluateThis {
 /**
  * Import the dependencies of Mindustry.
  * It will take those into account:
- * - [MindustryExtension.projectType]
+ * - [MindustryExtension._projectType]
  * - [DependencySpec.mindustry]
  * - [DependencySpec.arc]
  *
@@ -77,7 +77,7 @@ fun Project.importMindustry(configurationName: String) = afterEvaluateThis {
     mdt.whenAvailable("core", ::addSpecificDependency)
     // Arc
     arc.whenAvailable("arc-core", ::addSpecificDependency)
-    when (ex.projectType.get()) {
+    when (ex._projectType.get()) {
         ProjectType.Mod -> {
             mdt.whenAvailable("desktop", ::addSpecificDependency)
             mdt.whenAvailable("server", ::addSpecificDependency)
