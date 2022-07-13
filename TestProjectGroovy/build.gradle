@@ -72,6 +72,12 @@ mindustry {
         fatJar
     }
 }
+dexJar {
+    options.minApi = '26'
+    options {
+        minApi = '14'
+    }
+}
 mindustryAssets {
     rootAt "$rootDir/assets"
     // There is no need to create a batch, if you use `rootAt 'foo/bar'`.

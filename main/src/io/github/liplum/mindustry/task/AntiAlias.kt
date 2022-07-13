@@ -4,6 +4,7 @@ import io.github.liplum.dsl.dirProp
 import io.github.liplum.dsl.new
 import io.github.liplum.mindustry.FileFilter
 import io.github.liplum.mindustry.antiAliasing
+import org.gradle.api.Action
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.FileType
@@ -97,6 +98,14 @@ open class AntiAlias : DefaultTask() {
 
     fun addFilter(filter: FileFilter) {
         filters += filter
+    }
+    //For Kotlin
+    inline fun options(config: AntiAliasingOptions.() -> Unit) {
+        options.config()
+    }
+    // For Groovy
+    fun options(config: Action<AntiAliasingOptions>) {
+        config.execute(options)
     }
 }
 

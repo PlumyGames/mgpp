@@ -76,6 +76,7 @@ mindustry {
             add kotlin "liplum/cyberio"
             // add hjson "BlueWolf3682/Exotic-Mod" branch "0.8"
             add fromTask "iconMaker"
+            add localProperties "extraModPath"
         }
     }
     meta += ModMeta(
@@ -96,7 +97,12 @@ mindustry {
         useDefaultDataDir
     }
 }
-
+tasks.dexJar {
+    options.minApi = "26"
+    options {
+        minApi = "14"
+    }
+}
 mindustryAssets {
     sprites {
         dir = rootDir.resolve("sprites")

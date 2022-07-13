@@ -3,6 +3,7 @@ package io.github.liplum.mindustry
 import io.github.liplum.dsl.listProp
 import io.github.liplum.dsl.stringsProp
 import io.github.liplum.dsl.whenHas
+import io.github.liplum.mindustry.LocalProperties.localProperties
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 
@@ -11,7 +12,7 @@ import org.gradle.api.plugins.JavaPlugin
  * a local file, an url or even a gradle task.
  */
 class ModsSpec(
-    target: Project,
+    val target: Project,
 ) {
     val _extraModsFromTask = target.stringsProp().apply {
         target.plugins.whenHas<JavaPlugin> {
@@ -133,6 +134,18 @@ class ModsSpec(
      */
     infix fun local(path: String) {
         worksWith.add(LocalMod(path))
+    }
+    /**
+     * Add a local mod form disk by the [key] in local.properties.
+     * @param key in local.properties
+     */
+    infix fun localProperties(key: String) {
+        val path = target.localProperties.getProperty(key)
+        if (path != null) {
+            worksWith.add(LocalMod(path))
+        } else {
+            target.logger.warn("$key not found in local.properties.")
+        }
     }
     /**
      * Add a mod from [url]

@@ -1,9 +1,11 @@
 package io.github.liplum.mindustry.task
 
 import io.github.liplum.dsl.*
+import org.gradle.api.Action
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.*
+import org.gradle.api.tasks.compile.AbstractOptions
 import java.io.File
 
 open class DexJar : DefaultTask() {
@@ -19,6 +21,8 @@ open class DexJar : DefaultTask() {
         @Optional @Input get
     val dexedJar = project.fileProp()
         @OutputFile get
+    val options: DexJarOptions = new()
+        @Input @Optional get
 
     init {
         dexedJar.convention(temporaryDir.resolve("dexed.jar"))
@@ -70,7 +74,7 @@ open class DexJar : DefaultTask() {
             params.add(classpath.path)
         }
         params.add("--min-api")
-        params.add("14")
+        params.add(options.minApi)
         params.add("--output")
         // Don't add quotes here, it doesn't work on linux
         params.add(dexedJarPath)
@@ -82,6 +86,21 @@ open class DexJar : DefaultTask() {
             it.errorOutput = System.err
         }
     }
+    //For Kotlin
+    inline fun options(config: DexJarOptions.() -> Unit) {
+        options.config()
+    }
+    // For Groovy
+    fun options(config: Action<DexJarOptions>) {
+        config.execute(options)
+    }
+}
+
+open class DexJarOptions : AbstractOptions() {
+    /**
+     * --min-api 14 as default
+     */
+    var minApi = "14"
 }
 
 fun List<File>.platformFindD8(): File? =
