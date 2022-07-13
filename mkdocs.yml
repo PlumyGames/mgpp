@@ -1,0 +1,48 @@
+site_name: MGPP Instruction
+theme:
+  name: material
+  shortcuts:
+    help: 191    # ?
+    next: 78     # n
+    previous: 66 # p
+    search: 83   # s
+  features:
+    - navigation.tabs
+    - content.tabs.link
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+
+#page tree
+nav:
+  - Home:
+    - Overview: index.md
+    - Installation: home/installation.md
+    - Samples: home/samples.md
+
+  - Mindustry:
+    - Overview: mindustry/overview.md
+
+  - Assets:
+    - Overview: assets/overview.md
+
+  - Task:
+    - Overview: task/overview.md
+
+markdown_extensions:
+  - pymdownx.tabbed:
+      alternate_style: true 
+  - pymdownx.superfences
+  - toc:
+      permalink: "#"
