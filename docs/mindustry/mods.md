@@ -66,6 +66,28 @@ As mgpp provided, you can use the syntax mentioned below to add a mod.
     }
     ```
 
+For a Js/Json mod, you can specify its branch:
+
+=== "Groovy"
+
+    ``` groovy
+    mods {
+        worksWith {
+            hjson 'PlumyGame/mgpp' branch 'v7'
+        }
+    }
+    ```
+
+=== "Kotlin"
+
+    ``` kotlin
+    mods {
+        worksWith {
+            add hjson "PlumyGame/mgpp" branch "v7"
+        }
+    }
+    ```
+
 #### Typeless mod
 
 MGPP also allows to you add a mod without explicit type .
@@ -100,6 +122,7 @@ MGPP will copy it from your local disk into `temp`
 
 - local: the path specified here will be copied.
 - localProperties: the value in `local.properties` file will be treated as a path for copying.
+There is no effect if the key doesn't exist.
 
 === "Groovy"
 

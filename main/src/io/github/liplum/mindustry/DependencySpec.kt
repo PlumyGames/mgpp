@@ -32,7 +32,9 @@ class DependencySpec(
     val mindustryDependency = target.prop<IDependency>().apply {
         convention(MindustryDependency())
     }
+    //For Kotlin
     val arc = ArcSpec()
+    //For Kotlin
     val mindustry = MindustrySpec()
     /**
      * A notation represents the latest version.
@@ -40,7 +42,8 @@ class DependencySpec(
      * ```
      * mindustry be latest
      * ```
-     * This is not recommended, it might not work if you faced the API limit of GitHub.
+     * This is not recommended, it might not work if you faced the API limit of GitHub or
+     * jitpack yet to build this version.
      */
     val latest: LatestNotation
         get() = LatestNotation
@@ -230,6 +233,7 @@ class DependencySpec(
     /**
      * To configure Arc dependency
      */
+    // For Kotlin
     inner class ArcSpec {
         /**
          * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
@@ -244,31 +248,17 @@ class DependencySpec(
          * - [latestTag]: set the [arcDependency] to the latest tag
          */
         infix fun on(notation: INotation) {
-            if (notation === LatestNotation)
-                arcLatestCommit()
-            else if (notation === LatestReleaseNotation)
-                arcLatestTag()
-            else
-                throw GradleException("Unknown dependency notation of mindustry $notation")
-        }
-        /**
-         * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
-         * ## Supported notations:
-         * - [latest]: set the [arcDependency] to the latest commit
-         * - [latestTag]: set the [arcDependency] to the latest tag
-         */
-        fun on(map: Map<String, Any>) {
-            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc.on`")
-            when (version) {
-                LatestNotation.toString() -> on(LatestNotation)
-                LatestReleaseNotation.toString() -> on(LatestReleaseNotation)
-                else -> on(version)
+            when(notation) {
+                LatestNotation -> arcLatestCommit()
+                LatestReleaseNotation -> arcLatestTag()
+                else -> throw GradleException("Unknown dependency notation of arc $notation")
             }
         }
     }
     /**
      * To configure Mindustry dependency
      */
+    // For Kotlin
     inner class MindustrySpec {
         /**
          * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
@@ -289,23 +279,10 @@ class DependencySpec(
          * - [latestRelease]: set the [mindustryDependency] to the latest official release
          */
         infix fun on(notation: INotation) {
-            if (notation === LatestNotation || notation === LatestReleaseNotation)
-                mindustryLatestRelease()
-            else
-                throw GradleException("Unknown dependency notation of mindustry $notation")
-        }
-        /**
-         * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
-         * ## Supported notations:
-         * - [latest]: set the [mindustryDependency] to the latest official release
-         * - [latestRelease]: set the [mindustryDependency] to the latest official release
-         */
-        fun on(map: Map<String, Any>) {
-            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.on`")
-            when (version) {
-                LatestNotation.toString() -> on(LatestNotation)
-                LatestReleaseNotation.toString() -> on(LatestReleaseNotation)
-                else -> on(version)
+            when (notation) {
+                LatestNotation -> mindustryLatestRelease()
+                LatestReleaseNotation -> mindustryLatestRelease()
+                else -> throw GradleException("Unknown dependency notation of mindustry $notation")
             }
         }
         /**
@@ -314,21 +291,9 @@ class DependencySpec(
          * - [latest]: set the [mindustryDependency] to the latest jitpack mirror commit
          */
         infix fun mirror(notation: INotation) {
-            if (notation === LatestNotation)
-                mindustryMirrorLatestCommit()
-            else
-                throw GradleException("Unknown dependency notation of mindustry mirror $notation")
-        }
-        /**
-         * Fetch the Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
-         * ## Supported notations:
-         * - [latest]: set the [mindustryDependency] to the latest jitpack mirror commit
-         */
-        fun mirror(map: Map<String, Any>) {
-            val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry.mirror`")
-            when (version) {
-                LatestNotation.toString() -> mirror(LatestNotation)
-                else -> mirror(version)
+            when(notation) {
+                LatestNotation -> mindustryMirrorLatestCommit()
+                else -> throw GradleException("Unknown dependency notation of mindustry mirror $notation")
             }
         }
     }

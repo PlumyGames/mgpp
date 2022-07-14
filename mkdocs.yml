@@ -51,5 +51,7 @@ markdown_extensions:
   - pymdownx.tabbed:
       alternate_style: true 
   - pymdownx.superfences
+  - pymdownx.tilde
+  - pymdownx.snippets
   - toc:
       permalink: "#"

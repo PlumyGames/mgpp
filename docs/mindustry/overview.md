@@ -22,6 +22,7 @@ MGPP supports 2 types of project: `Mod`, `Plugin`.
     ``` groovy
     mindustry {
         projectType = Mod
+        // OR
         projectType = Plugin
     }
     ```
@@ -31,6 +32,7 @@ MGPP supports 2 types of project: `Mod`, `Plugin`.
     ``` kotlin
     mindustry {
         projectType = Mod
+        // OR
         projectType = Plugin
     }
     ```

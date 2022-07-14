@@ -66,8 +66,8 @@ class ModsSpec(
      * **Not recommended:** Please use any more specific method, such as [java] or [json]
      * @param repo like "PlumyGame/mgpp"
      */
-    infix fun github(repo: String) {
-        worksWith.add(GitHubMod(repo))
+    infix fun github(repo: String)=GitHubMod(repo).apply {
+        worksWith.add(this)
     }
     /**
      * Add a json mod form GitHub by its repo name.
@@ -94,36 +94,36 @@ class ModsSpec(
      * Add a java mod form GitHub by its repo name.
      * @param repo like "PlumyGame/mgpp"
      */
-    infix fun java(repo: String) {
-        worksWith.add(GitHubJvmMod(repo))
+    infix fun java(repo: String) = GitHubJvmMod(repo).apply {
+        worksWith.add(this)
     }
     /**
      * Add a kotlin mod form GitHub by its repo name.
      * @param repo like "PlumyGame/mgpp"
      */
-    infix fun kotlin(repo: String) {
-        worksWith.add(GitHubJvmMod(repo))
+    infix fun kotlin(repo: String) = GitHubJvmMod(repo).apply {
+        worksWith.add(this)
     }
     /**
      * Add a groovy mod form GitHub by its repo name.
      * @param repo like "PlumyGame/mgpp"
      */
-    infix fun groovy(repo: String) {
-        worksWith.add(GitHubJvmMod(repo))
+    infix fun groovy(repo: String) = GitHubJvmMod(repo).apply {
+        worksWith.add(this)
     }
     /**
      * Add a scala mod form GitHub by its repo name.
      * @param repo like "PlumyGame/mgpp"
      */
-    infix fun scala(repo: String) {
-        worksWith.add(GitHubJvmMod(repo))
+    infix fun scala(repo: String) = GitHubJvmMod(repo).apply {
+        worksWith.add(this)
     }
     /**
      * Add a closure mod form GitHub by its repo name.
      * @param repo like "PlumyGame/mgpp"
      */
-    infix fun closure(repo: String) {
-        worksWith.add(GitHubJvmMod(repo))
+    infix fun closure(repo: String) = GitHubJvmMod(repo).apply {
+        worksWith.add(this)
     }
     /**
      * Add a local mod form disk.
@@ -132,8 +132,8 @@ class ModsSpec(
      * would be better for git or collaboration.
      * @param path of that mod
      */
-    infix fun local(path: String) {
-        worksWith.add(LocalMod(path))
+    infix fun local(path: String) = LocalMod(path).apply {
+        worksWith.add(this)
     }
     /**
      * Add a local mod form disk by the [key] in local.properties.
@@ -151,8 +151,8 @@ class ModsSpec(
      * Add a mod from [url]
      * @param url any resource
      */
-    infix fun url(url: String) {
-        worksWith.add(UrlMod(url))
+    infix fun url(url: String) = UrlMod(url).apply {
+        worksWith.add(this)
     }
     /**
      * Add a mod from the outputs of another task.
