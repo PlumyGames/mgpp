@@ -20,15 +20,19 @@ MGPP supports 2 types of project: `Mod`, `Plugin`.
 === "Groovy"
 
     ``` groovy
-    projectType = Mod
-    projectType = Plugin
+    mindustry {
+        projectType = Mod
+        projectType = Plugin
+    }
     ```
 
 === "Kotlin"
 
     ``` kotlin
-    projectType = Mod
-    projectType = Plugin
+    mindustry {
+        projectType = Mod
+        projectType = Plugin
+    }
     ```
 
 It will affect the Dependency Resolution.
@@ -43,17 +47,21 @@ Unit: second
 === "Groovy"
 
     ``` groovy
-    outOfDateTime = 60 * 60 // 60 minutes
+    mindustry {
+        outOfDateTime = 60 * 60 // 60 minutes
+    }
     ```
 
 === "Kotlin"
 
     ``` kotlin
-    outOfDateTime = 60 * 60 // 60 minutes
+    mindustry {
+        outOfDateTime = 60 * 60 // 60 minutes
+    }
     ```
 
 ### Mod meta
-It represents the `mod.[h]json` file of your mod/plugin.
+It represents the `mod.[h]json` file of your mod.
 MGPP will automatically search for it in order of the paths mentioned below:
 
 1. projectDir/mod.hjson
@@ -70,41 +78,45 @@ Thus, you could manipulate it internally in build script.
 === "Groovy"
 
     ``` groovy
-    meta << ModMeta(
-        name: 'test-name',
-        displayName: 'Test Display Name',
-        author: 'yourself',
-        description: '...',
-        subtitle: '...',
-        version: '1.0',
-        main: 'org.example.ExampleMod',
-        minGameVersion: '135',
-        repo: 'PlumyGame/mgpp',
-        dependencies: ['plumy/mgpp'],
-        hidden: false,
-        java: true,
-        keepOutline: false,
-    )
+    mindustry {
+        meta << ModMeta(
+            name: 'test-name',
+            displayName: 'Test Display Name',
+            author: 'yourself',
+            description: '...',
+            subtitle: '...',
+            version: '1.0',
+            main: 'org.example.ExampleMod',
+            minGameVersion: '135',
+            repo: 'PlumyGame/mgpp',
+            dependencies: ['plumy/mgpp'],
+            hidden: false,
+            java: true,
+            keepOutline: false,
+        )
+    }
     ```
 
 === "Kotlin"
 
     ``` kotlin
-    meta += ModMeta(
-        name = "test-name",
-        displayName = "Test Display Name",
-        author = "yourself",
-        description = "...",
-        subtitle = "...",
-        version = "1.0",
-        main = "org.example.ExampleMod",
-        minGameVersion = "135",
-        repo = "PlumyGame/mgpp",
-        dependencies = listOf("plumy/mgpp"),
-        hidden = false,
-        java = true,
-        keepOutline = false,
-    )
+    mindustry {
+        meta += ModMeta(
+            name = "test-name",
+            displayName = "Test Display Name",
+            author = "yourself",
+            description = "...",
+            subtitle = "...",
+            version = "1.0",
+            main = "org.example.ExampleMod",
+            minGameVersion = "135",
+            repo = "PlumyGame/mgpp",
+            dependencies = listOf("plumy/mgpp"),
+            hidden = false,
+            java = true,
+            keepOutline = false,
+        )
+    }
     ```
 
 Note: Some of them only exist in higher version of Mindustry.

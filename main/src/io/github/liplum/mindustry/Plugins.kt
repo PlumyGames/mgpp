@@ -14,7 +14,6 @@ import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.configurationcache.extensions.capitalized
 import java.io.File
-import kotlin.math.log
 
 typealias Mgpp = MindustryPlugin
 
@@ -215,7 +214,10 @@ class MindustryAppPlugin : Plugin<Project> {
                 group = Mgpp.MindustryTaskGroup
                 dependsOn(downloadClient)
                 mainClass.convention(Mgpp.MindustryDesktopMainClass)
-                forciblyClear.set(ex._run.forciblyClear)
+                val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
+                    it != "false"
+                } ?: ex._run._forciblyClear.get()
+                forciblyClear.set(doForciblyClear)
                 val dataDirConfig = project.localProperties.getProperty("mgpp.run.dataDir") ?: ex._run._dataDir.get()
                 val resolvedDataDir = if (dataDirConfig != "default" && dataDirConfig != "temp")
                     File(dataDirConfig)
@@ -237,7 +239,10 @@ class MindustryAppPlugin : Plugin<Project> {
             ) {
                 group = Mgpp.MindustryTaskGroup
                 dependsOn(downloadServer)
-                forciblyClear.set(ex._run.forciblyClear)
+                val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
+                    it != "false"
+                } ?: ex._run._forciblyClear.get()
+                forciblyClear.set(doForciblyClear)
                 mainClass.convention(Mgpp.MindustrySeverMainClass)
                 mindustryFile.setFrom(downloadServer)
                 modsWorkWith.setFrom(resolveMods)

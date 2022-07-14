@@ -34,18 +34,21 @@ class RunSpec(
      * Whether to delete all mods other than any in [ModsSpec.worksWith] in the data directory,
      * ensure you have backed up your mods.
      */
-    @DefaultValue("true")
     @InheritFromParent
+    @DefaultValue("false")
+    @LocalProperty("mgpp.run.forciblyClear")
     val _forciblyClear = target.boolProp().apply {
-        convention(true)
+        convention(false)
     }
     /**
      * Whether to delete all mods other than any in [ModsSpec.worksWith] in the data directory,
      * ensure you have backed up your mods.
      */
-    @DefaultValue("true")
+    @InheritFromParent
+    @DefaultValue("false")
+    @LocalProperty("mgpp.run.forciblyClear")
     var forciblyClear: Boolean
-        get() = _forciblyClear.getOrElse(true)
+        get() = _forciblyClear.getOrElse(false)
         set(value) {
             _forciblyClear.set(value)
         }
