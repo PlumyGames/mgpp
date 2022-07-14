@@ -128,7 +128,7 @@ abstract class GameSpecBase(
             location.set(this)
         }
     /**
-     * Download bleeding-edge from [MindustryPlugin.MindustryBEReleaseURL]
+     * Download bleeding-edge from [MindustryPlugin.APIMindustryBEReleaseURL]
      */
     infix fun be(version: String): GitHubGameLocation =
         BE(version).apply {
@@ -147,7 +147,7 @@ abstract class GameSpecBase(
                 throw GradleException("Unknown game notation of official $notation")
         }
     /**
-     * Download bleeding-edge from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * Download bleeding-edge from [MindustryPlugin.APIMindustryBEReleaseURL]
      * ## Supported notations:
      * - [latest]: set the [location] to the latest bleeding-edge
      */
@@ -194,29 +194,28 @@ abstract class GameSpecBase(
      * ## Supported notations:
      * - [localProperties]: see [fromLocalProperties]
      */
-    infix fun from(notation: INotation) {
-        if (notation === LocalPropertiesNotation)
-            fromLocalProperties()
-        else
-            throw GradleException("Unknown $type notation of mindustry $notation")
-    }
+    infix fun from(notation: INotation):IGameLocation =
+        when(notation) {
+            LocalPropertiesNotation -> fromLocalProperties()
+            else -> throw GradleException("Unknown $type notation of mindustry $notation")
+        }
     /**
-     * Create a [GitHubGameLocation] of official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * Create a [GitHubGameLocation] of official edition from [MindustryPlugin.APIMindustryOfficialReleaseURL]
      */
     abstract fun Official(version: String): GitHubGameLocation
     /**
-     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.APIMindustryBEReleaseURL]
      */
     abstract fun BE(version: String): GitHubGameLocation
     /**
-     * Create a [GitHubGameLocation] of the latest official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * Create a [GitHubGameLocation] of the latest official edition from [MindustryPlugin.APIMindustryOfficialReleaseURL]
      *
      * **Not Recommended** It may not work due to a network issue or GitHub API access limitation.
      */
     fun LatestOfficial(): GitHubGameLocation {
         val latestVersion = target.getLatestVersion("mindustry-$type-official") {
             try {
-                val url = URL(Mgpp.MindustryOfficialReleaseURL)
+                val url = URL(Mgpp.APIMindustryOfficialLatestReleaseURL)
                 val json = Jval.read(url.readText())
                 val version = json.getString("tag_name").let {
                     if (it == null) {
@@ -236,14 +235,14 @@ abstract class GameSpecBase(
         return Official(latestVersion)
     }
     /**
-     * Create a [GitHubGameLocation] of the latest bleeding-edge from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * Create a [GitHubGameLocation] of the latest bleeding-edge from [MindustryPlugin.APIMindustryBEReleaseURL]
      *
      * **Not Recommended** It may not work due to a network issue or GitHub API access limitation.
      */
     fun LatestBE(): GitHubGameLocation {
         val latestVersion = target.getLatestVersion("mindustry-$type-be") {
             try {
-                val url = URL(Mgpp.MindustryBEReleaseURL)
+                val url = URL(Mgpp.APIMindustryBELatestReleaseURL)
                 val json = Jval.read(url.readText())
                 val version = json.getString("tag_name").let {
                     if (it == null) {
@@ -263,7 +262,7 @@ abstract class GameSpecBase(
         return BE(latestVersion)
     }
     /**
-     * Download official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * Download official edition from [MindustryPlugin.APIMindustryOfficialLatestReleaseURL]
      * ## Supported notations:
      * - [latest]: set the [location] to the latest official
      */
@@ -275,7 +274,7 @@ abstract class GameSpecBase(
         }
     }
     /**
-     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.MindustryOfficialReleaseURL]
+     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.APIMindustryOfficialLatestReleaseURL]
      * ## Supported notations:
      * - [latest]: set the [location] to the latest bleeding-edge
      */

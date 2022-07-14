@@ -9,7 +9,7 @@ import java.io.Serializable
 import java.net.URL
 
 /**
- * An abstract file representing a mod.
+ * An abstract mod file.
  */
 interface IMod : Serializable {
     fun resolveFile(project: Project, currentDir: File): File

@@ -97,7 +97,7 @@ class MindustryPlugin : Plugin<Project> {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryBEVersion = "22806"
+        const val DefaultMindustryBEVersion = "22826"
         /**
          * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v135.2)
          *
@@ -105,13 +105,25 @@ class MindustryPlugin : Plugin<Project> {
          */
         const val DefaultArcVersion = "v135"
         /**
-         * [Mindustry official repo](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+         * [Mindustry official release](https://github.com/Anuken/Mindustry/releases)
          */
-        const val MindustryOfficialReleaseURL = "https://api.github.com/repos/Anuken/Mindustry/releases/latest"
+        const val MindustryOfficialReleaseURL = "https://github.com/Anuken/Mindustry/releases"
         /**
-         * [Mindustry bleeding edge repo](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+         * GitHub API of [Mindustry official release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
          */
-        const val MindustryBEReleaseURL = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+        const val APIMindustryOfficialReleaseURL = "https://api.github.com/repos/Anuken/Mindustry/releases"
+        /**
+         * GitHub API of [Latest Mindustry official release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+         */
+        const val APIMindustryOfficialLatestReleaseURL = "https://api.github.com/repos/Anuken/Mindustry/releases/latest"
+        /**
+         * GitHub API of [Mindustry bleeding-edge release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+         */
+        const val APIMindustryBEReleaseURL = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+        /**
+         * GitHub API of [Latest Mindustry bleeding-edge release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+         */
+        const val APIMindustryBELatestReleaseURL = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
         /**
          * [Arc tags](https://github.com/Anuken/Arc/tags)
          */

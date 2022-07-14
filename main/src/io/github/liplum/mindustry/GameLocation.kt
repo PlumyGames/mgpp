@@ -2,9 +2,14 @@ package io.github.liplum.mindustry
 
 import java.io.File
 import java.io.Serializable
-
+/**
+ * An abstract Mindustry game file.
+ */
 interface IGameLocation : Serializable {
     var fileName: String
+    /**
+     * Generate an [IDownloadLocation] deterministically.
+     */
     fun toDownloadLocation(): IDownloadLocation
     infix fun named(name: String): IGameLocation {
         fileName = name

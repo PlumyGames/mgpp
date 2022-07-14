@@ -33,7 +33,7 @@ mindustry {
         arc version: '123fbf12b9'
     }
     client {
-        be version: latest
+        be version: latest named 'Test.jar'
         /*
         from GameLocation(
             'mindustry-antigrief',

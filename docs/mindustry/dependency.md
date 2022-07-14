@@ -54,12 +54,12 @@ You can specify the which Arc version to use with this syntax.
 
 As default, mgpp will apply `arc v135`.
 
-#### Notations
+##### Notations
 
-- latest: Apply the [latest commit](https://github.com/Anuken/Arc/commits/master) of Arc,
+- latest: To apply the [latest commit](https://github.com/Anuken/Arc/commits/master) of Arc,
   such as `b1b88883e2`.
 > **NOTE:** It might not work if you faced the API limit of GitHub or jitpack yet to build this version.
-- latestTag: Apply the [latest tag](https://github.com/Anuken/Arc/tags) of Arc, such as `v135.2`.
+- latestTag: To apply the [latest tag](https://github.com/Anuken/Arc/tags) of Arc, such as `v135.2`.
 > **NOTE:** It has a very small chance that it won't work when the new version was just released.
 
 === "Groovy"
@@ -109,19 +109,19 @@ You can specify the which Mindustry version to use with this syntax.
 
 As default, mgpp will apply `mindustry v135`.
 
-#### Notations
+##### Notations
 
 - latest
-    - For `mindustry`:  Apply the [latest release](https://github.com/Anuken/Mindustry/releases) of Mindustry,
+    - For `mindustry`: To apply the [latest release](https://github.com/Anuken/Mindustry/releases) of Mindustry,
       such as `v135.2`.
 > **NOTE:** It has a very small chance that it won't work when the new version was just released.
 
-    - For `mirror`: Apply the [latest commit](https://github.com/Anuken/MindustryJitpack/commits/main) of Mindustry mirror,
+    - For `mirror`: To apply the [latest commit](https://github.com/Anuken/MindustryJitpack/commits/main) of Mindustry mirror,
       such as `66595eb140`.
 > **NOTE:** It might not work if you faced the API limit of GitHub or jitpack yet to build this version.
 
 - latestRelease:
-    - Only for `mindustry`: Apply the [latest release](https://github.com/Anuken/Mindustry/releases) of Mindustry,
+    - Only for `mindustry`: To apply the [latest release](https://github.com/Anuken/Mindustry/releases) of Mindustry,
       completely the same as `mindustry latest`, such as `v135.2`.
 > **NOTE:** It has a very small chance that it won't work when the new version was just released.
 

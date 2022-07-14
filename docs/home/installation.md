@@ -95,7 +95,7 @@ For ease of understanding, simplified examples are used here. Of course, it can 
     ```
 
 ## Dependency setup
-You can improt the repositories where Mindustry was published by `mindustryRepo()`.
+You can import the repositories where Mindustry was published by `mindustryRepo()`.
 
 You can use `importMindustry()` to import the Mindustry dependencies you have configured above.
 

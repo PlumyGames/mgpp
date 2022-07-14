@@ -6,7 +6,7 @@ import java.io.Serializable
 import java.net.URL
 
 /**
- * An abstract download location, which only can open an input stream for reading
+ * An abstract download location, which can only open the input stream for reading
  */
 interface IDownloadLocation : Serializable {
     /**

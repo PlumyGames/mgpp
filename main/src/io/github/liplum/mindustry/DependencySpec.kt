@@ -133,7 +133,7 @@ class DependencySpec(
     fun mindustryLatestRelease() {
         val latestVersion = target.getLatestVersion("mindustry-release-dependency") {
             try {
-                val url = URL(Mgpp.MindustryOfficialReleaseURL)
+                val url = URL(Mgpp.APIMindustryOfficialLatestReleaseURL)
                 val json = Jval.read(url.readText())
                 return@getLatestVersion json.getString("tag_name")
             } catch (e: Exception) {
