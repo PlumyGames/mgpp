@@ -230,13 +230,21 @@ class MindustryAppPlugin : Plugin<Project> {
                     it != "false"
                 } ?: ex._run._forciblyClear.get()
                 forciblyClear.set(doForciblyClear)
-                val dataDirConfig = project.localProperties.getProperty("mgpp.run.dataDir") ?: ex._run._dataDir.get()
-                val resolvedDataDir = if (dataDirConfig != "default" && dataDirConfig != "temp")
-                    File(dataDirConfig)
-                else if (dataDirConfig == "temp")
-                    temporaryDir.resolve("data")
-                else // Default data directory
-                    resolveDefaultDataDir()
+                val resolvedDataDir = when (val dataDirConfig =
+                    project.localProperties.getProperty("mgpp.run.dataDir") ?: ex._run._dataDir.get()
+                ) {
+                    "<default>" -> resolveDefaultDataDir()
+                    "<temp>" -> temporaryDir.resolve("data")
+                    "<env>" -> System.getenv(Mgpp.MindustryDataDirEnv).let{
+                        if(it == null) temporaryDir.resolve("data")
+                        else File(it).run {
+                            if(isFile) this
+                            else temporaryDir.resolve("data")
+                        }
+                    }
+                    else -> File(dataDirConfig) // customized data directory
+                }
+
                 logger.info("Data directory of $name is $resolvedDataDir .")
                 dataDir.set(resolvedDataDir)
                 mindustryFile.setFrom(downloadClient)

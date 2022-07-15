@@ -3,7 +3,7 @@
 You can add more mods working with your mod, such as a Json or Java from GitHub,
 a local file, an url or even a gradle task.
 
-The `mods{}` closure is inside of [`mindustry{}`](overview.md) hereinafter.
+The `mods{}` closure is inside of [`mindustry{}`](overview.md) closure hereinafter.
 
 ### Extra mods from task
 

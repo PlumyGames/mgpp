@@ -1,5 +1,5 @@
 # Client
-The `client{}` closure is inside of [`mindustry{}`](overview.md) hereinafter.
+The `client{}` closure is inside of [`mindustry{}`](overview.md) closure hereinafter.
 
 --8<--
 docs-shared/mindustry/game-spec-base-location.md

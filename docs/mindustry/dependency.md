@@ -1,9 +1,5 @@
 # Dependency
 
-Here you can configure what
-
-The `dependency{}` closure is inside of [`mindustry{}`](overview.md) hereinafter.
-
 ### Import
 
 To apply the dependency configuration,
@@ -26,7 +22,8 @@ inside `dependencies{}` closure in your `build.gradle[.kts]`.
         importMindustry()
     }
     ```
-
+MGPP provides `dependency{}` closure for you to configure which version you want to use,
+and it's inside of [`mindustry{}`](overview.md) closure hereinafter.
 
 ### Arc dependency
 

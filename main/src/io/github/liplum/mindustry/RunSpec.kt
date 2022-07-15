@@ -41,7 +41,7 @@ class RunSpec(
         convention(false)
     }
     /**
-     * Whether to delete all mods other than any in [ModsSpec.worksWith] in the data directory,
+     * Whether to delete all mods other than any from [ModsSpec.worksWith] in the data directory,
      * ensure you have backed up your mods.
      */
     @InheritFromParent
@@ -75,14 +75,21 @@ class RunSpec(
      */
     val useDefaultDataDir: Unit
         get() {
-            _dataDir.set("default")
+            _dataDir.set("<default>")
         }
     /**
      * Set the [dataDir] to the [RunMindustry.getTemporaryDir].
      */
     val useTempDataDir: Unit
         get() {
-            _dataDir.set("temp")
+            _dataDir.set("<temp>")
+        }
+    /**
+     * Set the [dataDir] to the environment variable,
+     */
+    val useEnvDataDir: Unit
+        get() {
+            _dataDir.set("<env>")
         }
     /**
      * Set the [dataDir] to the default path of which Mindustry commonly used
