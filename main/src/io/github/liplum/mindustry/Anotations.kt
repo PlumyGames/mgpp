@@ -59,7 +59,7 @@ annotation class PropertyAsDefault(
 @Target(
     AnnotationTarget.LOCAL_VARIABLE,
     AnnotationTarget.FIELD,
-    AnnotationTarget.PROPERTY, AnnotationTarget.EXPRESSION
+    AnnotationTarget.PROPERTY, AnnotationTarget.EXPRESSION, AnnotationTarget.CLASS, AnnotationTarget.FUNCTION
 )
 @MustBeDocumented
 annotation class DisableIfWithout(

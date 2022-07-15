@@ -25,6 +25,8 @@ inside `dependencies{}` closure in your `build.gradle[.kts]`.
 MGPP provides `dependency{}` closure for you to configure which version you want to use,
 and it's inside of [`mindustry{}`](overview.md) closure hereinafter.
 
+___
+
 ### Arc dependency
 
 You can specify the which Arc version to use with this syntax.

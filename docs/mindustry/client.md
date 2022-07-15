@@ -1,6 +1,8 @@
 # Client
 The `client{}` closure is inside of [`mindustry{}`](overview.md) closure hereinafter.
 
+Related tasks: `downloadClient`, `runClient`
+
 --8<--
 docs-shared/mindustry/game-spec-base-location.md
 --8<--

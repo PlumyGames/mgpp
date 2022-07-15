@@ -5,12 +5,14 @@ a local file, an url or even a gradle task.
 
 The `mods{}` closure is inside of [`mindustry{}`](overview.md) closure hereinafter.
 
+Related tasks: `resolveMods`
+
 ### Extra mods from task
 
 This list contains task paths whose outputs will be copied into `dataDir/mods`.
 
 Conventionally, when you apply `java` plugin,
-mgpp will add `:jar` task into the list automatically.
+mgpp will add `jar` task into the list automatically.
 === "Groovy"
 
     ``` groovy
@@ -94,7 +96,7 @@ MGPP also allows to you add a mod without explicit type .
 
 ##### URL mod
 
-MGPP will download it into the temporary directory of `:resolveMods` task (hereinafter referred to as `temp`).
+MGPP will download it into the temporary directory of `resolveMods` task (hereinafter referred to as `temp`).
 
 === "Groovy"
 
@@ -129,7 +131,7 @@ There is no effect if the key doesn't exist.
     ``` groovy
     mods {
         worksWith {
-            local 'E:\mgpp\mod.jar'
+            local 'E:/mgpp/mod.jar'
             localProperties 'mods.what-mod-to-copy'
         }
     }
@@ -140,7 +142,7 @@ There is no effect if the key doesn't exist.
     ``` kotlin
     mods {
         worksWith {
-            add local "E:\mgpp\mod.jar"
+            add local "E:/mgpp/mod.jar"
             add localProperties "mods.what-mod-to-copy"
         }
     }

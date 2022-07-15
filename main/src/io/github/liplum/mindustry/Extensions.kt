@@ -147,16 +147,19 @@ open class MindustryExtension(
         _run.func()
     }
     @JvmField
+    @DisableIfWithout("java")
     val _deploy = DeploySpec(target)
     /**
      * Configure how to deploy your artifacts.
      */
+    @DisableIfWithout("java")
     fun deploy(func: Action<DeploySpec>) {
         func.execute(_deploy)
     }
     /**
      * Configure how to deploy your artifacts.
      */
+    @DisableIfWithout("java")
     inline fun deploy(func: DeploySpec.() -> Unit) {
         _deploy.func()
     }

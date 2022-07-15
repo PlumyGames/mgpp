@@ -37,6 +37,6 @@ Also, there is a [JavaDoc page](https://plumygame.github.io/mgppDoc/index.html) 
 
 If you face any issue with mgpp, please contact us on [Issue Report](https://github.com/PlumyGame/mgpp/issues) page.
 
-Join our [Discord server](https://discord.gg/3Hrep3WtUz) to send us feedback immediately.
+Join our [Discord server](https://discord.gg/3Hrep3WtUz) to send us feedback or get help immediately.
 
 Welcome to contribute mgpp!

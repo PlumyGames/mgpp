@@ -7,6 +7,7 @@ import org.gradle.api.Project
 /**
  * You can configure the process of a jar compatible with both Desktop and Android.
  */
+@DisableIfWithout("java")
 class DeploySpec(
     target: Project,
 ) {

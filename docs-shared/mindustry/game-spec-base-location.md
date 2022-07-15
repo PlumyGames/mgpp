@@ -2,6 +2,8 @@
 so in these chapters, `client/server` are used, which indicates that syntax can work both sides.
 Please select the proper one.
 
+___
+
 ### Game location
 
 The game location is an abstract file, which represents the Mindustry game.
@@ -118,7 +120,7 @@ To copy the game file from a local file.
 
     ``` groovy
     client/server {
-        fromLocal 'E:\Mindustry\myMindustry.jar'
+        fromLocal 'E:/Mindustry/myMindustry.jar'
     }
     ```
 
@@ -126,7 +128,7 @@ To copy the game file from a local file.
 
     ``` kotlin
     client/server {
-        mindustry fromLocal 'E:\Mindustry\myMindustry.jar'
+        mindustry fromLocal 'E:/Mindustry/myMindustry.jar'
     }
     ```
 
@@ -137,6 +139,13 @@ you should declare the key-value pair in `local.properties` file first.
 
 - For `client`: `mgpp.client.location`
 - For `server`: `mgpp.server.location`
+
+**TYPE:** String
+
+```properties
+mgpp.client.location=E:/Mindustry/client.jar
+mgpp.server.location=E:/Mindustry/server.jar
+```
 
 Then let mgpp find it from `local.properties` file with the `localProperties` notation.
 

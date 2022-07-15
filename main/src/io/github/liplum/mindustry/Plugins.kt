@@ -191,6 +191,11 @@ class MindustryPlugin : Plugin<Project> {
         const val FooClient = "mindustry-client"
     }
 }
+fun String?.addAngleBracketsIfNeed(): String? =
+    if (this == null) null
+    else if (startsWith("<") && endsWith(">")) this
+    else "<$this>"
+
 /**
  * For downloading and running game.
  */
@@ -231,14 +236,15 @@ class MindustryAppPlugin : Plugin<Project> {
                 } ?: ex._run._forciblyClear.get()
                 forciblyClear.set(doForciblyClear)
                 val resolvedDataDir = when (val dataDirConfig =
-                    project.localProperties.getProperty("mgpp.run.dataDir") ?: ex._run._dataDir.get()
+                    project.localProperties.getProperty("mgpp.run.dataDir").addAngleBracketsIfNeed()
+                        ?: ex._run._dataDir.get()
                 ) {
                     "<default>" -> resolveDefaultDataDir()
                     "<temp>" -> temporaryDir.resolve("data")
-                    "<env>" -> System.getenv(Mgpp.MindustryDataDirEnv).let{
-                        if(it == null) temporaryDir.resolve("data")
+                    "<env>" -> System.getenv(Mgpp.MindustryDataDirEnv).let {
+                        if (it == null) temporaryDir.resolve("data")
                         else File(it).run {
-                            if(isFile) this
+                            if (isFile) this
                             else temporaryDir.resolve("data")
                         }
                     }
@@ -278,6 +284,7 @@ class MindustryAppPlugin : Plugin<Project> {
 /**
  * It transports the Jar task output to running task.
  */
+@DisableIfWithout("java")
 class MindustryJavaPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         val ex = extensions.getOrCreate<MindustryExtension>(
@@ -323,6 +330,7 @@ class MindustryJavaPlugin : Plugin<Project> {
                 }
             }
         }
+        // Set the convention to ex._deploy
         val modMeta = ex._modMeta.get()
         ex._deploy._baseName.convention(provider {
             modMeta.name

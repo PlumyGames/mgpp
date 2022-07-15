@@ -91,7 +91,7 @@ version [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/i
 |:-------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 |    Usages     |                     [Groovy DSL](https://plumygame.github.io/mgpp/groovy.html), [Kotlin DSL](https://plumygame.github.io/mgpp/kotlin.html)                     |
 |    Samples    | [Groovy Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectGroovy), [Kotlin Sample](https://github.com/PlumyGame/mgpp/tree/master/TestProjectKt) |
-|   Documents   |                                                   [JavaDoc](https://plumygame.github.io/mgppDoc/index.html)                                                    |
+|   Documents   |                           [JavaDoc](https://plumygame.github.io/mgppDoc/index.html),[Instruction](https://plumygame.github.io/mgpp/)                           |
 | Mod Templates |                                                  [MDT Mod Template](https://github.com/liplum/MdtModTemplate)                                                  |
 
 ## License

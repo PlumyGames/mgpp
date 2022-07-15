@@ -3,6 +3,8 @@
 The `mindustry` extension is used to configure the `mod.[h]json`,
 `dependency`, `run`, `deploy` and so on.
 
+___
+
 ### Configurations
 
 It has separated all configurations as mentioned below.

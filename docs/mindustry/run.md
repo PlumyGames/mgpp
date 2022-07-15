@@ -1,6 +1,10 @@
 # Run
 The `run{}` closure is inside of [`mindustry{}`](overview.md) closure hereinafter.
 
+Related tasks: `runClient`, `runServer`
+
+___
+
 ### Data Directory
 Mindustry will store saves and settings in the data directory.
 
@@ -36,7 +40,7 @@ MGPP allows you to customize the location of data directory:
 
     ``` groovy
     run {
-        dataDir = 'E:\MindustryData'
+        dataDir = 'E:/MindustryData'
         useDefaultDataDir
         useTempDataDir
         useEnvDataDir
@@ -47,7 +51,7 @@ MGPP allows you to customize the location of data directory:
 
     ``` kotlin
     run {
-        dataDir = 'E:\MindustryData'
+        dataDir = 'E:/MindustryData'
         useDefaultDataDir
         useTempDataDir
         useEnvDataDir
@@ -55,6 +59,14 @@ MGPP allows you to customize the location of data directory:
     ```
 
 MGPP will apply the `useTempDataDir` as default.
+
+#### Overwrite from local properties
+You can declare the `mgpp.run.dataDir` in `local.properties` file to
+overwrite the [customized](#customize-data-directory) and [default](#default-data-directory) data directory
+
+```properties
+mgpp.run.dataDir=default
+```
 
 ### Forcibly Clear
 
@@ -86,3 +98,12 @@ ensure you have backed up your mods if it's on.
     ```
 
 MGPP will apply the `keepOtherMods` as default.
+
+#### Overwrite from local properties
+You can declare the `mgpp.run.forciblyClear` in `local.properties` file to overwrite this behavior. 
+
+**TYPE:** Boolean { true, false }
+
+```properties
+mgpp.run.forciblyClear=true
+```
