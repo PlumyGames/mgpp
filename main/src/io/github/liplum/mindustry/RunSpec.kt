@@ -20,7 +20,9 @@ class RunSpec(
     /**
      * The data directory for Mindustry running.
      *
-     * It will be set to the [RunMindustry.getTemporaryDir] as default
+     * It will be set to the [RunMindustry.getTemporaryDir] as default.
+     *
+     * `mgpp.run.dataDir` in `local.properties` will overwrite this.
      */
     @InheritFromParent
     @DefaultValue("temp")

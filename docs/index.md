@@ -5,6 +5,8 @@ MGPP is an unofficial gradle plugin for Mindustry modding.
 
 It provides lots of functionalities for you to develop a mod or plugin.
 
+___
+
 ## Features
 - Manage the Dependencies
 > Importing the dependencies of arc and Mindustry automatically with configuration.
@@ -30,7 +32,7 @@ It provides lots of functionalities for you to develop a mod or plugin.
 - Deploy on Android
 > Deploy your mod compatible to Mindustry on Android. *[Android SDK Required]*
 
-## Information
+## More Info
 You can access the [repository](https://github.com/PlumyGame/mgpp) on GitHub to obtain more information.
 
 Also, there is a [JavaDoc page](https://plumygame.github.io/mgppDoc/index.html) for you to check up the API of mgpp.
@@ -40,3 +42,8 @@ If you face any issue with mgpp, please contact us on [Issue Report](https://git
 Join our [Discord server](https://discord.gg/3Hrep3WtUz) to send us feedback or get help immediately.
 
 Welcome to contribute mgpp!
+
+## My name?
+MGPP means `Mindustry Gradle Plugin, named Plumy` (ฅ՞• •՞ฅ)!
+
+~~by Liplum~~

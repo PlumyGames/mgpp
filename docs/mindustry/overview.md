@@ -1,6 +1,6 @@
 # Mindustry Extension
 
-The `mindustry` extension is used to configure the `mod.[h]json`,
+The `mindustry` extension allows you to configure the `mod.[h]json`,
 `dependency`, `run`, `deploy` and so on.
 
 ___
@@ -32,6 +32,7 @@ MGPP supports 2 types of project: `Mod`, `Plugin`.
 === "Kotlin"
 
     ``` kotlin
+    import io.github.liplum.mindustry.*
     mindustry {
         projectType = Mod
         // OR

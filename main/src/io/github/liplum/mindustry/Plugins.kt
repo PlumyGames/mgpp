@@ -39,9 +39,19 @@ class MindustryPlugin : Plugin<Project> {
                 ex._deploy._androidSdkRoot.set(parentEx._deploy._androidSdkRoot)
             }
         }
+        // Register this for dynamically configure tasks without class reference in groovy.
+        // Eagerly configure this task in order to be added into task group in IDE
+        tasks.register<AntiAlias>("antiAlias") {
+            group = Mgpp.MindustryTaskGroup
+        }.get()
+        tasks.register<ModHjsonGenerate>("genModHjson") {
+            group = Mgpp.MindustryTaskGroup
+            modMeta.set(ex._modMeta)
+            outputHjson.set(temporaryDir.resolve("mod.hjson"))
+        }
         plugins.apply<MindustryAppPlugin>()
-        plugins.apply<MindustryAssetPlugin>()
         plugins.whenHas<JavaPlugin> {
+            plugins.apply<MindustryAssetPlugin>()
             plugins.apply<MindustryJavaPlugin>()
         }
         GroovyBridge.attach(target)
@@ -191,11 +201,11 @@ class MindustryPlugin : Plugin<Project> {
         const val FooClient = "mindustry-client"
     }
 }
+
 fun String?.addAngleBracketsIfNeed(): String? =
     if (this == null) null
     else if (startsWith("<") && endsWith(">")) this
     else "<$this>"
-
 /**
  * For downloading and running game.
  */
@@ -282,7 +292,7 @@ class MindustryAppPlugin : Plugin<Project> {
     }
 }
 /**
- * It transports the Jar task output to running task.
+ * For deployment.
  */
 @DisableIfWithout("java")
 class MindustryJavaPlugin : Plugin<Project> {
@@ -350,7 +360,10 @@ val TaskContainer.`dexJar`: TaskProvider<DexJar>
  */
 val TaskContainer.`deploy`: TaskProvider<Jar>
     get() = named<Jar>("deploy")
-
+/**
+ * For generating resource class.
+ */
+@DisableIfWithout("java")
 class MindustryAssetPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         val main = extensions.getOrCreate<MindustryExtension>(
@@ -359,105 +372,90 @@ class MindustryAssetPlugin : Plugin<Project> {
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(
             Mgpp.AssetExtensionName
         )
-        // Register this for dynamically configure tasks without class reference in groovy.
-        // Eagerly configure this task in order to be added into task group in IDE
-        tasks.register<AntiAlias>("antiAlias") {
-            group = Mgpp.MindustryTaskGroup
-        }.get()
-        val genModHjson = tasks.register<ModHjsonGenerate>("genModHjson") {
-            group = Mgpp.MindustryTaskGroup
-            modMeta.set(main._modMeta)
-            outputHjson.set(temporaryDir.resolve("mod.hjson"))
-        }
-        plugins.whenHas<JavaPlugin> {
-            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                dependsOn(genModHjson)
-                from(genModHjson)
-            }
+        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+            dependsOn("genModHjson")
+            from(tasks.getByPath("genModHjson"))
         }
         // Doesn't register the tasks if no resource needs to generate its class.
-        plugins.whenHas<JavaPlugin> {
-            @DisableIfWithout("java")
-            val genResourceClass by lazy {
-                tasks.register<GenerateRClass>("genResourceClass") {
-                    this.group = Mgpp.MindustryAssetTaskGroup
-                    val name = assets.qualifiedName.get()
-                    if (name == "default") {
-                        val modMeta = main._modMeta.get()
-                        val (packageName, _) = modMeta.main.packageAndClassName()
-                        qualifiedName.set("$packageName.R")
-                    } else {
-                        qualifiedName.set(name)
-                    }
+        @DisableIfWithout("java")
+        val genResourceClass by lazy {
+            tasks.register<GenerateRClass>("genResourceClass") {
+                this.group = Mgpp.MindustryAssetTaskGroup
+                val name = assets.qualifiedName.get()
+                if (name == "default") {
+                    val modMeta = main._modMeta.get()
+                    val (packageName, _) = modMeta.main.packageAndClassName()
+                    qualifiedName.set("$packageName.R")
+                } else {
+                    qualifiedName.set(name)
                 }
             }
-            target.afterEvaluateThis {
-                val assetsRoot = assets.assetsRoot.get()
-                if (assetsRoot != Mgpp.DefaultEmptyFile) {
-                    tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                        from(assetsRoot)
-                    }
-                }
-                val icon = assets.icon.get()
+        }
+        target.afterEvaluateThis {
+            val assetsRoot = assets.assetsRoot.get()
+            if (assetsRoot != Mgpp.DefaultEmptyFile) {
                 tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                    from(icon)
+                    from(assetsRoot)
                 }
-                // Resolve all batches
-                val group2Batches = assets.batches.get().resolveBatches()
-                val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
-                var genResourceClassCounter = 0
-                for ((type, batches) in group2Batches) {
-                    if (batches.isEmpty()) continue
-                    jar.configure {
-                        batches.forEach { batch ->
-                            val dir = batch.dir
-                            val root = batch.root
-                            if (root == Mgpp.DefaultEmptyFile) {
-                                it.from(dir.parentFile) {
-                                    it.include("${dir.name}/**")
-                                }
-                            } else { // relative path
-                                it.from(root) {
-                                    it.include("$dir/**")
-                                }
+            }
+            val icon = assets.icon.get()
+            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                from(icon)
+            }
+            // Resolve all batches
+            val group2Batches = assets.batches.get().resolveBatches()
+            var genResourceClassCounter = 0
+            for ((type, batches) in group2Batches) {
+                if (batches.isEmpty()) continue
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    batches.forEach { batch ->
+                        val dir = batch.dir
+                        val root = batch.root
+                        if (root == Mgpp.DefaultEmptyFile) {
+                            from(dir.parentFile) {
+                                include("${dir.name}/**")
+                            }
+                        } else { // relative path
+                            from(root) {
+                                include("$dir/**")
                             }
                         }
                     }
-                    if (!batches.any { it.enableGenClass }) continue
-                    val groupPascal = type.group.lowercase().capitalized()
-                    @DisableIfWithout("java")
-                    val gen = tasks.register<GenerateResourceClass>("gen${groupPascal}Class") {
-                        this.group = Mgpp.MindustryAssetTaskGroup
-                        dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
-                        args.put("ModName", main._modMeta.get().name)
-                        args.put("ResourceNameRule", type.nameRule.name)
-                        args.putAll(assets.args)
-                        args.putAll(type.args)
-                        generator.set(type.generator)
-                        className.set(type.className)
-                        resources.setFrom(batches.filter { it.enableGenClass }.map { it.dir })
-                    }
-                    genResourceClass.get().apply {
-                        dependsOn(gen)
-                        classFiles.from(gen)
-                    }
-                    genResourceClassCounter++
                 }
-                if (genResourceClassCounter > 0) {
-                    safeRun {
-                        tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME) {
-                            it.dependsOn(genResourceClass)
-                        }
+                if (!batches.any { it.enableGenClass }) continue
+                val groupPascal = type.group.lowercase().capitalized()
+                @DisableIfWithout("java")
+                val gen = tasks.register<GenerateResourceClass>("gen${groupPascal}Class") {
+                    this.group = Mgpp.MindustryAssetTaskGroup
+                    dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
+                    args.put("ModName", main._modMeta.get().name)
+                    args.put("ResourceNameRule", type.nameRule.name)
+                    args.putAll(assets.args)
+                    args.putAll(type.args)
+                    generator.set(type.generator)
+                    className.set(type.className)
+                    resources.setFrom(batches.filter { it.enableGenClass }.map { it.dir })
+                }
+                genResourceClass.get().apply {
+                    dependsOn(gen)
+                    classFiles.from(gen)
+                }
+                genResourceClassCounter++
+            }
+            if (genResourceClassCounter > 0) {
+                safeRun {
+                    tasks.named(JavaPlugin.COMPILE_JAVA_TASK_NAME) {
+                        it.dependsOn(genResourceClass)
                     }
-                    safeRun {
-                        tasks.named("compileKotlin") {
-                            it.dependsOn(genResourceClass)
-                        }
+                }
+                safeRun {
+                    tasks.named("compileKotlin") {
+                        it.dependsOn(genResourceClass)
                     }
-                    safeRun {
-                        tasks.named("compileGroovy") {
-                            it.dependsOn(genResourceClass)
-                        }
+                }
+                safeRun {
+                    tasks.named("compileGroovy") {
+                        it.dependsOn(genResourceClass)
                     }
                 }
             }

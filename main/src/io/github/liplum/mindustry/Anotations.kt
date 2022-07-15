@@ -23,7 +23,7 @@ annotation class DefaultValue(
     val default: String,
 )
 /**
- * It indicates this property with [key] will be overwritten from `local.properties` file in the project's root directory
+ * It indicates this property corresponds to a key in `local.properties` file.
  */
 @Target(
     AnnotationTarget.FIELD,
