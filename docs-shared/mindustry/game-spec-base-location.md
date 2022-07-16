@@ -38,7 +38,7 @@ To download the game from [Mindustry official release](https://github.com/Anuken
 
     ``` groovy
     client/server {
-        official version: 'v135'
+        official version: 'v136'
     }
     ```
 
@@ -46,11 +46,11 @@ To download the game from [Mindustry official release](https://github.com/Anuken
 
     ``` kotlin
     client/server {
-        mindustry official "v135"
+        mindustry official "v136"
     }
     ```
 
-As default, mgpp will download `v135`.
+As default, mgpp will download `v136`.
 
 ##### Notations
 - latest: To download the latest official Mindustry from [Mindustry official release](https://github.com/Anuken/Mindustry/releases), such as `v135.2`.
@@ -79,7 +79,7 @@ To download the bleeding-edge from [Mindustry bleeding-edge release](https://git
 
     ``` groovy
     client/server {
-        be version: 'v135'
+        be version: '22853'
     }
     ```
 
@@ -87,7 +87,7 @@ To download the bleeding-edge from [Mindustry bleeding-edge release](https://git
 
     ``` kotlin
     client/server {
-        mindustry be "v135"
+        mindustry be "22853"
     }
     ```
 

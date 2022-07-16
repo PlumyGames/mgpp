@@ -102,25 +102,25 @@ class MindustryPlugin : Plugin<Project> {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMinGameVersion = "135"
+        const val DefaultMinGameVersion = "136"
         /**
-         * [The default Mindustry version](https://github.com/Anuken/Mindustry/releases/tag/v135)
+         * [The default Mindustry version](https://github.com/Anuken/Mindustry/releases/tag/v136)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryVersion = "v135"
+        const val DefaultMindustryVersion = "v136"
         /**
-         * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases/tag/22767)
+         * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases/tag/22853)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryBEVersion = "22852"
+        const val DefaultMindustryBEVersion = "22853"
         /**
-         * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v135.2)
+         * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v136)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultArcVersion = "v135"
+        const val DefaultArcVersion = "v136"
         /**
          * [Mindustry official release](https://github.com/Anuken/Mindustry/releases)
          */
