@@ -23,6 +23,9 @@ class MindustryPlugin : Plugin<Project> {
         val ex = target.extensions.getOrCreate<MindustryExtension>(
             Mgpp.MainExtensionName
         )
+        val assets = extensions.getOrCreate<MindustryAssetsExtension>(
+            Mgpp.AssetExtensionName
+        )
         /**
          * Handle [InheritFromParent].
          * Because they're initialized at the [Plugin.apply] phase, the user-code will overwrite them if it's possible.

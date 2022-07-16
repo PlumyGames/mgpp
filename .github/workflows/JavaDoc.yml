@@ -1,11 +1,12 @@
-name: Publish Plugin
+name: Generate JavaDoc
 on: [ push ]
 
 jobs:
   publish-and-doc:
     runs-on: ubuntu-latest
     if: |
-      startsWith(github.event.head_commit.message,'[publish]') &&
+      (startsWith(github.event.head_commit.message,'[javaDoc]') ||
+      endsWith(github.event.head_commit.message,'[javaDoc]')) &&
       github.repository == 'PlumyGame/mgpp'
     steps:
       - uses: actions/checkout@v2
@@ -29,8 +30,8 @@ jobs:
           cp -r ./mgpp/main/build/dokka/html/* ./mgppDoc
           cd mgppDoc
           git add .
-          git config --global user.email "cli@github.com"
-          git config --global user.name "Github Actions"
+          git config --global user.email "Li_plum@outlook.com"
+          git config --global user.name "liplum"
           git commit --allow-empty -m "${{ github.event.head_commit.message }}"
           git push https://Liplum:${{ secrets.API_TOKEN_GITHUB }}@github.com/PlumyGame/mgppDoc
 
