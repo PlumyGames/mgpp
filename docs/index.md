@@ -21,7 +21,7 @@ ___
 > Starting the game with your mod and others to test the compatibility or interaction.
 
 - Separate Working Space
-> The configurable data directory of Mindustry Client located in a temporarily folder as default to separate the envrionments of your all projects.
+> The configurable data directory of Mindustry Client located in a temporary folder as default to separate the environments of your all projects.
 
 - Manage your Assets
 > Assets will be copied into the output jar file with configuration.
@@ -35,7 +35,7 @@ ___
 ## More Info
 You can access the [repository](https://github.com/PlumyGame/mgpp) on GitHub to obtain more information.
 
-Also, there is a [JavaDoc page](https://plumygame.github.io/mgppDoc/index.html) for you to check up the API of mgpp.
+Also, there is a [JavaDoc page](https://plumygame.github.io/mgppDoc) for you to check up the API of mgpp.
 
 If you face any issue with mgpp, please contact us on [Issue Report](https://github.com/PlumyGame/mgpp/issues) page.
 

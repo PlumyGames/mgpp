@@ -46,6 +46,11 @@ nav:
 
   - Task:
     - Overview: task/overview.md
+    - downloadClient: task/task-downloadClient.md
+    - downloadServer: task/task-downloadServer.md
+    - runClient: task/task-runClient.md
+    - runServer: task/task-runServer.md
+    - resolveMods: task/task-resolveMods.md
 
 markdown_extensions:
   - pymdownx.tabbed:
