@@ -33,7 +33,11 @@ class MindustryPlugin : Plugin<Project> {
                 ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
                 ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
                 ex._client.location.set(parentEx._client.location)
+                ex._client.keepOtherVersion.set(parentEx._client.keepOtherVersion)
+                ex._client.startupArgs.set(parentEx._client.startupArgs)
                 ex._server.location.set(parentEx._server.location)
+                ex._server.keepOtherVersion.set(parentEx._server.keepOtherVersion)
+                ex._server.startupArgs.set(parentEx._server.startupArgs)
                 ex._run._dataDir.set(parentEx._run._dataDir)
                 ex._run._forciblyClear.set(parentEx._run._forciblyClear)
                 ex._deploy._androidSdkRoot.set(parentEx._deploy._androidSdkRoot)
@@ -266,6 +270,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 mindustryFile.setFrom(downloadClient)
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.set("mods")
+                startupArgs.set(ex._client.startupArgs)
                 ex._mods._extraModsFromTask.get().forEach {
                     outputtedMods.from(tasks.getByPath(it))
                 }
@@ -283,6 +288,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 mindustryFile.setFrom(downloadServer)
                 modsWorkWith.setFrom(resolveMods)
                 dataModsPath.convention("config/mods")
+                startupArgs.set(ex._server.startupArgs)
                 ex._mods._extraModsFromTask.get().forEach {
                     dependsOn(tasks.getByPath(it))
                     outputtedMods.from(tasks.getByPath(it))

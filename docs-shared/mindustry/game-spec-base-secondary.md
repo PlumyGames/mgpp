@@ -21,3 +21,22 @@ Whether to keep other versions when a new version is downloaded.
         clearUp
     }
     ```
+
+### Startup args
+The extra startup arguments for Mindustry game.
+
+=== "Groovy"
+
+    ``` groovy
+    client/server {
+        args += [ '-gl2' ]
+    }
+    ```
+
+=== "Kotlin"
+
+    ``` kotlin
+    client/server {
+        args += listOf("-gl2") 
+    }
+    ```

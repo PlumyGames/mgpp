@@ -14,11 +14,12 @@ open class RunMindustry : JavaExec() {
         @Optional @Input get
     val dataModsPath = project.stringProp()
         @Input get
+    val startupArgs = project.stringsProp()
+        @Input @Optional get
     val outputtedMods = project.configurationFileCollection()
         @InputFiles get
     val modsWorkWith = project.configurationFileCollection()
         @InputFiles get
-
     init {
         mainClass.set("-jar")
         forciblyClear.convention(false)
@@ -42,7 +43,7 @@ open class RunMindustry : JavaExec() {
         logger.info("Copied outputted mods[${output.joinToString(",") { it.name }}] into task $name")
         outputtedMods.mapFilesTo(mods)
         standardInput = System.`in`
-        args = listOf(mindustryFile.singleFile.absolutePath)
+        args = listOf(mindustryFile.singleFile.absolutePath) + startupArgs.get()
         environment[Mgpp.MindustryDataDirEnv] = data.absoluteFile
         workingDir = data
         // run Mindustry

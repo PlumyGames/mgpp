@@ -1,7 +1,10 @@
 package io.github.liplum.mindustry
 
 import arc.util.serialization.Jval
+import io.github.liplum.dsl.BoolProp
+import io.github.liplum.dsl.StringsProp
 import io.github.liplum.dsl.prop
+import io.github.liplum.dsl.stringsProp
 import io.github.liplum.mindustry.LocalProperties.localProperties
 import org.gradle.api.GradleException
 import org.gradle.api.Project
@@ -14,14 +17,25 @@ abstract class GameSpecBase(
     val type: String,
 ) {
     /**
-     * The location of a game on GitHub
+     * The location of Mindustry game.
      */
     @InheritFromParent
     abstract val location: Property<IGameLocation>
     /**
      * Whether to keep other versions when a new version is downloaded.
      */
-    abstract val keepOtherVersion: Property<Boolean>
+    @InheritFromParent
+    abstract val keepOtherVersion: BoolProp
+    /**
+     * The extra startup arguments for Mindustry game.
+     */
+    @InheritFromParent
+    abstract val startupArgs: StringsProp
+    var args: List<String>
+        get() = startupArgs.get()
+        set(value) {
+            startupArgs.set(value)
+        }
     /**
      * Clean all other versions when a new version is downloaded.
      */
@@ -194,8 +208,8 @@ abstract class GameSpecBase(
      * ## Supported notations:
      * - [localProperties]: see [fromLocalProperties]
      */
-    infix fun from(notation: INotation):IGameLocation =
-        when(notation) {
+    infix fun from(notation: INotation): IGameLocation =
+        when (notation) {
             LocalPropertiesNotation -> fromLocalProperties()
             else -> throw GradleException("Unknown $type notation of mindustry $notation")
         }
@@ -293,9 +307,12 @@ abstract class GameSpecBase(
 class ClientSpec(
     target: Project,
 ) : GameSpecBase(target, "client") {
+    @InheritFromParent
     override val keepOtherVersion = target.prop<Boolean>().apply {
         convention(false)
     }
+    @InheritFromParent
+    override val startupArgs = target.stringsProp()
     @InheritFromParent
     @LocalProperty("mgpp.client.location")
     override val location = target.prop<IGameLocation>().apply {
@@ -341,9 +358,12 @@ class ClientSpec(
 class ServerSpec(
     target: Project,
 ) : GameSpecBase(target, "server") {
+    @InheritFromParent
     override val keepOtherVersion = target.prop<Boolean>().apply {
         convention(false)
     }
+    @InheritFromParent
+    override val startupArgs = target.stringsProp()
     @InheritFromParent
     @LocalProperty("mgpp.server.location")
     override val location = target.prop<IGameLocation>().apply {
