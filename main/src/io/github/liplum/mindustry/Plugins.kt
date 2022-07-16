@@ -107,7 +107,7 @@ class MindustryPlugin : Plugin<Project> {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryBEVersion = "22826"
+        const val DefaultMindustryBEVersion = "22852"
         /**
          * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v135.2)
          *
@@ -398,7 +398,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                     from(assetsRoot)
                 }
             }
-            val icon = assets.icon.get()
+            val icon = assets._icon.get()
             tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
                 from(icon)
             }

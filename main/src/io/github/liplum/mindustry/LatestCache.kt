@@ -34,6 +34,7 @@ inline fun Project.getLatestVersion(
             res = cache.lastValue
         } else { // out of date
             res = fetch()
+            cache.lastValue = res
             cache.lastUpdatedTimeStamp = System.currentTimeMillis()
             changed = true
         }

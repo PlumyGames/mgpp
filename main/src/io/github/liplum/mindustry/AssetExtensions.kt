@@ -51,6 +51,7 @@ open class MindustryAssetsExtension(
     /**
      * The assets root of a mod only including a single `assets` folder
      */
+    @JvmField
     val assetsRoot = target.fileProp().apply {
         convention(Mgpp.DefaultEmptyFile)
     }
@@ -102,7 +103,8 @@ open class MindustryAssetsExtension(
      *
      * [Project.getRootDir]/icon.png as default
      */
-    val icon = target.fileProp().apply {
+    @JvmField
+    val _icon = target.fileProp().apply {
         convention(
             findFileInOrder(
                 target.proDir("icon.png"),
@@ -111,10 +113,27 @@ open class MindustryAssetsExtension(
         )
     }
     /**
+     * Set the [_icon] to [file]
+     */
+    fun iconAt(file: File) {
+        _icon.set(file)
+    }
+    /**
+     * Set the [_icon] to [path]
+     */
+    fun iconAt(path: String) {
+        _icon.set(File(path))
+    }
+    /**
      * A spec for configuring [assetsRoot].
      */
     // For Kotlin
     val root = AssetRootSpec()
+    /**
+     * A spec for configuring [icon].
+     */
+    // For Kotlin
+    val icon = IconSpec()
     /**
      * The batch type of `sprites`:
      * - group: "sprites"
@@ -207,16 +226,30 @@ open class MindustryAssetsExtension(
      */
     inner class AssetRootSpec {
         /**
+         * Set [assetsRoot] to [folder]
+         */
+        infix fun at(folder: File) {
+            assetsRoot.set(folder)
+        }
+        /**
          * Set [assetsRoot] to [path]
          */
         infix fun at(path: String) {
             assetsRoot.set(File(path))
         }
+    }
+    inner class IconSpec{
         /**
-         * Set [assetsRoot] to [folder]
+         * Set [assetsRoot] to [file]
          */
-        infix fun at(folder: File) {
-            assetsRoot.set(folder)
+        infix fun at(file: File) {
+            _icon.set(file)
+        }
+        /**
+         * Set [_icon] to [path]
+         */
+        infix fun at(path: String) {
+            _icon.set(File(path))
         }
     }
     /**

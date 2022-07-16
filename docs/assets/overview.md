@@ -22,6 +22,7 @@ YourMod/
 
 ### Simple usage
 
+#### Assets
 In most cases, you can just simply copy all files
 recursively from the `assets root folder` into the `jar` task with this syntax:
 
@@ -41,6 +42,32 @@ recursively from the `assets root folder` into the `jar` task with this syntax:
         root at "$projectDir/assets"
     }
     ```
+
+#### Icon
+MGPP will automatically search for it in order of the paths mentioned below:
+
+1. projectDir/icon.png
+2. rootDir/icon.png
+
+Also, you can configure it to any file/path your want.
+
+=== "Groovy"
+
+    ``` groovy
+    mindustryAssets {
+        iconAt "$rootDir/icon.png"
+    }
+    ```
+
+=== "Kotlin"
+
+    ``` kotlin
+    import io.github.liplum.mindustry.*
+    mindustryAssets {
+        icon at "$rootDir/icon.png"
+    }
+    ```
+
 
 ### Advanced usage
 
