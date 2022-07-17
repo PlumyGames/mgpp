@@ -47,7 +47,7 @@ It will affect the Dependency Resolution.
 
 ### Out of date time
 
-It represents how much time the [`latest`](stuff.md#latest-notation) check will restart.
+It represents how much time the `latest` check will restart.
 Unit: second
 === "Groovy"
 

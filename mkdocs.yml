@@ -43,6 +43,7 @@ nav:
 
   - Mindustry Assets:
     - Overview: assets/overview.md
+    - Advanced: assets/advanced.md
 
   - Task:
     - Overview: task/overview.md
@@ -51,6 +52,11 @@ nav:
     - runClient: task/task-runClient.md
     - runServer: task/task-runServer.md
     - resolveMods: task/task-resolveMods.md
+    - deploy: task/task-deploy.md
+    - dexJar: task/task-dexJar.md
+    - genModHjson: task/task-genModHjson.md
+    - genResourceClass: task/task-genResourceClass.md
+    - antiAliasing: task/task-antiAliasing.md
 
 markdown_extensions:
   - pymdownx.tabbed:

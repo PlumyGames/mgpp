@@ -11,8 +11,8 @@ import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
-import org.gradle.api.tasks.bundling.Jar
 import org.gradle.configurationcache.extensions.capitalized
+import org.gradle.jvm.tasks.Jar
 import java.io.File
 
 typealias Mgpp = MindustryPlugin
@@ -114,7 +114,7 @@ class MindustryPlugin : Plugin<Project> {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryBEVersion = "22853"
+        const val DefaultMindustryBEVersion = "22855"
         /**
          * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v136)
          *

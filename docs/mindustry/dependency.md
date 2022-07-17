@@ -35,9 +35,9 @@ You can specify the which Arc version to use with this syntax.
 
     ``` groovy
     dependency {
-        arc version: 'v135' // a released version
+        arc version: 'v136' // a released version
         // OR
-        arc version: 'b1b88883e2' // a commit snapshot
+        arc version: '47925a7b91' // a commit snapshot
     }
     ```
 
@@ -45,9 +45,9 @@ You can specify the which Arc version to use with this syntax.
 
     ``` kotlin
     dependency {
-        arc on "v135" // a released version
+        arc on "v136" // a released version
         // OR
-        arc on "b1b88883e2" // a commit snapshot
+        arc on "47925a7b91" // a commit snapshot
     }
     ```
 
@@ -56,9 +56,9 @@ As default, mgpp will apply `arc v135`.
 ##### Notations
 
 - latest: To apply the [latest commit](https://github.com/Anuken/Arc/commits/master) of Arc,
-  such as `b1b88883e2`.
+  such as `47925a7b91`.
 > **NOTE:** It might not work if you faced the API limit of GitHub or jitpack yet to build this version.
-- latestTag: To apply the [latest tag](https://github.com/Anuken/Arc/tags) of Arc, such as `v135.2`.
+- latestTag: To apply the [latest tag](https://github.com/Anuken/Arc/tags) of Arc, such as `v136`.
 > **NOTE:** It has a very small chance that it won't work when the new version was just released.
 
 === "Groovy"
@@ -90,9 +90,9 @@ You can specify the which Mindustry version to use with this syntax.
 
     ``` groovy
     dependency {
-        mindustry version: 'v135' // a released version of Mindustry
+        mindustry version: 'v136' // a released version of Mindustry
         // OR
-        mindustryMirror version: '66595eb140' // a commit snapshot from mirror
+        mindustryMirror version: '558283c6c8' // a commit snapshot from mirror
     }
     ```
 
@@ -100,9 +100,9 @@ You can specify the which Mindustry version to use with this syntax.
 
     ``` kotlin
     dependency {
-        mindustry on "v135" // a released version of Mindustry
+        mindustry on "v136" // a released version of Mindustry
         // OR
-        mindustry mirror "66595eb140" // a commit snapshot from mirror
+        mindustry mirror "558283c6c8" // a commit snapshot from mirror
     }
     ```
 
@@ -112,16 +112,16 @@ As default, mgpp will apply `mindustry v135`.
 
 - latest
     - For `mindustry`: To apply the [latest release](https://github.com/Anuken/Mindustry/releases) of Mindustry,
-      such as `v135.2`.
+      such as `v136`.
 > **NOTE:** It has a very small chance that it won't work when the new version was just released.
 
     - For `mirror`: To apply the [latest commit](https://github.com/Anuken/MindustryJitpack/commits/main) of Mindustry mirror,
-      such as `66595eb140`.
+      such as `558283c6c8`.
 > **NOTE:** It might not work if you faced the API limit of GitHub or jitpack yet to build this version.
 
 - latestRelease:
     - Only for `mindustry`: To apply the [latest release](https://github.com/Anuken/Mindustry/releases) of Mindustry,
-      completely the same as `mindustry latest`, such as `v135.2`.
+      completely the same as `mindustry latest`, such as `v136`.
 > **NOTE:** It has a very small chance that it won't work when the new version was just released.
 
 === "Groovy"

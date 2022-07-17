@@ -5,12 +5,21 @@ This instruction might not tell you how their classes work,
 but teach you how to configure those tasks.
 For more information about those tasks, please check the [javaDoc](https://plumygame.github.io/mgppDoc).
 
-### Debugging
+### Building
+- [genModHjson](task-genModHjson.md)
+- [genResourceClass](task-genResourceClass.md)
 
-Related tasks:
+### Debugging
 
 - [downloadClient](task-downloadClient.md)
 - [downloadServer](task-downloadServer.md)
 - [runClient](task-runClient.md)
 - [runServer](task-runServer.md)
 - [resolveMods](task-resolveMods.md)
+
+### Deployment
+- [dexJar](task-dexJar.md)
+- [deploy](task-deploy.md)
+
+### Extra
+- [antiAliasing](task-antiAliasing.md)

@@ -44,7 +44,6 @@ open class TestOutputTask : DefaultTask() {
 tasks.register<TestOutputTask>("iconMaker") {
     outputFile.set(rootDir.resolve("icon.png"))
 }
-
 mindustry {
     dependency {
         // mindustry on "v135"

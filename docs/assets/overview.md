@@ -73,3 +73,6 @@ Also, you can configure it to any file/path your want.
 
 MGPP provides `AssetBatchType` and `AssetBatch` for generating resource class,
 named `R.java` conventionally.
+
+Due to rare use cases, 
+please check [its specific page](advanced.md) for more information.
