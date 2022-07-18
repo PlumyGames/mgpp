@@ -2,6 +2,7 @@ site_name: MGPP Instruction
 theme:
   name: material
   logo: icon.png
+  custom_dir: overrides
   favicon: favicon.png
   shortcuts:
     help: 191    # ?
@@ -66,5 +67,6 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tilde
   - pymdownx.snippets
+  - meta
   - toc:
       permalink: "#"
