@@ -67,7 +67,7 @@ Unit: second
 
 ### Mod meta
 It represents the `mod.[h]json` file of your mod.
-MGPP will automatically search for it in order of the paths mentioned below:
+MGPP will automatically search for it by paths mentioned below orderly:
 
 1. projectDir/mod.hjson
 2. projectDir/mod.json
@@ -92,7 +92,7 @@ Thus, you could manipulate it internally in build script.
             subtitle: '...',
             version: '1.0',
             main: 'org.example.ExampleMod',
-            minGameVersion: '135',
+            minGameVersion: '136',
             repo: 'PlumyGame/mgpp',
             dependencies: ['plumy/mgpp'],
             hidden: false,
@@ -114,7 +114,7 @@ Thus, you could manipulate it internally in build script.
             subtitle = "...",
             version = "1.0",
             main = "org.example.ExampleMod",
-            minGameVersion = "135",
+            minGameVersion = "136",
             repo = "PlumyGame/mgpp",
             dependencies = listOf("plumy/mgpp"),
             hidden = false,

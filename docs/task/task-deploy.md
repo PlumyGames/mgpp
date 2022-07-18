@@ -1,5 +1,4 @@
 # deploy
 
-##### Type
-`org.gradle.jvm.tasks.Jar`
-
+##### Attributes
+- **TYPE** `org.gradle.jvm.tasks.Jar`

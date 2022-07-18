@@ -3,6 +3,7 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
+import io.github.liplum.mindustry.LocalProperties.local
 import io.github.liplum.mindustry.LocalProperties.localProperties
 import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
@@ -227,23 +228,29 @@ class MindustryAppPlugin : Plugin<Project> {
             group = Mgpp.MindustryTaskGroup
             mods.set(ex._mods.worksWith)
         }
-        // For client side
-        val downloadClient = target.tasks.register<Download>(
-            "downloadClient",
-        ) {
-            group = Mgpp.MindustryTaskGroup
-            keepOthers.set(ex._client.keepOtherVersion)
-            location.set(ex._client.location)
-        }
-        // For server side
-        val downloadServer = target.tasks.register<Download>(
-            "downloadServer",
-        ) {
-            group = Mgpp.MindustryTaskGroup
-            keepOthers.set(ex._client.keepOtherVersion)
-            location.set(ex._server.location)
-        }
         target.afterEvaluateThis {
+            // For client side
+            val downloadClient = target.tasks.register<Download>(
+                "downloadClient",
+            ) {
+                group = Mgpp.MindustryTaskGroup
+                keepOthers.set(ex._client.keepOtherVersion)
+                val localOverwrite = project.local["mgpp.client.location"]
+                if (localOverwrite != null)
+                    location.set(LocalGameLocation(localOverwrite))
+                else location.set(ex._client.location)
+            }
+            // For server side
+            val downloadServer = target.tasks.register<Download>(
+                "downloadServer",
+            ) {
+                group = Mgpp.MindustryTaskGroup
+                keepOthers.set(ex._client.keepOtherVersion)
+                val localOverwrite = project.local["mgpp.server.location"]
+                if (localOverwrite != null)
+                    location.set(LocalGameLocation(localOverwrite))
+                else location.set(ex._server.location)
+            }
             val runClient = tasks.register<RunMindustry>("runClient") {
                 group = Mgpp.MindustryTaskGroup
                 dependsOn(downloadClient)

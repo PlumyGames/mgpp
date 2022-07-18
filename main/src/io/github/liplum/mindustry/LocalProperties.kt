@@ -8,6 +8,8 @@ object LocalProperties {
     private var all: Properties? = null
     val Project.localProperties: Properties
         get() = all ?: load()
+    val Project.local: PropertiesSpec
+        get() = PropertiesSpec(localProperties)
 
     fun clearCache(project: Project? = null) {
         all = null
@@ -26,4 +28,10 @@ object LocalProperties {
         all = properties
         return properties
     }
+}
+@JvmInline
+value class PropertiesSpec(
+    val properties: Properties,
+) {
+    operator fun get(key: String): String? = properties.getProperty(key)
 }

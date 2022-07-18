@@ -2,6 +2,7 @@ package io.github.liplum.mindustry
 
 import java.io.File
 import java.io.Serializable
+
 /**
  * An abstract Mindustry game file.
  */
@@ -31,6 +32,8 @@ data class GitHubGameLocation(
 data class LocalGameLocation(
     val file: File,
 ) : IGameLocation {
+    constructor(path: String) : this(File(path))
+
     val localCopy = LocalDownload(file)
     override var fileName: String = file.name
     override fun toDownloadLocation() = localCopy

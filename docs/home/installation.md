@@ -59,14 +59,14 @@ For ease of understanding, simplified examples are used here. Of course, it can 
     ```groovy
     mindustry {
            dependency {
-            mindustry version: 'v135'
-            arc version: 'v135'
+            mindustry version: 'v136'
+            arc version: 'v136'
         }
         client {
-            official version: 'v135' 
+            official version: 'v136' 
         }
         server {
-            official version: 'v135'
+            official version: 'v136'
         }
     }
     mindustryAssets {
@@ -79,14 +79,14 @@ For ease of understanding, simplified examples are used here. Of course, it can 
     import io.github.liplum.mindustry.*
     mindustry {
         dependency {
-            mindustry on "v135"
-            arc on "v135"
+            mindustry on "v136"
+            arc on "v136"
         }
         client {
-            mindustry official "v135"
+            mindustry official "v136"
         }
         server {
-            mindustry official "v135"
+            mindustry official "v136"
         }
     }
     mindustryAssets {

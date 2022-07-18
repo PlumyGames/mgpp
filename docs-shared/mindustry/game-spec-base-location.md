@@ -53,7 +53,7 @@ To download the game from [Mindustry official release](https://github.com/Anuken
 As default, mgpp will download `v136`.
 
 ##### Notations
-- latest: To download the latest official Mindustry from [Mindustry official release](https://github.com/Anuken/Mindustry/releases), such as `v135.2`.
+- latest: To download the latest official Mindustry from [Mindustry official release](https://github.com/Anuken/Mindustry/releases), such as `v136`.
 
 === "Groovy"
 
@@ -132,10 +132,10 @@ To copy the game file from a local file.
     }
     ```
 
-#### From local properties
+#### Overwrite from local properties
 
-To copy the game file with its path from `local.properties`,
-you should declare the key-value pair in `local.properties` file first.
+You can declare a property mentioned below in `local.properties`,
+mgpp will consider it as a path to overwrite what you have already set before
 
 - For `client`: `mgpp.client.location`
 - For `server`: `mgpp.server.location`
@@ -146,21 +146,3 @@ you should declare the key-value pair in `local.properties` file first.
 mgpp.client.location=E:/Mindustry/client.jar
 mgpp.server.location=E:/Mindustry/server.jar
 ```
-
-Then let mgpp find it from `local.properties` file with the `localProperties` notation.
-
-=== "Groovy"
-
-    ``` groovy
-    client/server {
-        from localProperties
-    }
-    ```
-
-=== "Kotlin"
-
-    ``` kotlin
-    client/server {
-        mindustry from localProperties
-    }
-    ```

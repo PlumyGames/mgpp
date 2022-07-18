@@ -44,7 +44,7 @@ recursively from the `assets root folder` into the `jar` task with this syntax:
     ```
 
 #### Icon
-MGPP will automatically search for it in order of the paths mentioned below:
+MGPP will automatically search for it by paths mentioned below orderly:
 
 1. projectDir/icon.png
 2. rootDir/icon.png

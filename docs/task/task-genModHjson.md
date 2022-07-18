@@ -1,5 +1,4 @@
 # genModHjson
 
-##### Type
-`io.github.liplum.mindustry.task.ModHjsonGenerate`
-
+##### Attributes
+- **TYPE** `io.github.liplum.mindustry.task.ModHjsonGenerate`

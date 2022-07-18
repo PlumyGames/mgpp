@@ -1,5 +1,4 @@
 # genResourceClass
 
-##### Type
-`io.github.liplum.mindustry.task.GenerateRClass`
-
+##### Attributes
+- **TYPE** `io.github.liplum.mindustry.task.GenerateRClass`

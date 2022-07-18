@@ -1,5 +1,4 @@
 # antiAliasing
 
-##### Type
-`io.github.liplum.mindustry.task.AntiAlias`
-
+##### Attributes
+- **TYPE** `io.github.liplum.mindustry.task.AntiAlias`

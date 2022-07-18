@@ -51,7 +51,7 @@ You can specify the which Arc version to use with this syntax.
     }
     ```
 
-As default, mgpp will apply `arc v135`.
+As default, mgpp will apply `arc v136`.
 
 ##### Notations
 
@@ -106,7 +106,7 @@ You can specify the which Mindustry version to use with this syntax.
     }
     ```
 
-As default, mgpp will apply `mindustry v135`.
+As default, mgpp will apply `mindustry v136`.
 
 ##### Notations
 

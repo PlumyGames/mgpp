@@ -1,6 +1,5 @@
 # runServer
 
-##### Type
-`io.github.liplum.mindustry.task.RunMindustry`
-
-### Test
+##### Attributes
+- **TYPE** `io.github.liplum.mindustry.task.RunMindustry`
+- **[On The Fly](../mindustry/concepts.md#on-the-fly)** Can't be accessed during configuration

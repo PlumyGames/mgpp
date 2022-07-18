@@ -1,6 +1,8 @@
 site_name: MGPP Instruction
 theme:
   name: material
+  logo: icon.png
+  favicon: favicon.png
   shortcuts:
     help: 191    # ?
     next: 78     # n
@@ -39,7 +41,7 @@ nav:
     - Mods: mindustry/mods.md
     - Run: mindustry/run.md
     - Deploy: mindustry/deploy.md
-    - Stuff: mindustry/stuff.md
+    - Concepts: mindustry/concepts.md
 
   - Mindustry Assets:
     - Overview: assets/overview.md

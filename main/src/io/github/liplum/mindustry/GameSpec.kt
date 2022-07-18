@@ -90,20 +90,6 @@ abstract class GameSpecBase(
      */
     fun LocalLocation(path: String) = LocalGameLocation(File(path))
     /**
-     * Get a local game location from the value of "mgpp.$type.location" in `local.properties`
-     *
-     * type: `client` or `server`
-     */
-    fun LocalPropertyLocation(): IGameLocation {
-        val key = "mgpp.$type.location"
-        val value = target.localProperties.getProperty(key)
-        return if (value != null) LocalLocation(value)
-        else {
-            target.logger.warn("$key isn't in the local.properties.")
-            Official(Mgpp.DefaultMindustryVersion)
-        }
-    }
-    /**
      * A notation represents the latest version.
      * ## Usages
      * ```kotlin
@@ -116,17 +102,6 @@ abstract class GameSpecBase(
      */
     val latest: LatestNotation
         get() = LatestNotation
-    /**
-     * A notation represents the `local.properties`
-     * ## Usages
-     * ```kotlin
-     * client {
-     *      mindustry from localProperties
-     * }
-     * ```
-     */
-    val localProperties: LocalPropertiesNotation
-        get() = LocalPropertiesNotation
     /**
      * Set the [location] to [game]
      */
@@ -178,7 +153,6 @@ abstract class GameSpecBase(
      * **Suggestion** To use a relative path would be better for git or collaboration.
      * Don't embed the whole game into project directory.
      *
-     * **Also** You could try [fromLocalProperties] to set a different game location for everyone.
      */
     infix fun fromLocal(file: File): LocalGameLocation =
         LocalLocation(file).apply {
@@ -195,24 +169,11 @@ abstract class GameSpecBase(
             location.set(this)
         }
     /**
-     * Set [location] to a local game by the value of "mgpp.$type.location" in `local.properties`
-     *
-     * type: `client` or `server`
-     * @see [LocalPropertyLocation]
-     */
-    fun fromLocalProperties(): IGameLocation =
-        LocalPropertyLocation().apply {
-            location.set(this)
-        }
-    /**
      * ## Supported notations:
-     * - [localProperties]: see [fromLocalProperties]
+     * - None
      */
     infix fun from(notation: INotation): IGameLocation =
-        when (notation) {
-            LocalPropertiesNotation -> fromLocalProperties()
-            else -> throw GradleException("Unknown $type notation of mindustry $notation")
-        }
+        throw GradleException("Unknown $type notation of mindustry $notation")
     /**
      * Create a [GitHubGameLocation] of official edition from [MindustryPlugin.APIMindustryOfficialReleaseURL]
      */
@@ -313,6 +274,11 @@ class ClientSpec(
     }
     @InheritFromParent
     override val startupArgs = target.stringsProp()
+    /**
+     * The game location of client.
+     *
+     * `mgpp.client.location` in `local.properties` will overwrite this.
+     */
     @InheritFromParent
     @LocalProperty("mgpp.client.location")
     override val location = target.prop<IGameLocation>().apply {
@@ -364,6 +330,11 @@ class ServerSpec(
     }
     @InheritFromParent
     override val startupArgs = target.stringsProp()
+    /**
+     * The game location of client.
+     *
+     * `mgpp.server.location` in `local.properties` will overwrite this.
+     */
     @InheritFromParent
     @LocalProperty("mgpp.server.location")
     override val location = target.prop<IGameLocation>().apply {

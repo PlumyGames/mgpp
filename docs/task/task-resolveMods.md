@@ -1,5 +1,4 @@
 # resolveMods
 
-##### Type
-`io.github.liplum.mindustry.task.ResolveMods`
-
+##### Attributes
+- **TYPE** `io.github.liplum.mindustry.task.ResolveMods`
