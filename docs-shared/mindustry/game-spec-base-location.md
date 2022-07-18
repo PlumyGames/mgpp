@@ -53,7 +53,8 @@ To download the game from [Mindustry official release](https://github.com/Anuken
 As default, mgpp will download `v136`.
 
 ##### Notations
-- latest: To download the latest official Mindustry from [Mindustry official release](https://github.com/Anuken/Mindustry/releases), such as `v136`.
+- latest: To download the latest official Mindustry from [Mindustry official release](https://github.com/Anuken/Mindustry/releases), such as `v126.2`.
+NOTE: It will skip the pre-release.
 
 === "Groovy"
 
@@ -95,7 +96,7 @@ As default, mgpp will download a certain version to prevent errors when gradle c
 but you shouldn't except this behavior.
 
 ##### Notations
-- latest: To download the latest bleeding-edge Mindustry from [Mindustry bleeding-edge release](https://github.com/Anuken/MindustryBuilds/releases), such as `22826`.
+- latest: To download the latest bleeding-edge Mindustry from [Mindustry bleeding-edge release](https://github.com/Anuken/MindustryBuilds/releases), such as `22853`.
 
 === "Groovy"
 

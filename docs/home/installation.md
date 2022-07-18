@@ -3,7 +3,15 @@ MGPP was published on [Gradle Plugin Portal](https://plugins.gradle.org/plugin/i
 
 Please make sure to always upgrade MGPP to the latest version: [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/io.github.liplum.mgpp?color=02303a&label=&logo=Gradle&style=for-the-badge)](https://plugins.gradle.org/plugin/io.github.liplum.mgpp)
 
+| Mindustry | MGPP Version |
+|:---------:|:------------:|
+|  ≤ 135.2  |   v 1.1.1    |
+|   = 136   |   v 1.1.3    |
+
+___
+
 ## Gradle setup
+
 - Using the [plugins DSL](https://docs.gradle.org/current/userguide/plugins.html#sec:plugins_block):
 === "Groovy"
 
