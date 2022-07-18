@@ -277,8 +277,8 @@ class MindustryAppPlugin : Plugin<Project> {
 
                 logger.info("Data directory of $name is $resolvedDataDir .")
                 dataDir.set(resolvedDataDir)
-                mindustryFile.setFrom(downloadClient)
-                modsWorkWith.setFrom(resolveMods)
+                mindustryFile.from(downloadClient)
+                modsWorkWith.from(resolveMods)
                 dataModsPath.set("mods")
                 startupArgs.set(ex._client.startupArgs)
                 ex._mods._extraModsFromTask.get().forEach {
@@ -295,8 +295,8 @@ class MindustryAppPlugin : Plugin<Project> {
                 } ?: ex._run._forciblyClear.get()
                 forciblyClear.set(doForciblyClear)
                 mainClass.convention(Mgpp.MindustrySeverMainClass)
-                mindustryFile.setFrom(downloadServer)
-                modsWorkWith.setFrom(resolveMods)
+                mindustryFile.from(downloadServer)
+                modsWorkWith.from(resolveMods)
                 dataModsPath.convention("config/mods")
                 startupArgs.set(ex._server.startupArgs)
                 ex._mods._extraModsFromTask.get().forEach {
@@ -421,19 +421,25 @@ class MindustryAssetPlugin : Plugin<Project> {
             // Resolve all batches
             val group2Batches = assets.batches.get().resolveBatches()
             var genResourceClassCounter = 0
+            val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
             for ((type, batches) in group2Batches) {
                 if (batches.isEmpty()) continue
-                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                jar.configure {
                     batches.forEach { batch ->
                         val dir = batch.dir
                         val root = batch.root
                         if (root == Mgpp.DefaultEmptyFile) {
-                            from(dir.parentFile) {
-                                include("${dir.name}/**")
+                            val dirParent = dir.parentFile
+                            if (dirParent != null) {
+                                it.from(dirParent) {
+                                    it.include("${dir.name}/**")
+                                }
+                            } else {
+                                it.include("${dir.name}/**")
                             }
                         } else { // relative path
-                            from(root) {
-                                include("$dir/**")
+                            it.from(root) {
+                                it.include("$dir/**")
                             }
                         }
                     }
@@ -450,7 +456,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                     args.putAll(type.args)
                     generator.set(type.generator)
                     className.set(type.className)
-                    resources.setFrom(batches.filter { it.enableGenClass }.map { it.dir })
+                    resources.from(batches.filter { it.enableGenClass }.map { it.dir })
                 }
                 genResourceClass.get().apply {
                     dependsOn(gen)

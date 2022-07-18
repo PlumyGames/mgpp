@@ -39,21 +39,9 @@ fun Project.importMindustry() = afterEvaluateThis {
     val arc = ex._dependency.arcDependency.get()
     // Mindustry core
     mdt.whenAvailable("core", ::addMindustry)
+    mdt.whenAvailable("server", ::addMindustry)
     // Arc
     arc.whenAvailable("arc-core", ::addMindustry)
-    when (ex._projectType.get()) {
-        ProjectType.Mod -> {
-            mdt.whenAvailable("desktop", ::addMindustry)
-            mdt.whenAvailable("server", ::addMindustry)
-            // This doesn't work, so disable it for now until a better solution
-            //addMindustry(mdt.resolve("backend-headless"))
-        }
-        ProjectType.Plugin -> {
-            mdt.whenAvailable("server", ::addMindustry)
-            //addMindustry(mdt.resolve("backend-headless"))
-        }
-        else -> {}
-    }
 }
 /**
  * Import the dependencies of Mindustry.

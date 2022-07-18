@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.0"
-    id("io.github.liplum.mgpp") version "1.1.2"
+    id("io.github.liplum.mgpp") version "1.1.3"
 }
 
 sourceSets {
@@ -46,12 +46,13 @@ tasks.register<TestOutputTask>("iconMaker") {
 }
 mindustry {
     dependency {
-        // mindustry on "v135"
-        mindustry mirror "d7312445a1"
-        arc on "123fbf12b9"
+        mindustry on "v136"
+        // mindustry mirror "d7312445a1"
+        arc on "v136"
         // arc on latestRelease
     }
     client {
+        mindustry official "v136"
         //mindustry be latest
         /*
         mindustry from GameLocation(
@@ -62,13 +63,13 @@ mindustry {
         )
         */
         //mindustry from localProperties
-        mindustry fromLocal "F:/Mindustry/Mindustry-BE-Desktop-22799.jar" named "22799.jar"
+        // mindustry fromLocal "F:/Mindustry/Mindustry-BE-Desktop-22799.jar" named "22799.jar"
         // `clearUp` as default, it will delete other versions when download a new one
         // `keepOthers` will keep them
     }
     server {
         //mindustry be "22728"
-        mindustry official latest
+        mindustry official "v136"
     }
     mods {
         worksWith {
@@ -102,9 +103,6 @@ tasks.dexJar {
         minApi = "14"
     }
 }
-/*tasks.runClient{
-
-}*/
 mindustryAssets {
     sprites {
         dir = rootDir.resolve("sprites")

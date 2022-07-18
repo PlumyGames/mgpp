@@ -34,15 +34,4 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
-mindustry {
-    client {
-        mindustry be latest
-    }
-    meta += ModMeta(
-        name = "core",
-        displayName = "Core Mod",
-        minGameVersion = "136",
-        main = "plumy.test.CoreMod"
-    )
-}
 

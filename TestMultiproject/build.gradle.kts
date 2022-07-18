@@ -3,17 +3,17 @@ import io.github.liplum.mindustry.mindustry
 group = "plumy.test"
 version = "1.0"
 plugins {
-    id("io.github.liplum.mgpp") version "1.1.2"
+    id("io.github.liplum.mgpp") version "1.1.3"
 }
 mindustry {
     dependency {
-        mindustry mirror "d7312445a1"
-        arc on "123fbf12b9"
+        mindustry on "v136"
+        arc on "v136"
     }
     client {
-        mindustry be latest
+        mindustry official "v135"
     }
     server {
-        mindustry be "22803"
+        mindustry official "v135"
     }
 }
