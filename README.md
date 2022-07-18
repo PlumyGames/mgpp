@@ -1,6 +1,6 @@
 <div align="center">
 
-# [Mindustry Gradle Plugin](https://plumygame.github.io/mgpp/)
+# [M G P P](https://plumygame.github.io/mgpp/)
 
 [![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/io.github.liplum.mgpp?color=02303a&label=Gradle%20Plugin&logo=Gradle&style=for-the-badge)](https://plugins.gradle.org/plugin/io.github.liplum.mgpp)
 [![Discord](https://img.shields.io/discord/937228972041842718?color=%23529b69&label=Discord&logo=Discord&style=for-the-badge)](https://discord.gg/3Hrep3WtUz)
@@ -20,14 +20,14 @@ ___
 - Generate Resource Class
 - Deploy on Android
 
-Please check the [homepage](https://plumygame.github.io/mgpp/) to obtain more information.
+Please check the [instruction](https://plumygame.github.io/mgpp/) to learn MGPP.
 
 ## Supports
 
 | Mindustry | MGPP Version |
 |:---------:|:------------:|
 |  ≤ 135.2  |   v 1.1.1    |
-|   = 136   |   v 1.1.3    |
+|   = 136   |   v 1.1.4    |
 
 
 ### How to Use

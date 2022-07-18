@@ -12,10 +12,10 @@ class RunSpec(
     target: Project,
 ) {
     @InheritFromParent
-    @DefaultValue("temp")
+    @DefaultValue("<temp>")
     @LocalProperty("mgpp.run.dataDir")
     val _dataDir = target.stringProp().apply {
-        convention("temp")
+        convention("<temp>")
     }
     /**
      * The data directory for Mindustry running.
@@ -28,13 +28,15 @@ class RunSpec(
     @DefaultValue("temp")
     @LocalProperty("mgpp.run.dataDir")
     var dataDir: String
-        get() = _dataDir.getOrElse("temp")
+        get() = _dataDir.getOrElse("<temp>")
         set(value) {
             _dataDir.set(value)
         }
     /**
      * Whether to delete all mods other than any in [ModsSpec.worksWith] in the data directory,
      * ensure you have backed up your mods.
+     *
+     * `mgpp.run.forciblyClear` in `local.properties` will overwrite this.
      */
     @InheritFromParent
     @DefaultValue("false")
@@ -103,12 +105,12 @@ class RunSpec(
      * @see [resolveDefaultDataDir]
      */
     fun setDataDefault() {
-        _dataDir.set("default")
+        _dataDir.set("<default>")
     }
     /**
      * Set the [dataDir] to the [RunMindustry.getTemporaryDir].
      */
     fun setDataTemp() {
-        _dataDir.set("temp")
+        _dataDir.set("<temp>")
     }
 }
