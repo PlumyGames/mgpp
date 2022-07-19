@@ -62,22 +62,10 @@ fun Project.importMindustry(configurationName: String) = afterEvaluateThis {
         addDependency(configurationName, dependencyNotation)
     }
     // Mindustry core
-    mdt.whenAvailable("core", ::addSpecificDependency)
+    mdt.whenAvailable("core", ::addMindustry)
+    mdt.whenAvailable("server", ::addMindustry)
     // Arc
-    arc.whenAvailable("arc-core", ::addSpecificDependency)
-    when (ex._projectType.get()) {
-        ProjectType.Mod -> {
-            mdt.whenAvailable("desktop", ::addSpecificDependency)
-            mdt.whenAvailable("server", ::addSpecificDependency)
-            // This doesn't work, so disable it for now until a better solution
-            //addMindustry(mdt.resolve("backend-headless"))
-        }
-        ProjectType.Plugin -> {
-            mdt.whenAvailable("server", ::addSpecificDependency)
-            //addMindustry(mdt.resolve("backend-headless"))
-        }
-        else -> {}
-    }
+    arc.whenAvailable("arc-core", ::addMindustry)
 }
 internal
 fun Dependency.tryJitpackResolve(module: String): String? {
