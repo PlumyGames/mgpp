@@ -22,6 +22,26 @@ inside `dependencies{}` closure in your `build.gradle[.kts]`.
         importMindustry()
     }
     ```
+
+You can import Mindustry for a specific dependency configuration, such as `ksp` plugin.
+
+=== "Groovy"
+
+    ``` groovy
+    dependencies {
+        importMindustry('ksp')
+    }
+    ```
+
+=== "Kotlin"
+
+    ``` kotlin
+    import io.github.liplum.mindustry.*
+    dependencies {
+        importMindustry("ksp")
+    }
+    ```
+
 MGPP provides `dependency{}` closure for you to configure which version you want to use,
 and it's inside of [`mindustry{}`](overview.md) closure hereinafter.
 
