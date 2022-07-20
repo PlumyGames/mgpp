@@ -357,12 +357,11 @@ class MindustryJavaPlugin : Plugin<Project> {
             }
         }
         // Set the convention to ex._deploy
-        val modMeta = ex._modMeta.get()
         ex._deploy._baseName.convention(provider {
-            modMeta.name
+            ex._modMeta.get().name
         })
         ex._deploy._version.convention(provider {
-            modMeta.version
+            ex._modMeta.get().version
         })
     }
 }

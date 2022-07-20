@@ -34,6 +34,7 @@ data class ModMeta(
         hidden: Boolean = default("hidden"),
         java: Boolean = default("java"),
         hideBrowser: Boolean = default("hideBrowser"),
+        /** since Mindustry v136 */
         keepOutlines: Boolean = default("keepOutlines"),
     ) : this(
         HashMap(
@@ -183,8 +184,15 @@ var ModMeta.hideBrowser: Boolean by meta()
 var ModMeta.keepOutlines: Boolean by meta()
 inline fun <reified T : Any> meta(): ReadWriteProperty<ModMeta, T> =
     object : ReadWriteProperty<ModMeta, T> {
-        override fun getValue(thisRef: ModMeta, property: KProperty<*>): T =
-            thisRef.info[property.name] as? T ?: ModMeta.default(property.name)
+        override fun getValue(thisRef: ModMeta, property: KProperty<*>): T {
+            val meta = thisRef.info[property.name] ?: return ModMeta.default(property.name)
+            return if (meta is T)
+                meta
+            else if (T::class.java == String::class.java)
+                meta.toString() as? T ?: ModMeta.default(property.name)
+            else
+                ModMeta.default(property.name)
+        }
 
         override fun setValue(thisRef: ModMeta, property: KProperty<*>, value: T) {
             thisRef.info[property.name] = value as Any
