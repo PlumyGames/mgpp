@@ -6,7 +6,7 @@ Please make sure to always upgrade MGPP to the latest version: [![Gradle Plugin 
 | Mindustry | MGPP Version |
 |:---------:|:------------:|
 |  ≤ 135.2  |   v 1.1.1    |
-|   = 136   |   v 1.1.4    |
+|   ≥ 136   |   v 1.1.5    |
 
 ___
 
