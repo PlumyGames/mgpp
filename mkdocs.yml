@@ -1,9 +1,13 @@
 site_name: MGPP Instruction
+repo_url: https://github.com/PlumyGame/mgpp
+repo_name: MGPP
 theme:
   name: material
   logo: icon.png
   custom_dir: overrides
   favicon: favicon.png
+  icon:
+    repo: fontawesome/brands/github
   shortcuts:
     help: 191    # ?
     next: 78     # n
