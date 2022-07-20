@@ -62,10 +62,10 @@ fun Project.importMindustry(configurationName: String) = afterEvaluateThis {
         addDependency(configurationName, dependencyNotation)
     }
     // Mindustry core
-    mdt.whenAvailable("core", ::addMindustry)
-    mdt.whenAvailable("server", ::addMindustry)
+    mdt.whenAvailable("core", ::addSpecificDependency)
+    mdt.whenAvailable("server", ::addSpecificDependency)
     // Arc
-    arc.whenAvailable("arc-core", ::addMindustry)
+    arc.whenAvailable("arc-core", ::addSpecificDependency)
 }
 internal
 fun Dependency.tryJitpackResolve(module: String): String? {

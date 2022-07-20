@@ -27,7 +27,7 @@ Please check the [instruction](https://plumygame.github.io/mgpp/) to learn MGPP.
 | Mindustry | MGPP Version |
 |:---------:|:------------:|
 |  ≤ 135.2  |   v 1.1.1    |
-|   ≥ 136   |   v 1.1.5    |
+|   ≥ 136   |   v 1.1.6    |
 
 
 ### How to Use

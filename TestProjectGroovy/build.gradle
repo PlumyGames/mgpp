@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id "io.github.liplum.mgpp" version "1.1.5"
+    id "io.github.liplum.mgpp" version "1.1.6"
 }
 group 'plumy.test'
 version '0.1'
