@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.0"
-    id("io.github.liplum.mgpp") version "1.1.6"
+    id("io.github.liplum.mgpp") version "1.1.7"
 }
 
 sourceSets {
@@ -97,6 +97,10 @@ mindustry {
         // useDefaultDataDir
     }
 }
+tasks.jar {
+    archiveBaseName.set("TestRenamed")
+}
+
 tasks.dexJar {
     options.minApi = "26"
     options {

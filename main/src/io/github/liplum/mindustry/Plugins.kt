@@ -329,22 +329,22 @@ class MindustryJavaPlugin : Plugin<Project> {
             jarFiles.from(jar)
             sdkRoot.set(ex._deploy._androidSdkRoot)
         }
-        @DisableIfWithout("java")
-        tasks.register<Jar>("deploy") {
-            group = Mgpp.MindustryTaskGroup
-            val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
-            dependsOn(jar)
-            dependsOn(dexJar)
-            destinationDirectory.set(temporaryDir)
-            archiveBaseName.set(ex._deploy._baseName)
-            archiveVersion.set(ex._deploy._version)
-            archiveClassifier.set(ex._deploy._classifier)
-            from(
-                *jar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
-                *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
-            )
-        }
         target.afterEvaluateThis {
+            @DisableIfWithout("java")
+            tasks.register<Jar>("deploy") {
+                group = Mgpp.MindustryTaskGroup
+                val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
+                dependsOn(jar)
+                dependsOn(dexJar)
+                destinationDirectory.set(temporaryDir)
+                archiveBaseName.set(ex._deploy._baseName)
+                archiveVersion.set(ex._deploy._version)
+                archiveClassifier.set(ex._deploy._classifier)
+                from(
+                    *jar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
+                    *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
+                )
+            }
             if (ex._deploy.enableFatJar.get()) {
                 tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
                     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
