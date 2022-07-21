@@ -316,6 +316,7 @@ class MindustryJavaPlugin : Plugin<Project> {
         val ex = extensions.getOrCreate<MindustryExtension>(
             Mgpp.MainExtensionName
         )
+        val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
         @DisableIfWithout("java")
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")
@@ -325,22 +326,21 @@ class MindustryJavaPlugin : Plugin<Project> {
                 configurations.compileClasspath,
                 configurations.runtimeClasspath
             )
-            val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
             jarFiles.from(jar)
             sdkRoot.set(ex._deploy._androidSdkRoot)
         }
+        val deploy = tasks.register<Jar>("deploy") {
+            group = Mgpp.MindustryTaskGroup
+            dependsOn(jar)
+            dependsOn(dexJar)
+            destinationDirectory.set(temporaryDir)
+            archiveBaseName.set(ex._deploy._baseName)
+            archiveVersion.set(ex._deploy._version)
+            archiveClassifier.set(ex._deploy._classifier)
+        }
         target.afterEvaluateThis {
-            @DisableIfWithout("java")
-            tasks.register<Jar>("deploy") {
-                group = Mgpp.MindustryTaskGroup
-                val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
-                dependsOn(jar)
-                dependsOn(dexJar)
-                destinationDirectory.set(temporaryDir)
-                archiveBaseName.set(ex._deploy._baseName)
-                archiveVersion.set(ex._deploy._version)
-                archiveClassifier.set(ex._deploy._classifier)
-                from(
+            deploy.configure { deploy ->
+                deploy.from(
                     *jar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
                     *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
                 )
