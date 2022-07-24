@@ -5,8 +5,7 @@ jobs:
   publish-and-doc:
     runs-on: ubuntu-latest
     if: |
-      (startsWith(github.event.head_commit.message,'[javaDoc]') ||
-      endsWith(github.event.head_commit.message,'[javaDoc]')) &&
+      contains(github.event.head_commit.message,'[javadoc]') &&
       github.repository == 'PlumyGame/mgpp'
     steps:
       - uses: actions/checkout@v2
