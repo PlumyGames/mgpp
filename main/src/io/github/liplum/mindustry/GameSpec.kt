@@ -40,12 +40,12 @@ abstract class GameSpecBase(
      * Clean all other versions when a new version is downloaded.
      */
     val clearUp: Unit
-        get() = keepOtherVersion.set(true)
+        get() = keepOtherVersion.set(false)
     /**
      * Keep other versions when a new version is downloaded.
      */
     val keepOthers: Unit
-        get() = keepOtherVersion.set(false)
+        get() = keepOtherVersion.set(true)
     /**
      * @see [GitHubGameLocation]
      */
