@@ -4,6 +4,7 @@ import io.github.liplum.dsl.ensure
 import io.github.liplum.dsl.fromJson
 import io.github.liplum.dsl.gson
 import org.gradle.api.Project
+import java.io.File
 import kotlin.math.absoluteValue
 
 data class LatestCache(
@@ -12,7 +13,7 @@ data class LatestCache(
     var lastUpdatedTimeStamp: Long,
 )
 
-inline fun Project.getLatestVersion(
+inline fun Project.fetchLatestVersion(
     type: String,
     outOfDate: Long = Mgpp.outOfDataTime,
     fetch: () -> String,
@@ -55,3 +56,13 @@ inline fun Project.getLatestVersion(
     }
     return res
 }
+
+data class RunInfo(
+    val lastMods: List<ModInfo>,
+)
+
+data class ModInfo(
+    val file: File,
+    val size: Long,
+    val name: String,
+)

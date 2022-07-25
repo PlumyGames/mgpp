@@ -131,14 +131,14 @@ class DependencySpec(
      * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
      */
     fun mindustryLatestRelease() {
-        val latestVersion = target.getLatestVersion("mindustry-release-dependency") {
+        val latestVersion = target.fetchLatestVersion("mindustry-release-dependency") {
             try {
                 val url = URL(Mgpp.APIMindustryOfficialLatestReleaseURL)
                 val json = Jval.read(url.readText())
-                return@getLatestVersion json.getString("tag_name")
+                return@fetchLatestVersion json.getString("tag_name")
             } catch (e: Exception) {
                 target.logger.warn("Can't fetch the exact latest version of mindustry, so use ${Mgpp.DefaultMindustryVersion} instead")
-                return@getLatestVersion Mgpp.DefaultMindustryVersion
+                return@fetchLatestVersion Mgpp.DefaultMindustryVersion
             }
         }
         mindustry(latestVersion)
@@ -149,15 +149,15 @@ class DependencySpec(
      * **Not Recommended** It may not work due to a network issue or jitpack not yet to build this version
      */
     fun mindustryMirrorLatestCommit() {
-        val latestVersion = target.getLatestVersion("mindustry-mirror-commit-dependency") {
+        val latestVersion = target.fetchLatestVersion("mindustry-mirror-commit-dependency") {
             try {
                 val url = URL(Mgpp.MindustryJitpackLatestCommit)
                 val json = Jval.read(url.readText())
                 val fullSha = json.getString("sha")
-                return@getLatestVersion fullSha.subSequence(0, 10).toString()
+                return@fetchLatestVersion fullSha.subSequence(0, 10).toString()
             } catch (e: Exception) {
                 target.logger.warn("Can't fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
-                return@getLatestVersion "-SNAPSHOT"
+                return@fetchLatestVersion "-SNAPSHOT"
             }
         }
         mindustryMirror(latestVersion)
@@ -168,15 +168,15 @@ class DependencySpec(
      * **Not Recommended** It may not work due to a network issue or jitpack not yet to build this version
      */
     fun arcLatestCommit() {
-        val latestVersion = target.getLatestVersion("arc-commit-dependency") {
+        val latestVersion = target.fetchLatestVersion("arc-commit-dependency") {
             try {
                 val url = URL(Mgpp.ArcLatestCommit)
                 val json = Jval.read(url.readText())
                 val fullSha = json.getString("sha")
-                return@getLatestVersion fullSha.subSequence(0, 10).toString()
+                return@fetchLatestVersion fullSha.subSequence(0, 10).toString()
             } catch (e: Exception) {
                 target.logger.warn("Can't fetch the exact latest version of arc, so use -SNAPSHOT instead")
-                return@getLatestVersion "-SNAPSHOT"
+                return@fetchLatestVersion "-SNAPSHOT"
             }
         }
         arc(latestVersion)
@@ -187,16 +187,16 @@ class DependencySpec(
      * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
      */
     fun arcLatestTag() {
-        val latestVersion = target.getLatestVersion("arc-tag-dependency") {
+        val latestVersion = target.fetchLatestVersion("arc-tag-dependency") {
             try {
                 val url = URL(Mgpp.ArcTagURL)
                 val json = Jval.read(url.readText())
                 val all = json.asArray()
                 val latestTag = all.get(0) // the latest tag
-                return@getLatestVersion latestTag.getString("name")
+                return@fetchLatestVersion latestTag.getString("name")
             } catch (e: Exception) {
                 target.logger.warn("Can't fetch the exact latest version of arc, so use ${Mgpp.DefaultArcVersion} instead")
-                return@getLatestVersion Mgpp.DefaultArcVersion
+                return@fetchLatestVersion Mgpp.DefaultArcVersion
             }
         }
         arc(latestVersion)

@@ -5,7 +5,6 @@ import io.github.liplum.dsl.BoolProp
 import io.github.liplum.dsl.StringsProp
 import io.github.liplum.dsl.prop
 import io.github.liplum.dsl.stringsProp
-import io.github.liplum.mindustry.LocalProperties.localProperties
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
@@ -188,7 +187,7 @@ abstract class GameSpecBase(
      * **Not Recommended** It may not work due to a network issue or GitHub API access limitation.
      */
     fun LatestOfficial(): GitHubGameLocation {
-        val latestVersion = target.getLatestVersion("mindustry-$type-official") {
+        val latestVersion = target.fetchLatestVersion("mindustry-$type-official") {
             try {
                 val url = URL(Mgpp.APIMindustryOfficialLatestReleaseURL)
                 val json = Jval.read(url.readText())
@@ -198,13 +197,13 @@ abstract class GameSpecBase(
                         Mgpp.DefaultMindustryVersion
                     } else it
                 }
-                return@getLatestVersion version
+                return@fetchLatestVersion version
             } catch (e: Exception) {
                 target.logger.warn(
                     "Can't fetch latest official version, so use ${Mgpp.DefaultMindustryVersion} as default instead.",
                     e
                 )
-                return@getLatestVersion Mgpp.DefaultMindustryVersion
+                return@fetchLatestVersion Mgpp.DefaultMindustryVersion
             }
         }
         return Official(latestVersion)
@@ -215,7 +214,7 @@ abstract class GameSpecBase(
      * **Not Recommended** It may not work due to a network issue or GitHub API access limitation.
      */
     fun LatestBE(): GitHubGameLocation {
-        val latestVersion = target.getLatestVersion("mindustry-$type-be") {
+        val latestVersion = target.fetchLatestVersion("mindustry-$type-be") {
             try {
                 val url = URL(Mgpp.APIMindustryBELatestReleaseURL)
                 val json = Jval.read(url.readText())
@@ -225,13 +224,13 @@ abstract class GameSpecBase(
                         Mgpp.DefaultMindustryBEVersion
                     } else it
                 }
-                return@getLatestVersion version
+                return@fetchLatestVersion version
             } catch (e: Exception) {
                 target.logger.warn(
                     "Can't fetch latest be version, so use ${Mgpp.DefaultMindustryBEVersion} as default instead.",
                     e
                 )
-                return@getLatestVersion Mgpp.DefaultMindustryBEVersion
+                return@fetchLatestVersion Mgpp.DefaultMindustryBEVersion
             }
         }
         return BE(latestVersion)
