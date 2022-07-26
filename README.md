@@ -2,8 +2,8 @@
 
 ![Banner]
 
-[![Badge License]][License]   
 [![Badge Grandle]][Grandle]   
+[![Badge License]][License]   
 [![Badge Discord]][Discord]
 
 <br>
@@ -22,25 +22,20 @@
 <br>
 <br>
 
-</div>
-
 ## Features
 
-- **Resource Class Generation**
+<br>
 
-- **Separated Working Space**
+<kbd>   <br>   Resource Class Generation   <br>   </kbd>   
+<kbd>   <br>   Debugging Tools   <br>   </kbd>   
+<kbd>   <br>   Download the Game   <br>   </kbd>
 
-- **Manage Dependencies**
+<kbd>   <br>   Work with other Mods   <br>   </kbd>   
+<kbd>   <br>   Android Deployment   <br>   </kbd>   
+<kbd>   <br>   Manage Dependencies   <br>   </kbd>
 
-- **Work with other Mods**
-
-- **Android Deployment**
-
-- **Download the Game**
-
-- **Asset Management**
-
-- **Debug your Mod**
+<kbd>   <br>   Asset Management   <br>   </kbd>   
+<kbd>   <br>   Separated Working Space   <br>   </kbd>
 
 <br>
 <br>
@@ -49,13 +44,16 @@
 
 *Supported **Mindustry** versions.*
 
+<br>
+
 | Mindustry |    MGPP    |
 |:---------:|:----------:|
 | `≤ 135.2` |  `v1.1.1`  |
 | `≥ 136`   |  `v1.1.7`  |
 
 <br>
-<br>
+
+</div>
 
 
 <!----------------------------------------------------------------------------->
