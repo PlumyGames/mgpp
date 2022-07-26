@@ -15,8 +15,19 @@
 <br>
 <br>
 
-[![Button Website]][Website]   
-[![Button Documentation]][Documentation]
+[![Button Getting Started]][Getting Started]   
+[![Button JavaDoc]][JavaDoc]   
+[![Button Mod Template]][Mod Template]
+
+### Groovy
+
+[![Button Example]][Example Groovy]   
+[![Button Usage]][Usage Groovy]
+
+### Kotlin
+
+[![Button Example]][Example Kotlin]   
+[![Button Usage]][Usage Kotlin]
 
 <br>
 <br>
@@ -60,12 +71,26 @@
 
 [Mindustry]: https://mindustrygame.github.io/
 [Grandle]: https://plugins.gradle.org/plugin/io.github.liplum.mgpp
-[Website]: https://plumygame.github.io/mgpp/
 [Discord]: https://discord.gg/3Hrep3WtUz
 
 [Documentation]: docs-shared/Documentation.md
-[Banner]: GFX/preview.png
 [License]: LICENSE
+[Banner]: GFX/preview.png
+
+[Getting Started]: https://plumygame.github.io/mgpp/
+[Mod Template]: https://github.com/liplum/MdtModTemplate
+[JavaDoc]: https://plumygame.github.io/mgppDoc/index.html
+
+[Example Groovy]: https://github.com/PlumyGame/mgpp/tree/master/TestProjectGroovy
+[Example Kotlin]: https://github.com/PlumyGame/mgpp/tree/master/TestProjectKt
+
+<!--
+[Usage Groovy]: https://plumygame.github.io/mgpp/groovy.html
+[Usage Kotlin]: https://plumygame.github.io/mgpp/kotlin.html
+-->
+
+[Usage Groovy]: Usage/Groovy.md
+[Usage Kotlin]: Usage/Kotlin.md
 
 
 <!----------------------------------[ Badges ]--------------------------------->
@@ -77,5 +102,10 @@
 
 <!---------------------------------[ Buttons ]--------------------------------->
 
+[Button Getting Started]: https://img.shields.io/badge/Getting_Started-428813?style=for-the-badge&logoColor=white&logo=GitBook
 [Button Documentation]: https://img.shields.io/badge/Documentation-bd8da2?style=for-the-badge&logoColor=white&logo=GitBook
-[Button Website]: https://img.shields.io/badge/Website-76455a?style=for-the-badge&logoColor=white&logo=GoogleEarth
+[Button Mod Template]: https://img.shields.io/badge/Mod_Template-AA344D?style=for-the-badge&logoColor=white&logo=AzureArtifacts
+[Button JavaDoc]: https://img.shields.io/badge/JavaDoc-097399?style=for-the-badge&logoColor=white&logo=OpenJDK
+
+[Button Example]: https://img.shields.io/badge/Example-4285F4?style=for-the-badge&logoColor=white&logo=GoogleKeep
+[Button Usage]: https://img.shields.io/badge/Usage-2d7b7e?style=for-the-badge&logoColor=white&logo=GoogleSearchConsole
