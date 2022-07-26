@@ -1,12 +1,15 @@
-<div align="center">
+<div align = center>
 
-![Banner]
+<br>
 
 [![Badge Grandle]][Grandle]   
 [![Badge License]][License]   
 [![Badge Discord]][Discord]
 
 <br>
+
+![Banner]
+
 <br>
 
 ### ***Plumy*** *the **[Mindustry]** Gradle plugin.*
@@ -19,12 +22,16 @@
 [![Button JavaDoc]][JavaDoc]   
 [![Button Mod Template]][Mod Template]
 
-### Groovy
+<br>
+
+#### Groovy
 
 [![Button Example]][Example Groovy]   
 [![Button Usage]][Usage Groovy]
 
-### Kotlin
+<br>
+
+#### Kotlin
 
 [![Button Example]][Example Kotlin]   
 [![Button Usage]][Usage Kotlin]
@@ -74,8 +81,10 @@
 [Discord]: https://discord.gg/3Hrep3WtUz
 
 [Documentation]: docs-shared/Documentation.md
+[Usage Groovy]: Usage/Groovy.md
+[Usage Kotlin]: Usage/Kotlin.md
 [License]: LICENSE
-[Banner]: GFX/preview.png
+[Banner]: GFX/preview-small.png
 
 [Getting Started]: https://plumygame.github.io/mgpp/
 [Mod Template]: https://github.com/liplum/MdtModTemplate
@@ -89,8 +98,7 @@
 [Usage Kotlin]: https://plumygame.github.io/mgpp/kotlin.html
 -->
 
-[Usage Groovy]: Usage/Groovy.md
-[Usage Kotlin]: Usage/Kotlin.md
+
 
 
 <!----------------------------------[ Badges ]--------------------------------->
