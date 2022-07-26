@@ -2,7 +2,7 @@
 
 <br>
 
-[![Badge Grandle]][Grandle]   
+[![Badge Gradle]][Gradle]   
 [![Badge License]][License]   
 [![Badge Discord]][Discord]
 
@@ -22,22 +22,7 @@
 [![Button JavaDoc]][JavaDoc]   
 [![Button Mod Template]][Mod Template]
 
-<br>
 
-#### Groovy
-
-[![Button Example]][Example Groovy]   
-[![Button Usage]][Usage Groovy]
-
-<br>
-
-#### Kotlin
-
-[![Button Example]][Example Kotlin]   
-[![Button Usage]][Usage Kotlin]
-
-<br>
-<br>
 <br>
 
 ## Features
@@ -67,7 +52,7 @@
 | Mindustry |    MGPP    |
 |:---------:|:----------:|
 | `≤ 135.2` |  `v1.1.1`  |
-| `≥ 136`   |  `v1.1.7`  |
+|  `≥ 136`  |  `v1.1.7`  |
 
 <br>
 
@@ -77,12 +62,9 @@
 <!----------------------------------------------------------------------------->
 
 [Mindustry]: https://mindustrygame.github.io/
-[Grandle]: https://plugins.gradle.org/plugin/io.github.liplum.mgpp
+[Gradle]: https://plugins.gradle.org/plugin/io.github.liplum.mgpp
 [Discord]: https://discord.gg/3Hrep3WtUz
 
-[Documentation]: docs-shared/Documentation.md
-[Usage Groovy]: Usage/Groovy.md
-[Usage Kotlin]: Usage/Kotlin.md
 [License]: LICENSE
 [Banner]: GFX/preview-small.png
 
@@ -103,7 +85,7 @@
 
 <!----------------------------------[ Badges ]--------------------------------->
 
-[Badge Grandle]: https://img.shields.io/gradle-plugin-portal/v/io.github.liplum.mgpp?color=023a46&label=Gradle&logo=Gradle&style=for-the-badge&labelColor=034e5e
+[Badge Gradle]: https://img.shields.io/gradle-plugin-portal/v/io.github.liplum.mgpp?color=023a46&label=Gradle&logo=Gradle&style=for-the-badge&labelColor=034e5e
 [Badge Discord]: https://img.shields.io/discord/937228972041842718?color=454fc1&label=Discord&logo=Discord&style=for-the-badge&logoColor=white&labelColor=5865F2
 [Badge License]: https://img.shields.io/badge/License-GPL3-015d93.svg?style=for-the-badge&labelColor=blue
 
