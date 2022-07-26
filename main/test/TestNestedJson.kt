@@ -1,5 +1,6 @@
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import io.github.liplum.dsl.fromJson
 import org.junit.jupiter.api.Test
 
 data class Outer(
@@ -60,7 +61,7 @@ class TestJson {
               }
             }
         """.trimIndent()
-        val obj = gson.fromJson(json, Outer::class.java)
+        val obj = gson.fromJson<Outer>(json)
         assert(obj.a.name == "Restore A")
         assert(obj.a.list == listOf("a", "b", "c"))
         assert(obj.b.bool)
