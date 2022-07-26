@@ -1,42 +1,55 @@
 
+<div align = center>
+
 # Documentation
 
 <br>
+<br>
 
-## ![Badge Usage]
+### ![Badge Usage]
 
-- **[Groovy][DSL Groovy]**
+<br>
 
-- **[Kotlin][DSL Kotlin]**
+**[Groovy][DSL Groovy]**
+
+**[Kotlin][DSL Kotlin]**
 
 
 <br>
 <br>
 
-## ![Badge Examples]
+### ![Badge Examples]
 
-- **[Example Groovy]**
+<br>
 
-- **[Example Kotlin]**
+**[Groovy][Example Groovy]**
+
+**[Kotlin][Example Kotlin]**
 
 <br>
 <br>
 
-## ![Badge Documents]
+### ![Badge Documents]
 
-- **[Getting Started]**
+<br>
 
-- **[JavaDoc]**
+**[Getting Started]**
+
+**[JavaDoc]**
 
 <br>
 <br>
 
-## ![Badge Templates]
-
-- **[MDT Mod Template]**
-
+### ![Badge Templates]
 
 <br>
+  
+**[MDT Mod Template]**
+
+<br>
+<br>
+
+</div>
 
 
 <!----------------------------------------------------------------------------->
