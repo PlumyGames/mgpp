@@ -25,7 +25,7 @@ data class LocalMod(
 
     override fun resolveFile(project: Project, currentDir: File): File =
         currentDir.resolve(modFile.name).apply {
-            modFile.copyTo(this)
+            modFile.copyTo(this, overwrite = true)
         }
 
     override fun mapLocalFile(project: Project, currentDir: File): File =

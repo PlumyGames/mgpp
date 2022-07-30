@@ -75,14 +75,6 @@
 [Example Groovy]: https://github.com/PlumyGame/mgpp/tree/master/TestProjectGroovy
 [Example Kotlin]: https://github.com/PlumyGame/mgpp/tree/master/TestProjectKt
 
-<!--
-[Usage Groovy]: https://plumygame.github.io/mgpp/groovy.html
-[Usage Kotlin]: https://plumygame.github.io/mgpp/kotlin.html
--->
-
-
-
-
 <!----------------------------------[ Badges ]--------------------------------->
 
 [Badge Gradle]: https://img.shields.io/gradle-plugin-portal/v/io.github.liplum.mgpp?color=023a46&label=Gradle&logo=Gradle&style=for-the-badge&labelColor=034e5e
