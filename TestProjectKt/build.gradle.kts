@@ -74,7 +74,9 @@ mindustry {
     mods {
         worksWith {
             add kotlin "liplum/cyberio"
-            // add hjson "BlueWolf3682/Exotic-Mod" branch "0.8"
+            add folder "$buildDir/mods"
+            add folder "$buildDir/fakeMods"
+            add hjson "BlueWolf3682/Exotic-Mod" branch "0.8"
             add fromTask "iconMaker"
             add localProperties "extraModPath"
         }

@@ -31,6 +31,11 @@ fun File.ensure(): File {
     return this
 }
 
+fun File.getOrCreateDir(): File {
+    mkdirs()
+    return this
+}
+
 fun FileAt(
     vararg segments: String,
 ): File = StringBuilder().run {
@@ -70,7 +75,7 @@ fun File.forEachFilesRecursive(func: (File) -> Unit) {
         this.listFiles()?.forEach {
             it.forEachFilesRecursive(func)
         }
-    } else {
+    } else if (this.isFile) {
         func(this)
     }
 }

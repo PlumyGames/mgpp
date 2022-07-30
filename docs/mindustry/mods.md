@@ -122,9 +122,12 @@ MGPP will download it into the temporary directory of `resolveMods` task (herein
 
 MGPP will copy it from your local disk into `temp`
 
-- local: the path specified here will be copied.
+- local: the file specified here will be copied.
+There is no effect if the file doesn't exist.
 - localProperties: the value in `local.properties` file will be treated as a path for copying.
 There is no effect if the key doesn't exist.
+- folder: all files inside this folder will be copied.
+The folder will be created if it doesn't exist.
 
 === "Groovy"
 
@@ -132,7 +135,10 @@ There is no effect if the key doesn't exist.
     mods {
         worksWith {
             local 'E:/mgpp/mod.jar'
+            local new File('E:/mgpp/mod.jar')
             localProperties 'mods.what-mod-to-copy'
+            folder 'E:/mod-repository'
+            folder new File('E:/mod-repository')
         }
     }
     ```
@@ -143,7 +149,10 @@ There is no effect if the key doesn't exist.
     mods {
         worksWith {
             add local "E:/mgpp/mod.jar"
+            add local File("E:/mgpp/mod.jar")
             add localProperties "mods.what-mod-to-copy"
+            folder "E:/mod-repository"
+            folder File("E:/mod-repository")
         }
     }
     ```

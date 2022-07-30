@@ -12,17 +12,20 @@ open class ResolveMods : DefaultTask() {
     val mods = project.listProp<IMod>()
         @Input get
     val downloadedMods: List<File>
-        @OutputFiles get() = mods.get().mapNotNull {
-            it.mapLocalFile(project, temporaryDir).let { fi ->
-                if (fi.exists()) fi else null
+        @OutputFiles get() = mods.get().run {
+            ArrayList<File>().apply {
+                for (mod in this@run)
+                    this += mod.mapLocalFile(project, temporaryDir).filter { it.exists() }
             }
         }
     @TaskAction
     fun resolve() {
         mods.get().forEach {
             try {
-                val resolved = it.resolveFile(project, temporaryDir)
-                logger.info("resolved $it into ${resolved.absolutePath} .")
+                val resolvedMods = it.resolveFile(project, temporaryDir)
+                resolvedMods.forEach { f ->
+                    logger.info("resolved $it into ${f.absolutePath} .")
+                }
             } catch (e: Exception) {
                 logger.warn("Can't resolve the $it", e)
             }

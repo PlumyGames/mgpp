@@ -6,6 +6,7 @@ import io.github.liplum.dsl.whenHas
 import io.github.liplum.mindustry.LocalProperties.localProperties
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
+import java.io.File
 
 /**
  * You can add more mods working with your mod, such as a Json mod or Java mod from GitHub,
@@ -66,7 +67,7 @@ class ModsSpec(
      * **Not recommended:** Please use any more specific method, such as [java] or [json]
      * @param repo like "PlumyGame/mgpp"
      */
-    infix fun github(repo: String)=GitHubMod(repo).apply {
+    infix fun github(repo: String) = GitHubMod(repo).apply {
         worksWith.add(this)
     }
     /**
@@ -136,6 +137,16 @@ class ModsSpec(
         worksWith.add(this)
     }
     /**
+     * Add a local mod form disk.
+     *
+     * **Suggestion** To use a relative path and embed the mod into project directory
+     * would be better for git or collaboration.
+     * @param file of that mod
+     */
+    infix fun local(file: File) = LocalMod(file).apply {
+        worksWith.add(this)
+    }
+    /**
      * Add a local mod form disk by the [key] in local.properties.
      * @param key in local.properties
      */
@@ -146,6 +157,26 @@ class ModsSpec(
         } else {
             target.logger.warn("$key not found in local.properties.")
         }
+    }
+    /**
+     * Add mods inside a folder from local disk.
+     *
+     * **Suggestion** To use a relative path and embed the mod into project directory
+     * would be better for git or collaboration.
+     * @param folder a folder contains mods
+     */
+    infix fun folder(folder: File) = ModFolder(folder).apply {
+        worksWith.add(this)
+    }
+    /**
+     * Add mods inside a folder from local disk.
+     *
+     * **Suggestion** To use a relative path and embed the mod into project directory
+     * would be better for git or collaboration.
+     * @param path of that folder
+     */
+    infix fun folder(path: String) = ModFolder(path).apply {
+        worksWith.add(this)
     }
     /**
      * Add a mod from [url]
