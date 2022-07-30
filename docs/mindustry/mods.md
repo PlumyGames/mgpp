@@ -151,8 +151,8 @@ The folder will be created if it doesn't exist.
             add local "E:/mgpp/mod.jar"
             add local File("E:/mgpp/mod.jar")
             add localProperties "mods.what-mod-to-copy"
-            folder "E:/mod-repository"
-            folder File("E:/mod-repository")
+            add folder "E:/mod-repository"
+            add folder File("E:/mod-repository")
         }
     }
     ```
