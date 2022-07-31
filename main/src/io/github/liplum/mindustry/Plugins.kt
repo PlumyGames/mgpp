@@ -413,9 +413,8 @@ class MindustryAssetPlugin : Plugin<Project> {
                     from(assetsRoot)
                 }
             }
-            val icon = assets._icon.get()
             tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                from(icon)
+                from(assets._icon)
             }
             // Resolve all batches
             val group2Batches = assets.batches.get().resolveBatches()
