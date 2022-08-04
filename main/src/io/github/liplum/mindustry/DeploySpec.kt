@@ -71,7 +71,7 @@ class DeploySpec(
     /**
      * Whether to make a fat jar, which contains all dependencies from classpath.
      *
-     * Basically, `enabled` as default.
+     * `enabled` as default.
      */
     @InheritFromParent
     val enableFatJar = target.prop<Boolean>().apply {
@@ -80,7 +80,7 @@ class DeploySpec(
     /**
      * Enable the fat jar.
      *
-     * `enable` as default
+     * `fatJar` as default
      * @see [enableFatJar]
      */
     val fatJar: Unit
@@ -90,7 +90,7 @@ class DeploySpec(
     /**
      * Disable the fat jar.
      *
-     * `disable` as default
+     * `fatJar` as default
      * @see [enableFatJar]
      */
     val noFatJar: Unit
