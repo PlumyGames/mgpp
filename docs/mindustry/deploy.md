@@ -74,21 +74,7 @@ It's useful when you utilize other library or make a Kotlin mod.
         noFatJar
     }
     ```
-MGPP will apply `fatJar` as default,
-if you don't specify `mgpp.deploy.enableFatJar` in `gradle.properties` file.
-
-#### Default value from gradle properties
-MGPP will read the default value from `mgpp.deploy.enableFatJar` in `gradle.properties` file.
-If not found, `fatJar` will be applied.
-
-**TYPE:** Boolean { true, false }
-
-```properties
-mgpp.run.enableFatJar=false
-```
-
-> When you work on a multi-project, this may be useful. 
-> To obtain more information, please check the [issue #13](https://github.com/PlumyGame/mgpp/issues/13)
+MGPP will apply `fatJar` as default.
 
 ### Android SDK
 
