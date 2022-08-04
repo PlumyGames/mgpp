@@ -45,6 +45,7 @@ class MindustryPlugin : Plugin<Project> {
                 ex._run._dataDir.set(parentEx._run._dataDir)
                 ex._run._forciblyClear.set(parentEx._run._forciblyClear)
                 ex._deploy._androidSdkRoot.set(parentEx._deploy._androidSdkRoot)
+                ex._deploy.enableFatJar.set(parentEx._deploy.enableFatJar)
             }
         }
         // Register this for dynamically configure tasks without class reference in groovy.
