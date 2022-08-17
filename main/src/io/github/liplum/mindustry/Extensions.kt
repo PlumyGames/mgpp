@@ -3,10 +3,7 @@
 
 package io.github.liplum.mindustry
 
-import io.github.liplum.dsl.findFileInOrder
-import io.github.liplum.dsl.proDir
-import io.github.liplum.dsl.prop
-import io.github.liplum.dsl.rootDir
+import io.github.liplum.dsl.*
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -71,9 +68,18 @@ open class MindustryExtension(
      */
     var projectType: ProjectType
         get() = _projectType.getOrElse(ProjectType.Mod)
-        set(value) {
-            _projectType.set(value)
-        }
+        set(value) = _projectType.set(value)
+    @JvmField
+    val _isLib = target.boolProp().apply {
+        convention(false)
+    }
+    /**
+     * If this project is a library, its jar won't contain something a mod needs
+     */
+    @InheritFromParent
+    var isLib: Boolean
+        get() = _isLib.getOrElse(false)
+        set(value) = _isLib.set(value)
     @JvmField
     val _dependency = DependencySpec(target)
     /**
@@ -188,9 +194,7 @@ open class MindustryExtension(
      */
     var meta: ModMeta
         get() = _modMeta.get()
-        set(value) {
-            _modMeta.set(value)
-        }
+        set(value) = _modMeta.set(value)
     /**
      * @see [io.github.liplum.mindustry.ModMeta]
      */

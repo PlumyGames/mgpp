@@ -34,6 +34,7 @@ class MindustryPlugin : Plugin<Project> {
         target.parent?.let {
             it.plugins.whenHas<MindustryPlugin> {
                 val parentEx = it.extensions.getOrCreate<MindustryExtension>(Mgpp.MainExtensionName)
+                ex._isLib.set(parentEx._isLib)
                 ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
                 ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
                 ex._client.location.set(parentEx._client.location)
@@ -64,6 +65,13 @@ class MindustryPlugin : Plugin<Project> {
             plugins.apply<MindustryJavaPlugin>()
         }
         GroovyBridge.attach(target)
+        afterEvaluateThis {
+            if (ex.isLib) {
+                tasks.genModHjson.configure {
+                    it.enabled = false
+                }
+            }
+        }
     }
 
     companion object {
@@ -110,19 +118,19 @@ class MindustryPlugin : Plugin<Project> {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryVersion = "v136"
+        const val DefaultMindustryVersion = "v137"
         /**
          * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases/tag/22853)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryBEVersion = "22855"
+        const val DefaultMindustryBEVersion = "23028"
         /**
          * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v136)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultArcVersion = "v136"
+        const val DefaultArcVersion = "v137"
         /**
          * [Mindustry official release](https://github.com/Anuken/Mindustry/releases)
          */
@@ -414,8 +422,10 @@ class MindustryAssetPlugin : Plugin<Project> {
                     from(assetsRoot)
                 }
             }
-            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                from(assets._icon)
+            if (!main.isLib) {
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    from(assets._icon)
+                }
             }
             // Resolve all batches
             val group2Batches = assets.batches.get().resolveBatches()
