@@ -64,6 +64,29 @@ Unit: second
         outOfDateTime = 60 * 60 // 60 minutes
     }
     ```
+### Mod library
+It's for anu library for Mindustry modding that benefits from MGPP.
+
+If `isLib` is true, the task `jar` won't contain something included in a normal mod project.
+
+- mod.hjson
+- icon.png
+
+=== "Groovy"
+
+    ``` groovy
+    mindustry {
+        isLib = true
+    }
+    ```
+
+=== "Kotlin"
+
+    ``` kotlin
+    mindustry {
+        isLib = true
+    }
+    ```
 
 ### Mod meta
 It represents the `mod.[h]json` file of your mod.
