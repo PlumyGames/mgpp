@@ -28,9 +28,7 @@ sourceSets {
         resources.srcDir("resources")
     }
 }
-mindustry {
-    isLib = true
-}
+
 version = "1.0"
 group = "net.liplum"
 

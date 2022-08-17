@@ -65,13 +65,6 @@ class MindustryPlugin : Plugin<Project> {
             plugins.apply<MindustryJavaPlugin>()
         }
         GroovyBridge.attach(target)
-        afterEvaluateThis {
-            if (ex.isLib) {
-                tasks.genModHjson.configure {
-                    it.enabled = false
-                }
-            }
-        }
     }
 
     companion object {
@@ -396,10 +389,6 @@ class MindustryAssetPlugin : Plugin<Project> {
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(
             Mgpp.AssetExtensionName
         )
-        tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-            dependsOn("genModHjson")
-            from(tasks.getByPath("genModHjson"))
-        }
         // Doesn't register the tasks if no resource needs to generate its class.
         @DisableIfWithout("java")
         val genResourceClass by lazy {
@@ -425,6 +414,10 @@ class MindustryAssetPlugin : Plugin<Project> {
             if (!main.isLib) {
                 tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
                     from(assets._icon)
+                }
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    dependsOn("genModHjson")
+                    from(tasks.getByPath("genModHjson"))
                 }
             }
             // Resolve all batches

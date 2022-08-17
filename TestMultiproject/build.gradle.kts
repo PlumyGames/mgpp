@@ -3,7 +3,7 @@ import io.github.liplum.mindustry.mindustry
 group = "plumy.test"
 version = "1.0"
 plugins {
-    id("io.github.liplum.mgpp") version "1.1.11"
+    id("io.github.liplum.mgpp") version "1.1.12"
 }
 mindustry {
     dependency {
@@ -16,4 +16,7 @@ mindustry {
     server {
         mindustry official "v135"
     }
+}
+mindustry {
+    isLib = true
 }
