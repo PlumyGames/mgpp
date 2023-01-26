@@ -33,11 +33,11 @@ ___
 > Deploy your mod compatible to Mindustry on Android. *[Android SDK Required]*
 
 ## More Info
-You can access the [repository](https://github.com/PlumyGame/mgpp) on GitHub to obtain more information.
+You can access the [repository](https://github.com/PlumyGames/mgpp) on GitHub to obtain more information.
 
-Also, there is a [JavaDoc page](https://plumygame.github.io/mgppDoc) for you to check up the API of mgpp.
+Also, there is a [JavaDoc page](https://plumygames.github.io/mgppDoc) for you to check up the API of mgpp.
 
-If you face any issue with mgpp, please contact us on [Issue Report](https://github.com/PlumyGame/mgpp/issues) page.
+If you face any issue with mgpp, please contact us on [Issue Report](https://github.com/PlumyGames/mgpp/issues) page.
 
 Join our [Discord server](https://discord.gg/3Hrep3WtUz) to send us feedback or get help immediately.
 

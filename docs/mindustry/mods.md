@@ -52,7 +52,7 @@ As mgpp provided, you can use the syntax mentioned below to add a mod.
     mods {
         worksWith {
             // pattern: expression + 'repo'
-            java 'PlumyGame/mgpp'
+            java 'PlumyGames/mgpp'
         }
     }
     ```
@@ -63,7 +63,7 @@ As mgpp provided, you can use the syntax mentioned below to add a mod.
     mods {
         worksWith {
             // pattern: add expression + 'repo'
-            add java "PlumyGame/mgpp"
+            add java "PlumyGames/mgpp"
         }
     }
     ```
@@ -75,7 +75,7 @@ For a Js/Json mod, you can specify its branch:
     ``` groovy
     mods {
         worksWith {
-            hjson 'PlumyGame/mgpp' branch 'v7'
+            hjson 'PlumyGames/mgpp' branch 'v7'
         }
     }
     ```
@@ -85,7 +85,7 @@ For a Js/Json mod, you can specify its branch:
     ``` kotlin
     mods {
         worksWith {
-            add hjson "PlumyGame/mgpp" branch "v7"
+            add hjson "PlumyGames/mgpp" branch "v7"
         }
     }
     ```
@@ -167,7 +167,7 @@ MGPP will figure out the mod type the same as Mindustry does.
     mods {
         worksWith {
             // In this case, it'll be treated as a Jvm mod
-            github 'PlumyGame/mgpp'
+            github 'PlumyGames/mgpp'
         }
     }
     ```
@@ -178,7 +178,7 @@ MGPP will figure out the mod type the same as Mindustry does.
     mods {
         worksWith {
             // In this case, it'll be treated as a Jvm mod
-            add github "PlumyGame/mgpp"
+            add github "PlumyGames/mgpp"
         }
     }
     ```
@@ -212,8 +212,8 @@ but you may benefit from its simple syntax.
 #### Directly add
 Anyway, if mgpp doesn't meet your need,
 you can also directly add a mod,
-which you can implement on your own [IMod](https://plumygame.github.io/mgppDoc/main/io.github.liplum.mindustry/-i-mod/index.html) class
-, into [worksWith](https://plumygame.github.io/mgppDoc/main/io.github.liplum.mindustry/-mods-spec/index.html#-520366566%2FProperties%2F-140426848) set.
+which you can implement on your own [IMod](https://plumygames.github.io/mgppDoc/main/io.github.liplum.mindustry/-i-mod/index.html) class
+, into [worksWith](https://plumygames.github.io/mgppDoc/main/io.github.liplum.mindustry/-mods-spec/index.html#-520366566%2FProperties%2F-140426848) set.
 
 === "Groovy"
 

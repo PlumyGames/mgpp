@@ -68,12 +68,12 @@
 [License]: LICENSE
 [Banner]: GFX/preview-small.png
 
-[Getting Started]: https://plumygame.github.io/mgpp/
+[Getting Started]: https://plumygames.github.io/mgpp/
 [Mod Template]: https://github.com/liplum/MdtModTemplate
-[JavaDoc]: https://plumygame.github.io/mgppDoc/index.html
+[JavaDoc]: https://plumygames.github.io/mgppDoc/index.html
 
-[Example Groovy]: https://github.com/PlumyGame/mgpp/tree/master/TestProjectGroovy
-[Example Kotlin]: https://github.com/PlumyGame/mgpp/tree/master/TestProjectKt
+[Example Groovy]: https://github.com/PlumyGames/mgpp/tree/master/TestProjectGroovy
+[Example Kotlin]: https://github.com/PlumyGames/mgpp/tree/master/TestProjectKt
 
 <!----------------------------------[ Badges ]--------------------------------->
 

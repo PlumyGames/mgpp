@@ -104,7 +104,7 @@ fun String.repo2Path() = this.replace("/", "-")
  */
 data class GitHubMod(
     /**
-     * like "PlumyGame/mgpp"
+     * like "PlumyGames/mgpp"
      */
     var repo: String,
 ) : IMod {

@@ -38,8 +38,8 @@ gradlePlugin {
     }
 }
 pluginBundle {
-    website = "https://plumygame.github.io/mgpp/"
-    vcsUrl = "https://github.com/PlumyGame/mgpp"
+    website = "https://plumygames.github.io/mgpp/"
+    vcsUrl = "https://github.com/PlumyGames/mgpp"
     tags = listOf("mindustry", "mindustry-mod", "mod")
 }
 tasks.compileGroovy {

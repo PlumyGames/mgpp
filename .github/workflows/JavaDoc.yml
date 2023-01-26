@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       contains(github.event.head_commit.message,'[javadoc]') &&
-      github.repository == 'PlumyGame/mgpp'
+      github.repository == 'PlumyGames/mgpp'
     steps:
       - uses: actions/checkout@v2
 
@@ -25,12 +25,12 @@ jobs:
       - name: Update document
         run: |
           cd ../
-          git clone --depth 1 https://github.com/PlumyGame/mgppDoc.git
+          git clone --depth 1 https://github.com/PlumyGames/mgppDoc.git
           cp -r ./mgpp/main/build/dokka/html/* ./mgppDoc
           cd mgppDoc
           git add .
           git config --global user.email "Li_plum@outlook.com"
           git config --global user.name "liplum"
           git commit --allow-empty -m "${{ github.event.head_commit.message }}"
-          git push https://Liplum:${{ secrets.API_TOKEN_GITHUB }}@github.com/PlumyGame/mgppDoc
+          git push https://Liplum:${{ secrets.API_TOKEN_GITHUB }}@github.com/PlumyGames/mgppDoc
 

@@ -39,7 +39,7 @@ class ModsSpec(
     /**
      * such as :
      *
-     * ```add java "PlumyGame/mgpp"```
+     * ```add java "PlumyGames/mgpp"```
      */
     // For Kotlin
     val add: ModsSpec
@@ -65,63 +65,63 @@ class ModsSpec(
     /**
      * Add a mod form GitHub by its repo name.
      * **Not recommended:** Please use any more specific method, such as [java] or [json]
-     * @param repo like "PlumyGame/mgpp"
+     * @param repo like "PlumyGames/mgpp"
      */
     infix fun github(repo: String) = GitHubMod(repo).apply {
         worksWith.add(this)
     }
     /**
      * Add a json mod form GitHub by its repo name.
-     * @param repo like "PlumyGame/mgpp"
+     * @param repo like "PlumyGames/mgpp"
      */
     infix fun json(repo: String) = GitHubPlainMod(repo).apply {
         worksWith.add(this)
     }
     /**
      * Add a json mod form GitHub by its repo name.
-     * @param repo like "PlumyGame/mgpp"
+     * @param repo like "PlumyGames/mgpp"
      */
     infix fun hjson(repo: String) = GitHubPlainMod(repo).apply {
         worksWith.add(this)
     }
     /**
      * Add a js mod form GitHub by its repo name.
-     * @param repo like "PlumyGame/mgpp"
+     * @param repo like "PlumyGames/mgpp"
      */
     infix fun js(repo: String) = GitHubPlainMod(repo).apply {
         worksWith.add(this)
     }
     /**
      * Add a java mod form GitHub by its repo name.
-     * @param repo like "PlumyGame/mgpp"
+     * @param repo like "PlumyGames/mgpp"
      */
     infix fun java(repo: String) = GitHubJvmMod(repo).apply {
         worksWith.add(this)
     }
     /**
      * Add a kotlin mod form GitHub by its repo name.
-     * @param repo like "PlumyGame/mgpp"
+     * @param repo like "PlumyGames/mgpp"
      */
     infix fun kotlin(repo: String) = GitHubJvmMod(repo).apply {
         worksWith.add(this)
     }
     /**
      * Add a groovy mod form GitHub by its repo name.
-     * @param repo like "PlumyGame/mgpp"
+     * @param repo like "PlumyGames/mgpp"
      */
     infix fun groovy(repo: String) = GitHubJvmMod(repo).apply {
         worksWith.add(this)
     }
     /**
      * Add a scala mod form GitHub by its repo name.
-     * @param repo like "PlumyGame/mgpp"
+     * @param repo like "PlumyGames/mgpp"
      */
     infix fun scala(repo: String) = GitHubJvmMod(repo).apply {
         worksWith.add(this)
     }
     /**
      * Add a closure mod form GitHub by its repo name.
-     * @param repo like "PlumyGame/mgpp"
+     * @param repo like "PlumyGames/mgpp"
      */
     infix fun closure(repo: String) = GitHubJvmMod(repo).apply {
         worksWith.add(this)

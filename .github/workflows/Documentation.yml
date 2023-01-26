@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       contains(github.event.head_commit.message,'[document]') &&
-      github.repository == 'PlumyGame/mgpp'
+      github.repository == 'PlumyGames/mgpp'
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2

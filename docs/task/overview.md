@@ -3,7 +3,7 @@ MGPP provides many useful gradle tasks for building and debugging a mod.
 
 This instruction might not tell you how their classes work,
 but teach you how to configure those tasks.
-For more information about those tasks, please check the [javaDoc](https://plumygame.github.io/mgppDoc).
+For more information about those tasks, please check the [javaDoc](https://plumygames.github.io/mgppDoc).
 
 ### Building
 - [genModHjson](task-genModHjson.md)
