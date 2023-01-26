@@ -211,6 +211,16 @@ class MindustryPlugin : Plugin<Project> {
         const val FooClient = "mindustry-client"
     }
 }
+/**
+ * Provides the existing `antiAlias`: [AntiAlias] task.
+ */
+val TaskContainer.`antiAlias`: TaskProvider<AntiAlias>
+    get() = named<AntiAlias>("antiAlias")
+/**
+ * Provides the existing `genModHjson`: [ModHjsonGenerate] task.
+ */
+val TaskContainer.`genModHjson`: TaskProvider<ModHjsonGenerate>
+    get() = named<ModHjsonGenerate>("genModHjson")
 
 fun String?.addAngleBracketsIfNeed(): String? =
     if (this == null) null
@@ -274,6 +284,7 @@ class MindustryAppPlugin : Plugin<Project> {
                             else temporaryDir.resolve("data")
                         }
                     }
+
                     else -> File(dataDirConfig) // customized data directory
                 }
 
@@ -309,6 +320,38 @@ class MindustryAppPlugin : Plugin<Project> {
         }
     }
 }
+/**
+ * Provides the existing `downloadClient`: [Download] task.
+ *
+ * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
+ */
+val TaskContainer.`downloadClient`: TaskProvider<Download>
+    get() = named<Download>("downloadClient")
+
+/**
+ * Provides the existing `downloadServer`: [RunMindustry] task.
+ *
+ * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
+ */
+val TaskContainer.`downloadServer`: TaskProvider<Download>
+    get() = named<Download>("downloadServer")
+
+/**
+ * Provides the existing `runClient`: [RunMindustry] task.
+ *
+ * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
+ */
+val TaskContainer.`runClient`: TaskProvider<RunMindustry>
+    get() = named<RunMindustry>("runClient")
+
+/**
+ * Provides the existing `runServer`: [RunMindustry] task.
+ *
+ * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
+ */
+val TaskContainer.`runServer`: TaskProvider<RunMindustry>
+    get() = named<RunMindustry>("runServer")
+
 /**
  * For deployment.
  */
@@ -486,16 +529,6 @@ class MindustryAssetPlugin : Plugin<Project> {
         }
     }
 }
-/**
- * Provides the existing [antiAlias][AntiAlias] task.
- */
-val TaskContainer.`antiAlias`: TaskProvider<AntiAlias>
-    get() = named<AntiAlias>("antiAlias")
-/**
- * Provides the existing [genModHjson][ModHjsonGenerate] task.
- */
-val TaskContainer.`genModHjson`: TaskProvider<ModHjsonGenerate>
-    get() = named<ModHjsonGenerate>("genModHjson")
 
 inline fun safeRun(func: () -> Unit) {
     try {
@@ -515,6 +548,7 @@ fun Project.resolveDefaultDataDir(): File {
             logger.warn("Can't recognize your operation system.")
             Mgpp.DefaultEmptyFile
         }
+
         OS.Windows -> FileAt(System.getenv("AppData"), "Mindustry")
         OS.Linux -> FileAt(System.getenv("XDG_DATA_HOME") ?: System.getenv("HOME"), ".local", "share", "Mindustry")
         OS.Mac -> FileAt(System.getenv("HOME"), "Library", "Application Support", "Mindustry")
