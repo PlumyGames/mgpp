@@ -242,25 +242,25 @@ class MindustryAppPlugin : Plugin<Project> {
         }
         target.afterEvaluateThis {
             // For client side
-            val downloadClient = target.tasks.register<Download>(
+            val downloadClient = target.tasks.register<DownloadGame>(
                 "downloadClient",
             ) {
                 group = Mgpp.MindustryTaskGroup
                 keepOthers.set(ex._client.keepOtherVersion)
                 val localOverwrite = project.local["mgpp.client.location"]
                 if (localOverwrite != null)
-                    location.set(LocalGameLocation(localOverwrite))
+                    location.set(LocalGameLoc(localOverwrite))
                 else location.set(ex._client.location)
             }
             // For server side
-            val downloadServer = target.tasks.register<Download>(
+            val downloadServer = target.tasks.register<DownloadGame>(
                 "downloadServer",
             ) {
                 group = Mgpp.MindustryTaskGroup
                 keepOthers.set(ex._client.keepOtherVersion)
                 val localOverwrite = project.local["mgpp.server.location"]
                 if (localOverwrite != null)
-                    location.set(LocalGameLocation(localOverwrite))
+                    location.set(LocalGameLoc(localOverwrite))
                 else location.set(ex._server.location)
             }
             val runClient = tasks.register<RunMindustry>("runClient") {
@@ -321,20 +321,20 @@ class MindustryAppPlugin : Plugin<Project> {
     }
 }
 /**
- * Provides the existing `downloadClient`: [Download] task.
+ * Provides the existing `downloadClient`: [DownloadGame] task.
  *
  * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
  */
-val TaskContainer.`downloadClient`: TaskProvider<Download>
-    get() = named<Download>("downloadClient")
+val TaskContainer.`downloadClient`: TaskProvider<DownloadGame>
+    get() = named<DownloadGame>("downloadClient")
 
 /**
  * Provides the existing `downloadServer`: [RunMindustry] task.
  *
  * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
  */
-val TaskContainer.`downloadServer`: TaskProvider<Download>
-    get() = named<Download>("downloadServer")
+val TaskContainer.`downloadServer`: TaskProvider<DownloadGame>
+    get() = named<DownloadGame>("downloadServer")
 
 /**
  * Provides the existing `runClient`: [RunMindustry] task.

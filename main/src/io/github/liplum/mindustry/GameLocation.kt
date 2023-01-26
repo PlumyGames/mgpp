@@ -6,35 +6,35 @@ import java.io.Serializable
 /**
  * An abstract Mindustry game file.
  */
-interface IGameLocation : Serializable {
+interface IGameLoc<T : IDownloadLoc> : Serializable {
     var fileName: String
     /**
-     * Generate an [IDownloadLocation] deterministically.
+     * Generate an [T] deterministically.
      */
-    fun toDownloadLocation(): IDownloadLocation
-    infix fun named(name: String): IGameLocation {
+    fun createDownloadLoc(): T
+    infix fun named(name: String): IGameLoc<T> {
         fileName = name
         return this
     }
 }
 
-data class GitHubGameLocation(
+data class GitHubGameLoc(
     val user: String = "",
     val repo: String = "",
     val version: String = "",
     val release: String = "",
-) : IGameLocation {
+) : IGameLoc<GitHubDownload> {
     val download = GitHubDownload.release(user, repo, version, release)
     override var fileName = "${download.name.removeSuffix(".jar")}-${user}-${repo}-${version}.jar"
-    override fun toDownloadLocation() = download
+    override fun createDownloadLoc() = download
 }
 
-data class LocalGameLocation(
+data class LocalGameLoc(
     val file: File,
-) : IGameLocation {
+) : IGameLoc<LocalCopy> {
     constructor(path: String) : this(File(path))
 
-    val localCopy = LocalDownload(file)
+    val localCopy = LocalCopy(file)
     override var fileName: String = file.name
-    override fun toDownloadLocation() = localCopy
+    override fun createDownloadLoc() = localCopy
 }

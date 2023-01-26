@@ -19,7 +19,7 @@ abstract class GameSpecBase(
      * The location of Mindustry game.
      */
     @InheritFromParent
-    abstract val location: Property<IGameLocation>
+    abstract val location: Property<IGameLoc>
     /**
      * Whether to keep other versions when a new version is downloaded.
      */
@@ -46,7 +46,7 @@ abstract class GameSpecBase(
     val keepOthers: Unit
         get() = keepOtherVersion.set(true)
     /**
-     * @see [GitHubGameLocation]
+     * @see [GitHubGameLoc]
      */
     fun GameLocation(
         user: String = "",
@@ -55,39 +55,39 @@ abstract class GameSpecBase(
         release: String = "",
     ) = GitHubLocation(user, repo, version, release)
     /**
-     * @see [GitHubGameLocation]
+     * @see [GitHubGameLoc]
      */
     fun GameLocation(
         map: Map<String, String>,
     ) = GitHubLocation(map)
     /**
-     * @see [GitHubGameLocation]
+     * @see [GitHubGameLoc]
      */
     fun GitHubLocation(
         user: String = "",
         repo: String = "",
         version: String = "",
         release: String = "",
-    ) = GitHubGameLocation(user, repo, version, release)
+    ) = GitHubGameLoc(user, repo, version, release)
     /**
-     * @see [GitHubGameLocation]
+     * @see [GitHubGameLoc]
      */
     fun GitHubLocation(
         map: Map<String, String>,
-    ) = GitHubGameLocation(
+    ) = GitHubGameLoc(
         user = map["user"] ?: "",
         repo = map["repo"] ?: "",
         version = map["version"] ?: "",
         release = map["release"] ?: "",
     )
     /**
-     * @see [LocalGameLocation]
+     * @see [LocalGameLoc]
      */
-    fun LocalLocation(file: File) = LocalGameLocation(file)
+    fun LocalLocation(file: File) = LocalGameLoc(file)
     /**
-     * @see [LocalGameLocation]
+     * @see [LocalGameLoc]
      */
-    fun LocalLocation(path: String) = LocalGameLocation(File(path))
+    fun LocalLocation(path: String) = LocalGameLoc(File(path))
     /**
      * A notation represents the latest version.
      * ## Usages
@@ -104,21 +104,21 @@ abstract class GameSpecBase(
     /**
      * Set the [location] to [game]
      */
-    infix fun <T> from(game: T): T where T : IGameLocation =
+    infix fun <T> from(game: T): T where T : IGameLoc =
         game.apply {
             location.set(this)
         }
     /**
      * Download official edition from [MindustryPlugin.MindustryOfficialReleaseURL]
      */
-    infix fun official(version: String): GitHubGameLocation =
+    infix fun official(version: String): GitHubGameLoc =
         Official(version).apply {
             location.set(this)
         }
     /**
      * Download bleeding-edge from [MindustryPlugin.APIMindustryBEReleaseURL]
      */
-    infix fun be(version: String): GitHubGameLocation =
+    infix fun be(version: String): GitHubGameLoc =
         BE(version).apply {
             location.set(this)
         }
@@ -127,7 +127,7 @@ abstract class GameSpecBase(
      * ## Supported notations:
      * - [latest]: set the [location] to the latest official
      */
-    infix fun official(notation: INotation): GitHubGameLocation =
+    infix fun official(notation: INotation): GitHubGameLoc =
         LatestOfficial().apply {
             if (notation === LatestNotation)
                 location.set(this)
@@ -139,7 +139,7 @@ abstract class GameSpecBase(
      * ## Supported notations:
      * - [latest]: set the [location] to the latest bleeding-edge
      */
-    infix fun be(latest: INotation): GitHubGameLocation =
+    infix fun be(latest: INotation): GitHubGameLoc =
         LatestBE().apply {
             if (latest === LatestNotation)
                 location.set(this)
@@ -153,7 +153,7 @@ abstract class GameSpecBase(
      * Don't embed the whole game into project directory.
      *
      */
-    infix fun fromLocal(file: File): LocalGameLocation =
+    infix fun fromLocal(file: File): LocalGameLoc =
         LocalLocation(file).apply {
             location.set(this)
         }
@@ -163,7 +163,7 @@ abstract class GameSpecBase(
      * **Suggestion** To use a relative path would be better for git or collaboration.
      * Don't embed the whole game into project directory.
      */
-    infix fun fromLocal(path: String): LocalGameLocation =
+    infix fun fromLocal(path: String): LocalGameLoc =
         LocalLocation(path).apply {
             location.set(this)
         }
@@ -171,22 +171,22 @@ abstract class GameSpecBase(
      * ## Supported notations:
      * - None
      */
-    infix fun from(notation: INotation): IGameLocation =
+    infix fun from(notation: INotation): IGameLoc =
         throw GradleException("Unknown $type notation of mindustry $notation")
     /**
-     * Create a [GitHubGameLocation] of official edition from [MindustryPlugin.APIMindustryOfficialReleaseURL]
+     * Create a [GitHubGameLoc] of official edition from [MindustryPlugin.APIMindustryOfficialReleaseURL]
      */
-    abstract fun Official(version: String): GitHubGameLocation
+    abstract fun Official(version: String): GitHubGameLoc
     /**
-     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.APIMindustryBEReleaseURL]
+     * Create a [GitHubGameLoc] of bleeding-edge from [MindustryPlugin.APIMindustryBEReleaseURL]
      */
-    abstract fun BE(version: String): GitHubGameLocation
+    abstract fun BE(version: String): GitHubGameLoc
     /**
-     * Create a [GitHubGameLocation] of the latest official edition from [MindustryPlugin.APIMindustryOfficialReleaseURL]
+     * Create a [GitHubGameLoc] of the latest official edition from [MindustryPlugin.APIMindustryOfficialReleaseURL]
      *
      * **Not Recommended** It may not work due to a network issue or GitHub API access limitation.
      */
-    fun LatestOfficial(): GitHubGameLocation {
+    fun LatestOfficial(): GitHubGameLoc {
         val latestVersion = target.fetchLatestVersion("mindustry-$type-official") {
             try {
                 val url = URL(Mgpp.APIMindustryOfficialLatestReleaseURL)
@@ -209,11 +209,11 @@ abstract class GameSpecBase(
         return Official(latestVersion)
     }
     /**
-     * Create a [GitHubGameLocation] of the latest bleeding-edge from [MindustryPlugin.APIMindustryBEReleaseURL]
+     * Create a [GitHubGameLoc] of the latest bleeding-edge from [MindustryPlugin.APIMindustryBEReleaseURL]
      *
      * **Not Recommended** It may not work due to a network issue or GitHub API access limitation.
      */
-    fun LatestBE(): GitHubGameLocation {
+    fun LatestBE(): GitHubGameLoc {
         val latestVersion = target.fetchLatestVersion("mindustry-$type-be") {
             try {
                 val url = URL(Mgpp.APIMindustryBELatestReleaseURL)
@@ -240,7 +240,7 @@ abstract class GameSpecBase(
      * ## Supported notations:
      * - [latest]: set the [location] to the latest official
      */
-    infix fun official(map: Map<String, Any>): GitHubGameLocation {
+    infix fun official(map: Map<String, Any>): GitHubGameLoc {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
         return when (version) {
             LatestNotation.toString() -> official(LatestNotation)
@@ -248,11 +248,11 @@ abstract class GameSpecBase(
         }
     }
     /**
-     * Create a [GitHubGameLocation] of bleeding-edge from [MindustryPlugin.APIMindustryOfficialLatestReleaseURL]
+     * Create a [GitHubGameLoc] of bleeding-edge from [MindustryPlugin.APIMindustryOfficialLatestReleaseURL]
      * ## Supported notations:
      * - [latest]: set the [location] to the latest bleeding-edge
      */
-    infix fun be(map: Map<String, Any>): GitHubGameLocation {
+    infix fun be(map: Map<String, Any>): GitHubGameLoc {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
         return when (version) {
             LatestNotation.toString() -> be(LatestNotation)
@@ -280,7 +280,7 @@ class ClientSpec(
      */
     @InheritFromParent
     @LocalProperty("mgpp.client.location")
-    override val location = target.prop<IGameLocation>().apply {
+    override val location = target.prop<IGameLoc>().apply {
         convention(Official(version = Mgpp.DefaultMindustryVersion))
     }
     val mindustry: ClientSpec
@@ -336,7 +336,7 @@ class ServerSpec(
      */
     @InheritFromParent
     @LocalProperty("mgpp.server.location")
-    override val location = target.prop<IGameLocation>().apply {
+    override val location = target.prop<IGameLoc>().apply {
         convention(Official(version = Mgpp.DefaultMindustryVersion))
     }
     val mindustry: ServerSpec

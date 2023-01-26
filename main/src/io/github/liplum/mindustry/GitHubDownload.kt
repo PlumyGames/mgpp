@@ -8,7 +8,7 @@ import java.net.URL
 /**
  * An abstract download location, which can only open the input stream for reading
  */
-interface IDownloadLocation : Serializable {
+interface IDownloadLoc : Serializable {
     /**
      * Open an input stream for reading.
      * The caller has the responsibility to close this.
@@ -26,9 +26,9 @@ interface IDownloadLocation : Serializable {
 /**
  * A local download from disk
  */
-data class LocalDownload(
+data class LocalCopy(
     var localFile: File,
-) : IDownloadLocation {
+) : IDownloadLoc {
     override val name: String
         get() = localFile.name
     override val path: String
@@ -43,7 +43,7 @@ data class LocalDownload(
 data class GitHubDownload(
     override var name: String,
     var url: URL,
-) : IDownloadLocation {
+) : IDownloadLoc {
     override val path: String
         get() = url.toString()
 
