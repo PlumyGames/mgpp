@@ -1,10 +1,12 @@
+@file:JvmMultifileClass
+@file:JvmName("ExtensionKt")
 @file:Suppress("RemoveRedundantBackticks")
-@file:JvmName("AssetsExtension")
 
-package io.github.liplum.mindustry
+package io.github.liplum.mindustry.extension
 
 import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.MindustryAssetsExtension.AssetBatchType
+import io.github.liplum.mindustry.*
+import io.github.liplum.mindustry.extension.MindustryAssetsExtension.AssetBatchType
 import io.github.liplum.mindustry.task.GenerateRClass
 import io.github.liplum.mindustry.task.GenerateResourceClass
 import org.gradle.api.Action
@@ -17,12 +19,12 @@ import java.io.Serializable
  * Retrieves the [mindustry][MindustryExtension] extension.
  */
 val Project.`mindustryAssets`: MindustryAssetsExtension
-    get() = (this as ExtensionAware).extensions.getByName(Mgpp.AssetExtensionName) as MindustryAssetsExtension
+    get() = (this as ExtensionAware).extensions.getByName(MindustryPlugin.AssetExtensionName) as MindustryAssetsExtension
 /**
  * Configures the [mindustry][MindustryExtension] extension.
  */
 fun Project.`mindustryAssets`(configure: Action<MindustryAssetsExtension>): Unit =
-    (this as ExtensionAware).extensions.configure(Mgpp.AssetExtensionName, configure)
+    (this as ExtensionAware).extensions.configure(MindustryPlugin.AssetExtensionName, configure)
 
 object ResourceClassGeneratorRegistry {
     @JvmStatic
@@ -36,7 +38,7 @@ object ResourceClassGeneratorRegistry {
      * Get a resource generator or [IResourceClassGenerator.Empty] if that doesn't exist.
      */
     operator fun get(name: String): IResourceClassGenerator =
-        all[name] ?: IResourceClassGenerator.Empty
+        all[name] ?: IResourceClassGenerator
     /**
      * Set a resource generator.
      */
@@ -53,7 +55,7 @@ open class MindustryAssetsExtension(
      */
     @JvmField
     val assetsRoot = target.fileProp().apply {
-        convention(Mgpp.DefaultEmptyFile)
+        convention(MindustryPlugin.DefaultEmptyFile)
     }
     /**
      * The qualified name of generated class,
@@ -238,7 +240,8 @@ open class MindustryAssetsExtension(
             assetsRoot.set(File(path))
         }
     }
-    inner class IconSpec{
+
+    inner class IconSpec {
         /**
          * Set [assetsRoot] to [file]
          */
@@ -390,7 +393,7 @@ data class AssetBatch(
      * The root directory of resources.
      * It'll be used when you want to include a nested folder
      */
-    var root: File = Mgpp.DefaultEmptyFile,
+    var root: File = MindustryPlugin.DefaultEmptyFile,
     /**
      * What task the generating depends on.
      * It's useful to control the building chains.
@@ -432,5 +435,5 @@ data class AssetBatch(
  * Resolve all batches for generating and copying assets
  */
 fun List<AssetBatch>.resolveBatches():
-        Map<AssetBatchType, List<AssetBatch>> =
+    Map<AssetBatchType, List<AssetBatch>> =
     this.groupBy { it.type }

@@ -12,7 +12,7 @@ data class LatestCache(
     var lastValue: String,
     var lastUpdatedTimeStamp: Long,
 )
-
+internal
 inline fun Project.fetchLatestVersion(
     type: String,
     outOfDate: Long = Mgpp.outOfDataTime,

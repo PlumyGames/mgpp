@@ -1,3 +1,6 @@
+@file:JvmMultifileClass
+@file:JvmName("DslKt")
+
 package io.github.liplum.dsl
 
 import org.hjson.JsonType
@@ -21,6 +24,7 @@ fun JsonValue.convert(): Any? {
             }
             map
         }
+
         JsonType.ARRAY -> {
             val array = ArrayList<Any?>()
             for (jv in this.asArray()) {
@@ -28,6 +32,7 @@ fun JsonValue.convert(): Any? {
             }
             array
         }
+
         JsonType.BOOLEAN -> this.asBoolean()
         JsonType.NULL -> null
         JsonType.DSF -> this.asDsf()

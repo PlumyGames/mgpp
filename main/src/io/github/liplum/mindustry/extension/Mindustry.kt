@@ -1,9 +1,11 @@
+@file:JvmMultifileClass
+@file:JvmName("ExtensionKt")
 @file:Suppress("RemoveRedundantBackticks")
-@file:JvmName("Extension")
 
-package io.github.liplum.mindustry
+package io.github.liplum.mindustry.extension
 
 import io.github.liplum.dsl.*
+import io.github.liplum.mindustry.*
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -12,12 +14,12 @@ import org.gradle.api.plugins.ExtensionAware
  * Retrieves the [mindustry][MindustryExtension] extension.
  */
 val Project.`mindustry`: MindustryExtension
-    get() = (this as ExtensionAware).extensions.getByName(Mgpp.MainExtensionName) as MindustryExtension
+    get() = (this as ExtensionAware).extensions.getByName(MindustryPlugin.MainExtensionName) as MindustryExtension
 /**
  * Configures the [mindustry][MindustryExtension] extension.
  */
 fun Project.`mindustry`(configure: Action<MindustryExtension>): Unit =
-    (this as ExtensionAware).extensions.configure(Mgpp.MainExtensionName, configure)
+    (this as ExtensionAware).extensions.configure(MindustryPlugin.MainExtensionName, configure)
 /**
  * The project type.
  */
@@ -56,9 +58,9 @@ open class MindustryExtension(
      * 1 hour as default.
      */
     var outOfDateTime: Int
-        get() = (Mgpp.outOfDataTime / 1000).toInt()
+        get() = (MindustryPlugin.outOfDataTime / 1000).toInt()
         set(value) {
-            Mgpp.outOfDataTime = value * 1000L
+            MindustryPlugin.outOfDataTime = value * 1000L
         }
     val _projectType = target.prop<ProjectType>().apply {
         convention(ProjectType.Mod)

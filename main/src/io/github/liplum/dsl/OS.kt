@@ -1,3 +1,6 @@
+@file:JvmMultifileClass
+@file:JvmName("DslKt")
+
 package io.github.liplum.dsl
 
 enum class OS {

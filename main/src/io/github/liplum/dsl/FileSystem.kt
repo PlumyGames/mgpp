@@ -1,3 +1,6 @@
+@file:JvmMultifileClass
+@file:JvmName("DslKt")
+
 package io.github.liplum.dsl
 
 import java.io.File
@@ -8,6 +11,7 @@ import java.net.URL
  * Copy data from this input stream to [file].
  * @receiver Caller has responsibility to close this stream
  */
+internal
 fun InputStream.copyTo(file: File): File {
     file.outputStream().use {
         this.copyTo(it)
@@ -18,6 +22,7 @@ fun InputStream.copyTo(file: File): File {
  * Copy data from this url to [file].
  * It will create the parent folder if it doesn't exist.
  */
+internal
 fun URL.copyTo(file: File): File {
     file.parentFile.mkdirs()
     this.openStream().use {
@@ -26,16 +31,19 @@ fun URL.copyTo(file: File): File {
     return file
 }
 
+internal
 fun File.ensure(): File {
     parentFile?.mkdirs()
     return this
 }
 
+internal
 fun File.getOrCreateDir(): File {
     mkdirs()
     return this
 }
 
+internal
 fun FileAt(
     vararg segments: String,
 ): File = StringBuilder().run {
@@ -48,6 +56,7 @@ fun FileAt(
     File(this.toString())
 }
 
+internal
 fun File.mapTo(folder: File, overwrite: Boolean = true) {
     val target = folder.resolve(name)
     folder.mkdirs()
@@ -55,6 +64,7 @@ fun File.mapTo(folder: File, overwrite: Boolean = true) {
         this.copyTo(target, true)
 }
 
+internal
 fun Iterable<File>.mapFilesTo(
     folder: File, overwrite: Boolean = true,
 ) {
@@ -66,10 +76,12 @@ fun Iterable<File>.mapFilesTo(
     }
 }
 
+internal
 fun File.getFilesRecursive() = ArrayList<File>().apply {
     forEachFilesRecursive { add(it) }
 }
 
+internal
 fun File.forEachFilesRecursive(func: (File) -> Unit) {
     if (this.isDirectory) {
         this.listFiles()?.forEach {
@@ -80,6 +92,7 @@ fun File.forEachFilesRecursive(func: (File) -> Unit) {
     }
 }
 
+internal
 fun File.findFileInOrder(vararg files: File): File {
     if (this.exists()) return this
     for ((i, file) in files.withIndex()) {
@@ -90,6 +103,7 @@ fun File.findFileInOrder(vararg files: File): File {
     return files.last()
 }
 
+internal
 fun findFileInOrder(vararg files: File): File {
     for ((i, file) in files.withIndex()) {
         return if (file.exists()) file
@@ -99,6 +113,7 @@ fun findFileInOrder(vararg files: File): File {
     return files.last()
 }
 
+internal
 fun File.findFileInOrder(vararg files: () -> File): File {
     if (this.exists()) return this
     for ((i, file) in files.withIndex()) {
@@ -110,6 +125,7 @@ fun File.findFileInOrder(vararg files: () -> File): File {
     return files.last()()
 }
 
+internal
 fun findFileInOrder(vararg files: () -> File): File {
     for ((i, file) in files.withIndex()) {
         val f = file()

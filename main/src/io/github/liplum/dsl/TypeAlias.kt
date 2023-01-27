@@ -1,3 +1,6 @@
+@file:JvmMultifileClass
+@file:JvmName("DslKt")
+
 package io.github.liplum.dsl
 
 import org.gradle.api.file.DirectoryProperty

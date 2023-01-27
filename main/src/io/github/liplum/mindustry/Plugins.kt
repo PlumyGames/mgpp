@@ -5,6 +5,9 @@ package io.github.liplum.mindustry
 import io.github.liplum.dsl.*
 import io.github.liplum.mindustry.LocalProperties.local
 import io.github.liplum.mindustry.LocalProperties.localProperties
+import io.github.liplum.mindustry.extension.MindustryAssetsExtension
+import io.github.liplum.mindustry.extension.MindustryExtension
+import io.github.liplum.mindustry.extension.resolveBatches
 import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
