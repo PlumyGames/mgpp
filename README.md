@@ -1,6 +1,6 @@
 <div align = center>
 
-<br>
+![Banner]
 
 [![Badge Gradle]][Gradle]   
 [![Badge License]][License]   
@@ -8,13 +8,8 @@
 
 <br>
 
-![Banner]
-
-<br>
-
-### ***Plumy*** *the **[Mindustry]** Gradle plugin.*
-
-<br>
+### ***Plumy*** *the **[Mindustry]** Gradle plugin V2.*
+*The next generation of Mindustry modding.*
 <br>
 <br>
 
