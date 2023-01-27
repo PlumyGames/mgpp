@@ -1,4 +1,4 @@
-rootProject.name = "MindustryGradlePluginPlumy"
+rootProject.name = "mgpp"
 pluginManagement {
     repositories {
         gradlePluginPortal()
