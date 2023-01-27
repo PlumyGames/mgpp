@@ -19,7 +19,7 @@ abstract class GameSpecBase(
      * The location of Mindustry game.
      */
     @InheritFromParent
-    abstract val location: Property<IGameLoc<*>>
+    abstract val location: Property<IGameLoc>
     /**
      * Whether to keep other versions when a new version is downloaded.
      */
@@ -77,8 +77,8 @@ abstract class GameSpecBase(
     ) = GitHubGameLoc(
         user = map["user"] ?: "",
         repo = map["repo"] ?: "",
-        version = map["version"] ?: "",
-        release = map["release"] ?: "",
+        tag = map["version"] ?: "",
+        file = map["release"] ?: "",
     )
     /**
      * @see [LocalGameLoc]
@@ -104,7 +104,7 @@ abstract class GameSpecBase(
     /**
      * Set the [location] to [game]
      */
-    infix fun <T> from(game: T): T where T : IGameLoc<*> =
+    infix fun <T> from(game: T): T where T : IGameLoc =
         game.apply {
             location.set(this)
         }
@@ -171,7 +171,7 @@ abstract class GameSpecBase(
      * ## Supported notations:
      * - None
      */
-    infix fun from(notation: INotation): IGameLoc<*> =
+    infix fun from(notation: INotation): IGameLoc =
         throw GradleException("Unknown $type notation of mindustry $notation")
     /**
      * Create a [GitHubGameLoc] of official edition from [MindustryPlugin.APIMindustryOfficialReleaseURL]
@@ -280,7 +280,7 @@ class ClientSpec(
      */
     @InheritFromParent
     @LocalProperty("mgpp.client.location")
-    override val location = target.prop<IGameLoc<*>>().apply {
+    override val location = target.prop<IGameLoc>().apply {
         convention(Official(version = Mgpp.DefaultMindustryVersion))
     }
     val mindustry: ClientSpec
@@ -336,7 +336,7 @@ class ServerSpec(
      */
     @InheritFromParent
     @LocalProperty("mgpp.server.location")
-    override val location = target.prop<IGameLoc<*>>().apply {
+    override val location = target.prop<IGameLoc>().apply {
         convention(Official(version = Mgpp.DefaultMindustryVersion))
     }
     val mindustry: ServerSpec

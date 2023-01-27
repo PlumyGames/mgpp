@@ -3,6 +3,9 @@
 
 package io.github.liplum.mindustry.extension
 
+import io.github.liplum.mindustry.GitHubGameLoc
+import io.github.liplum.mindustry.IGameLoc
+import io.github.liplum.mindustry.R
 import org.gradle.api.Project
 
 /**
@@ -72,7 +75,7 @@ open class RunMindustryExtension(
      * }
      * ```
      */
-    fun addClient(config: AddClientSpec.() -> Unit) {
+    inline fun addClient(config: AddClientSpec.() -> Unit) {
         val client = Client()
         AddClientSpec(client).config()
         clients.add(client)
@@ -92,6 +95,7 @@ class Client {
     val jvmArgs = ArrayList<String>()
     /** @see [AddClientSpec.dataDir] */
     var dataDir: String? = null
+    var location: IGameLoc? = null
 }
 @JvmInline
 value class AddClientSpec(
@@ -130,4 +134,57 @@ value class AddClientSpec(
      * Because of Lwjgl3, the `-XstartOnFirstThread` will be passed when run on macOS.
      */
     val jvmArgs get() = client.jvmArgs
+    fun github(
+        user: String,
+        repo: String,
+        tag: String,
+        file: String,
+    ) {
+        val loc = GitHubGameLoc(
+            user = user,
+            repo = repo,
+            tag = tag,
+            file = file,
+        )
+        client.location = loc
+    }
+
+    fun github(props: Map<String, String>) {
+        github(
+            user = props["user"] ?: "",
+            repo = props["repo"] ?: "",
+            tag = props["tag"] ?: "",
+            file = props["file"] ?: "",
+        )
+    }
+
+    fun official(version: String) {
+        github(
+            user = R.anuken,
+            repo = R.mindustry,
+            tag = version,
+            file = R.MindustryClientReleaseFileName,
+        )
+    }
+
+    fun official(props: Map<String, String>) {
+        official(
+            version = props["version"] ?: "",
+        )
+    }
+
+    fun be(version: String) {
+        github(
+            user = R.anuken,
+            repo = R.mindustryBuilds,
+            tag = version,
+            file = "Mindustry-BE-Desktop-$version.jar",
+        )
+    }
+
+    fun be(props: Map<String, String>) {
+        be(
+            version = props["version"] ?: "",
+        )
+    }
 }

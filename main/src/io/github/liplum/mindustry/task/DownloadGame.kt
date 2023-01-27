@@ -14,7 +14,7 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 open class DownloadGame : DefaultTask() {
-    val location = project.prop<IGameLoc<*>>()
+    val location = project.prop<IGameLoc>()
         @Input get
     val overwrite = project.boolProp()
         @Optional @Input get
@@ -46,7 +46,7 @@ open class DownloadGame : DefaultTask() {
         }
     }
 
-    private fun useCacheOrDownload(gameLoc: IGameLoc<*>) {
+    private fun useCacheOrDownload(gameLoc: IGameLoc) {
         // Download is a very expensive task, it should detect whether the file exists.
         if (gameLoc is GitHubGameLoc) {
             val downloadLoc = gameLoc.createDownloadLoc()
