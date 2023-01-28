@@ -247,7 +247,7 @@ class DependencySpec(
          * - [latest]: set the [arcDependency] to the latest commit
          * - [latestTag]: set the [arcDependency] to the latest tag
          */
-        infix fun on(notation: INotation) {
+        infix fun on(notation: Notation) {
             when(notation) {
                 LatestNotation -> arcLatestCommit()
                 LatestReleaseNotation -> arcLatestTag()
@@ -278,7 +278,7 @@ class DependencySpec(
          * - [latest]: set the [mindustryDependency] to the latest official release
          * - [latestRelease]: set the [mindustryDependency] to the latest official release
          */
-        infix fun on(notation: INotation) {
+        infix fun on(notation: Notation) {
             when (notation) {
                 LatestNotation -> mindustryLatestRelease()
                 LatestReleaseNotation -> mindustryLatestRelease()
@@ -290,7 +290,7 @@ class DependencySpec(
          * ## Supported notations:
          * - [latest]: set the [mindustryDependency] to the latest jitpack mirror commit
          */
-        infix fun mirror(notation: INotation) {
+        infix fun mirror(notation: Notation) {
             when(notation) {
                 LatestNotation -> mindustryMirrorLatestCommit()
                 else -> throw GradleException("Unknown dependency notation of mindustry mirror $notation")

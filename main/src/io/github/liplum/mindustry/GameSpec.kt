@@ -127,7 +127,7 @@ abstract class GameSpecBase(
      * ## Supported notations:
      * - [latest]: set the [location] to the latest official
      */
-    infix fun official(notation: INotation): GitHubGameLoc =
+    infix fun official(notation: Notation): GitHubGameLoc =
         LatestOfficial().apply {
             if (notation === LatestNotation)
                 location.set(this)
@@ -139,7 +139,7 @@ abstract class GameSpecBase(
      * ## Supported notations:
      * - [latest]: set the [location] to the latest bleeding-edge
      */
-    infix fun be(latest: INotation): GitHubGameLoc =
+    infix fun be(latest: Notation): GitHubGameLoc =
         LatestBE().apply {
             if (latest === LatestNotation)
                 location.set(this)
@@ -171,7 +171,7 @@ abstract class GameSpecBase(
      * ## Supported notations:
      * - None
      */
-    infix fun from(notation: INotation): IGameLoc =
+    infix fun from(notation: Notation): IGameLoc =
         throw GradleException("Unknown $type notation of mindustry $notation")
     /**
      * Create a [GitHubGameLoc] of official edition from [MindustryPlugin.APIMindustryOfficialReleaseURL]

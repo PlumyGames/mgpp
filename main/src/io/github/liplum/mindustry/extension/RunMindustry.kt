@@ -3,10 +3,10 @@
 
 package io.github.liplum.mindustry.extension
 
-import io.github.liplum.mindustry.GitHubGameLoc
-import io.github.liplum.mindustry.IGameLoc
-import io.github.liplum.mindustry.R
+import io.github.liplum.mindustry.*
 import org.gradle.api.Project
+import org.gradle.api.logging.LogLevel
+import java.io.File
 
 /**
  * ## How to use
@@ -22,7 +22,7 @@ import org.gradle.api.Project
  * ```
  */
 open class RunMindustryExtension(
-    target: Project,
+    val target: Project,
 ) {
     val clients = ArrayList<Client>()
     /**
@@ -77,7 +77,7 @@ open class RunMindustryExtension(
      */
     inline fun addClient(config: AddClientSpec.() -> Unit) {
         val client = Client()
-        AddClientSpec(client).config()
+        AddClientSpec(target, client).config()
         clients.add(client)
     }
 
@@ -97,10 +97,12 @@ class Client {
     var dataDir: String? = null
     var location: IGameLoc? = null
 }
-@JvmInline
-value class AddClientSpec(
+
+class AddClientSpec(
+    private val proj: Project,
     private val client: Client
 ) {
+    val latest: Notation get() = Notation.latest
     /**
      * *Optional*
      * An empty String as default.
@@ -157,7 +159,11 @@ value class AddClientSpec(
             file = props["file"] ?: "",
         )
     }
-
+    /**
+     * ```kotlin
+     * official(version="v141")
+     * ```
+     */
     fun official(version: String) {
         github(
             user = R.anuken,
@@ -166,12 +172,31 @@ value class AddClientSpec(
             file = R.MindustryClientReleaseFileName,
         )
     }
-
-    fun official(props: Map<String, String>) {
-        official(
-            version = props["version"] ?: "",
-        )
+    /**
+     * ```kotlin
+     * official(version=latest)
+     * ```
+     */
+    fun official(version: Notation) {
+        when (version) {
+            Notation.latest -> client.location = LatestOfficialMindustryLoc()
+            else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
+        }
     }
+    /**
+     * ```groovy
+     * official version: "v141"
+     * official version: latest
+     * ```
+     */
+    fun official(props: Map<String, String>) {
+        when (val version = props["version"]) {
+            Notation.latest.toString() -> official(version = latest)
+            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in addClient.official(Map<String,Any>)")
+            else -> official(version)
+        }
+    }
+
 
     fun be(version: String) {
         github(
@@ -186,5 +211,30 @@ value class AddClientSpec(
         be(
             version = props["version"] ?: "",
         )
+    }
+
+    fun fromLocalDisk(path: String) {
+        val loc = LocalGameLoc(File(path))
+        client.location = loc
+    }
+
+    fun fromLocalDisk(file: File) {
+        val loc = LocalGameLoc(file)
+        client.location = loc
+    }
+
+    fun fromLocalDisk(props: Map<String, Any>) {
+        val path = props["path"]
+        val file = props["file"]
+        if (path != null) {
+            client.location = LocalGameLoc(File(path as String))
+        } else if (file != null) {
+            client.location = LocalGameLoc(file as File)
+        } else {
+            proj.logger.log(
+                LogLevel.WARN,
+                "Neither \"path\" nor \"file\" given in addClient.fromLocalDisk(Map<String,Any>)"
+            )
+        }
     }
 }
