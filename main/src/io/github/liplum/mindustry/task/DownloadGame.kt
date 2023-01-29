@@ -6,6 +6,7 @@ import io.github.liplum.dsl.ensure
 import io.github.liplum.dsl.prop
 import io.github.liplum.mindustry.GitHubGameLoc
 import io.github.liplum.mindustry.IGameLoc
+import io.github.liplum.mindustry.SharedCache
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
@@ -50,9 +51,7 @@ open class DownloadGame : DefaultTask() {
         // Download is a very expensive task, it should detect whether the file exists.
         if (gameLoc is GitHubGameLoc) {
             val downloadLoc = gameLoc.createDownloadLoc()
-            val userHome = System.getProperty("user.home")
-            val cacheFile = File(userHome).resolve(".gradle").resolve("mindustry-mgpp")
-                .resolve("github").resolve(gameLoc.fileName).ensure()
+            val cacheFile = SharedCache.resolveCacheDir().resolve("github").resolve(gameLoc.fileName).ensure()
             if (!cacheFile.exists()) {
                 logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName}...")
                 downloadLoc.openInputStream().use { it.copyTo(cacheFile) }
