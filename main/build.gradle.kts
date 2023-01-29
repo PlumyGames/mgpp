@@ -29,7 +29,7 @@ tasks.withType<Test>().configureEach {
 }
 gradlePlugin {
     plugins {
-        create("plumyMindustryPlugin") {
+        create("mgpp") {
             id = "io.github.liplum.mgpp"
             displayName = "mgpp"
             description = "For Mindustry modding in Java, kotlin and so on."

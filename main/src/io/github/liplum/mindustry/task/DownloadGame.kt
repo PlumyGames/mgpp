@@ -54,19 +54,20 @@ open class DownloadGame : DefaultTask() {
             val cacheFile = File(userHome).resolve(".gradle").resolve("mindustry")
                 .resolve("github").resolve(gameLoc.fileName).ensure()
             if (!cacheFile.exists()) {
-                logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName} .")
+                logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName}...")
                 downloadLoc.openInputStream().use { it.copyTo(cacheFile) }
-                logger.info("Downloaded ${gameLoc.fileName} at ${cacheFile}.")
+                logger.lifecycle("Downloaded ${gameLoc.fileName} at ${cacheFile}.")
             }
             if (!outputFile.exists()) {
                 cacheFile.copyTo(outputFile)
+                logger.lifecycle("Copied game from cache $cacheFile to $outputFile.")
             }
         } else {
             if (!outputFile.exists()) {
                 val downloadLoc = gameLoc.createDownloadLoc()
                 logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName} .")
                 downloadLoc.openInputStream().use { it.copyTo(outputFile) }
-                logger.info("Downloaded ${gameLoc.fileName} at ${outputFile}.")
+                logger.lifecycle("Downloaded ${gameLoc.fileName} at ${outputFile}.")
             }
         }
     }

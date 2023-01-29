@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.0"
-    id("io.github.liplum.mgpp") version "1.1.12"
+    id("io.github.liplum.mgpp") version "1.2.0"
 }
 
 sourceSets {
@@ -46,13 +46,13 @@ tasks.register<TestOutputTask>("iconMaker") {
 }
 mindustry {
     dependency {
-        mindustry on "v136"
-        // mindustry mirror "d7312445a1"
-        arc on "v136"
+        //mindustry on "v136"
+        mindustry mirror "v141.2"
+        arc on "v141.3"
         // arc on latestRelease
     }
     client {
-        mindustry official "v136"
+        mindustry official "v141.3"
         //mindustry be latest
         /*
         mindustry from GameLocation(
@@ -69,7 +69,7 @@ mindustry {
     }
     server {
         //mindustry be "22728"
-        mindustry official "v136"
+        mindustry official "v141.3"
     }
     mods {
         worksWith {
