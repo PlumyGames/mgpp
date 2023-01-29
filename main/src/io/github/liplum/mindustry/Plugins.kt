@@ -240,6 +240,12 @@ class MindustryAppPlugin : Plugin<Project> {
             group = Mgpp.MindustryTaskGroup
             mods.set(ex._mods.worksWith)
         }
+        target.tasks.register<CleanMindustryDownloadCache>("cleanMindustryDownloadCache") {
+            group = Mgpp.MindustryTaskGroup
+        }
+        target.tasks.findByName("clean")?.let {
+            it.dependsOn("cleanMindustryDownloadCache")
+        }
         target.afterEvaluateThis {
             // For client side
             val downloadClient = target.tasks.register<DownloadGame>(

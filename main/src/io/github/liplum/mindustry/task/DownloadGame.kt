@@ -42,7 +42,7 @@ open class DownloadGame : DefaultTask() {
         if (!output.exists() || overwrite.get()) {
             useCacheOrDownload(gameLoc)
         } else {
-            logger.info("$gameLoc has been already downloaded at ${output.absolutePath} , so skip it.")
+            logger.info("$gameLoc has been already downloaded at ${output.absolutePath}, so skip it.")
         }
     }
 
@@ -51,7 +51,7 @@ open class DownloadGame : DefaultTask() {
         if (gameLoc is GitHubGameLoc) {
             val downloadLoc = gameLoc.createDownloadLoc()
             val userHome = System.getProperty("user.home")
-            val cacheFile = File(userHome).resolve(".gradle").resolve("mindustry")
+            val cacheFile = File(userHome).resolve(".gradle").resolve("mindustry-mgpp")
                 .resolve("github").resolve(gameLoc.fileName).ensure()
             if (!cacheFile.exists()) {
                 logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName}...")
