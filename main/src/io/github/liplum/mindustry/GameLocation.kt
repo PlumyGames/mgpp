@@ -41,6 +41,18 @@ data class LatestOfficialMindustryLoc(
     }
 }
 
+data class LatestBeMindustryLoc(
+    val file: String
+) : IGameLoc {
+    override var fileName: String
+        get() = TODO("Not yet implemented")
+        set(value) {}
+
+    override fun createDownloadLoc(): IDownloadLoc {
+        TODO("Not yet implemented")
+    }
+}
+
 data class LocalGameLoc(
     val file: File,
 ) : IGameLoc {

@@ -41,14 +41,14 @@ open class RunMindustryExtension(
      *    github(
      *        user="mindustry-antigrief"
      *        repo="mindustry-client"
-     *        version = "v8.0.0",
-     *        release = "erekir-client.jar",
+     *        tag = "v8.0.0",
+     *        file = "erekir-client.jar",
      *    )
      * }
      * addClient {
      *    fooClient(
-     *       version = "v8.0.0",
-     *       release = "erekir-client.jar",
+     *       tag = "v8.0.0",
+     *       file = "erekir-client.jar",
      *    )
      * }
      * ```
@@ -65,14 +65,14 @@ open class RunMindustryExtension(
      *    github(
      *        user: "mindustry-antigrief"
      *        repo: "mindustry-client"
-     *        version: "v8.0.0",
-     *        release: "erekir-client.jar",
+     *        tag: "v8.0.0",
+     *        file: "erekir-client.jar",
      *    )
      * }
      * addClient {
      *    fooClient(
-     *       version: "v8.0.0",
-     *       release: "erekir-client.jar",
+     *       tag: "v8.0.0",
+     *       file: "erekir-client.jar",
      *    )
      * }
      * ```
@@ -206,8 +206,8 @@ class AddClientSpec(
      * official version: latest
      * ```
      */
-    fun official(props: Map<String, String>) {
-        when (val version = props["version"]) {
+    fun official(props: Map<String, Any>) {
+        when (val version = props["version"]?.toString()) {
             Notation.latest.toString() -> official(version = latest)
             null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in addClient.official(Map<String,Any>)")
             else -> official(version)
@@ -223,10 +223,19 @@ class AddClientSpec(
         )
     }
 
-    fun be(props: Map<String, String>) {
-        be(
-            version = props["version"] ?: "",
-        )
+    fun be(props: Map<String, Any>) {
+        when (val version = props["version"]?.toString()) {
+            Notation.latest.toString() -> be(version = latest)
+            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in addClient.be(Map<String,Any>)")
+            else -> be(version)
+        }
+    }
+
+    fun be(version: Notation) {
+        when (version) {
+            Notation.latest -> client.location = LatestBeMindustryLoc(file = "Mindustry-BE-Desktop-$version.jar")
+            else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
+        }
     }
 
     fun fromLocalDisk(path: String) {
@@ -251,9 +260,31 @@ class AddClientSpec(
             )
         }
     }
+
+    fun fooClient(
+        tag: String,
+        file: String,
+    ) {
+        github(
+            user = "mindustry-antigrief",
+            repo = "mindustry-client",
+            tag = tag,
+            file = file,
+        )
+    }
+
+    fun fooClient(props: Map<String, String>) {
+        github(
+            user = "mindustry-antigrief",
+            repo = "mindustry-client",
+            tag = props["tag"] ?: "",
+            file = props["file"] ?: "",
+        )
+    }
 }
 //</editor-fold>
 
+//<editor-fold desc="Add Server Spec">
 class Server {
     /** @see [AddServerSpec.name] */
     var name: String = ""
@@ -353,14 +384,23 @@ class AddServerSpec(
             user = R.anuken,
             repo = R.mindustryBuilds,
             tag = version,
-            file = "MMindustry-BE-Server-$version.jar",
+            file = "Mindustry-BE-Server-$version.jar",
         )
     }
 
-    fun be(props: Map<String, String>) {
-        be(
-            version = props["version"] ?: "",
-        )
+    fun be(props: Map<String, Any>) {
+        when (val version = props["version"]?.toString()) {
+            Notation.latest.toString() -> be(version = latest)
+            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in AddServer.be(Map<String,Any>)")
+            else -> be(version)
+        }
+    }
+
+    fun be(version: Notation) {
+        when (version) {
+            Notation.latest -> server.location = LatestBeMindustryLoc(file = "Mindustry-BE-Server-$version.jar")
+            else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
+        }
     }
 
     fun fromLocalDisk(path: String) {
@@ -386,3 +426,4 @@ class AddServerSpec(
         }
     }
 }
+//</editor-fold>
