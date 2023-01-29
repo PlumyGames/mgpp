@@ -19,12 +19,12 @@ import java.io.Serializable
  * Retrieves the [mindustry][MindustryExtension] extension.
  */
 val Project.`mindustryAssets`: MindustryAssetsExtension
-    get() = (this as ExtensionAware).extensions.getByName(MindustryPlugin.AssetExtensionName) as MindustryAssetsExtension
+    get() = (this as ExtensionAware).extensions.getByName(R.x.mindustryAssets) as MindustryAssetsExtension
 /**
  * Configures the [mindustry][MindustryExtension] extension.
  */
 fun Project.`mindustryAssets`(configure: Action<MindustryAssetsExtension>): Unit =
-    (this as ExtensionAware).extensions.configure(MindustryPlugin.AssetExtensionName, configure)
+    (this as ExtensionAware).extensions.configure(R.x.mindustryAssets, configure)
 
 object ResourceClassGeneratorRegistry {
     @JvmStatic
