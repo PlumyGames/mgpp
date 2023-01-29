@@ -16,6 +16,8 @@ interface IGameLoc : Serializable {
         fileName = name
         return this
     }
+
+    fun resolveOutputFile(): File
 }
 
 data class GitHubGameLoc(
@@ -27,6 +29,9 @@ data class GitHubGameLoc(
     val download = GitHubDownload.release(user, repo, tag, file)
     override var fileName = "$user-$repo-$tag-${download.name}"
     override fun createDownloadLoc() = download
+    override fun resolveOutputFile(): File {
+        return SharedCache.resolveCacheDir().resolve("github").resolve(fileName)
+    }
 }
 
 data class LatestOfficialMindustryLoc(
@@ -37,6 +42,10 @@ data class LatestOfficialMindustryLoc(
         set(value) {}
 
     override fun createDownloadLoc(): IDownloadLoc {
+        TODO("Not yet implemented")
+    }
+
+    override fun resolveOutputFile(): File {
         TODO("Not yet implemented")
     }
 }
@@ -51,6 +60,10 @@ data class LatestBeMindustryLoc(
     override fun createDownloadLoc(): IDownloadLoc {
         TODO("Not yet implemented")
     }
+
+    override fun resolveOutputFile(): File {
+        TODO("Not yet implemented")
+    }
 }
 
 data class LocalGameLoc(
@@ -61,4 +74,10 @@ data class LocalGameLoc(
     val localCopy = LocalCopy(file)
     override var fileName: String = file.name
     override fun createDownloadLoc() = localCopy
+    /**
+     * It points to a local file
+     */
+    override fun resolveOutputFile(): File {
+        return file
+    }
 }
