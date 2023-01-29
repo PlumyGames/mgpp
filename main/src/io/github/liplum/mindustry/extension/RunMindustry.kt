@@ -186,7 +186,7 @@ class AddClientSpec(
             user = R.anuken,
             repo = R.mindustry,
             tag = version,
-            file = R.MindustryClientReleaseFileName,
+            file = R.officialRelease.client,
         )
     }
     /**
@@ -196,7 +196,7 @@ class AddClientSpec(
      */
     fun official(version: Notation) {
         when (version) {
-            Notation.latest -> client.location = LatestOfficialMindustryLoc(file = R.MindustryClientReleaseFileName)
+            Notation.latest -> client.location = LatestOfficialMindustryLoc(file = R.officialRelease.client)
             else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
         }
     }
@@ -266,17 +266,15 @@ class AddClientSpec(
         file: String,
     ) {
         github(
-            user = "mindustry-antigrief",
-            repo = "mindustry-client",
+            user = R.fooClient.user,
+            repo = R.fooClient.repo,
             tag = tag,
             file = file,
         )
     }
 
     fun fooClient(props: Map<String, String>) {
-        github(
-            user = "mindustry-antigrief",
-            repo = "mindustry-client",
+        fooClient(
             tag = props["tag"] ?: "",
             file = props["file"] ?: "",
         )
@@ -351,7 +349,7 @@ class AddServerSpec(
             user = R.anuken,
             repo = R.mindustry,
             tag = version,
-            file = R.MindustryClientReleaseFileName,
+            file = R.officialRelease.server,
         )
     }
     /**
@@ -361,7 +359,7 @@ class AddServerSpec(
      */
     fun official(version: Notation) {
         when (version) {
-            Notation.latest -> server.location = LatestOfficialMindustryLoc(file = R.MindustryServerReleaseFileName)
+            Notation.latest -> server.location = LatestOfficialMindustryLoc(file = R.officialRelease.server)
             else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
         }
     }

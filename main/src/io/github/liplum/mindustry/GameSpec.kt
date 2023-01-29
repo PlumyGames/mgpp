@@ -291,7 +291,7 @@ class ClientSpec(
     ) = GitHubLocation(
         user = Mgpp.Anuken, repo = Mgpp.Mindustry,
         version = version,
-        release = Mgpp.ClientReleaseName
+        release = R.officialRelease.client
     )
 
     override fun BE(
@@ -305,7 +305,7 @@ class ClientSpec(
         version: String,
         release: String,
     ) = GitHubLocation(
-        Mgpp.AntiGrief, Mgpp.FooClient,
+        R.fooClient.user, R.fooClient.repo,
         version, release
     )
 
@@ -347,7 +347,7 @@ class ServerSpec(
     ) = GitHubLocation(
         user = Mgpp.Anuken, repo = Mgpp.Mindustry,
         version = version,
-        release = Mgpp.ServerReleaseName
+        release = R.officialRelease.server
     )
 
     override fun BE(

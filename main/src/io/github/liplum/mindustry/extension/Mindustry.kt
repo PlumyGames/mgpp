@@ -14,12 +14,12 @@ import org.gradle.api.plugins.ExtensionAware
  * Retrieves the [mindustry][MindustryExtension] extension.
  */
 val Project.`mindustry`: MindustryExtension
-    get() = (this as ExtensionAware).extensions.getByName(MindustryPlugin.MainExtensionName) as MindustryExtension
+    get() = (this as ExtensionAware).extensions.getByName(R.x.mindustry) as MindustryExtension
 /**
  * Configures the [mindustry][MindustryExtension] extension.
  */
 fun Project.`mindustry`(configure: Action<MindustryExtension>): Unit =
-    (this as ExtensionAware).extensions.configure(MindustryPlugin.MainExtensionName, configure)
+    (this as ExtensionAware).extensions.configure(R.x.mindustry, configure)
 /**
  * The project type.
  */

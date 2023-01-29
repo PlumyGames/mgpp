@@ -1,7 +1,7 @@
 package io.github.liplum.mindustry.task
 
 import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.Mgpp
+import io.github.liplum.mindustry.R
 import org.gradle.api.tasks.*
 import kotlin.collections.set
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -46,7 +46,7 @@ open class RunMindustry : JavaExec() {
         outputtedMods.mapFilesTo(mods)
         standardInput = System.`in`
         args = listOf(mindustryFile.singleFile.absolutePath) + startupArgs.get()
-        environment[Mgpp.MindustryDataDirEnv] = data.absoluteFile
+        environment[R.env.mindustryDataDir] = data.absoluteFile
         if (Os.isFamily(Os.FAMILY_MAC)) {
             // Lwjgl3 application requires it to run on macOS
             jvmArgs = (jvmArgs ?: mutableListOf()) + "-XstartOnFirstThread"

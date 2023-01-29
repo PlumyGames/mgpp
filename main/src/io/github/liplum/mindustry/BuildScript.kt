@@ -34,7 +34,7 @@ fun RepositoryHandler.mindustryRepo(
  */
 fun Project.importMindustry() = afterEvaluateThis {
     val ex = extensions.getOrCreate<MindustryExtension>(
-        Mgpp.MainExtensionName
+        R.x.mindustry
     )
     val mdt = ex._dependency.mindustryDependency.get()
     val arc = ex._dependency.arcDependency.get()
@@ -55,7 +55,7 @@ fun Project.importMindustry() = afterEvaluateThis {
  */
 fun Project.importMindustry(configurationName: String) = afterEvaluateThis {
     val ex = extensions.getOrCreate<MindustryExtension>(
-        Mgpp.MainExtensionName
+        R.x.mindustry
     )
     val mdt = ex._dependency.mindustryDependency.get()
     val arc = ex._dependency.arcDependency.get()

@@ -1,3 +1,5 @@
+@file:Suppress("ClassName")
+
 package io.github.liplum.mindustry
 
 import io.github.liplum.mindustry.extension.MindustryAssetsExtension
@@ -17,26 +19,38 @@ object R {
      * 1 hour as default.
      */
     var outOfDataTime = defaultOutOfDataTime
+
+    object taskGroup {
+        /**
+         * A task group for main tasks, named `mindustry`
+         */
+        const val mindustry = "mindustry"
+        /**
+         * A task group for tasks related to [MindustryAssetsExtension], named `mindustry assets`
+         */
+        const val mindustryAsset = "mindustry assets"
+    }
+
+    object x {
+        /**
+         * The name of [MindustryExtension]
+         */
+        const val mindustry = "mindustry"
+        /**
+         * The name of [MindustryAssetsExtension]
+         */
+        const val mindustryAssets = "mindustryAssets"
+    }
     /**
-     * A task group for main tasks, named `mindustry`
+     * The environment variables.
      */
-    const val MindustryTaskGroup = "mindustry"
-    /**
-     * A task group for tasks related to [MindustryAssetsExtension], named `mindustry assets`
-     */
-    const val MindustryAssetTaskGroup = "mindustry assets"
-    /**
-     * The name of [MindustryExtension]
-     */
-    const val MainExtensionName = "mindustry"
-    /**
-     * The name of [MindustryAssetsExtension]
-     */
-    const val AssetExtensionName = "mindustryAssets"
-    /**
-     * The environment variable, as a folder, for Mindustry client to store data
-     */
-    const val MindustryDataDirEnv = "MINDUSTRY_DATA_DIR"
+    object env {
+        /**
+         * A folder for Mindustry client to store data.
+         */
+        const val mindustryDataDir = "MINDUSTRY_DATA_DIR"
+    }
+
     /**
      * The default minGameVersion in `mod.(h)json`.
      *
@@ -97,14 +111,17 @@ object R {
      * [Mindustry bleeding-edge](https://github.com/Anuken/MindustryBuilds)
      */
     const val mindustryBuilds = "MindustryBuilds"
-    /**
-     * [The name convention of client release](https://github.com/Anuken/Mindustry/releases)
-     */
-    const val MindustryClientReleaseFileName = "Mindustry.jar"
-    /**
-     * [The name convention of server release](https://github.com/Anuken/Mindustry/releases)
-     */
-    const val MindustryServerReleaseFileName = "server-release.jar"
+
+    object officialRelease {
+        /**
+         * [The name convention of client release](https://github.com/Anuken/Mindustry/releases)
+         */
+        const val client = "Mindustry.jar"
+        /**
+         * [The name convention of server release](https://github.com/Anuken/Mindustry/releases)
+         */
+        const val server = "server-release.jar"
+    }
     /**
      * [The Mindustry repo on Jitpack](https://github.com/anuken/mindustry)
      */
@@ -125,25 +142,31 @@ object R {
      * [The Arc repo on Jitpack](https://github.com/anuken/arc)
      */
     const val ArcJitpackRepo = "com.github.anuken.arc"
-    /**
-     * The main class of desktop launcher.
-     */
-    const val MindustryDesktopMainClass = "mindustry.desktop.DesktopLauncher"
-    /**
-     * The main class of server launcher.
-     */
-    const val MindustrySeverMainClass = "mindustry.server.ServerLauncher"
+
+    object mainClass {
+        /**
+         * The main class of desktop launcher.
+         */
+        const val desktop = "mindustry.desktop.DesktopLauncher"
+        /**
+         * The main class of server launcher.
+         */
+        const val server = "mindustry.server.ServerLauncher"
+    }
     /**
      * An empty folder for null-check
      */
     @JvmStatic
     val defaultEmptyFile = File("")
-    /**
-     * The [organization](https://github.com/mindustry-antigrief) of Foo's Client
-     */
-    const val AntiGrief = "mindustry-antigrief"
-    /**
-     * The [Foo's Client repo](https://github.com/mindustry-antigrief/mindustry-client)
-     */
-    const val FooClient = "mindustry-client"
+
+    object fooClient {
+        /**
+         * The [organization](https://github.com/mindustry-antigrief) of Foo's Client
+         */
+        const val user = "mindustry-antigrief"
+        /**
+         * The [Foo's Client repo](https://github.com/mindustry-antigrief/mindustry-client)
+         */
+        const val repo = "mindustry-client"
+    }
 }

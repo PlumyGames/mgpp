@@ -26,10 +26,10 @@ class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         LocalProperties.clearCache(this)
         val ex = target.extensions.getOrCreate<MindustryExtension>(
-            Mgpp.MainExtensionName
+            R.x.mindustry
         )
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(
-            Mgpp.AssetExtensionName
+            R.x.mindustryAssets
         )
         /**
          * Handle [InheritFromParent].
@@ -37,7 +37,7 @@ class MindustryPlugin : Plugin<Project> {
          */
         target.parent?.let {
             it.plugins.whenHas<MindustryPlugin> {
-                val parentEx = it.extensions.getOrCreate<MindustryExtension>(Mgpp.MainExtensionName)
+                val parentEx = it.extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
                 ex._isLib.set(parentEx._isLib)
                 ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
                 ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
@@ -56,10 +56,10 @@ class MindustryPlugin : Plugin<Project> {
         // Register this for dynamically configure tasks without class reference in groovy.
         // Eagerly configure this task in order to be added into task group in IDE
         tasks.register<AntiAlias>("antiAlias") {
-            group = Mgpp.MindustryTaskGroup
+            group = R.taskGroup.mindustry
         }.get()
         tasks.register<ModHjsonGenerate>("genModHjson") {
-            group = Mgpp.MindustryTaskGroup
+            group = R.taskGroup.mindustry
             modMeta.set(ex._modMeta)
             outputHjson.set(temporaryDir.resolve("mod.hjson"))
         }
@@ -84,26 +84,6 @@ class MindustryPlugin : Plugin<Project> {
          * 1 hour as default.
          */
         var outOfDataTime = defaultOutOfDataTime
-        /**
-         * A task group for main tasks, named `mindustry`
-         */
-        const val MindustryTaskGroup = "mindustry"
-        /**
-         * A task group for tasks related to [MindustryAssetsExtension], named `mindustry assets`
-         */
-        const val MindustryAssetTaskGroup = "mindustry assets"
-        /**
-         * The name of [MindustryExtension]
-         */
-        const val MainExtensionName = "mindustry"
-        /**
-         * The name of [MindustryAssetsExtension]
-         */
-        const val AssetExtensionName = "mindustryAssets"
-        /**
-         * The environment variable, as a folder, for Mindustry client to store data
-         */
-        const val MindustryDataDirEnv = "MINDUSTRY_DATA_DIR"
         /**
          * The default minGameVersion in `mod.(h)json`.
          *
@@ -165,14 +145,6 @@ class MindustryPlugin : Plugin<Project> {
          */
         const val MindustryBuilds = "MindustryBuilds"
         /**
-         * [The name convention of client release](https://github.com/Anuken/Mindustry/releases)
-         */
-        const val ClientReleaseName = "Mindustry.jar"
-        /**
-         * [The name convention of server release](https://github.com/Anuken/Mindustry/releases)
-         */
-        const val ServerReleaseName = "server-release.jar"
-        /**
          * [The Mindustry repo on Jitpack](https://github.com/anuken/mindustry)
          */
         const val MindustryJitpackRepo = "com.github.anuken.mindustry"
@@ -193,26 +165,10 @@ class MindustryPlugin : Plugin<Project> {
          */
         const val ArcJitpackRepo = "com.github.anuken.arc"
         /**
-         * The main class of desktop launcher.
-         */
-        const val MindustryDesktopMainClass = "mindustry.desktop.DesktopLauncher"
-        /**
-         * The main class of server launcher.
-         */
-        const val MindustrySeverMainClass = "mindustry.server.ServerLauncher"
-        /**
          * An empty folder for null-check
          */
         @JvmStatic
         val DefaultEmptyFile = File("")
-        /**
-         * The [organization](https://github.com/mindustry-antigrief) of Foo's Client
-         */
-        const val AntiGrief = "mindustry-antigrief"
-        /**
-         * The [Foo's Client repo](https://github.com/mindustry-antigrief/mindustry-client)
-         */
-        const val FooClient = "mindustry-client"
     }
 }
 /**
@@ -236,12 +192,12 @@ fun String?.addAngleBracketsIfNeed(): String? =
 class MindustryAppPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         val ex = target.extensions.getOrCreate<MindustryExtension>(
-            Mgpp.MainExtensionName
+            R.x.mindustry
         )
         val resolveMods = target.tasks.register<ResolveMods>(
             "resolveMods"
         ) {
-            group = Mgpp.MindustryTaskGroup
+            group = R.taskGroup.mindustry
             mods.set(ex._mods.worksWith)
         }
         target.tasks.register<CleanMindustrySharedCache>("cleanMindustrySharedCache") {
@@ -252,7 +208,7 @@ class MindustryAppPlugin : Plugin<Project> {
             val downloadClient = target.tasks.register<DownloadGame>(
                 "downloadClient",
             ) {
-                group = Mgpp.MindustryTaskGroup
+                group = R.taskGroup.mindustry
                 keepOthers.set(ex._client.keepOtherVersion)
                 val localOverwrite = project.local["mgpp.client.location"]
                 if (localOverwrite != null)
@@ -263,7 +219,7 @@ class MindustryAppPlugin : Plugin<Project> {
             val downloadServer = target.tasks.register<DownloadGame>(
                 "downloadServer",
             ) {
-                group = Mgpp.MindustryTaskGroup
+                group = R.taskGroup.mindustry
                 keepOthers.set(ex._client.keepOtherVersion)
                 val localOverwrite = project.local["mgpp.server.location"]
                 if (localOverwrite != null)
@@ -271,9 +227,9 @@ class MindustryAppPlugin : Plugin<Project> {
                 else location.set(ex._server.location)
             }
             val runClient = tasks.register<RunMindustry>("runClient") {
-                group = Mgpp.MindustryTaskGroup
+                group = R.taskGroup.mindustry
                 dependsOn(downloadClient)
-                mainClass.convention(Mgpp.MindustryDesktopMainClass)
+                mainClass.convention(R.mainClass.desktop)
                 val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
                     it != "false"
                 } ?: ex._run._forciblyClear.get()
@@ -284,7 +240,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 ) {
                     "<default>" -> resolveDefaultDataDir()
                     "<temp>" -> temporaryDir.resolve("data")
-                    "<env>" -> System.getenv(Mgpp.MindustryDataDirEnv).let {
+                    "<env>" -> System.getenv(R.env.mindustryDataDir).let {
                         if (it == null) temporaryDir.resolve("data")
                         else File(it).run {
                             if (isFile) this
@@ -308,13 +264,13 @@ class MindustryAppPlugin : Plugin<Project> {
             val runServer = tasks.register<RunMindustry>(
                 "runServer",
             ) {
-                group = Mgpp.MindustryTaskGroup
+                group = R.taskGroup.mindustry
                 dependsOn(downloadServer)
                 val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
                     it != "false"
                 } ?: ex._run._forciblyClear.get()
                 forciblyClear.set(doForciblyClear)
-                mainClass.convention(Mgpp.MindustrySeverMainClass)
+                mainClass.convention(R.mainClass.server)
                 mindustryFile.from(downloadServer)
                 modsWorkWith.from(resolveMods)
                 dataModsPath.convention("config/mods")
@@ -366,13 +322,13 @@ val TaskContainer.`runServer`: TaskProvider<RunMindustry>
 class MindustryJavaPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         val ex = extensions.getOrCreate<MindustryExtension>(
-            Mgpp.MainExtensionName
+            R.x.mindustry
         )
         val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
         @DisableIfWithout("java")
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")
-            group = Mgpp.MindustryTaskGroup
+            group = R.taskGroup.mindustry
             dependsOn(JavaPlugin.JAR_TASK_NAME)
             classpath.from(
                 configurations.compileClasspath,
@@ -382,7 +338,7 @@ class MindustryJavaPlugin : Plugin<Project> {
             sdkRoot.set(ex._deploy._androidSdkRoot)
         }
         val deploy = tasks.register<Jar>("deploy") {
-            group = Mgpp.MindustryTaskGroup
+            group = R.taskGroup.mindustry
             dependsOn(jar)
             dependsOn(dexJar)
             destinationDirectory.set(temporaryDir)
@@ -434,16 +390,16 @@ val TaskContainer.`deploy`: TaskProvider<Jar>
 class MindustryAssetPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         val main = extensions.getOrCreate<MindustryExtension>(
-            Mgpp.MainExtensionName
+            R.x.mindustry
         )
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(
-            Mgpp.AssetExtensionName
+            R.x.mindustryAssets
         )
         // Doesn't register the tasks if no resource needs to generate its class.
         @DisableIfWithout("java")
         val genResourceClass by lazy {
             tasks.register<GenerateRClass>("genResourceClass") {
-                this.group = Mgpp.MindustryAssetTaskGroup
+                this.group = R.taskGroup.mindustryAsset
                 val name = assets.qualifiedName.get()
                 if (name == "default") {
                     val modMeta = main._modMeta.get()
@@ -500,7 +456,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                 val groupPascal = type.group.lowercase().capitalized()
                 @DisableIfWithout("java")
                 val gen = tasks.register<GenerateResourceClass>("gen${groupPascal}Class") {
-                    this.group = Mgpp.MindustryAssetTaskGroup
+                    this.group = R.taskGroup.mindustryAsset
                     dependsOn(batches.flatMap { it.dependsOn }.distinct().toTypedArray())
                     args.put("ModName", main._modMeta.get().name)
                     args.put("ResourceNameRule", type.nameRule.name)
