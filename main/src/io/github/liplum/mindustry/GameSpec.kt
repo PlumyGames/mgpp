@@ -99,8 +99,8 @@ abstract class GameSpecBase(
      * ```
      * **Not Recommended** It might not work if you faced the API limit of GitHub.
      */
-    val latest: LatestNotation
-        get() = LatestNotation
+    val latest: Notation
+        get() = Notation.latest
     /**
      * Set the [location] to [game]
      */
@@ -129,7 +129,7 @@ abstract class GameSpecBase(
      */
     infix fun official(notation: Notation): GitHubGameLoc =
         LatestOfficial().apply {
-            if (notation === LatestNotation)
+            if (notation === Notation.latest)
                 location.set(this)
             else
                 throw GradleException("Unknown game notation of official $notation")
@@ -141,7 +141,7 @@ abstract class GameSpecBase(
      */
     infix fun be(latest: Notation): GitHubGameLoc =
         LatestBE().apply {
-            if (latest === LatestNotation)
+            if (latest === Notation.latest)
                 location.set(this)
             else
                 throw GradleException("Unknown game notation of be $latest")
@@ -243,7 +243,7 @@ abstract class GameSpecBase(
     infix fun official(map: Map<String, Any>): GitHubGameLoc {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `official`")
         return when (version) {
-            LatestNotation.toString() -> official(LatestNotation)
+            Notation.latest.toString() -> official(Notation.latest)
             else -> official(version)
         }
     }
@@ -255,7 +255,7 @@ abstract class GameSpecBase(
     infix fun be(map: Map<String, Any>): GitHubGameLoc {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified in `be`")
         return when (version) {
-            LatestNotation.toString() -> be(LatestNotation)
+            Notation.latest.toString() -> be(Notation.latest)
             else -> be(version)
         }
     }

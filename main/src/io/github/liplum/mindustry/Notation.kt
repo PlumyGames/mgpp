@@ -19,23 +19,3 @@ interface Notation {
         }
     }
 }
-
-object LatestNotation : Notation {
-    override fun toString() = "latest"
-}
-
-object LatestReleaseNotation : Notation {
-    override fun toString() = "latest-release"
-}
-
-object LocalPropertiesNotation : Notation {
-    override fun toString() = "local-properties"
-}
-
-object ProjectNotation : Notation {
-    override fun toString() = "project"
-}
-
-object RootNotation : Notation {
-    override fun toString() = "root"
-}

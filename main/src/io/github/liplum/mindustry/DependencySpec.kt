@@ -45,8 +45,8 @@ class DependencySpec(
      * This is not recommended, it might not work if you faced the API limit of GitHub or
      * jitpack yet to build this version.
      */
-    val latest: LatestNotation
-        get() = LatestNotation
+    val latest: Notation
+        get() = Notation.latest
     /**
      * A notation represents the latest release.
      * ## Usages
@@ -55,8 +55,8 @@ class DependencySpec(
      * ```
      * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
      */
-    val latestRelease: LatestReleaseNotation
-        get() = LatestReleaseNotation
+    val latestRelease: Notation
+        get() = Notation.latestRelease
     /**
      * A notation represents the latest tag.
      * ## Usages
@@ -65,8 +65,8 @@ class DependencySpec(
      * ```
      * **Potential Issue** It has a very small chance that it won't work when the new tag was just released.
      */
-    val latestTag: LatestReleaseNotation
-        get() = LatestReleaseNotation
+    val latestTag: Notation
+        get() = Notation.latestRelease
     /**
      * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
      */
@@ -94,8 +94,8 @@ class DependencySpec(
     fun arc(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `arc`")
         when (version) {
-            LatestNotation.toString() -> arcLatestCommit()
-            LatestReleaseNotation.toString() -> arcLatestTag()
+            Notation.latest.toString() -> arcLatestCommit()
+            Notation.latestRelease.toString() -> arcLatestTag()
             else -> arc(version)
         }
     }
@@ -108,8 +108,8 @@ class DependencySpec(
     fun mindustry(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustry`")
         when (version) {
-            LatestNotation.toString() -> mindustryLatestRelease()
-            LatestReleaseNotation.toString() -> mindustryLatestRelease()
+            Notation.latest.toString() -> mindustryLatestRelease()
+            Notation.latestRelease.toString() -> mindustryLatestRelease()
             else -> mindustry(version)
         }
     }
@@ -121,7 +121,7 @@ class DependencySpec(
     fun mindustryMirror(map: Map<String, Any>) {
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustryMirror`")
         when (version) {
-            LatestNotation.toString() -> mindustryMirrorLatestCommit()
+            Notation.latest.toString() -> mindustryMirrorLatestCommit()
             else -> mindustryMirror(version)
         }
     }
@@ -249,8 +249,8 @@ class DependencySpec(
          */
         infix fun on(notation: Notation) {
             when(notation) {
-                LatestNotation -> arcLatestCommit()
-                LatestReleaseNotation -> arcLatestTag()
+                Notation.latest -> arcLatestCommit()
+                Notation.latestRelease -> arcLatestTag()
                 else -> throw GradleException("Unknown dependency notation of arc $notation")
             }
         }
@@ -280,8 +280,8 @@ class DependencySpec(
          */
         infix fun on(notation: Notation) {
             when (notation) {
-                LatestNotation -> mindustryLatestRelease()
-                LatestReleaseNotation -> mindustryLatestRelease()
+                Notation.latest -> mindustryLatestRelease()
+                Notation.latestRelease -> mindustryLatestRelease()
                 else -> throw GradleException("Unknown dependency notation of mindustry $notation")
             }
         }
@@ -292,7 +292,7 @@ class DependencySpec(
          */
         infix fun mirror(notation: Notation) {
             when(notation) {
-                LatestNotation -> mindustryMirrorLatestCommit()
+                Notation.latest -> mindustryMirrorLatestCommit()
                 else -> throw GradleException("Unknown dependency notation of mindustry mirror $notation")
             }
         }
