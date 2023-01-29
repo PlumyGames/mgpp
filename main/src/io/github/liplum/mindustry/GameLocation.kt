@@ -29,7 +29,9 @@ data class GitHubGameLoc(
     override fun createDownloadLoc() = download
 }
 
-class LatestOfficialMindustryLoc : IGameLoc {
+data class LatestOfficialMindustryLoc(
+    val file: String
+) : IGameLoc {
     override var fileName: String
         get() = TODO("Not yet implemented")
         set(value) {}

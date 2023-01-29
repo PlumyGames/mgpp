@@ -104,7 +104,7 @@ object R {
     /**
      * [The name convention of server release](https://github.com/Anuken/Mindustry/releases)
      */
-    const val ServerReleaseName = "server-release.jar"
+    const val MindustryServerReleaseFileName = "server-release.jar"
     /**
      * [The Mindustry repo on Jitpack](https://github.com/anuken/mindustry)
      */
