@@ -25,7 +25,7 @@ data class GitHubGameLoc(
     val release: String = "",
 ) : IGameLoc<GitHubDownload> {
     val download = GitHubDownload.release(user, repo, version, release)
-    override var fileName = "${download.name.removeSuffix(".jar")}-${user}-${repo}-${version}.jar"
+    override var fileName = "${user}-${repo}-${version}-${download.name}"
     override fun createDownloadLoc() = download
 }
 
