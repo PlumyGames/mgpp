@@ -12,6 +12,7 @@ import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
+import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
@@ -242,6 +243,9 @@ class MindustryAppPlugin : Plugin<Project> {
         ) {
             group = Mgpp.MindustryTaskGroup
             mods.set(ex._mods.worksWith)
+        }
+        target.tasks.register<CleanMindustrySharedCache>("cleanMindustrySharedCache") {
+            group = BasePlugin.BUILD_GROUP
         }
         target.afterEvaluateThis {
             // For client side

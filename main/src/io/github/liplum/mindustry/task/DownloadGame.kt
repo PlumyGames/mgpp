@@ -6,6 +6,7 @@ import io.github.liplum.dsl.ensure
 import io.github.liplum.dsl.prop
 import io.github.liplum.mindustry.GitHubGameLoc
 import io.github.liplum.mindustry.IGameLoc
+import io.github.liplum.mindustry.SharedCache
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
@@ -42,7 +43,7 @@ open class DownloadGame : DefaultTask() {
         if (!output.exists() || overwrite.get()) {
             useCacheOrDownload(gameLoc)
         } else {
-            logger.info("$gameLoc has been already downloaded at ${output.absolutePath} , so skip it.")
+            logger.info("$gameLoc has been already downloaded at ${output.absolutePath}, so skip it.")
         }
     }
 
@@ -50,23 +51,28 @@ open class DownloadGame : DefaultTask() {
         // Download is a very expensive task, it should detect whether the file exists.
         if (gameLoc is GitHubGameLoc) {
             val downloadLoc = gameLoc.createDownloadLoc()
-            val userHome = System.getProperty("user.home")
-            val cacheFile = File(userHome).resolve(".gradle").resolve("mindustry")
-                .resolve("github").resolve(gameLoc.fileName).ensure()
+            val cacheFile = SharedCache.resolveCacheDir().resolve("github").resolve(gameLoc.fileName).ensure()
             if (!cacheFile.exists()) {
-                logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName} .")
-                downloadLoc.openInputStream().use { it.copyTo(cacheFile) }
-                logger.info("Downloaded ${gameLoc.fileName} at ${cacheFile}.")
+                logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName}...")
+                try {
+                    downloadLoc.openInputStream().use { it.copyTo(cacheFile) }
+                    logger.lifecycle("Downloaded ${gameLoc.fileName} at ${cacheFile}.")
+                } catch (e: Exception) {
+                    // now cache could be corrupted, delete it
+                    cacheFile.delete()
+                    throw e
+                }
             }
             if (!outputFile.exists()) {
                 cacheFile.copyTo(outputFile)
+                logger.lifecycle("Copied game from cache $cacheFile to $outputFile.")
             }
         } else {
             if (!outputFile.exists()) {
                 val downloadLoc = gameLoc.createDownloadLoc()
                 logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName} .")
                 downloadLoc.openInputStream().use { it.copyTo(outputFile) }
-                logger.info("Downloaded ${gameLoc.fileName} at ${outputFile}.")
+                logger.lifecycle("Downloaded ${gameLoc.fileName} at ${outputFile}.")
             }
         }
     }
