@@ -7,6 +7,7 @@ import io.github.liplum.mindustry.LocalProperties.local
 import io.github.liplum.mindustry.LocalProperties.localProperties
 import io.github.liplum.mindustry.extension.MindustryAssetsExtension
 import io.github.liplum.mindustry.extension.MindustryExtension
+import io.github.liplum.mindustry.extension.RunMindustryExtension
 import io.github.liplum.mindustry.extension.resolveBatches
 import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
@@ -25,12 +26,9 @@ typealias Mgpp = MindustryPlugin
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         LocalProperties.clearCache(this)
-        val ex = target.extensions.getOrCreate<MindustryExtension>(
-            R.x.mindustry
-        )
-        val assets = extensions.getOrCreate<MindustryAssetsExtension>(
-            R.x.mindustryAssets
-        )
+        val ex = target.extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
+        val assets = extensions.getOrCreate<MindustryAssetsExtension>(R.x.mindustryAssets)
+        val run = extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)
         /**
          * Handle [InheritFromParent].
          * Because they're initialized at the [Plugin.apply] phase, the user-code will overwrite them if it's possible.
@@ -286,7 +284,7 @@ class MindustryAppPlugin : Plugin<Project> {
 /**
  * Provides the existing `downloadClient`: [DownloadGame] task.
  *
- * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
+ * Because it's registered after project evaluating, please access it in [Project.afterEvaluate].
  */
 val TaskContainer.`downloadClient`: TaskProvider<DownloadGame>
     get() = named<DownloadGame>("downloadClient")
@@ -294,7 +292,7 @@ val TaskContainer.`downloadClient`: TaskProvider<DownloadGame>
 /**
  * Provides the existing `downloadServer`: [RunMindustry] task.
  *
- * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
+ * Because it's registered after project evaluating, please access it in [Project.afterEvaluate].
  */
 val TaskContainer.`downloadServer`: TaskProvider<DownloadGame>
     get() = named<DownloadGame>("downloadServer")

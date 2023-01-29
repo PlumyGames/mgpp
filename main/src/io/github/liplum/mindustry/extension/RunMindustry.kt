@@ -1,5 +1,6 @@
 @file:JvmMultifileClass
 @file:JvmName("ExtensionKt")
+@file:Suppress("RemoveRedundantBackticks")
 
 package io.github.liplum.mindustry.extension
 
@@ -7,8 +8,18 @@ import io.github.liplum.mindustry.*
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
+import org.gradle.api.plugins.ExtensionAware
 import java.io.File
-
+/**
+ * Retrieves the `runMindustry`: [RunMindustryExtension] extension.
+ */
+val Project.`runMindustry`: RunMindustryExtension
+    get() = (this as ExtensionAware).extensions.getByName(R.x.runMindustry) as RunMindustryExtension
+/**
+ * Configures the [mindustry][RunMindustryExtension] extension.
+ */
+fun Project.`runMindustry`(configure: Action<RunMindustryExtension>): Unit =
+    (this as ExtensionAware).extensions.configure(R.x.runMindustry, configure)
 /**
  * ## How to use
  * ```kotlin

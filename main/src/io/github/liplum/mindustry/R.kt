@@ -20,6 +20,21 @@ object R {
      */
     var outOfDataTime = defaultOutOfDataTime
 
+    object x {
+        /**
+         * The name of [MindustryExtension]
+         */
+        const val mindustry = "mindustry"
+        /**
+         * The name of [MindustryExtension]
+         */
+        const val runMindustry = "runMindustry"
+        /**
+         * The name of [MindustryAssetsExtension]
+         */
+        const val mindustryAssets = "mindustryAssets"
+    }
+
     object taskGroup {
         /**
          * A task group for main tasks, named `mindustry`
@@ -31,16 +46,6 @@ object R {
         const val mindustryAsset = "mindustry assets"
     }
 
-    object x {
-        /**
-         * The name of [MindustryExtension]
-         */
-        const val mindustry = "mindustry"
-        /**
-         * The name of [MindustryAssetsExtension]
-         */
-        const val mindustryAssets = "mindustryAssets"
-    }
     /**
      * The environment variables.
      */
