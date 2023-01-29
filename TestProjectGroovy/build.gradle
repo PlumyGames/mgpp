@@ -61,7 +61,8 @@ mindustry {
         }
     }
     run {
-        dataDir = 'temp'
+        // set Mindustry's data directory to "./temp"
+        //dataDir = 'temp'
     }
     meta << ModMeta(
         name: 'mgpp-groovy',
