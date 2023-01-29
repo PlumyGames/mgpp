@@ -241,7 +241,7 @@ class MindustryAppPlugin : Plugin<Project> {
             group = Mgpp.MindustryTaskGroup
             mods.set(ex._mods.worksWith)
         }
-        target.tasks.register<CleanMindustrySharedCache>("cleanMindustryDownloadCache") {
+        target.tasks.register<CleanMindustrySharedCache>("cleanMindustrySharedCache") {
             group = BasePlugin.BUILD_GROUP
         }
         target.afterEvaluateThis {

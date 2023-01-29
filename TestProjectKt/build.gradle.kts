@@ -83,7 +83,7 @@ mindustry {
     }
     meta += ModMeta(
         name = "mgpp-kt",
-        displayName = "Test Plumy Mindustry Gradle Plugin Kt",
+        displayName = "MGPP Kotlin Test",
         main = "plumy.test.TestModKt",
         author = "Liplum"
     )

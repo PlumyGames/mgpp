@@ -54,8 +54,14 @@ open class DownloadGame : DefaultTask() {
             val cacheFile = SharedCache.resolveCacheDir().resolve("github").resolve(gameLoc.fileName).ensure()
             if (!cacheFile.exists()) {
                 logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName}...")
-                downloadLoc.openInputStream().use { it.copyTo(cacheFile) }
-                logger.lifecycle("Downloaded ${gameLoc.fileName} at ${cacheFile}.")
+                try {
+                    downloadLoc.openInputStream().use { it.copyTo(cacheFile) }
+                    logger.lifecycle("Downloaded ${gameLoc.fileName} at ${cacheFile}.")
+                } catch (e: Exception) {
+                    // now cache could be corrupted, delete it
+                    cacheFile.delete()
+                    throw e
+                }
             }
             if (!outputFile.exists()) {
                 cacheFile.copyTo(outputFile)
