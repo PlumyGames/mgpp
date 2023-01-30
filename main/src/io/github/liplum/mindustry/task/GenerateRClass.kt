@@ -1,7 +1,7 @@
 package io.github.liplum.mindustry.task
 
 import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.Mgpp
+import io.github.liplum.mindustry.MindustryPlugin
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 
@@ -16,7 +16,7 @@ open class GenerateRClass : DefaultTask() {
     init {
         generated.convention(project.provider {
             qualifiedName.get().qualified2FileName(
-                project.buildDir.resolve("generated").resolve(Mgpp.Mindustry)
+                project.buildDir.resolve("generated").resolve(MindustryPlugin.Mindustry)
             )
         })
     }

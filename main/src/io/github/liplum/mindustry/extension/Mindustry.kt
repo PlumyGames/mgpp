@@ -34,7 +34,7 @@ enum class ProjectType {
     Plugin
 }
 /**
- * The main extension of [Mgpp].
+ * The main extension of [MindustryPlugin].
  * It provides many configurations for Mindustry modding development:
  * - [meta]: the `mod.(h)json` that will be included in the `:jar` task.
  * You can modify this, but it only affects the output file.

@@ -1,3 +1,5 @@
+@file:Suppress("RemoveRedundantBackticks")
+
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*

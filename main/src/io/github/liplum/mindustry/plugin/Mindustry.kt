@@ -4,22 +4,13 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
 import io.github.liplum.mindustry.*
-import io.github.liplum.mindustry.LocalProperties.local
-import io.github.liplum.mindustry.LocalProperties.localProperties
-import io.github.liplum.mindustry.RunMindustryExtension
 import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.file.DuplicatesStrategy
-import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
-import org.gradle.configurationcache.extensions.capitalized
-import org.gradle.jvm.tasks.Jar
 import java.io.File
-
-typealias Mgpp = MindustryPlugin
 
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
@@ -182,7 +173,6 @@ fun String?.addAngleBracketsIfNeed(): String? =
     if (this == null) null
     else if (startsWith("<") && endsWith(">")) this
     else "<$this>"
-
 
 
 inline fun safeRun(func: () -> Unit) {
