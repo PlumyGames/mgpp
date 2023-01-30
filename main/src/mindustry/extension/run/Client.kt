@@ -11,7 +11,6 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionAware
 import java.io.File
 
-//<editor-fold desc="Add Client Spec">
 class Client : Common() {
     /** @see [AddClientSpec.dataDir] */
     var dataDir: String? = null
@@ -84,4 +83,3 @@ class AddClientSpec(
         )
     }
 }
-//</editor-fold>

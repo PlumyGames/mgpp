@@ -10,6 +10,7 @@ import io.github.liplum.mindustry.*
 import io.github.liplum.mindustry.LocalProperties.local
 import io.github.liplum.mindustry.LocalProperties.localProperties
 import io.github.liplum.mindustry.task.*
+import mindustry.task.ResolveModpack
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
@@ -119,8 +120,18 @@ class MindustryAppPlugin : Plugin<Project> {
 
     fun applyNew(target: Project) {
         val runX = target.extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)
+        addResolveModpacks(target, runX)
         addRunClient(target, runX)
         addRunServer(target, runX)
+    }
+
+    private fun addResolveModpacks(proj: Project, x: RunMindustryExtension) {
+        for ((i, modpack) in x.modpacks.withIndex()) {
+            val name = modpack.name
+            proj.tasks.register<ResolveModpack>("resolveModpack$name") {
+                group = null
+            }
+        }
     }
 
     private fun addRunClient(proj: Project, x: RunMindustryExtension) {
@@ -134,7 +145,11 @@ class MindustryAppPlugin : Plugin<Project> {
                     (anonymous++ + 1).toString()
                 }
             }
-            val resolveGame = proj.tasks.register<ResolveGame>("resolveClient$name") {
+            val resolveGame = proj.tasks.register<ResolveClient>("resolveClient$name") {
+                val modpackName = client.modpack
+                if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
+                    dependsOn("resolveModpack$modpackName")
+                }
                 group = null
                 location.set(client.location)
             }
@@ -156,7 +171,11 @@ class MindustryAppPlugin : Plugin<Project> {
                     (anonymous++ + 1).toString()
                 }
             }
-            val resolveGame = proj.tasks.register<ResolveGame>("resolveServer$name") {
+            val resolveGame = proj.tasks.register<ResolveServer>("resolveServer$name") {
+                val modpackName = server.modpack
+                if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
+                    dependsOn("resolveModpack$modpackName")
+                }
                 group = null
                 location.set(server.location)
             }

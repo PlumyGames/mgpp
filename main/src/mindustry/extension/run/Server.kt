@@ -11,7 +11,6 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionAware
 import java.io.File
 
-//<editor-fold desc="Add Server Spec">
 class Server : Common() {
 }
 
@@ -52,4 +51,3 @@ class AddServerSpec(
         }
     }
 }
-//</editor-fold>

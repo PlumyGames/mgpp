@@ -11,7 +11,6 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionAware
 import java.io.File
 
-//<editor-fold desc="Common">
 open class Common {
     /** @see [AddCommonSpec.name] */
     var name = ""
@@ -137,4 +136,3 @@ abstract class AddCommonSpec<T : Common> {
         }
     }
 }
-//</editor-fold>

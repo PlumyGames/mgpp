@@ -1,25 +1,29 @@
 package io.github.liplum.mindustry.task
 
 import io.github.liplum.dsl.copyTo
+import io.github.liplum.dsl.listProp
 import io.github.liplum.dsl.prop
-import io.github.liplum.mindustry.GitHubGameLoc
-import io.github.liplum.mindustry.IGameLoc
-import io.github.liplum.mindustry.LocalGameLoc
+import io.github.liplum.mindustry.*
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
-open class ResolveGame : DefaultTask() {
+/**
+ * Data directory of Mindustry desktop is customizable with env var `$MINDUSTRY_DATA_DIR`.
+ */
+open class ResolveClient : DefaultTask() {
     val location = project.prop<IGameLoc>()
         @Input get
-    val outputFile
+    val mods = project.listProp<IMod>()
+        @Input get
+    val gameFile
         @OutputFile get() = location.get().resolveOutputFile()
 
     init {
         outputs.upToDateWhen {
-            outputFile.exists()
+            gameFile.exists()
         }
     }
     @TaskAction
