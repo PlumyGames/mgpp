@@ -131,8 +131,11 @@ class MindustryAppPlugin : Plugin<Project> {
                     (anonymous++ + 1).toString()
                 }
             }
+            val resolveGame = proj.tasks.register<ResolveGame>("resolveClient$name") {
+                location.set(client.location)
+            }
             proj.tasks.register<RunClient>("runClient$name") {
-
+                dependsOn(resolveGame)
             }
         }
     }
