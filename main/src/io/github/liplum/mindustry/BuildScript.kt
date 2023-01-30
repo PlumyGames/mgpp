@@ -4,7 +4,6 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.afterEvaluateThis
 import io.github.liplum.dsl.getOrCreate
-import io.github.liplum.mindustry.extension.MindustryExtension
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.dsl.RepositoryHandler

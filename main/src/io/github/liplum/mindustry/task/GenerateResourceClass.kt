@@ -3,7 +3,7 @@ package io.github.liplum.mindustry.task
 import io.github.liplum.dsl.*
 import io.github.liplum.mindustry.GenerateContext
 import io.github.liplum.mindustry.IResourceClassGenerator
-import io.github.liplum.mindustry.extension.ResourceClassGeneratorRegistry
+import io.github.liplum.mindustry.ResourceClassGeneratorRegistry
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.*
 

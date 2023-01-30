@@ -2,7 +2,7 @@
 @file:JvmName("ExtensionKt")
 @file:Suppress("RemoveRedundantBackticks")
 
-package io.github.liplum.mindustry.extension
+package io.github.liplum.mindustry
 
 import io.github.liplum.mindustry.*
 import org.gradle.api.Action
@@ -10,6 +10,7 @@ import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionAware
 import java.io.File
+
 /**
  * Retrieves the `runMindustry`: [RunMindustryExtension] extension.
  */
@@ -21,17 +22,9 @@ val Project.`runMindustry`: RunMindustryExtension
 fun Project.`runMindustry`(configure: Action<RunMindustryExtension>): Unit =
     (this as ExtensionAware).extensions.configure(R.x.runMindustry, configure)
 /**
- * ## How to use
- * ```kotlin
- * runMindustry {
- *   //...
- * }
- * ```
- * ```groovy
- * runMindustry {
- *   //...
- * }
- * ```
+ * [runMindustry] is used to create [runClient] and [runServer] tasks dynamically after build script is evaluated.
+ *
+ * Therefore, you can simply ignore `runMindustry` if you don't want to run the game.
  */
 open class RunMindustryExtension(
     val target: Project,

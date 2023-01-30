@@ -2,8 +2,6 @@
 
 package io.github.liplum.mindustry
 
-import io.github.liplum.mindustry.extension.MindustryAssetsExtension
-import io.github.liplum.mindustry.extension.MindustryExtension
 import java.io.File
 
 object R {

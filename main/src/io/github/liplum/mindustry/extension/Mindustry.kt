@@ -2,7 +2,7 @@
 @file:JvmName("ExtensionKt")
 @file:Suppress("RemoveRedundantBackticks")
 
-package io.github.liplum.mindustry.extension
+package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
 import io.github.liplum.mindustry.*
