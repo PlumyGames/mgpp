@@ -6,7 +6,7 @@ plugins {
     `java-gradle-plugin`
     id("maven-publish")
     id("com.gradle.plugin-publish") version "0.18.0"
-    id("org.jetbrains.dokka") version "1.7.0"
+    id("org.jetbrains.dokka") version "1.7.20"
 }
 group = "io.github.liplum.mgpp"
 val mgppVersion: String by project

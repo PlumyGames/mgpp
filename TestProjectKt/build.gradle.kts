@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.7.0"
-    id("io.github.liplum.mgpp") version "1.2.0"
+    id("io.github.liplum.mgpp") version "2.0.0"
 }
 
 sourceSets {
@@ -97,6 +97,26 @@ mindustry {
     }
     run {
         // useDefaultDataDir
+    }
+}
+runMindustry {
+    addModpack {
+        jvm("liplum/CyberIO")
+    }
+    addClient {
+        // anonymous 1
+        official("v141.3")
+    }
+    addClient {
+        // anonymous 2
+        official("v137")
+    }
+    addClient {
+        name = "Old Mindustry"
+        official("v126")
+    }
+    addServer {
+        official("v141.3")
     }
 }
 tasks.jar {

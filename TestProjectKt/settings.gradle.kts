@@ -1,4 +1,4 @@
-rootProject.name = "TestProject"
+rootProject.name = "TestProjectKt"
 pluginManagement {
     repositories {
         mavenLocal()

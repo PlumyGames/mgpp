@@ -1,4 +1,4 @@
-rootProject.name = "MindustryGradlePluginPlumy"
+rootProject.name = "mgpp"
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -6,7 +6,7 @@ pluginManagement {
     }
 
     plugins {
-        kotlin("jvm").version(extra["kotlinVersion"] as String)
+        kotlin("jvm").version("1.6.21")
     }
 }
 include(
