@@ -77,6 +77,26 @@ mindustry {
         fatJar
     }
 }
+runMindustry {
+    addModpack {
+        jvm repo: "liplum/CyberIO"
+    }
+    addClient {
+        // anonymous 1
+        official version: "v141.3"
+    }
+    addClient {
+        // anonymous 2
+        official version: "v137"
+    }
+    addClient {
+        name = "Old Mindustry"
+        official version: "v126"
+    }
+    addServer {
+        official version: "v141.3"
+    }
+}
 dexJar {
     options.minApi = '26'
     options {

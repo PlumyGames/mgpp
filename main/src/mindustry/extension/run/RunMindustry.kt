@@ -7,9 +7,7 @@ package io.github.liplum.mindustry
 import io.github.liplum.mindustry.*
 import org.gradle.api.Action
 import org.gradle.api.Project
-import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionAware
-import java.io.File
 
 /**
  * Retrieves the `runMindustry`: [RunMindustryExtension] extension.
@@ -27,10 +25,11 @@ fun Project.`runMindustry`(configure: Action<RunMindustryExtension>): Unit =
  * Therefore, you can simply ignore `runMindustry` if you don't want to run the game.
  */
 open class RunMindustryExtension(
-    val target: Project,
+    val proj: Project,
 ) {
     val clients = ArrayList<Client>()
     val servers = ArrayList<Server>()
+    val modpacks = ArrayList<Modpack>()
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -83,25 +82,49 @@ open class RunMindustryExtension(
      */
     inline fun addClient(config: AddClientSpec.() -> Unit) {
         val client = Client()
-        AddClientSpec(target, client).config()
+        client.modpack = "default"
+        AddClientSpec(proj, client).config()
         clients.add(client)
     }
 
     fun addClient(config: Action<AddClientSpec>) {
         val client = Client()
-        config.execute(AddClientSpec(target, client))
+        client.modpack = "default"
+        config.execute(AddClientSpec(proj, client))
         clients.add(client)
     }
 
     inline fun addServer(config: AddServerSpec.() -> Unit) {
         val server = Server()
-        AddServerSpec(target, server).config()
+        server.modpack = "default"
+        AddServerSpec(proj, server).config()
         servers.add(server)
     }
 
     fun addServer(config: Action<AddServerSpec>) {
         val server = Server()
-        config.execute(AddServerSpec(target, server))
+        server.modpack = "default"
+        config.execute(AddServerSpec(proj, server))
         servers.add(server)
+    }
+
+    inline fun addModpack(name: String = "default", config: AddModpackSpec.() -> Unit) {
+        val modpack = Modpack(name)
+        AddModpackSpec(proj, modpack).config()
+        if (modpack.name.isNotBlank()) {
+            modpacks.add(modpack)
+        }
+    }
+
+    fun addModpack(name: String, config: Action<AddModpackSpec>) {
+        val modpack = Modpack(name)
+        config.execute(AddModpackSpec(proj, modpack))
+        if (modpack.name.isNotBlank()) {
+            modpacks.add(modpack)
+        }
+    }
+
+    fun addModpack(config: Action<AddModpackSpec>) {
+        addModpack("default", config)
     }
 }

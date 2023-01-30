@@ -14,16 +14,13 @@ import java.io.File
 //<editor-fold desc="Common">
 open class Common {
     /** @see [AddCommonSpec.name] */
-    var name: String = ""
-        set(value) {
-            // prevent space
-            field = value.replace(" ", "")
-        }
+    var name = ""
     /** @see [AddCommonSpec.startupArgs] */
     val startupArgs = ArrayList<String>()
     /** @see [AddCommonSpec.jvmArgs] */
     val jvmArgs = ArrayList<String>()
     var location: IGameLoc? = null
+    var modpack: String? = null
 }
 
 abstract class AddCommonSpec<T : Common> {
@@ -52,6 +49,12 @@ abstract class AddCommonSpec<T : Common> {
      * Because Mindustry desktop is based on Lwjgl3, the `-XstartOnFirstThread` will be passed when run on macOS.
      */
     val jvmArgs get() = backend.jvmArgs
+    var modpack: String?
+        get() = backend.modpack
+        set(value) {
+            backend.modpack = value
+        }
+
     fun github(
         user: String,
         repo: String,

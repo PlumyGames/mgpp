@@ -100,8 +100,23 @@ mindustry {
     }
 }
 runMindustry {
+    addModpack {
+        jvm("liplum/CyberIO")
+    }
     addClient {
-
+        // anonymous 1
+        official("v141.3")
+    }
+    addClient {
+        // anonymous 2
+        official("v137")
+    }
+    addClient {
+        name = "Old Mindustry"
+        official("v126")
+    }
+    addServer {
+        official("v141.3")
     }
 }
 tasks.jar {

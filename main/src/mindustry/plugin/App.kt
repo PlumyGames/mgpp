@@ -57,58 +57,61 @@ class MindustryAppPlugin : Plugin<Project> {
                     location.set(LocalGameLoc(localOverwrite))
                 else location.set(ex._server.location)
             }
-            val runClient = tasks.register<RunMindustry>("runClient") {
-                group = R.taskGroup.mindustry
-                dependsOn(downloadClient)
-                mainClass.convention(R.mainClass.desktop)
-                val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
-                    it != "false"
-                } ?: ex._run._forciblyClear.get()
-                forciblyClear.set(doForciblyClear)
-                val resolvedDataDir = when (val dataDirConfig =
-                    project.localProperties.getProperty("mgpp.run.dataDir").addAngleBracketsIfNeed()
-                        ?: ex._run._dataDir.get()
-                ) {
-                    "<default>" -> resolveDefaultDataDir()
-                    "<temp>" -> temporaryDir.resolve("data")
-                    "<env>" -> System.getenv(R.env.mindustryDataDir).let {
-                        if (it == null) temporaryDir.resolve("data")
-                        else File(it).run {
-                            if (isFile) this
-                            else temporaryDir.resolve("data")
+            applyNew(target)
+            if (false) {
+                val runClient = tasks.register<RunMindustry>("runClient") {
+                    group = R.taskGroup.mindustry
+                    dependsOn(downloadClient)
+                    mainClass.convention(R.mainClass.desktop)
+                    val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
+                        it != "false"
+                    } ?: ex._run._forciblyClear.get()
+                    forciblyClear.set(doForciblyClear)
+                    val resolvedDataDir = when (val dataDirConfig =
+                        project.localProperties.getProperty("mgpp.run.dataDir").addAngleBracketsIfNeed()
+                            ?: ex._run._dataDir.get()
+                    ) {
+                        "<default>" -> resolveDefaultDataDir()
+                        "<temp>" -> temporaryDir.resolve("data")
+                        "<env>" -> System.getenv(R.env.mindustryDataDir).let {
+                            if (it == null) temporaryDir.resolve("data")
+                            else File(it).run {
+                                if (isFile) this
+                                else temporaryDir.resolve("data")
+                            }
                         }
+
+                        else -> File(dataDirConfig) // customized data directory
                     }
 
-                    else -> File(dataDirConfig) // customized data directory
+                    logger.info("Data directory of $name is $resolvedDataDir .")
+                    dataDir.set(resolvedDataDir)
+                    mindustryFile.from(downloadClient)
+                    modsWorkWith.from(resolveMods)
+                    dataModsPath.set("mods")
+                    startupArgs.set(ex._client.startupArgs)
+                    ex._mods._extraModsFromTask.get().forEach {
+                        outputtedMods.from(tasks.getByPath(it))
+                    }
                 }
-
-                logger.info("Data directory of $name is $resolvedDataDir .")
-                dataDir.set(resolvedDataDir)
-                mindustryFile.from(downloadClient)
-                modsWorkWith.from(resolveMods)
-                dataModsPath.set("mods")
-                startupArgs.set(ex._client.startupArgs)
-                ex._mods._extraModsFromTask.get().forEach {
-                    outputtedMods.from(tasks.getByPath(it))
-                }
-            }
-            val runServer = tasks.register<RunMindustry>(
-                "runServer",
-            ) {
-                group = R.taskGroup.mindustry
-                dependsOn(downloadServer)
-                val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
-                    it != "false"
-                } ?: ex._run._forciblyClear.get()
-                forciblyClear.set(doForciblyClear)
-                mainClass.convention(R.mainClass.server)
-                mindustryFile.from(downloadServer)
-                modsWorkWith.from(resolveMods)
-                dataModsPath.convention("config/mods")
-                startupArgs.set(ex._server.startupArgs)
-                ex._mods._extraModsFromTask.get().forEach {
-                    dependsOn(tasks.getByPath(it))
-                    outputtedMods.from(tasks.getByPath(it))
+                val runServer = tasks.register<RunMindustry>(
+                    "runServer",
+                ) {
+                    group = R.taskGroup.mindustry
+                    dependsOn(downloadServer)
+                    val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
+                        it != "false"
+                    } ?: ex._run._forciblyClear.get()
+                    forciblyClear.set(doForciblyClear)
+                    mainClass.convention(R.mainClass.server)
+                    mindustryFile.from(downloadServer)
+                    modsWorkWith.from(resolveMods)
+                    dataModsPath.convention("config/mods")
+                    startupArgs.set(ex._server.startupArgs)
+                    ex._mods._extraModsFromTask.get().forEach {
+                        dependsOn(tasks.getByPath(it))
+                        outputtedMods.from(tasks.getByPath(it))
+                    }
                 }
             }
         }
@@ -132,9 +135,11 @@ class MindustryAppPlugin : Plugin<Project> {
                 }
             }
             val resolveGame = proj.tasks.register<ResolveGame>("resolveClient$name") {
+                group = null
                 location.set(client.location)
             }
             proj.tasks.register<RunClient>("runClient$name") {
+                group = R.taskGroup.mindustry
                 dependsOn(resolveGame)
             }
         }
@@ -143,7 +148,22 @@ class MindustryAppPlugin : Plugin<Project> {
     private fun addRunServer(proj: Project, x: RunMindustryExtension) {
         var anonymous = 0
         for ((i, server) in x.servers.withIndex()) {
-
+            val name = server.name.ifEmpty {
+                if (anonymous == 0) {
+                    anonymous++
+                    ""
+                } else {
+                    (anonymous++ + 1).toString()
+                }
+            }
+            val resolveGame = proj.tasks.register<ResolveGame>("resolveServer$name") {
+                group = null
+                location.set(server.location)
+            }
+            proj.tasks.register<RunServer>("runServer$name") {
+                group = R.taskGroup.mindustry
+                dependsOn(resolveGame)
+            }
         }
     }
 }
