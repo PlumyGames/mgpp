@@ -107,28 +107,25 @@ open class RunMindustryExtension(
 
 }
 
-//<editor-fold desc="Add Client Spec">
-class Client {
+//<editor-fold desc="Common">
+open class Common {
     /** @see [AddClientSpec.name] */
     var name: String = ""
     /** @see [AddClientSpec.startupArgs] */
     val startupArgs = ArrayList<String>()
     /** @see [AddClientSpec.jvmArgs] */
     val jvmArgs = ArrayList<String>()
-    /** @see [AddClientSpec.dataDir] */
-    var dataDir: String? = null
     var location: IGameLoc? = null
 }
 
-class AddClientSpec(
-    private val proj: Project,
-    private val client: Client
-) {
+abstract class AddCommonSpec<T : Common> {
+    protected abstract val proj: Project
+    protected abstract val backend: T
     val latest: Notation get() = Notation.latest
     /**
      * *Optional*
      * An empty String as default.
-     * It will affect the name of gradle task.
+     * It affects gradle task names.
      * ```
      * runClient // if it's empty
      * runClient2 // if second name is still empty
@@ -136,35 +133,24 @@ class AddClientSpec(
      * ```
      */
     var name: Any
-        get() = client.name
+        get() = backend.name
         set(value) {
-            client.name = value.toString().replace(" ", "")
+            backend.name = value.toString().replace(" ", "")
         }
-    /**
-     * *Optional*
-     * The name of Mindustry's data directory where to put saves.
-     *
-     * The default [dataDir] is the same as [name].
-     */
-    var dataDir: String?
-        get() = client.dataDir
-        set(value) {
-            client.dataDir = value
-        }
-    val startupArgs get() = client.startupArgs
+    val startupArgs get() = backend.startupArgs
     /**
      * The arguments of JVM.
      *
-     * Because of Lwjgl3, the `-XstartOnFirstThread` will be passed when run on macOS.
+     * Because Mindustry desktop is based on Lwjgl3, the `-XstartOnFirstThread` will be passed when run on macOS.
      */
-    val jvmArgs get() = client.jvmArgs
+    val jvmArgs get() = backend.jvmArgs
     fun github(
         user: String,
         repo: String,
         tag: String,
         file: String,
     ) {
-        client.location = GitHubGameLoc(
+        backend.location = GitHubGameLoc(
             user = user,
             repo = repo,
             tag = tag,
@@ -185,25 +171,13 @@ class AddClientSpec(
      * official(version="v141")
      * ```
      */
-    fun official(version: String) {
-        github(
-            user = R.anuken,
-            repo = R.mindustry,
-            tag = version,
-            file = R.officialRelease.client,
-        )
-    }
+    abstract fun official(version: String)
     /**
      * ```kotlin
      * official(version=latest)
      * ```
      */
-    fun official(version: Notation) {
-        when (version) {
-            Notation.latest -> client.location = LatestOfficialMindustryLoc(file = R.officialRelease.client)
-            else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
-        }
-    }
+    abstract fun official(version: Notation)
     /**
      * ```groovy
      * official version: "v141"
@@ -213,12 +187,88 @@ class AddClientSpec(
     fun official(props: Map<String, Any>) {
         when (val version = props["version"]?.toString()) {
             Notation.latest.toString() -> official(version = latest)
-            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in addClient.official(Map<String,Any>)")
+            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in official(Map<String,Any>)")
             else -> official(version)
         }
     }
 
-    fun be(version: String) {
+    abstract fun be(version: String)
+    abstract fun be(version: Notation)
+
+    fun be(props: Map<String, Any>) {
+        when (val version = props["version"]?.toString()) {
+            Notation.latest.toString() -> be(version = latest)
+            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in be(Map<String,Any>)")
+            else -> be(version)
+        }
+    }
+
+    fun fromLocalDisk(path: String) {
+        backend.location = LocalGameLoc(File(path))
+    }
+
+    fun fromLocalDisk(file: File) {
+        backend.location = LocalGameLoc(file)
+    }
+
+    fun fromLocalDisk(props: Map<String, Any>) {
+        val path = props["path"]
+        val file = props["file"]
+        if (path != null) {
+            backend.location = LocalGameLoc(File(path as String))
+        } else if (file != null) {
+            backend.location = LocalGameLoc(file as File)
+        } else {
+            proj.logger.log(
+                LogLevel.WARN,
+                "Neither \"path\" nor \"file\" given in fromLocalDisk(Map<String,Any>)"
+            )
+        }
+    }
+
+
+}
+//</editor-fold>
+
+//<editor-fold desc="Add Client Spec">
+class Client : Common() {
+    /** @see [AddClientSpec.dataDir] */
+    var dataDir: String? = null
+}
+
+class AddClientSpec(
+    override val proj: Project,
+    override val backend: Client,
+) : AddCommonSpec<Client>() {
+    /**
+     * *Optional*
+     * The name of Mindustry's data directory where to put saves.
+     *
+     * The default [dataDir] is the same as [name].
+     */
+    var dataDir: String?
+        get() = backend.dataDir
+        set(value) {
+            backend.dataDir = value
+        }
+
+    override fun official(version: String) {
+        github(
+            user = R.anuken,
+            repo = R.mindustry,
+            tag = version,
+            file = R.officialRelease.client,
+        )
+    }
+
+    override fun official(version: Notation) {
+        when (version) {
+            Notation.latest -> backend.location = LatestOfficialMindustryLoc(file = R.officialRelease.client)
+            else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
+        }
+    }
+
+    override fun be(version: String) {
         github(
             user = R.anuken,
             repo = R.mindustryBuilds,
@@ -227,41 +277,10 @@ class AddClientSpec(
         )
     }
 
-    fun be(props: Map<String, Any>) {
-        when (val version = props["version"]?.toString()) {
-            Notation.latest.toString() -> be(version = latest)
-            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in addClient.be(Map<String,Any>)")
-            else -> be(version)
-        }
-    }
-
-    fun be(version: Notation) {
+    override fun be(version: Notation) {
         when (version) {
-            Notation.latest -> client.location = LatestBeMindustryLoc(file = "Mindustry-BE-Desktop-$version.jar")
+            Notation.latest -> backend.location = LatestBeMindustryLoc(file = "Mindustry-BE-Desktop-$version.jar")
             else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
-        }
-    }
-
-    fun fromLocalDisk(path: String) {
-        client.location = LocalGameLoc(File(path))
-    }
-
-    fun fromLocalDisk(file: File) {
-        client.location = LocalGameLoc(file)
-    }
-
-    fun fromLocalDisk(props: Map<String, Any>) {
-        val path = props["path"]
-        val file = props["file"]
-        if (path != null) {
-            client.location = LocalGameLoc(File(path as String))
-        } else if (file != null) {
-            client.location = LocalGameLoc(file as File)
-        } else {
-            proj.logger.log(
-                LogLevel.WARN,
-                "Neither \"path\" nor \"file\" given in addClient.fromLocalDisk(Map<String,Any>)"
-            )
         }
     }
 
@@ -287,68 +306,15 @@ class AddClientSpec(
 //</editor-fold>
 
 //<editor-fold desc="Add Server Spec">
-class Server {
-    /** @see [AddServerSpec.name] */
-    var name: String = ""
-    /** @see [AddServerSpec.startupArgs] */
-    val startupArgs = ArrayList<String>()
-    /** @see [AddServerSpec.jvmArgs] */
-    val jvmArgs = ArrayList<String>()
-    var location: IGameLoc? = null
+class Server : Common() {
 }
 
 class AddServerSpec(
-    private val proj: Project,
-    private val server: Server
-) {
-    val latest: Notation get() = Notation.latest
-    /**
-     * *Optional*
-     * An empty String as default.
-     * It will affect the name of gradle task.
-     * ```
-     * runServer // if it's empty
-     * runServer2 // if second name is still empty
-     * ```
-     */
-    var name: Any
-        get() = server.name
-        set(value) {
-            server.name = value.toString().replace(" ", "")
-        }
-    val startupArgs get() = server.startupArgs
-    /**
-     * The arguments of JVM.
-     */
-    val jvmArgs get() = server.jvmArgs
-    fun github(
-        user: String,
-        repo: String,
-        tag: String,
-        file: String,
-    ) {
-        server.location = GitHubGameLoc(
-            user = user,
-            repo = repo,
-            tag = tag,
-            file = file,
-        )
-    }
+    override val proj: Project,
+    override val backend: Server
+) : AddCommonSpec<Server>() {
 
-    fun github(props: Map<String, String>) {
-        github(
-            user = props["user"] ?: "",
-            repo = props["repo"] ?: "",
-            tag = props["tag"] ?: "",
-            file = props["file"] ?: "",
-        )
-    }
-    /**
-     * ```kotlin
-     * official(version="v141")
-     * ```
-     */
-    fun official(version: String) {
+    override fun official(version: String) {
         github(
             user = R.anuken,
             repo = R.mindustry,
@@ -356,32 +322,15 @@ class AddServerSpec(
             file = R.officialRelease.server,
         )
     }
-    /**
-     * ```kotlin
-     * official(version=latest)
-     * ```
-     */
-    fun official(version: Notation) {
+
+    override fun official(version: Notation) {
         when (version) {
-            Notation.latest -> server.location = LatestOfficialMindustryLoc(file = R.officialRelease.server)
+            Notation.latest -> backend.location = LatestOfficialMindustryLoc(file = R.officialRelease.server)
             else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
         }
     }
-    /**
-     * ```groovy
-     * official version: "v141"
-     * official version: latest
-     * ```
-     */
-    fun official(props: Map<String, String>) {
-        when (val version = props["version"]) {
-            Notation.latest.toString() -> official(version = latest)
-            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in AddServer.official(Map<String,Any>)")
-            else -> official(version)
-        }
-    }
 
-    fun be(version: String) {
+    override fun be(version: String) {
         github(
             user = R.anuken,
             repo = R.mindustryBuilds,
@@ -390,41 +339,10 @@ class AddServerSpec(
         )
     }
 
-    fun be(props: Map<String, Any>) {
-        when (val version = props["version"]?.toString()) {
-            Notation.latest.toString() -> be(version = latest)
-            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in AddServer.be(Map<String,Any>)")
-            else -> be(version)
-        }
-    }
-
-    fun be(version: Notation) {
+    override fun be(version: Notation) {
         when (version) {
-            Notation.latest -> server.location = LatestBeMindustryLoc(file = "Mindustry-BE-Server-$version.jar")
+            Notation.latest -> backend.location = LatestBeMindustryLoc(file = "Mindustry-BE-Server-$version.jar")
             else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
-        }
-    }
-
-    fun fromLocalDisk(path: String) {
-        server.location = LocalGameLoc(File(path))
-    }
-
-    fun fromLocalDisk(file: File) {
-        server.location = LocalGameLoc(file)
-    }
-
-    fun fromLocalDisk(props: Map<String, Any>) {
-        val path = props["path"]
-        val file = props["file"]
-        if (path != null) {
-            server.location = LocalGameLoc(File(path as String))
-        } else if (file != null) {
-            server.location = LocalGameLoc(file as File)
-        } else {
-            proj.logger.log(
-                LogLevel.WARN,
-                "Neither \"path\" nor \"file\" given in AddServer.fromLocalDisk(Map<String,Any>)"
-            )
         }
     }
 }
