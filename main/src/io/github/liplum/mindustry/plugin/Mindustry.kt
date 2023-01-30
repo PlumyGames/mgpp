@@ -12,6 +12,8 @@ import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 import java.io.File
 
+typealias Mgpp = MindustryPlugin
+
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         LocalProperties.clearCache(this)

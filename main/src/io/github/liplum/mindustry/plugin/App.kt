@@ -9,10 +9,7 @@ import io.github.liplum.dsl.register
 import io.github.liplum.mindustry.*
 import io.github.liplum.mindustry.LocalProperties.local
 import io.github.liplum.mindustry.LocalProperties.localProperties
-import io.github.liplum.mindustry.task.CleanMindustrySharedCache
-import io.github.liplum.mindustry.task.DownloadGame
-import io.github.liplum.mindustry.task.ResolveMods
-import io.github.liplum.mindustry.task.RunMindustry
+import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
@@ -116,6 +113,36 @@ class MindustryAppPlugin : Plugin<Project> {
             }
         }
     }
+
+    fun applyNew(target: Project) {
+        val runX = target.extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)
+        addRunClient(target, runX)
+        addRunServer(target, runX)
+    }
+
+    private fun addRunClient(proj: Project, x: RunMindustryExtension) {
+        var anonymous = 0
+        for ((i, client) in x.clients.withIndex()) {
+            val name = client.name.ifEmpty {
+                if (anonymous == 0) {
+                    anonymous++
+                    ""
+                } else {
+                    (anonymous++ + 1).toString()
+                }
+            }
+            proj.tasks.register<RunClient>("runClient$name") {
+
+            }
+        }
+    }
+
+    private fun addRunServer(proj: Project, x: RunMindustryExtension) {
+        var anonymous = 0
+        for ((i, server) in x.servers.withIndex()) {
+
+        }
+    }
 }
 /**
  * Provides the existing `downloadClient`: [DownloadGame] task.
@@ -136,7 +163,7 @@ val TaskContainer.`downloadServer`: TaskProvider<DownloadGame>
 /**
  * Provides the existing `runClient`: [RunMindustry] task.
  *
- * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
+ * Because it's registered after project evaluating, please access it in [Project.afterEvaluate].
  */
 val TaskContainer.`runClient`: TaskProvider<RunMindustry>
     get() = named<RunMindustry>("runClient")
@@ -144,7 +171,7 @@ val TaskContainer.`runClient`: TaskProvider<RunMindustry>
 /**
  * Provides the existing `runServer`: [RunMindustry] task.
  *
- * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
+ * Because it's registered after project evaluating, please access it in [Project.afterEvaluate].
  */
 val TaskContainer.`runServer`: TaskProvider<RunMindustry>
     get() = named<RunMindustry>("runServer")

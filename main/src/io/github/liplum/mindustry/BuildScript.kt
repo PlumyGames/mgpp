@@ -1,6 +1,6 @@
 @file:JvmName("BuildScript")
 
-import io.github.liplum.mindustry.*
+package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.afterEvaluateThis
 import io.github.liplum.dsl.getOrCreate
