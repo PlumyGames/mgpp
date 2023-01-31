@@ -47,7 +47,7 @@
 | Mindustry |   MGPP    |
 |:---------:|:---------:|
 | `≤ 135.2` | `v1.1.1`  |
-|  `≥ 136`  | `v1.2.0` |
+|  `≥ 136`  | `v1.2.0`  |
 
 <br>
 
@@ -64,7 +64,7 @@
 [Banner]: GFX/preview-small.png
 
 [Getting Started]: https://plumygames.github.io/mgpp/
-[Mod Template]: https://github.com/liplum/MdtModTemplate
+[Mod Template]: https://github.com/liplum/MindustryModTemplate
 [JavaDoc]: https://plumygames.github.io/mgppDoc/index.html
 
 [Example Groovy]: https://github.com/PlumyGames/mgpp/tree/master/TestProjectGroovy
