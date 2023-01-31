@@ -5,10 +5,8 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.mindustry.*
-import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
-import org.gradle.api.plugins.ExtensionAware
 import java.io.File
 
 open class Common {
@@ -18,6 +16,8 @@ open class Common {
     val startupArgs = ArrayList<String>()
     /** @see [AddCommonSpec.jvmArgs] */
     val jvmArgs = ArrayList<String>()
+    /** @see [AddClientSpec.dataDir] */
+    var dataDir: String? = null
     var location: IGameLoc? = null
     var modpack: String? = null
 }
@@ -48,6 +48,17 @@ abstract class AddCommonSpec<T : Common> {
      * Because Mindustry desktop is based on Lwjgl3, the `-XstartOnFirstThread` will be passed when run on macOS.
      */
     val jvmArgs get() = backend.jvmArgs
+    /**
+     * *Optional*
+     * The name of Mindustry's data directory where to put saves.
+     *
+     * The default [dataDir] is the same as [name].
+     */
+    var dataDir: String?
+        get() = backend.dataDir
+        set(value) {
+            backend.dataDir = value
+        }
     var modpack: String?
         get() = backend.modpack
         set(value) {

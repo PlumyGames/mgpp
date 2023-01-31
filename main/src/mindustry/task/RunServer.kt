@@ -22,6 +22,12 @@ open class RunServer : JavaExec() {
     }
     @TaskAction
     override fun exec() {
-
+        val data = dataDir.asFile.get()
+        data.mkdirs()
+        standardInput = System.`in`
+        args = listOf(mindustryFile.get().absolutePath) + startupArgs.get()
+        workingDir = data
+        // run Mindustry
+        super.exec()
     }
 }

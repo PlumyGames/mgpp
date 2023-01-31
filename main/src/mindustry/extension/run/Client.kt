@@ -11,26 +11,12 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionAware
 import java.io.File
 
-class Client : Common() {
-    /** @see [AddClientSpec.dataDir] */
-    var dataDir: String? = null
-}
+class Client : Common()
 
 class AddClientSpec(
     override val proj: Project,
     override val backend: Client,
 ) : AddCommonSpec<Client>() {
-    /**
-     * *Optional*
-     * The name of Mindustry's data directory where to put saves.
-     *
-     * The default [dataDir] is the same as [name].
-     */
-    var dataDir: String?
-        get() = backend.dataDir
-        set(value) {
-            backend.dataDir = value
-        }
 
     override fun official(version: String) {
         github(
