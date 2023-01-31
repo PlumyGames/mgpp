@@ -6,7 +6,7 @@ Please make sure to always upgrade MGPP to the latest version: [![Gradle Plugin 
 | Mindustry | MGPP Version |
 |:---------:|:------------:|
 |  ≤ 135.2  |   v 1.1.1    |
-|   ≥ 136   |   v 1.2.0   |
+|   ≥ 136   |   v 1.2.0    |
 
 ___
 
@@ -67,14 +67,14 @@ For ease of understanding, simplified examples are used here. Of course, it can 
     ```groovy
     mindustry {
            dependency {
-            mindustry version: 'v136'
-            arc version: 'v136'
+            mindustryMirror version: 'v141.2'
+            arc version: 'v141.3'
         }
         client {
-            official version: 'v136' 
+            official version: 'v141.3' 
         }
         server {
-            official version: 'v136'
+            official version: 'v141.3'
         }
     }
     mindustryAssets {
@@ -87,14 +87,14 @@ For ease of understanding, simplified examples are used here. Of course, it can 
     import io.github.liplum.mindustry.*
     mindustry {
         dependency {
-            mindustry on "v136"
-            arc on "v136"
+            mindustry mirror "v141.2"
+            arc on "v141.3"
         }
         client {
-            mindustry official "v136"
+            mindustry official "v141.3"
         }
         server {
-            mindustry official "v136"
+            mindustry official "v141.3"
         }
     }
     mindustryAssets {
