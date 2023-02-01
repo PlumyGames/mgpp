@@ -14,6 +14,11 @@ interface IMod : Serializable {
     fun resolveFile(project: Project, currentDir: File): List<File>
     fun mapLocalFile(project: Project, currentDir: File): List<File>
 }
+
+interface IGitHubMod : IMod {
+    val fileName: String
+}
+
 /**
  * A local mod from disk.
  */
@@ -33,6 +38,7 @@ data class LocalMod(
 /**
  * A local mod from disk.
  */
+@Deprecated("It will be removed in mgpp v2.0")
 data class ModFolder(
     var folder: File = File(""),
 ) : IMod {
@@ -55,7 +61,6 @@ data class UrlMod(
     var url: URL,
 ) : IMod {
     constructor(url: String) : this(URL(url))
-
     val fileName: String
         get() {
             val path: String = url.toURI().path
@@ -73,8 +78,8 @@ data class UrlMod(
 }
 
 fun String.isJvmMod() = this == "Java" || this == "Kotlin" ||
-        this == "Groovy" || this == "Scala" ||
-        this == "Clojure"
+    this == "Groovy" || this == "Scala" ||
+    this == "Clojure"
 
 fun importJvmMod(repo: String, dest: File) {
     val releaseJson = URL("https://api.github.com/repos/$repo/releases/latest").readText()
@@ -82,7 +87,7 @@ fun importJvmMod(repo: String, dest: File) {
     val assets = json["assets"].asArray()
     val dexedAsset = assets.find {
         it.getString("name").startsWith("dexed") &&
-                it.getString("name").endsWith(".jar")
+            it.getString("name").endsWith(".jar")
     }
     val asset = dexedAsset ?: assets.find { it.getString("name").endsWith(".jar") }
     if (asset != null) {
@@ -107,8 +112,8 @@ data class GitHubMod(
      * like "PlumyGames/mgpp"
      */
     var repo: String,
-) : IMod {
-    val fileName: String
+) : IGitHubMod {
+    override val fileName: String
         get() = repo.repo2Path() + ".zip"
 
     override fun resolveFile(project: Project, currentDir: File): List<File> {
@@ -131,8 +136,8 @@ data class GitHubMod(
 
 data class GitHubJvmMod(
     var repo: String,
-) : IMod {
-    val fileName: String
+) : IGitHubMod {
+    override val fileName: String
         get() = repo.repo2Path() + ".jar"
 
     override fun resolveFile(project: Project, currentDir: File): List<File> {
@@ -147,8 +152,8 @@ data class GitHubJvmMod(
 
 data class GitHubPlainMod(
     var repo: String, var branch: String = "",
-) : IMod {
-    val fileName: String
+) : IGitHubMod {
+    override val fileName: String
         get() = linkString(separator = "-", repo.repo2Path(), branch) + ".zip"
 
     override fun resolveFile(project: Project, currentDir: File): List<File> {
