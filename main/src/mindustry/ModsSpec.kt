@@ -159,26 +159,6 @@ class ModsSpec(
         }
     }
     /**
-     * Add mods inside a folder from local disk.
-     *
-     * **Suggestion** To use a relative path and embed the mod into project directory
-     * would be better for git or collaboration.
-     * @param folder a folder contains mods
-     */
-    infix fun folder(folder: File) = ModFolder(folder).apply {
-        worksWith.add(this)
-    }
-    /**
-     * Add mods inside a folder from local disk.
-     *
-     * **Suggestion** To use a relative path and embed the mod into project directory
-     * would be better for git or collaboration.
-     * @param path of that folder
-     */
-    infix fun folder(path: String) = ModFolder(path).apply {
-        worksWith.add(this)
-    }
-    /**
      * Add a mod from [url]
      * @param url any resource
      */

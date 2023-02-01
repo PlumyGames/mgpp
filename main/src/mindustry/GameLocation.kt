@@ -30,7 +30,7 @@ data class GitHubGameLoc(
     override var fileName = "$user-$repo-$tag-${download.name}"
     override fun createDownloadLoc() = download
     override fun resolveOutputFile(): File {
-        return SharedCache.resolveCacheDir().resolve("github").resolve(fileName)
+        return SharedCache.cacheDir.resolve("github").resolve(fileName)
     }
 }
 
