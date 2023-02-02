@@ -68,4 +68,23 @@ class AddClientSpec(
             file = props["file"] ?: "",
         )
     }
+
+    fun cnARC(
+        tag: String,
+        file: String,
+    ) {
+        github(
+            user = R.cnARC.user,
+            repo = R.cnARC.repo,
+            tag = tag,
+            file = file,
+        )
+    }
+
+    fun cnARC(props: Map<String, String>) {
+        cnARC(
+            tag = props["tag"] ?: "",
+            file = props["file"] ?: "",
+        )
+    }
 }
