@@ -81,10 +81,26 @@ class AddClientSpec(
         )
     }
 
-    fun cnARC(props: Map<String, String>) {
-        cnARC(
-            tag = props["tag"] ?: "",
-            file = props["file"] ?: "",
+    fun cnARC(
+        version: String,
+    ) {
+        github(
+            user = R.cnARC.user,
+            repo = R.cnARC.repo,
+            tag = version,
+            file = "Mindustry-CN-ARC-Desktop-$version.jar",
         )
+    }
+
+    fun cnARC(props: Map<String, String>) {
+        val version = props["version"]
+        if(version != null){
+            cnARC(version=version)
+        }else {    
+            cnARC(
+                tag = props["tag"] ?: "",
+                file = props["file"] ?: "",
+            )
+        }
     }
 }
