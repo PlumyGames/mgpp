@@ -173,4 +173,15 @@ object R {
          */
         const val repo = "mindustry-client"
     }
+
+    object cnARC{
+        /**
+         * The [maintainer](https://github.com/Jackson11500) of CN-ARC Client
+         */
+        const val user = "Jackson11500"
+        /**
+         * The [CN-ARC client buildings](https://github.com/Jackson11500/Mindustry-CN-ARC)
+         */
+        const val repo = "Mindustry-CN-ARC-Builds"
+    }
 }
