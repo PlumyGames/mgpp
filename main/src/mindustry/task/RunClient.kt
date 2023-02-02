@@ -16,7 +16,16 @@ open class RunClient : RunMindustryAbstract() {
     @TaskAction
     override fun exec() {
         val data = dataDir.asFile.get()
+        if (data.isDirectory) {
+            // TODO: Record the mod signature.
+            // TODO: Don't always delete all.
+            data.deleteRecursively()
+        }
         data.mkdirs()
+        val modsFolder = data.resolve("mods")
+        for (modFile in mods) {
+            modFile.copyTo(modsFolder.resolve(modFile.name), overwrite = true)
+        }
         standardInput = System.`in`
         args = listOf(mindustryFile.get().absolutePath) + startupArgs.get()
         environment[R.env.mindustryDataDir] = data.absoluteFile
