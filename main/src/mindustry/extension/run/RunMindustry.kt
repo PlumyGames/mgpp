@@ -27,6 +27,10 @@ fun Project.`runMindustry`(configure: Action<RunMindustryExtension>): Unit =
 open class RunMindustryExtension(
     val proj: Project,
 ) {
+    companion object {
+        const val defaultModpackName = "Default"
+    }
+
     val clients = ArrayList<Client>()
     val servers = ArrayList<Server>()
     val modpacks = ArrayList<Modpack>()
@@ -82,7 +86,7 @@ open class RunMindustryExtension(
      */
     inline fun addClient(config: AddClientSpec.() -> Unit) {
         val client = Client()
-        client.modpack = "Default"
+        client.modpack = defaultModpackName
         AddClientSpec(proj, client).config()
         clients.add(client)
     }
@@ -95,7 +99,7 @@ open class RunMindustryExtension(
 
     inline fun addServer(config: AddServerSpec.() -> Unit) {
         val server = Server()
-        server.modpack = "Default"
+        server.modpack = defaultModpackName
         AddServerSpec(proj, server).config()
         servers.add(server)
     }
@@ -106,7 +110,7 @@ open class RunMindustryExtension(
         }
     }
 
-    inline fun addModpack(name: String = "Default", config: AddModpackSpec.() -> Unit) {
+    inline fun addModpack(name: String = defaultModpackName, config: AddModpackSpec.() -> Unit) {
         val modpack = Modpack(formatValidGradleName(name))
         AddModpackSpec(proj, modpack).config()
         if (modpack.name.isNotBlank() && modpack.mods.isNotEmpty()) {
@@ -121,6 +125,6 @@ open class RunMindustryExtension(
     }
 
     fun addModpack(config: Action<AddModpackSpec>) {
-        addModpack("default", config)
+        addModpack(defaultModpackName, config)
     }
 }

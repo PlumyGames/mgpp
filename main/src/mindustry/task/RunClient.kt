@@ -11,9 +11,7 @@ import org.gradle.api.tasks.*
 
 open class RunClient : RunMindustryAbstract() {
     init {
-        dataDir.convention(project.dirProv {
-            temporaryDir.resolve("data")
-        })
+
     }
     @TaskAction
     override fun exec() {

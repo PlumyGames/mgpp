@@ -2,6 +2,7 @@
 
 package io.github.liplum.mindustry
 
+import io.github.liplum.dsl.*
 import io.github.liplum.dsl.afterEvaluateThis
 import io.github.liplum.dsl.getOrCreate
 import io.github.liplum.dsl.named
@@ -36,32 +37,10 @@ class MindustryAppPlugin : Plugin<Project> {
         }
         target.afterEvaluateThis {
             // For client side
-            val downloadClient = target.tasks.register<DownloadGame>(
-                "downloadClient",
-            ) {
-                group = R.taskGroup.mindustry
-                keepOthers.set(ex._client.keepOtherVersion)
-                val localOverwrite = project.local["mgpp.client.location"]
-                if (localOverwrite != null)
-                    location.set(LocalGameLoc(localOverwrite))
-                else location.set(ex._client.location)
-            }
-            // For server side
-            val downloadServer = target.tasks.register<DownloadGame>(
-                "downloadServer",
-            ) {
-                group = R.taskGroup.mindustry
-                keepOthers.set(ex._client.keepOtherVersion)
-                val localOverwrite = project.local["mgpp.server.location"]
-                if (localOverwrite != null)
-                    location.set(LocalGameLoc(localOverwrite))
-                else location.set(ex._server.location)
-            }
             applyNew(target)
             if (false) {
                 val runClient = tasks.register<RunMindustry>("runClient") {
                     group = R.taskGroup.mindustry
-                    dependsOn(downloadClient)
                     mainClass.convention(R.mainClass.desktop)
                     val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
                         it != "false"
@@ -86,7 +65,6 @@ class MindustryAppPlugin : Plugin<Project> {
 
                     logger.info("Data directory of $name is $resolvedDataDir .")
                     dataDir.set(resolvedDataDir)
-                    mindustryFile.from(downloadClient)
                     modsWorkWith.from(resolveMods)
                     dataModsPath.set("mods")
                     startupArgs.set(ex._client.startupArgs)
@@ -98,13 +76,11 @@ class MindustryAppPlugin : Plugin<Project> {
                     "runServer",
                 ) {
                     group = R.taskGroup.mindustry
-                    dependsOn(downloadServer)
                     val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
                         it != "false"
                     } ?: ex._run._forciblyClear.get()
                     forciblyClear.set(doForciblyClear)
                     mainClass.convention(R.mainClass.server)
-                    mindustryFile.from(downloadServer)
                     modsWorkWith.from(resolveMods)
                     dataModsPath.convention("config/mods")
                     startupArgs.set(ex._server.startupArgs)
@@ -145,7 +121,7 @@ class MindustryAppPlugin : Plugin<Project> {
                     (anonymous++ + 1).toString()
                 }
             }
-            val resolveGame = proj.tasks.register<ResolveClient>("resolveClient$name") {
+            val resolveGame = proj.tasks.register<ResolveGame>("resolveClient$name") {
                 val modpackName = client.modpack
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
                     dependsOn("resolveModpack$modpackName")
@@ -154,8 +130,14 @@ class MindustryAppPlugin : Plugin<Project> {
                 location.set(client.location)
             }
             proj.tasks.register<RunClient>("runClient$name") {
-                group = R.taskGroup.mindustry
                 dependsOn(resolveGame)
+                group = R.taskGroup.mindustry
+                startupArgs.addAll(client.startupArgs)
+                dataDir.set(project.dirProv {
+                    project.buildDir.resolve("mindustryClientData").resolve(
+                        client.name.ifBlank { "Default" }
+                    )
+                })
                 mindustryFile.set(resolveGame.get().outputs.files.singleFile)
                 val modpackName = client.modpack
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
@@ -178,7 +160,7 @@ class MindustryAppPlugin : Plugin<Project> {
                     (anonymous++ + 1).toString()
                 }
             }
-            val resolveGame = proj.tasks.register<ResolveServer>("resolveServer$name") {
+            val resolveGame = proj.tasks.register<ResolveGame>("resolveServer$name") {
                 val modpackName = server.modpack
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
                     dependsOn("resolveModpack$modpackName")
@@ -187,40 +169,22 @@ class MindustryAppPlugin : Plugin<Project> {
                 location.set(server.location)
             }
             proj.tasks.register<RunServer>("runServer$name") {
-                group = R.taskGroup.mindustry
                 dependsOn(resolveGame)
+                group = R.taskGroup.mindustry
+                startupArgs.addAll(server.startupArgs)
+                dataDir.set(project.dirProv {
+                    project.buildDir.resolve("mindustryServerData").resolve(
+                        server.name.ifBlank { "Default" }
+                    )
+                })
+                mindustryFile.set(resolveGame.get().outputs.files.singleFile)
+                val modpackName = server.modpack
+                if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
+                    val resolveModpackTask = proj.tasks.named("resolveModpack$modpackName")
+                    dependsOn(resolveModpackTask)
+                    mods.from(resolveModpackTask)
+                }
             }
         }
     }
 }
-/**
- * Provides the existing `downloadClient`: [DownloadGame] task.
- *
- * Because it's registered after project evaluating, please access it in [Project.afterEvaluate].
- */
-val TaskContainer.`downloadClient`: TaskProvider<DownloadGame>
-    get() = named<DownloadGame>("downloadClient")
-
-/**
- * Provides the existing `downloadServer`: [RunMindustry] task.
- *
- * Because it's registered after project evaluating, please access it in [Project.afterEvaluate].
- */
-val TaskContainer.`downloadServer`: TaskProvider<DownloadGame>
-    get() = named<DownloadGame>("downloadServer")
-
-/**
- * Provides the existing `runClient`: [RunMindustry] task.
- *
- * Because it's registered after project evaluating, please access it in [Project.afterEvaluate].
- */
-val TaskContainer.`runClient`: TaskProvider<RunMindustry>
-    get() = named<RunMindustry>("runClient")
-
-/**
- * Provides the existing `runServer`: [RunMindustry] task.
- *
- * Because it's registered after project evaluating, please access it in [Project.afterEvaluate].
- */
-val TaskContainer.`runServer`: TaskProvider<RunMindustry>
-    get() = named<RunMindustry>("runServer")

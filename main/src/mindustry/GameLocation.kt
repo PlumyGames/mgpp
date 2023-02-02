@@ -7,15 +7,11 @@ import java.io.Serializable
  * An abstract Mindustry game file.
  */
 interface IGameLoc : Serializable {
-    var fileName: String
+    val fileName: String
     /**
      * Generate an [IDownloadLoc] deterministically.
      */
     fun createDownloadLoc(): IDownloadLoc
-    infix fun named(name: String): IGameLoc {
-        fileName = name
-        return this
-    }
 
     fun resolveOutputFile(): File
 }
@@ -27,19 +23,18 @@ data class GitHubGameLoc(
     val file: String,
 ) : IGameLoc {
     val download = GitHubDownload.release(user, repo, tag, file)
-    override var fileName = "$user-$repo-$tag-${download.name}"
+    override val fileName = "$user-$repo-$tag-${download.name}"
     override fun createDownloadLoc() = download
     override fun resolveOutputFile(): File {
-        return SharedCache.cacheDir.resolve("github").resolve(fileName)
+        return SharedCache.gamesDir.resolve("github").resolve(fileName)
     }
 }
 
 data class LatestOfficialMindustryLoc(
     val file: String
 ) : IGameLoc {
-    override var fileName: String
+    override val fileName: String
         get() = TODO("Not yet implemented")
-        set(value) {}
 
     override fun createDownloadLoc(): IDownloadLoc {
         TODO("Not yet implemented")
@@ -53,9 +48,8 @@ data class LatestOfficialMindustryLoc(
 data class LatestBeMindustryLoc(
     val file: String
 ) : IGameLoc {
-    override var fileName: String
+    override val fileName: String
         get() = TODO("Not yet implemented")
-        set(value) {}
 
     override fun createDownloadLoc(): IDownloadLoc {
         TODO("Not yet implemented")
@@ -71,8 +65,8 @@ data class LocalGameLoc(
 ) : IGameLoc {
     constructor(path: String) : this(File(path))
 
+    override val fileName: String = file.name
     val localCopy = LocalCopy(file)
-    override var fileName: String = file.name
     override fun createDownloadLoc() = localCopy
     /**
      * It points to a local file

@@ -1,8 +1,6 @@
 package io.github.liplum.mindustry.task
 
-import io.github.liplum.dsl.*
 import io.github.liplum.dsl.copyTo
-import io.github.liplum.dsl.dirProp
 import io.github.liplum.dsl.listProp
 import io.github.liplum.dsl.prop
 import io.github.liplum.mindustry.GitHubGameLoc
@@ -12,12 +10,11 @@ import io.github.liplum.mindustry.LocalGameLoc
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
 
-open class ResolveServer : DefaultTask() {
+open class ResolveGame : DefaultTask() {
     val location = project.prop<IGameLoc>()
         @Input get
     val mods = project.listProp<IMod>()
@@ -41,17 +38,17 @@ open class ResolveServer : DefaultTask() {
     fun resolveGitHubGameLoc(loc: GitHubGameLoc) {
         val output = loc.resolveOutputFile()
         if (output.isFile) return
-        logger.lifecycle("Downloading $loc...")
+        logger.lifecycle("Downloading $loc to $output...")
         try {
             loc.createDownloadLoc().openInputStream().use {
                 it.copyTo(output)
             }
+            logger.lifecycle("${loc.fileName} is downloaded.")
         } catch (e: Exception) {
             // now output is corrupted, delete it
             output.delete()
             throw e
         }
-        logger.lifecycle("Downloaded $loc at $output.")
     }
 
     fun resolveLocalGameLoc(loc: LocalGameLoc) {
