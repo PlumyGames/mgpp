@@ -110,7 +110,7 @@ runMindustry {
     }
     addClient {
         // anonymous 2
-        official("v137")
+        //fooClient("v137")
     }
     addClient {
         name = "old mindustry"
