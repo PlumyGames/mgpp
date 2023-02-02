@@ -24,7 +24,11 @@ open class RunClient : RunMindustryAbstract() {
         data.mkdirs()
         val modsFolder = data.resolve("mods")
         for (modFile in mods) {
-            modFile.copyTo(modsFolder.resolve(modFile.name), overwrite = true)
+            if (modFile.isFile) {
+                modFile.copyTo(modsFolder.resolve(modFile.name), overwrite = true)
+            } else {
+                logger.warn("Mod<$modFile> doesn't exist.")
+            }
         }
         standardInput = System.`in`
         args = listOf(mindustryFile.get().absolutePath) + startupArgs.get()

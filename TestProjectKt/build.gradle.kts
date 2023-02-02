@@ -76,7 +76,7 @@ mindustry {
             add kotlin "liplum/cyberio"
             //add folder "$buildDir/mods"
             //add folder "$buildDir/fakeMods"
-            add hjson "BlueWolf3682/Exotic-Mod" branch "0.8"
+            add hjson "BlueWolf3682/Exotic-Mod"// branch "0.8"
             add fromTask "iconMaker"
             add localProperties "extraModPath"
         }
@@ -101,7 +101,8 @@ mindustry {
 }
 runMindustry {
     addModpack {
-        jvm("liplum/CyberIO")
+        jvm(repo = "liplum/CyberIO")
+        json(repo = "BlueWolf3682/Exotic-Mod", branch = "0.8")
     }
     addClient {
         // anonymous 1

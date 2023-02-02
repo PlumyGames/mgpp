@@ -20,7 +20,7 @@ interface IDownloadableMod : IMod {
  * A local mod from disk.
  */
 data class LocalMod(
-    var modFile: File = File(""),
+    val modFile: File = File(""),
 ) : IMod {
     constructor(path: String) : this(File(path))
 }
@@ -29,7 +29,7 @@ data class LocalMod(
  * A mod from a url.
  */
 data class UrlMod(
-    var url: URL,
+    val url: URL,
 ) : IDownloadableMod {
     constructor(url: String) : this(URL(url))
 
@@ -79,7 +79,7 @@ data class GitHubMod(
     /**
      * like "PlumyGames/mgpp"
      */
-    var repo: String,
+    val repo: String,
 ) : IDownloadableMod {
     override val fileName: String
         get() = repo.repo2Path() + ".zip"
@@ -98,7 +98,7 @@ data class GitHubMod(
 }
 
 data class GitHubJvmMod(
-    var repo: String,
+    val repo: String,
 ) : IDownloadableMod {
     override val fileName: String
         get() = repo.repo2Path() + ".jar"
@@ -106,11 +106,10 @@ data class GitHubJvmMod(
     override fun resolveFile(writeIn: File) {
         importJvmMod(repo, writeIn)
     }
-
 }
 
 data class GitHubPlainMod(
-    var repo: String, var branch: String = "",
+    val repo: String, val branch: String? = null,
 ) : IDownloadableMod {
     override val fileName: String
         get() = linkString(separator = "-", repo.repo2Path(), branch) + ".zip"
@@ -118,11 +117,8 @@ data class GitHubPlainMod(
     override fun resolveFile(writeIn: File) {
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
         val json = Jval.read(jsonText)
-        val branch = branch.ifBlank { json.getString("default_branch") }
+        val branch = if (!branch.isNullOrBlank()) branch
+        else json.getString("default_branch")
         importPlainMod(repo, branch, writeIn)
-    }
-
-    infix fun branch(branch: String) {
-        this.branch = branch
     }
 }

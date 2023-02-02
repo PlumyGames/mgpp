@@ -80,6 +80,7 @@ mindustry {
 runMindustry {
     addModpack {
         jvm repo: "liplum/CyberIO"
+        json repo: "BlueWolf3682/Exotic-Mod", branch: "0.8"
     }
     addClient {
         // anonymous 1
