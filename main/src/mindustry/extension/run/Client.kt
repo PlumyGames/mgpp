@@ -50,6 +50,7 @@ class AddClientSpec(
         }
     }
     /**
+     * ### Kotlin DSL
      * [Foo's client](https://github.com/mindustry-antigrief/mindustry-client)
      *
      * ```kotlin
@@ -71,6 +72,7 @@ class AddClientSpec(
         )
     }
     /**
+     * ### Groovy DSL
      * [Foo's client](https://github.com/mindustry-antigrief/mindustry-client)
      *
      * ```groovy
@@ -83,7 +85,15 @@ class AddClientSpec(
             file = props["file"] ?: "",
         )
     }
-
+    /**
+     * ### Kotlin DSL
+     * ```kotlin
+     * cnARC(
+     *   tag="30388",
+     *   file="Mindustry-CN-ARC-Desktop-$version.jar"
+     * )
+     * ```
+     */
     fun cnARC(
         tag: String,
         file: String,
@@ -95,10 +105,13 @@ class AddClientSpec(
             file = file,
         )
     }
-
-    fun cnARC(
-        version: String,
-    ) {
+    /**
+     * ### Kotlin DSL
+     * ```kotlin
+     * cnARC(version="30388")
+     * ```
+     */
+    fun cnARC(version: String) {
         github(
             user = R.cnARC.user,
             repo = R.cnARC.repo,
@@ -107,16 +120,27 @@ class AddClientSpec(
         )
     }
     /**
-    * ```groovy
-    * cnARC version: "30388"
-    * cnARC tag: "30388", file: "Mindustry-CN-ARC-Desktop-30388.jar"
-    * ```
-    */
+     * ### Kotlin DSL
+     * ```kotlin
+     * cnARC(version=30388)
+     * ```
+     */
+    fun cnARC(version: Int) {
+        cnARC(version = version.toString())
+    }
+    /**
+     * ### Groovy DSL
+     * ```groovy
+     * cnARC version: 30388
+     * cnARC version: "30388"
+     * cnARC tag: "30388", file: "Mindustry-CN-ARC-Desktop-30388.jar"
+     * ```
+     */
     fun cnARC(props: Map<String, String>) {
         val version = props["version"]
-        if(version != null){
-            cnARC(version=version)
-        }else {    
+        if (version != null) {
+            cnARC(version = version.toString())
+        } else {
             cnARC(
                 tag = props["tag"] ?: "",
                 file = props["file"] ?: "",

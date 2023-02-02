@@ -55,30 +55,37 @@ object R {
         const val mindustryDataDir = "MINDUSTRY_DATA_DIR"
     }
 
-    /**
-     * The default minGameVersion in `mod.(h)json`.
-     *
-     * **Note:** You shouldn't pretend this version and work based on it.
-     */
-    const val DefaultMinGameVersion = "141.3"
-    /**
-     * [The default Mindustry version](https://github.com/Anuken/Mindustry/releases/tag/v141.3)
-     *
-     * **Note:** You shouldn't pretend this version and work based on it.
-     */
-    const val DefaultMindustryVersion = "v141.3"
-    /**
-     * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases/tag/23770)
-     *
-     * **Note:** You shouldn't pretend this version and work based on it.
-     */
-    const val DefaultMindustryBEVersion = "23770"
-    /**
-     * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v141.3)
-     *
-     * **Note:** You shouldn't pretend this version and work based on it.
-     */
-    const val DefaultArcVersion = "v141.3"
+    object modMeta {
+        /**
+         * The default minGameVersion in `mod.(h)json`.
+         *
+         * **Note:** You shouldn't pretend this version and work based on it.
+         */
+        const val defaultMinGameVersion = "141.3"
+    }
+
+    object version {
+
+        /**
+         * [The default Mindustry version](https://github.com/Anuken/Mindustry/releases/tag/v141.3)
+         *
+         * **Note:** You shouldn't pretend this version and work based on it.
+         */
+        const val defaultOfficial = "v141.3"
+        /**
+         * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases/tag/23786)
+         *
+         * **Note:** You shouldn't pretend this version and work based on it.
+         */
+        const val defaultBE = "23786"
+        /**
+         * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v141.3)
+         *
+         * **Note:** You shouldn't pretend this version and work based on it.
+         */
+        const val defaultArc = "v141.3"
+    }
+
     /**
      * [Mindustry official release](https://github.com/Anuken/Mindustry/releases)
      */
@@ -174,7 +181,7 @@ object R {
         const val repo = "mindustry-client"
     }
 
-    object cnARC{
+    object cnARC {
         /**
          * The [maintainer](https://github.com/Jackson11500) of CN-ARC Client
          */

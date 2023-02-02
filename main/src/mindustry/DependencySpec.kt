@@ -137,8 +137,8 @@ class DependencySpec(
                 val json = Jval.read(url.readText())
                 return@fetchLatestVersion json.getString("tag_name")
             } catch (e: Exception) {
-                target.logger.warn("Can't fetch the exact latest version of mindustry, so use ${Mgpp.DefaultMindustryVersion} instead")
-                return@fetchLatestVersion Mgpp.DefaultMindustryVersion
+                target.logger.warn("Can't fetch the exact latest version of mindustry, so use ${R.version.defaultOfficial} instead")
+                return@fetchLatestVersion R.version.defaultOfficial
             }
         }
         mindustry(latestVersion)
@@ -195,8 +195,8 @@ class DependencySpec(
                 val latestTag = all.get(0) // the latest tag
                 return@fetchLatestVersion latestTag.getString("name")
             } catch (e: Exception) {
-                target.logger.warn("Can't fetch the exact latest version of arc, so use ${Mgpp.DefaultArcVersion} instead")
-                return@fetchLatestVersion Mgpp.DefaultArcVersion
+                target.logger.warn("Can't fetch the exact latest version of arc, so use ${R.version.defaultArc} instead")
+                return@fetchLatestVersion R.version.defaultArc
             }
         }
         arc(latestVersion)
@@ -209,13 +209,13 @@ class DependencySpec(
      * Declare an Arc dependency from [arc jitpack](https://github.com/Anuken/Arc).
      */
     fun ArcDependency(
-        version: String = Mgpp.DefaultMindustryVersion,
+        version: String = R.version.defaultOfficial,
     ) = Dependency(Mgpp.ArcJitpackRepo, version)
     /**
      * Declare a Mindustry dependency from [mindustry jitpack](https://github.com/Anuken/Mindustry).
      */
     fun MindustryDependency(
-        version: String = Mgpp.DefaultMindustryVersion,
+        version: String = R.version.defaultOfficial,
     ) = Dependency(Mgpp.MindustryJitpackRepo, version)
     /**
      * Declare a dependency.

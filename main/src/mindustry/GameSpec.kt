@@ -194,16 +194,16 @@ abstract class GameSpecBase(
                 val version = json.getString("tag_name").let {
                     if (it == null) {
                         target.logger.warn("Can't fetch latest official.")
-                        Mgpp.DefaultMindustryVersion
+                        R.version.defaultOfficial
                     } else it
                 }
                 return@fetchLatestVersion version
             } catch (e: Exception) {
                 target.logger.warn(
-                    "Can't fetch latest official version, so use ${Mgpp.DefaultMindustryVersion} as default instead.",
+                    "Can't fetch latest official version, so use ${R.version.defaultOfficial} as default instead.",
                     e
                 )
-                return@fetchLatestVersion Mgpp.DefaultMindustryVersion
+                return@fetchLatestVersion R.version.defaultOfficial
             }
         }
         return Official(latestVersion)
@@ -221,16 +221,16 @@ abstract class GameSpecBase(
                 val version = json.getString("tag_name").let {
                     if (it == null) {
                         target.logger.warn("Can't fetch latest be.")
-                        Mgpp.DefaultMindustryBEVersion
+                        R.version.defaultBE
                     } else it
                 }
                 return@fetchLatestVersion version
             } catch (e: Exception) {
                 target.logger.warn(
-                    "Can't fetch latest be version, so use ${Mgpp.DefaultMindustryBEVersion} as default instead.",
+                    "Can't fetch latest be version, so use ${R.version.defaultBE} as default instead.",
                     e
                 )
-                return@fetchLatestVersion Mgpp.DefaultMindustryBEVersion
+                return@fetchLatestVersion R.version.defaultBE
             }
         }
         return BE(latestVersion)
@@ -281,7 +281,7 @@ class ClientSpec(
     @InheritFromParent
     @LocalProperty("mgpp.client.location")
     override val location = target.prop<IGameLoc>().apply {
-        convention(Official(version = Mgpp.DefaultMindustryVersion))
+        convention(Official(version = R.version.defaultOfficial))
     }
     val mindustry: ClientSpec
         get() = this
@@ -337,7 +337,7 @@ class ServerSpec(
     @InheritFromParent
     @LocalProperty("mgpp.server.location")
     override val location = target.prop<IGameLoc>().apply {
-        convention(Official(version = Mgpp.DefaultMindustryVersion))
+        convention(Official(version = R.version.defaultOfficial))
     }
     val mindustry: ServerSpec
         get() = this

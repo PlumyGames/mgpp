@@ -96,18 +96,21 @@ abstract class AddCommonSpec<T : Common> {
         )
     }
     /**
+     * ### Kotlin DSL
      * ```kotlin
      * official(version="v141")
      * ```
      */
     abstract fun official(version: String)
     /**
+     * ### Kotlin DSL
      * ```kotlin
      * official(version=latest)
      * ```
      */
     abstract fun official(version: Notation)
     /**
+     * ### Groovy DSL
      * ```groovy
      * official version: "v141"
      * official version: latest
@@ -120,10 +123,37 @@ abstract class AddCommonSpec<T : Common> {
             else -> official(version)
         }
     }
-
+    /**
+     * ### Kotlin DSL
+     * ```kotlin
+     * be(version="23786")
+     * ```
+     */
     abstract fun be(version: String)
+    /**
+     * ### Kotlin DSL
+     * ```kotlin
+     * be(version=23786)
+     * ```
+     */
+    fun be(version: Int) {
+        be(version = version.toString())
+    }
+    /**
+     * ### Kotlin DSL
+     * ```kotlin
+     * be(version=latest)
+     * ```
+     */
     abstract fun be(version: Notation)
-
+    /**
+     * ### Groovy DSL
+     * ```groovy
+     * be version: latest
+     * be version: 23786
+     * be version: "23786"
+     * ```
+     */
     fun be(props: Map<String, Any>) {
         when (val version = props["version"]?.toString()) {
             Notation.latest.toString() -> be(version = latest)
