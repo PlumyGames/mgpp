@@ -5,17 +5,13 @@ package io.github.liplum.mindustry
 import io.github.liplum.dsl.*
 import io.github.liplum.dsl.afterEvaluateThis
 import io.github.liplum.dsl.getOrCreate
-import io.github.liplum.dsl.named
 import io.github.liplum.dsl.register
 import io.github.liplum.mindustry.*
-import io.github.liplum.mindustry.LocalProperties.local
 import io.github.liplum.mindustry.LocalProperties.localProperties
 import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
-import org.gradle.api.tasks.TaskContainer
-import org.gradle.api.tasks.TaskProvider
 import java.io.File
 
 /**
@@ -104,7 +100,7 @@ class MindustryAppPlugin : Plugin<Project> {
         for (modpack in x.modpacks) {
             val name = modpack.name
             proj.tasks.register<ResolveMods>("resolveModpack$name") {
-                //group = null
+                group = R.taskGroup.mindustryStuff
                 mods.addAll(modpack.mods)
             }
         }
@@ -121,16 +117,16 @@ class MindustryAppPlugin : Plugin<Project> {
                     (anonymous++ + 1).toString()
                 }
             }
-            val resolveGame = proj.tasks.register<ResolveGame>("resolveClient$name") {
+            val resolveClient = proj.tasks.register<ResolveGame>("resolveClient$name") {
+                group = R.taskGroup.mindustryStuff
                 val modpackName = client.modpack
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
                     dependsOn("resolveModpack$modpackName")
                 }
-                //group = null
                 location.set(client.location)
             }
             proj.tasks.register<RunClient>("runClient$name") {
-                dependsOn(resolveGame)
+                dependsOn(resolveClient)
                 group = R.taskGroup.mindustry
                 startupArgs.addAll(client.startupArgs)
                 dataDir.set(project.dirProv {
@@ -138,7 +134,9 @@ class MindustryAppPlugin : Plugin<Project> {
                         client.name.ifBlank { "Default" }
                     )
                 })
-                mindustryFile.set(resolveGame.get().outputs.files.singleFile)
+                mindustryFile.set(proj.provider {
+                    resolveClient.get().outputs.files.singleFile
+                })
                 val modpackName = client.modpack
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
                     val resolveModpackTask = proj.tasks.named("resolveModpack$modpackName")
@@ -160,16 +158,16 @@ class MindustryAppPlugin : Plugin<Project> {
                     (anonymous++ + 1).toString()
                 }
             }
-            val resolveGame = proj.tasks.register<ResolveGame>("resolveServer$name") {
+            val resolveServer = proj.tasks.register<ResolveGame>("resolveServer$name") {
+                group = R.taskGroup.mindustryStuff
                 val modpackName = server.modpack
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
                     dependsOn("resolveModpack$modpackName")
                 }
-                //group = null
                 location.set(server.location)
             }
             proj.tasks.register<RunServer>("runServer$name") {
-                dependsOn(resolveGame)
+                dependsOn(resolveServer)
                 group = R.taskGroup.mindustry
                 startupArgs.addAll(server.startupArgs)
                 dataDir.set(project.dirProv {
@@ -177,7 +175,9 @@ class MindustryAppPlugin : Plugin<Project> {
                         server.name.ifBlank { "Default" }
                     )
                 })
-                mindustryFile.set(resolveGame.get().outputs.files.singleFile)
+                mindustryFile.set(proj.provider {
+                    resolveServer.get().outputs.files.singleFile
+                })
                 val modpackName = server.modpack
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
                     val resolveModpackTask = proj.tasks.named("resolveModpack$modpackName")

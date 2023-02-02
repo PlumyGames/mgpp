@@ -30,7 +30,7 @@ class AddServerSpec(
 
     override fun official(version: Notation) {
         when (version) {
-            Notation.latest -> backend.location = LatestOfficialMindustryLoc(file = R.officialRelease.server)
+            Notation.latest -> LatestOfficialMindustryLoc(file = R.officialRelease.server).checkAndSet()
             else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
         }
     }
@@ -46,7 +46,7 @@ class AddServerSpec(
 
     override fun be(version: Notation) {
         when (version) {
-            Notation.latest -> backend.location = LatestBeMindustryLoc(file = "Mindustry-BE-Server-$version.jar")
+            Notation.latest -> LatestBeMindustryLoc(file = "Mindustry-BE-Server-$version.jar").checkAndSet()
             else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
         }
     }

@@ -111,11 +111,20 @@ open class RunMindustryExtension(
     }
 
     inline fun addModpack(name: String = defaultModpackName, config: AddModpackSpec.() -> Unit) {
-        val modpack = Modpack(formatValidGradleName(name))
-        AddModpackSpec(proj, modpack).config()
-        if (modpack.name.isNotBlank() && modpack.mods.isNotEmpty()) {
-            modpacks.add(modpack)
+        val modpackName = formatValidGradleName(name)
+        if (modpackName.isBlank()) {
+            proj.logger.warn(
+                "Modpack's name can't be blank, but \"$name\". Any character other than [a-zA-Z0-9] will be ignored."
+            )
+            return
         }
+        val modpack = Modpack(modpackName)
+        AddModpackSpec(proj, modpack).config()
+        if (modpack.mods.isEmpty()) {
+            proj.logger.warn("Modpack<$modpackName> doesn't contains any mod, and it will be ignored.")
+            return
+        }
+        modpacks.add(modpack)
     }
 
     fun addModpack(name: String, config: Action<AddModpackSpec>) {

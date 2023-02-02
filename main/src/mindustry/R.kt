@@ -38,6 +38,7 @@ object R {
          * A task group for main tasks, named `mindustry`
          */
         const val mindustry = "mindustry"
+        const val mindustryStuff = "mindustry stuff"
         /**
          * A task group for tasks related to [MindustryAssetsExtension], named `mindustry assets`
          */

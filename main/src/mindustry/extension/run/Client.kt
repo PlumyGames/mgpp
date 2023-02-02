@@ -29,7 +29,7 @@ class AddClientSpec(
 
     override fun official(version: Notation) {
         when (version) {
-            Notation.latest -> backend.location = LatestOfficialMindustryLoc(file = R.officialRelease.client)
+            Notation.latest -> LatestOfficialMindustryLoc(file = R.officialRelease.client).checkAndSet()
             else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
         }
     }
@@ -45,11 +45,20 @@ class AddClientSpec(
 
     override fun be(version: Notation) {
         when (version) {
-            Notation.latest -> backend.location = LatestBeMindustryLoc(file = "Mindustry-BE-Desktop-$version.jar")
+            Notation.latest -> LatestBeMindustryLoc(file = "Mindustry-BE-Desktop-$version.jar").checkAndSet()
             else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
         }
     }
-
+    /**
+     * [Foo's client](https://github.com/mindustry-antigrief/mindustry-client)
+     *
+     * ```kotlin
+     * fooClient(
+     *   tag = "v8.0.0",
+     *   file = "erekir-client.jar"
+     * )
+     * ```
+     */
     fun fooClient(
         tag: String,
         file: String,
@@ -61,7 +70,13 @@ class AddClientSpec(
             file = file,
         )
     }
-
+    /**
+     * [Foo's client](https://github.com/mindustry-antigrief/mindustry-client)
+     *
+     * ```groovy
+     * fooClient tag: "v8.0.0", file: "erekir-client.jar"
+     * ```
+     */
     fun fooClient(props: Map<String, String>) {
         fooClient(
             tag = props["tag"] ?: "",

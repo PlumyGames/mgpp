@@ -82,14 +82,14 @@ operator fun StringBuilder.plusAssign(c: Char) {
 }
 
 internal
-fun linkString(separator: String, vararg strings: String) =
+fun linkString(separator: String, vararg strings: String?) =
     linkString(separator, strings.toList())
 
 internal
-fun linkString(separator: String, strings: List<String>): String {
+fun linkString(separator: String, strings: List<String?>): String {
     val sb = StringBuilder()
     for ((i, str) in strings.withIndex()) {
-        if (str.isBlank()) continue
+        if (str.isNullOrBlank()) continue
         if (i != 0) {
             sb.append(separator)
         }

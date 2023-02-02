@@ -66,18 +66,25 @@ abstract class AddCommonSpec<T : Common> {
             backend.modpack = value?.let(::formatValidGradleName)
         }
 
+    protected fun IGameLoc.checkAndSet() {
+        if (backend.location != null) {
+            proj.logger.warn("The game is already set to ${backend.location}, and will be overridden by $this.")
+        }
+        backend.location = this
+    }
+
     fun github(
         user: String,
         repo: String,
         tag: String,
         file: String,
     ) {
-        backend.location = GitHubGameLoc(
+        GitHubGameLoc(
             user = user,
             repo = repo,
             tag = tag,
             file = file,
-        )
+        ).checkAndSet()
     }
 
     fun github(props: Map<String, String>) {
@@ -126,20 +133,20 @@ abstract class AddCommonSpec<T : Common> {
     }
 
     fun fromLocalDisk(path: String) {
-        backend.location = LocalGameLoc(File(path))
+        LocalGameLoc(File(path)).checkAndSet()
     }
 
     fun fromLocalDisk(file: File) {
-        backend.location = LocalGameLoc(file)
+        LocalGameLoc(file).checkAndSet()
     }
 
     fun fromLocalDisk(props: Map<String, Any>) {
         val path = props["path"]
         val file = props["file"]
         if (path != null) {
-            backend.location = LocalGameLoc(File(path as String))
+            LocalGameLoc(File(path as String)).checkAndSet()
         } else if (file != null) {
-            backend.location = LocalGameLoc(file as File)
+            LocalGameLoc(file as File).checkAndSet()
         } else {
             proj.logger.log(
                 LogLevel.WARN,

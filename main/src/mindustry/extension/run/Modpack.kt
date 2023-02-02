@@ -28,12 +28,28 @@ class AddModpackSpec(
      * Add a json mod by its repo name on GitHub.
      * @param repo like "PlumyGames/mgpp"
      */
-    fun json(repo: String) = addMod(GitHubPlainMod(repo))
+    fun json(
+        repo: String,
+        branch: String? = null,
+    ) = addMod(
+        GitHubPlainMod(
+            repo = repo,
+            branch = branch
+        )
+    )
     /**
      * Add a javascript mod by its repo name on GitHub.
      * @param repo like "PlumyGames/mgpp"
      */
-    fun js(repo: String) = addMod(GitHubPlainMod(repo))
+    fun js(
+        repo: String,
+        branch: String? = null,
+    ) = addMod(
+        GitHubPlainMod(
+            repo = repo,
+            branch = branch
+        )
+    )
     /**
      * Add a java mod by its repo name on GitHub.
      * @param repo like "PlumyGames/mgpp"
@@ -61,13 +77,23 @@ class AddModpackSpec(
      */
     fun local(file: File) = addMod(LocalMod(file))
     /** @see [github]  */
-    fun github(props: Map<String, String>) = github(props["repo"] ?: "")
+    fun github(props: Map<String, String>) = github(
+        repo = props["repo"] ?: ""
+    )
     /** @see [json]  */
-    fun json(props: Map<String, String>) = json(props["repo"] ?: "")
+    fun json(props: Map<String, String>) = json(
+        repo = props["repo"] ?: "",
+        branch = props["branch"]
+    )
     /** @see [js]  */
-    fun js(props: Map<String, String>) = js(props["repo"] ?: "")
+    fun js(props: Map<String, String>) = js(
+        repo = props["repo"] ?: "",
+        branch = props["branch"]
+    )
     /** @see [js]  */
-    fun jvm(props: Map<String, String>) = jvm(props["repo"] ?: "")
+    fun jvm(props: Map<String, String>) = jvm(
+        repo = props["repo"] ?: ""
+    )
 
     /** @see [local]  */
     fun local(props: Map<String, Any>) {
