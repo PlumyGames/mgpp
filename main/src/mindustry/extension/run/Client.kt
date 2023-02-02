@@ -30,7 +30,7 @@ class AddClientSpec(
     override fun official(version: Notation) {
         when (version) {
             Notation.latest -> LatestOfficialMindustryLoc(file = R.officialRelease.client).checkAndSet()
-            else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
+            else -> proj.logger.log(LogLevel.WARN, "Version \"$version\" is unsupported")
         }
     }
 
@@ -46,14 +46,14 @@ class AddClientSpec(
     override fun be(version: Notation) {
         when (version) {
             Notation.latest -> LatestBeMindustryLoc(file = "Mindustry-BE-Desktop-$version.jar").checkAndSet()
-            else -> proj.logger.log(LogLevel.WARN, "Version $version is unsupported")
+            else -> proj.logger.log(LogLevel.WARN, "Version \"$version\" is unsupported")
         }
     }
     /**
      * [Foo's client](https://github.com/mindustry-antigrief/mindustry-client)
      *
      * ```kotlin
-     * fooClient(
+     * fooClient (
      *   tag = "v8.0.0",
      *   file = "erekir-client.jar"
      * )

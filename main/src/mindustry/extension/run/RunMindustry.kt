@@ -20,7 +20,7 @@ val Project.`runMindustry`: RunMindustryExtension
 fun Project.`runMindustry`(configure: Action<RunMindustryExtension>): Unit =
     (this as ExtensionAware).extensions.configure(R.x.runMindustry, configure)
 /**
- * [runMindustry] is used to create [runClient] and [runServer] tasks dynamically after build script is evaluated.
+ * [runMindustry] is used to create `runClient` and `runServer` tasks dynamically after build script is evaluated.
  *
  * Therefore, you can simply ignore `runMindustry` if you don't want to run the game.
  */
@@ -58,7 +58,20 @@ open class RunMindustryExtension(
      *       file = "erekir-client.jar",
      *    )
      * }
-     * ```
+     */
+    inline fun addClient(config: AddClientSpec.() -> Unit) {
+        val client = Client()
+        client.modpack = defaultModpackName
+        AddClientSpec(proj, client).config()
+        if (client.name.isBlank()) {
+            proj.logger.warn(
+                "Client's name can't be blank, but \"${client.name}\" is given. Any character other than [a-zA-Z0-9] will be ignored."
+            )
+            return
+        }
+        clients.add(client)
+    }
+    /**
      * ### Groovy DSL
      * ```groovy
      * addClient {
@@ -84,37 +97,67 @@ open class RunMindustryExtension(
      * }
      * ```
      */
-    inline fun addClient(config: AddClientSpec.() -> Unit) {
-        val client = Client()
-        client.modpack = defaultModpackName
-        AddClientSpec(proj, client).config()
-        clients.add(client)
-    }
-
     fun addClient(config: Action<AddClientSpec>) {
         addClient {
             config.execute(this)
         }
     }
-
+    /**
+     * ### Kotlin DSL
+     * ```kotlin
+     * addServer {
+     *    name = "" // optional
+     *    official(version="v141")
+     * }
+     * addServer {
+     *    be latest
+     * }
+     */
     inline fun addServer(config: AddServerSpec.() -> Unit) {
         val server = Server()
         server.modpack = defaultModpackName
         AddServerSpec(proj, server).config()
+        if (server.name.isBlank()) {
+            proj.logger.warn(
+                "Server's name can't be blank, but \"${server.name}\" is given. Any character other than [a-zA-Z0-9] will be ignored."
+            )
+            return
+        }
         servers.add(server)
     }
-
+    /**
+     * ### Groovy DSL
+     * ```groovy
+     * addServer {
+     *    name = "" // optional
+     *    official version: "v141"
+     * }
+     * addServer {
+     *    be version: latest
+     * }
+     * ```
+     */
     fun addServer(config: Action<AddServerSpec>) {
         addServer {
             config.execute(this)
         }
     }
-
+    /**
+     * ### Kotlin DSL
+     * ```kotlin
+     * addModpack { // add to default modpack
+     *    jvm(repo="PlumyGames/mgpp")
+     * }
+     * addModpack("awesome mod") { //
+     *    jvm(repo="PlumyGames/mgpp")
+     *    github(repo="liplum/CyberIO") // auto-detect mod type, not recommended.
+     * }
+     */
     inline fun addModpack(name: String = defaultModpackName, config: AddModpackSpec.() -> Unit) {
         val modpackName = formatValidGradleName(name)
         if (modpackName.isBlank()) {
             proj.logger.warn(
-                "Modpack's name can't be blank, but \"$name\". Any character other than [a-zA-Z0-9] will be ignored."
+                "Modpack's name can't be blank, but \"$name\" is given. Any character other than [a-zA-Z0-9] will be ignored."
             )
             return
         }
@@ -126,13 +169,29 @@ open class RunMindustryExtension(
         }
         modpacks.add(modpack)
     }
-
+    /**
+     * ### Groovy DSL
+     * ```groovy
+     * addModpack("awesome mod") { //
+     *    jvm repo: "PlumyGames/mgpp"
+     *    github repo: "liplum/CyberIO" // auto-detect mod type, not recommended.
+     * }
+     * ```
+     */
     fun addModpack(name: String, config: Action<AddModpackSpec>) {
         addModpack(name) {
             config.execute(this)
         }
     }
-
+    /**
+     * Add to default modpack
+     * ```groovy
+     * addModpack { //
+     *    jvm repo: "PlumyGames/mgpp"
+     *    github repo: "liplum/CyberIO" // auto-detect mod type, not recommended.
+     * }
+     * ```
+     */
     fun addModpack(config: Action<AddModpackSpec>) {
         addModpack(defaultModpackName, config)
     }
