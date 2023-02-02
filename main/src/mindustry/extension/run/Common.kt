@@ -4,6 +4,7 @@
 
 package io.github.liplum.mindustry
 
+import io.github.liplum.dsl.plusAssign
 import io.github.liplum.mindustry.*
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
@@ -39,7 +40,7 @@ abstract class AddCommonSpec<T : Common> {
     var name: Any
         get() = backend.name
         set(value) {
-            backend.name = value.toString().replace(" ", "")
+            backend.name = formatValidGradleName(value.toString())
         }
     val startupArgs get() = backend.startupArgs
     /**
@@ -62,7 +63,7 @@ abstract class AddCommonSpec<T : Common> {
     var modpack: String?
         get() = backend.modpack
         set(value) {
-            backend.modpack = value
+            backend.modpack = value?.let(::formatValidGradleName)
         }
 
     fun github(
@@ -146,4 +147,22 @@ abstract class AddCommonSpec<T : Common> {
             )
         }
     }
+}
+
+fun formatValidGradleName(raw: String): String {
+    val s = StringBuilder()
+    var nextUpper = true
+    for (c in raw) {
+        if (c in '0'..'9' || c in 'a'..'z' || c in 'A'..'Z') {
+            if (nextUpper) {
+                s += c.uppercaseChar()
+                nextUpper = false
+            } else {
+                s += c
+            }
+        } else {
+            nextUpper = true
+        }
+    }
+    return s.toString()
 }

@@ -10,7 +10,6 @@ import io.github.liplum.mindustry.*
 import io.github.liplum.mindustry.LocalProperties.local
 import io.github.liplum.mindustry.LocalProperties.localProperties
 import io.github.liplum.mindustry.task.*
-import mindustry.task.ResolveModpack
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
@@ -126,17 +125,18 @@ class MindustryAppPlugin : Plugin<Project> {
     }
 
     private fun addResolveModpacks(proj: Project, x: RunMindustryExtension) {
-        for ((i, modpack) in x.modpacks.withIndex()) {
+        for (modpack in x.modpacks) {
             val name = modpack.name
-            proj.tasks.register<ResolveModpack>("resolveModpack$name") {
-                group = null
+            proj.tasks.register<ResolveMods>("resolveModpack$name") {
+                //group = null
+                mods.addAll(modpack.mods)
             }
         }
     }
 
     private fun addRunClient(proj: Project, x: RunMindustryExtension) {
         var anonymous = 0
-        for ((i, client) in x.clients.withIndex()) {
+        for (client in x.clients) {
             val name = client.name.ifEmpty {
                 if (anonymous == 0) {
                     anonymous++
@@ -150,19 +150,26 @@ class MindustryAppPlugin : Plugin<Project> {
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
                     dependsOn("resolveModpack$modpackName")
                 }
-                group = null
+                //group = null
                 location.set(client.location)
             }
             proj.tasks.register<RunClient>("runClient$name") {
                 group = R.taskGroup.mindustry
                 dependsOn(resolveGame)
+                mindustryFile.set(resolveGame.get().outputs.files.singleFile)
+                val modpackName = client.modpack
+                if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
+                    val resolveModpackTask = proj.tasks.named("resolveModpack$modpackName")
+                    dependsOn(resolveModpackTask)
+                    mods.from(resolveModpackTask)
+                }
             }
         }
     }
 
     private fun addRunServer(proj: Project, x: RunMindustryExtension) {
         var anonymous = 0
-        for ((i, server) in x.servers.withIndex()) {
+        for (server in x.servers) {
             val name = server.name.ifEmpty {
                 if (anonymous == 0) {
                     anonymous++
@@ -176,7 +183,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
                     dependsOn("resolveModpack$modpackName")
                 }
-                group = null
+                //group = null
                 location.set(server.location)
             }
             proj.tasks.register<RunServer>("runServer$name") {

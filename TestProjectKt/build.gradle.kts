@@ -112,7 +112,7 @@ runMindustry {
         official("v137")
     }
     addClient {
-        name = "Old Mindustry"
+        name = "old mindustry"
         official("v126")
     }
     addServer {

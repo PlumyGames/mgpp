@@ -82,45 +82,41 @@ open class RunMindustryExtension(
      */
     inline fun addClient(config: AddClientSpec.() -> Unit) {
         val client = Client()
-        client.modpack = "default"
+        client.modpack = "Default"
         AddClientSpec(proj, client).config()
         clients.add(client)
     }
 
     fun addClient(config: Action<AddClientSpec>) {
-        val client = Client()
-        client.modpack = "default"
-        config.execute(AddClientSpec(proj, client))
-        clients.add(client)
+        addClient {
+            config.execute(this)
+        }
     }
 
     inline fun addServer(config: AddServerSpec.() -> Unit) {
         val server = Server()
-        server.modpack = "default"
+        server.modpack = "Default"
         AddServerSpec(proj, server).config()
         servers.add(server)
     }
 
     fun addServer(config: Action<AddServerSpec>) {
-        val server = Server()
-        server.modpack = "default"
-        config.execute(AddServerSpec(proj, server))
-        servers.add(server)
+        addServer {
+            config.execute(this)
+        }
     }
 
-    inline fun addModpack(name: String = "default", config: AddModpackSpec.() -> Unit) {
-        val modpack = Modpack(name)
+    inline fun addModpack(name: String = "Default", config: AddModpackSpec.() -> Unit) {
+        val modpack = Modpack(formatValidGradleName(name))
         AddModpackSpec(proj, modpack).config()
-        if (modpack.name.isNotBlank()) {
+        if (modpack.name.isNotBlank() && modpack.mods.isNotEmpty()) {
             modpacks.add(modpack)
         }
     }
 
     fun addModpack(name: String, config: Action<AddModpackSpec>) {
-        val modpack = Modpack(name)
-        config.execute(AddModpackSpec(proj, modpack))
-        if (modpack.name.isNotBlank()) {
-            modpacks.add(modpack)
+        addModpack(name) {
+            config.execute(this)
         }
     }
 

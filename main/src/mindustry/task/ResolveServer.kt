@@ -1,6 +1,8 @@
 package io.github.liplum.mindustry.task
 
+import io.github.liplum.dsl.*
 import io.github.liplum.dsl.copyTo
+import io.github.liplum.dsl.dirProp
 import io.github.liplum.dsl.listProp
 import io.github.liplum.dsl.prop
 import io.github.liplum.mindustry.GitHubGameLoc
@@ -10,12 +12,11 @@ import io.github.liplum.mindustry.LocalGameLoc
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
-/**
- * The data directory of Mindustry server can't be customized.
- */
+
 open class ResolveServer : DefaultTask() {
     val location = project.prop<IGameLoc>()
         @Input get
