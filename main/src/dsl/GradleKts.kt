@@ -78,6 +78,9 @@ fun <reified T : Plugin<*>> PluginContainer.whenHas(
     if (hasPlugin(T::class.java)) func()
 }
 internal inline
+fun <reified T : Plugin<*>> PluginContainer.hasPlugin() =
+    hasPlugin(T::class.java)
+internal inline
 fun PluginContainer.whenHas(
     pluginID: String,
     func: () -> Unit,

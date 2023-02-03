@@ -12,6 +12,7 @@ import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
+import org.gradle.api.plugins.JavaPlugin
 import java.io.File
 
 /**
@@ -137,11 +138,17 @@ class MindustryAppPlugin : Plugin<Project> {
                 mindustryFile.set(proj.provider {
                     resolveClient.get().outputs.files.singleFile
                 })
-                val modpackName = client.modpack
-                if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
-                    val resolveModpackTask = proj.tasks.named("resolveModpack$modpackName")
+                val modpack = x.findModpackByName(client.modpack)
+                if (modpack != null) {
+                    val resolveModpackTask = proj.tasks.named("resolveModpack${modpack.name}")
                     dependsOn(resolveModpackTask)
                     mods.from(resolveModpackTask)
+                    for (task in modpack.fromTaskPath) {
+                        mods.from(proj.tasks.findByPath(task))
+                    }
+                    if(proj.plugins.hasPlugin<JavaPlugin>()) {
+                        mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
+                    }
                 }
             }
         }
@@ -178,11 +185,17 @@ class MindustryAppPlugin : Plugin<Project> {
                 mindustryFile.set(proj.provider {
                     resolveServer.get().outputs.files.singleFile
                 })
-                val modpackName = server.modpack
-                if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
-                    val resolveModpackTask = proj.tasks.named("resolveModpack$modpackName")
+                val modpack = x.findModpackByName(server.modpack)
+                if (modpack != null) {
+                    val resolveModpackTask = proj.tasks.named("resolveModpack${modpack.name}")
                     dependsOn(resolveModpackTask)
                     mods.from(resolveModpackTask)
+                    for (task in modpack.fromTaskPath) {
+                        mods.from(proj.tasks.findByPath(task))
+                    }
+                    if(proj.plugins.hasPlugin<JavaPlugin>()) {
+                        mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
+                    }
                 }
             }
         }

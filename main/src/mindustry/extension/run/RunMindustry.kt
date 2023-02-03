@@ -63,12 +63,6 @@ open class RunMindustryExtension(
         val client = Client()
         client.modpack = defaultModpackName
         AddClientSpec(proj, client).config()
-        if (client.name.isBlank()) {
-            proj.logger.warn(
-                "Client's name can't be blank, but \"${client.name}\" is given. Any character other than [a-zA-Z0-9] will be ignored."
-            )
-            return
-        }
         clients.add(client)
     }
     /**
@@ -117,12 +111,6 @@ open class RunMindustryExtension(
         val server = Server()
         server.modpack = defaultModpackName
         AddServerSpec(proj, server).config()
-        if (server.name.isBlank()) {
-            proj.logger.warn(
-                "Server's name can't be blank, but \"${server.name}\" is given. Any character other than [a-zA-Z0-9] will be ignored."
-            )
-            return
-        }
         servers.add(server)
     }
     /**
@@ -195,4 +183,9 @@ open class RunMindustryExtension(
     fun addModpack(config: Action<AddModpackSpec>) {
         addModpack(defaultModpackName, config)
     }
+}
+
+fun RunMindustryExtension.findModpackByName(name: String?): Modpack? {
+    if (name == null) return null
+    return modpacks.find { it.name == name }
 }

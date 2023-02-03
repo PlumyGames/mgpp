@@ -8,6 +8,7 @@ class Modpack(
     val name: String
 ) {
     val mods = ArrayList<IMod>()
+    val fromTaskPath = ArrayList<String>()
 }
 
 class AddModpackSpec(
@@ -111,4 +112,13 @@ class AddModpackSpec(
         }
     }
 
+    fun fromTask(path: String) {
+        modpack.fromTaskPath.add(path)
+    }
+
+    fun fromTask(props: Map<String, String>) {
+        fromTask(
+            path = props["path"] ?: ""
+        )
+    }
 }
