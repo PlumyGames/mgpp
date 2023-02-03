@@ -9,6 +9,7 @@ class Modpack(
 ) {
     val mods = ArrayList<IMod>()
     val fromTaskPath = ArrayList<String>()
+    fun isEmpty() = mods.isEmpty() && fromTaskPath.isEmpty()
 }
 
 class AddModpackSpec(

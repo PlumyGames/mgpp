@@ -48,6 +48,7 @@ open class RunClient : RunMindustryAbstract() {
             // Lwjgl3 application requires it to run on macOS
             jvmArgs = (jvmArgs ?: mutableListOf()) + "-XstartOnFirstThread"
         }
+        logger.lifecycle("Run client in $dataDir.")
         // run Mindustry
         super.exec()
     }

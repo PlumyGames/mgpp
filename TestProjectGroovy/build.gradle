@@ -33,10 +33,6 @@ mindustry {
         // mindustryMirror version: latest
         arc version: 'v141.3'
     }
-    run {
-        // set Mindustry's data directory to "./temp"
-        //dataDir = 'temp'
-    }
     meta << ModMeta(
         name: 'mgpp-groovy',
         displayName: 'MGPP Groovy Test',
@@ -55,6 +51,9 @@ runMindustry {
         jvm repo: "liplum/CyberIO"
         json repo: "BlueWolf3682/Exotic-Mod", branch: "0.8"
     }
+    def modpack2nd = addModpack("number 2") {
+        json repo: "sk7725/TimeControl"
+    }
     addClient {
         // anonymous 1
         official version: "v141.3"
@@ -62,6 +61,7 @@ runMindustry {
     addClient {
         // anonymous 2
         fooClient tag: "v8.0.0", file: "erekir-client.jar"
+        modpack = modpack2nd
     }
     addClient("Old Mindustry") {
         official version: "v126"

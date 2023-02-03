@@ -2,6 +2,7 @@ package io.github.liplum.mindustry
 
 import arc.util.serialization.Jval
 import io.github.liplum.dsl.*
+import org.gradle.api.GradleException
 import java.io.File
 import java.io.Serializable
 import java.net.URL
@@ -62,7 +63,7 @@ fun importJvmMod(repo: String, dest: File) {
         val url = asset.getString("browser_download_url")
         URL(url).copyTo(dest)
     } else {
-        throw RuntimeException("Can't find the mod.")
+        throw GradleException("Can't find the mod.")
     }
 }
 

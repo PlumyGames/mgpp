@@ -76,7 +76,7 @@ runMindustry {
         fromTask(path = "iconMaker")
     }
     val modpack2nd = addModpack("number 2") {
-        fromTask(path = "iconMaker")
+        json(repo = "sk7725/TimeControl")
     }
     addClient {
         // anonymous 1

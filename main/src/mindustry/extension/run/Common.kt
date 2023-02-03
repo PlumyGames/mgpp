@@ -22,7 +22,11 @@ open class Common(
      * runServer // if it's anonymous
      * ```
      */
-    val name: String
+    val name: String,
+    /**
+     * Whether this is anonymous.
+     */
+    val isAnonymous: Boolean,
 ) {
     /** @see [AddCommonSpec.startupArgs] */
     val startupArgs = ArrayList<String>()

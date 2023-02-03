@@ -63,19 +63,21 @@ open class RunMindustryExtension(
         config: AddClientSpec.() -> Unit
     ): Client {
         var clientName = formatValidGradleName(name)
-        if (clientName.isBlank()) {
-            val anonymousCount = clients.count { it.name.isBlank() }
-            clientName = (if (anonymousCount == 0) ""
-            else (anonymousCount + 1).toString())
+        val isAnonymous = clientName.isBlank()
+        if (isAnonymous) {
+            val anonymousCount = clients.count { it.isAnonymous }
+            clientName = if (anonymousCount == 0) ""
+            else (anonymousCount + 1).toString()
         }
-        val client = Client(clientName)
+        val client = Client(name = clientName, isAnonymous = isAnonymous)
         client.modpack = defaultModpackName
         client.dataDir = ProjBuildDataDirLoc(
             namespace = "mindustryClientData",
-            name = name.ifBlank { "Default" },
+            name = clientName.ifBlank { "Default" },
         )
         AddClientSpec(proj, client).config()
         clients.add(client)
+        proj.logger.info("Client<$clientName> is added.", client)
         return client
     }
     /**
@@ -140,19 +142,21 @@ open class RunMindustryExtension(
         config: AddServerSpec.() -> Unit
     ): Server {
         var serverName = formatValidGradleName(name)
-        if (serverName.isBlank()) {
-            val anonymousCount = servers.count { it.name.isBlank() }
-            serverName = (if (anonymousCount == 0) ""
-            else (anonymousCount + 1).toString())
+        val isAnonymous = serverName.isBlank()
+        if (isAnonymous) {
+            val anonymousCount = servers.count { it.isAnonymous }
+            serverName = if (anonymousCount == 0) ""
+            else (anonymousCount + 1).toString()
         }
-        val server = Server(serverName)
+        val server = Server(name = serverName, isAnonymous = isAnonymous)
         server.modpack = defaultModpackName
         server.dataDir = ProjBuildDataDirLoc(
             namespace = "mindustryServerData",
-            name = name.ifBlank { "Default" },
+            name = serverName.ifBlank { "Default" },
         )
         AddServerSpec(proj, server).config()
         servers.add(server)
+        proj.logger.info("Server<$serverName> is added.", server)
         return server
     }
     /**
@@ -209,7 +213,7 @@ open class RunMindustryExtension(
         }
         val modpack = Modpack(modpackName)
         AddModpackSpec(proj, modpack).config()
-        if (modpack.mods.isEmpty()) {
+        if (modpack.isEmpty()) {
             proj.logger.warn("Modpack<$modpackName> doesn't contains any mod, and it will be ignored.")
             return null
         }

@@ -11,7 +11,7 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionAware
 import java.io.File
 
-class Server(name: String) : Common(name)
+class Server(name: String, isAnonymous: Boolean) : Common(name, isAnonymous)
 
 class AddServerSpec(
     override val proj: Project,

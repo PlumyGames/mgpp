@@ -8,7 +8,7 @@ import io.github.liplum.mindustry.*
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 
-class Client(name: String) : Common(name)
+class Client(name: String, isAnonymous: Boolean) : Common(name, isAnonymous)
 
 class AddClientSpec(
     override val proj: Project,
