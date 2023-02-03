@@ -109,7 +109,7 @@ open class MindustryAssetsExtension(
     val _icon = target.fileProp().apply {
         convention(
             findFileInOrder(
-                target.proDir("icon.png"),
+                target.projDir("icon.png"),
                 target.rootDir("icon.png")
             )
         )

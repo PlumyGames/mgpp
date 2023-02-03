@@ -122,8 +122,8 @@ open class MindustryExtension(
             convention(
                 ModMeta.fromHjson(
                     findFileInOrder(
-                        proDir("mod.hjson"),
-                        proDir("mod.json"),
+                        projDir("mod.hjson"),
+                        projDir("mod.json"),
                         rootDir("mod.hjson"),
                         rootDir("mod.json")
                     )
@@ -142,49 +142,12 @@ open class MindustryExtension(
     var meta: ModMeta
         get() = _modMeta.get()
         set(value) = _modMeta.set(value)
-    /**
-     * @see [io.github.liplum.mindustry.ModMeta]
-     */
-    fun ModMeta(info: Map<String, Any>) =
-        io.github.liplum.mindustry.ModMeta(info)
-    /**
-     * @see [io.github.liplum.mindustry.ModMeta]
-     */
-    fun ModMeta(
-        name: String = ModMeta.default("name"),
-        displayName: String = ModMeta.default("displayName"),
-        author: String = ModMeta.default("author"),
-        description: String = ModMeta.default("description"),
-        /** since Mindustry v136 */
-        subtitle: String = ModMeta.default("subtitle"),
-        version: String = ModMeta.default("version"),
-        main: String? = ModMeta.default("main"),
-        minGameVersion: String = ModMeta.default("minGameVersion"),
-        repo: String? = ModMeta.default("repo"),
-        dependencies: List<String> = ModMeta.default("dependencies"),
-        hidden: Boolean = ModMeta.default("hidden"),
-        java: Boolean = ModMeta.default("java"),
-        /** since Mindustry v136 */
-        keepOutlines: Boolean = ModMeta.default("keepOutlines"),
-        /** since Mindustry v138 */
-        texturescale: Float = ModMeta.default("texturescale"),
-        /** since Mindustry v138 */
-        pregenerated: Boolean = ModMeta.default("pregenerated"),
-    ) = io.github.liplum.mindustry.ModMeta(
-        name = name,
-        displayName = displayName,
-        author = author,
-        description = description,
-        subtitle = subtitle,
-        version = version,
-        main = main,
-        minGameVersion = minGameVersion,
-        repo = repo,
-        dependencies = dependencies,
-        hidden = hidden,
-        java = java,
-        keepOutlines = keepOutlines,
-        texturescale = texturescale,
-        pregenerated = pregenerated,
-    )
+
+    fun modMeta(config: ModMeta.() -> Unit) {
+        meta.config()
+    }
+
+    fun modMeta(config: Action<ModMeta>) {
+        config.execute(meta)
+    }
 }

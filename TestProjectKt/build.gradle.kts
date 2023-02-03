@@ -51,12 +51,12 @@ mindustry {
         arc on "v141.3"
         // arc on latestRelease
     }
-    meta += ModMeta(
-        name = "mgpp-kt",
-        displayName = "MGPP Kotlin Test",
-        main = "plumy.test.TestModKt",
+    modMeta {
+        name = "mgpp-kt"
+        displayName = "MGPP Kotlin Test"
+        main = "plumy.test.TestModKt"
         author = "Liplum"
-    )
+    }
     meta["version"] = "Kotlin 666"
     meta.minGameVersion = "136"
     deploy {

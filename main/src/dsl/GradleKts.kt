@@ -23,7 +23,7 @@ internal
 fun Task.tempFi(name: String) =
     temporaryDir.resolve(name)
 internal
-fun Project.proDir(name: String) =
+fun Project.projDir(name: String) =
     projectDir.resolve(name)
 internal
 fun Project.rootDir(name: String) =

@@ -10,9 +10,9 @@ import java.net.URL
 /**
  * An abstract mod file.
  */
-interface IMod : Serializable
+sealed interface IMod : Serializable
 
-interface IDownloadableMod : IMod {
+sealed interface IDownloadableMod : IMod {
     val fileName: String
     fun resolveFile(writeIn: File)
 }

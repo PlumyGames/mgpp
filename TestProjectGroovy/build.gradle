@@ -33,10 +33,10 @@ mindustry {
         // mindustryMirror version: latest
         arc version: 'v141.3'
     }
-    meta << ModMeta(
-        name: 'mgpp-groovy',
-        displayName: 'MGPP Groovy Test',
-    )
+    modMeta {
+        name = 'mgpp-groovy'
+        displayName = 'MGPP Groovy Test'
+    }
     meta.version = 'groovy 3000'
     meta.minGameVersion = '136'
     deploy {
