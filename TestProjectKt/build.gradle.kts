@@ -65,15 +65,13 @@ mindustry {
         // fatJar is default option unless you use another tool like shadowJar
         // fatJar
     }
-    run {
-        // useDefaultDataDir
-    }
 }
 runMindustry {
     addModpack("for debugging") {
         `testingUtilities`
     }
     addModpack {
+        // default modpack
         jvm(repo = "liplum/CyberIO")
         json(repo = "BlueWolf3682/Exotic-Mod", branch = "0.8")
         fromTask(path = "iconMaker")
