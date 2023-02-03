@@ -59,10 +59,6 @@ mindustry {
     }
     meta["version"] = "Kotlin 666"
     meta.minGameVersion = "136"
-    deploy {
-        // fatJar is default option unless you use another tool like shadowJar
-        // fatJar
-    }
 }
 deployMod {
     baseName = "KotlinMod"

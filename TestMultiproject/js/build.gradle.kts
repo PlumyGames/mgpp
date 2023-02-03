@@ -10,11 +10,11 @@ version = "1.0"
 group = "net.liplum"
 
 mindustry {
-    meta += ModMeta(
-        name = "js",
-        displayName = "Js Mod",
-        minGameVersion = "136",
-    )
+    modMeta {
+        name = "js"
+        displayName = "Js Mod"
+        minGameVersion = "136"
+    }
 }
 mindustryAssets {
     root at "$projectDir/assets"

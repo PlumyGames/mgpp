@@ -25,6 +25,9 @@ class MindustryJavaPlugin : Plugin<Project> {
         val deployX = extensions.getOrCreate<DeployModExtension>(
             R.x.deployMod
         )
+        target.parent?.let {
+            deployX.enableFatJar = false
+        }
         @DisableIfWithout("java")
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")
@@ -53,7 +56,7 @@ class MindustryJavaPlugin : Plugin<Project> {
                     *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
                 )
             }
-            if (ex._deploy.enableFatJar.get()) {
+            if (deployX.enableFatJar) {
                 tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
                     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                     from(

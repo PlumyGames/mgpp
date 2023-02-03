@@ -4,6 +4,7 @@
 
 package io.github.liplum.mindustry
 
+import io.github.liplum.dsl.prop
 import io.github.liplum.dsl.stringProp
 import org.gradle.api.Action
 import org.gradle.api.Project
@@ -68,5 +69,23 @@ open class DeployModExtension(
         get() = _classifier.getOrElse("")
         set(value) {
             _classifier.set(value)
+        }
+
+    @InheritFromParent
+    val _enableFatJar = proj.prop<Boolean>().apply {
+        convention(true)
+    }
+    /**
+     * Whether to make a fat jar, which contains all dependencies from classpath.
+     * `true` as default.
+     *
+     * If current [proj] is a subproject, it'll be `false` as default,
+     * which avoids other subprojects to output a fat jar.
+     * Therefore, you should manually set this to `true` when working with multi-project.
+     */
+    var enableFatJar: Boolean
+        get() = _enableFatJar.getOrElse(true)
+        set(value) {
+            _enableFatJar.set(value)
         }
 }

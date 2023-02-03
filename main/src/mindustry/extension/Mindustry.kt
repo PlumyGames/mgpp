@@ -98,24 +98,6 @@ open class MindustryExtension(
     inline fun dependency(func: DependencySpec.() -> Unit) {
         _dependency.func()
     }
-
-    @JvmField
-    @DisableIfWithout("java")
-    val _deploy = DeploySpec(target)
-    /**
-     * Configure how to deploy your artifacts.
-     */
-    @DisableIfWithout("java")
-    fun deploy(func: Action<DeploySpec>) {
-        func.execute(_deploy)
-    }
-    /**
-     * Configure how to deploy your artifacts.
-     */
-    @DisableIfWithout("java")
-    inline fun deploy(func: DeploySpec.() -> Unit) {
-        _deploy.func()
-    }
     @JvmField
     val _modMeta = target.prop<ModMeta>().apply {
         target.run {

@@ -35,20 +35,20 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 mindustry {
-    client {
-        mindustry be latest
-    }
-    mods {
-        worksWith {
-            add fromTask ":core:jar"
-        }
-    }
-    meta += ModMeta(
-        name = "main",
-        displayName = "Main Mod",
-        minGameVersion = "136",
+    modMeta {
+        name = "main"
+        displayName = "Main Mod"
+        minGameVersion = "136"
         main = "plumy.test.MainMod"
-    )
+    }
+}
+runMindustry {
+    addModpack {
+        fromTask(path = ":core:jar")
+    }
+    addClient {
+        official(version = "v141.3")
+    }
 }
 mindustryAssets {
     root at "$projectDir/assets"
