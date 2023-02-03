@@ -98,20 +98,7 @@ open class MindustryExtension(
     inline fun dependency(func: DependencySpec.() -> Unit) {
         _dependency.func()
     }
-    @JvmField
-    val _run = RunSpec(target)
-    /**
-     * Configure how to run and debug the game.
-     */
-    fun run(func: Action<RunSpec>) {
-        func.execute(_run)
-    }
-    /**
-     * Configure how to run and debug the game.
-     */
-    inline fun run(func: RunSpec.() -> Unit) {
-        _run.func()
-    }
+
     @JvmField
     @DisableIfWithout("java")
     val _deploy = DeploySpec(target)

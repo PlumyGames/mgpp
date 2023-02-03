@@ -30,8 +30,6 @@ class MindustryPlugin : Plugin<Project> {
                 ex._isLib.set(parentEx._isLib)
                 ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
                 ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
-                ex._run._dataDir.set(parentEx._run._dataDir)
-                ex._run._forciblyClear.set(parentEx._run._forciblyClear)
                 ex._deploy._androidSdkRoot.set(parentEx._deploy._androidSdkRoot)
                 ex._deploy.enableFatJar.set(parentEx._deploy.enableFatJar)
             }

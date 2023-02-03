@@ -19,51 +19,6 @@ import java.io.File
  * For downloading and running game.
  */
 class MindustryAppPlugin : Plugin<Project> {
-    fun applyOld(target: Project) {
-        target.afterEvaluateThis {
-            // For client side
-            /*  val runClient = tasks.register<RunMindustry>("runClient") {
-                  group = R.taskGroup.mindustry
-                  mainClass.convention(R.mainClass.desktop)
-                  val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
-                      it != "false"
-                  } ?: ex._run._forciblyClear.get()
-                  forciblyClear.set(doForciblyClear)
-                  val resolvedDataDir = when (val dataDirConfig =
-                      project.localProperties.getProperty("mgpp.run.dataDir").addAngleBracketsIfNeed()
-                          ?: ex._run._dataDir.get()
-                  ) {
-                      "<default>" -> resolveDefaultDataDir()
-                      "<temp>" -> temporaryDir.resolve("data")
-                      "<env>" -> System.getenv(R.env.mindustryDataDir).let {
-                          if (it == null) temporaryDir.resolve("data")
-                          else File(it).run {
-                              if (isFile) this
-                              else temporaryDir.resolve("data")
-                          }
-                      }
-
-                      else -> File(dataDirConfig) // customized data directory
-                  }
-
-                  logger.info("Data directory of $name is $resolvedDataDir .")
-                  dataDir.set(resolvedDataDir)
-                  dataModsPath.set("mods")
-              }
-              val runServer = tasks.register<RunMindustry>(
-                  "runServer",
-              ) {
-                  group = R.taskGroup.mindustry
-                  val doForciblyClear = project.localProperties.getProperty("mgpp.run.forciblyClear")?.let {
-                      it != "false"
-                  } ?: ex._run._forciblyClear.get()
-                  forciblyClear.set(doForciblyClear)
-                  mainClass.convention(R.mainClass.server)
-                  dataModsPath.convention("config/mods")
-             }*/
-        }
-    }
-
     override fun apply(target: Project) {
         target.tasks.register<CleanMindustrySharedCache>("cleanMindustrySharedCache") {
             group = BasePlugin.BUILD_GROUP
@@ -98,6 +53,7 @@ class MindustryAppPlugin : Plugin<Project> {
             }
             proj.tasks.register<RunClient>("runClient${client.name}") {
                 dependsOn(resolveClient)
+                mainClass.convention(R.mainClass.desktop)
                 group = R.taskGroup.mindustry
                 startupArgs.addAll(client.startupArgs)
                 dataDir.set(client.dataDir)
@@ -135,6 +91,7 @@ class MindustryAppPlugin : Plugin<Project> {
             }
             proj.tasks.register<RunServer>("runServer${server.name}") {
                 dependsOn(resolveServer)
+                mainClass.convention(R.mainClass.server)
                 group = R.taskGroup.mindustry
                 startupArgs.addAll(server.startupArgs)
                 dataDir.set(server.dataDir)

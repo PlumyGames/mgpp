@@ -22,7 +22,7 @@ open class Common(
      * runServer // if it's anonymous
      * ```
      */
-    val name:String
+    val name: String
 ) {
     /** @see [AddCommonSpec.startupArgs] */
     val startupArgs = ArrayList<String>()
@@ -50,6 +50,14 @@ abstract class AddCommonSpec<T : Common> {
      *
      * Where Mindustry's data directory to put saves.
      * The default [dataDir] is the same as [name].
+     *
+     *  ## Default data directory of Mindustry desktop
+     * - Linux: `$HOME/.local/share/Mindustry/`
+     * - MacOS: `$HOME/Library/Application Support/Mindustry/`
+     * - Windows: `%AppData%/Mindustry/`
+     *
+     *  ## Default data directory of Mindustry server
+     *  `./config/`
      */
     var dataDir: Any?
         get() = when (val dir = backend.dataDir) {
