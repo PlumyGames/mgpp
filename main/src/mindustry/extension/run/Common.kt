@@ -73,10 +73,14 @@ abstract class AddCommonSpec<T : Common> {
                 is IDataDirLoc -> backend.dataDir = value
             }
         }
-    var modpack: String?
+    var modpack: Any?
         get() = backend.modpack
         set(value) {
-            backend.modpack = value?.let(::formatValidGradleName)
+            backend.modpack = when (value) {
+                is Modpack -> value.name
+                null -> null
+                else -> value.toString().let(::formatValidGradleName)
+            }
         }
 
     protected fun IGameLoc.checkAndSet() {

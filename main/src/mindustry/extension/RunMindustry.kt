@@ -58,7 +58,10 @@ open class RunMindustryExtension(
      *    )
      * }
      */
-    inline fun addClient(name: String = "", config: AddClientSpec.() -> Unit) {
+    inline fun addClient(
+        name: String = "",
+        config: AddClientSpec.() -> Unit
+    ): Client {
         var clientName = formatValidGradleName(name)
         if (clientName.isBlank()) {
             val anonymousCount = clients.count { it.name.isBlank() }
@@ -73,6 +76,7 @@ open class RunMindustryExtension(
         )
         AddClientSpec(proj, client).config()
         clients.add(client)
+        return client
     }
     /**
      * ### Groovy DSL
@@ -99,8 +103,8 @@ open class RunMindustryExtension(
      * }
      * ```
      */
-    fun addClient(config: Action<AddClientSpec>) {
-        addClient {
+    fun addClient(config: Action<AddClientSpec>): Client {
+        return addClient {
             config.execute(this)
         }
     }
@@ -113,8 +117,11 @@ open class RunMindustryExtension(
      * }
      * ```
      */
-    fun addClient(name: String, config: Action<AddClientSpec>) {
-        addClient(name) {
+    fun addClient(
+        name: String,
+        config: Action<AddClientSpec>
+    ): Client {
+        return addClient(name) {
             config.execute(this)
         }
     }
@@ -128,7 +135,10 @@ open class RunMindustryExtension(
      *    be latest
      * }
      */
-    inline fun addServer(name: String = "", config: AddServerSpec.() -> Unit) {
+    inline fun addServer(
+        name: String = "",
+        config: AddServerSpec.() -> Unit
+    ): Server {
         var serverName = formatValidGradleName(name)
         if (serverName.isBlank()) {
             val anonymousCount = servers.count { it.name.isBlank() }
@@ -143,6 +153,7 @@ open class RunMindustryExtension(
         )
         AddServerSpec(proj, server).config()
         servers.add(server)
+        return server
     }
     /**
      * ### Groovy DSL
@@ -155,8 +166,8 @@ open class RunMindustryExtension(
      * }
      * ```
      */
-    fun addServer(config: Action<AddServerSpec>) {
-        addServer {
+    fun addServer(config: Action<AddServerSpec>): Server {
+        return addServer {
             config.execute(this)
         }
     }
@@ -169,8 +180,8 @@ open class RunMindustryExtension(
      * }
      * ```
      */
-    fun addServer(name: String, config: Action<AddServerSpec>) {
-        addServer(name) {
+    fun addServer(name: String, config: Action<AddServerSpec>): Server {
+        return addServer(name) {
             config.execute(this)
         }
     }
@@ -185,21 +196,25 @@ open class RunMindustryExtension(
      *    github(repo="liplum/CyberIO") // auto-detect mod type, not recommended.
      * }
      */
-    inline fun addModpack(name: String = defaultModpackName, config: AddModpackSpec.() -> Unit) {
+    inline fun addModpack(
+        name: String = defaultModpackName,
+        config: AddModpackSpec.() -> Unit
+    ): Modpack? {
         val modpackName = formatValidGradleName(name)
         if (modpackName.isBlank()) {
             proj.logger.warn(
                 "Modpack's name can't be blank, but \"$name\" is given. Any character other than [a-zA-Z0-9] will be ignored."
             )
-            return
+            return null
         }
         val modpack = Modpack(modpackName)
         AddModpackSpec(proj, modpack).config()
         if (modpack.mods.isEmpty()) {
             proj.logger.warn("Modpack<$modpackName> doesn't contains any mod, and it will be ignored.")
-            return
+            return null
         }
         modpacks.add(modpack)
+        return modpack
     }
     /**
      * ### Groovy DSL
@@ -210,8 +225,11 @@ open class RunMindustryExtension(
      * }
      * ```
      */
-    fun addModpack(name: String, config: Action<AddModpackSpec>) {
-        addModpack(name) {
+    fun addModpack(
+        name: String,
+        config: Action<AddModpackSpec>
+    ): Modpack? {
+        return addModpack(name) {
             config.execute(this)
         }
     }
@@ -224,8 +242,8 @@ open class RunMindustryExtension(
      * }
      * ```
      */
-    fun addModpack(config: Action<AddModpackSpec>) {
-        addModpack(defaultModpackName, config)
+    fun addModpack(config: Action<AddModpackSpec>): Modpack? {
+        return addModpack(defaultModpackName, config)
     }
 }
 

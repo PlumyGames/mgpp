@@ -81,7 +81,7 @@ class MindustryAppPlugin : Plugin<Project> {
 
     private fun addRunServer(proj: Project, x: RunMindustryExtension) {
         for (server in x.servers) {
-            val resolveServer = proj.tasks.register<ResolveGame>("resolveServer$${server.name}") {
+            val resolveServer = proj.tasks.register<ResolveGame>("resolveServer${server.name}") {
                 group = R.taskGroup.mindustryStuff
                 val modpackName = server.modpack
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {

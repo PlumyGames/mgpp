@@ -75,6 +75,9 @@ runMindustry {
         json(repo = "BlueWolf3682/Exotic-Mod", branch = "0.8")
         fromTask(path = "iconMaker")
     }
+    val modpack2nd = addModpack("number 2") {
+        fromTask(path = "iconMaker")
+    }
     addClient {
         // anonymous 1
         official(version = "v141.3")
@@ -82,6 +85,7 @@ runMindustry {
     addClient {
         // anonymous 2
         fooClient(tag = "v8.0.0", file = "erekir-client.jar")
+        modpack = modpack2nd
     }
     addClient(name = "Old Mindustry") {
         official(version = "v126")
