@@ -159,15 +159,3 @@ inline fun safeRun(func: () -> Unit) {
 val TaskContainer.`resolveMods`: TaskProvider<ResolveMods>
     get() = named<ResolveMods>("resolveMods")
 
-fun Project.resolveDefaultDataDir(): File {
-    return when (getOs()) {
-        OS.Unknown -> {
-            logger.warn("Can't recognize your operation system.")
-            MindustryPlugin.DefaultEmptyFile
-        }
-
-        OS.Windows -> FileAt(System.getenv("AppData"), "Mindustry")
-        OS.Linux -> FileAt(System.getenv("XDG_DATA_HOME") ?: System.getenv("HOME"), ".local", "share", "Mindustry")
-        OS.Mac -> FileAt(System.getenv("HOME"), "Library", "Application Support", "Mindustry")
-    }
-}

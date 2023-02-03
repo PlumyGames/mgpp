@@ -1,13 +1,10 @@
 package io.github.liplum.mindustry.task
 
 import io.github.liplum.dsl.*
-import io.github.liplum.dsl.dirProp
-import io.github.liplum.dsl.dirProv
-import io.github.liplum.dsl.fileProp
-import io.github.liplum.dsl.stringsProp
 import io.github.liplum.mindustry.R
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.*
+import java.io.File
 
 open class RunClient : RunMindustryAbstract() {
     init {
@@ -15,14 +12,29 @@ open class RunClient : RunMindustryAbstract() {
     }
     @TaskAction
     override fun exec() {
-        val data = dataDir.asFile.get()
-        if (data.isDirectory) {
+        val originDataDir = dataDir.get().resolveDir(this)
+        val dataDir = if (originDataDir != null) {
+            environment[R.env.mindustryDataDir] = originDataDir.absoluteFile
+            originDataDir
+        } else {
+            val default = resolveDefaultDataDir()
+            if (default == null) {
+                logger.warn("Can't recognize your operation system and find corresponding Mindustry data directory.")
+                val temp = temporaryDir.resolve(name)
+                environment[R.env.mindustryDataDir] = temp.absoluteFile
+                temp
+            } else {
+                default
+            }
+        }
+        workingDir = dataDir
+        if (dataDir.isDirectory) {
             // TODO: Record the mod signature.
             // TODO: Don't always delete all.
-            data.deleteRecursively()
+            dataDir.deleteRecursively()
         }
-        data.mkdirs()
-        val modsFolder = data.resolve("mods")
+        dataDir.mkdirs()
+        val modsFolder = dataDir.resolve("mods")
         for (modFile in mods) {
             if (modFile.isFile) {
                 modFile.copyTo(modsFolder.resolve(modFile.name), overwrite = true)
@@ -32,13 +44,21 @@ open class RunClient : RunMindustryAbstract() {
         }
         standardInput = System.`in`
         args = listOf(mindustryFile.get().absolutePath) + startupArgs.get()
-        environment[R.env.mindustryDataDir] = data.absoluteFile
         if (Os.isFamily(Os.FAMILY_MAC)) {
             // Lwjgl3 application requires it to run on macOS
             jvmArgs = (jvmArgs ?: mutableListOf()) + "-XstartOnFirstThread"
         }
-        workingDir = data
         // run Mindustry
         super.exec()
+    }
+
+    internal
+    fun resolveDefaultDataDir(): File? {
+        return when (getOs()) {
+            OS.Unknown -> null
+            OS.Windows -> FileAt(System.getenv("AppData"), "Mindustry")
+            OS.Linux -> FileAt(System.getenv("XDG_DATA_HOME") ?: System.getenv("HOME"), ".local", "share", "Mindustry")
+            OS.Mac -> FileAt(System.getenv("HOME"), "Library", "Application Support", "Mindustry")
+        }
     }
 }

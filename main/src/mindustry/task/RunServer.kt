@@ -1,20 +1,12 @@
 package io.github.liplum.mindustry.task
 
-import io.github.liplum.dsl.dirProp
-import io.github.liplum.dsl.dirProv
-import io.github.liplum.dsl.fileProp
-import io.github.liplum.dsl.stringsProp
 import org.gradle.api.tasks.*
 
 open class RunServer : RunMindustryAbstract() {
-    init {
-        dataDir.convention(project.dirProv {
-            temporaryDir.resolve("data")
-        })
-    }
+
     @TaskAction
     override fun exec() {
-        val data = dataDir.asFile.get()
+        val data = dataDir.get().resolveDir(this) ?: temporaryDir.resolve(name)
         if (data.isDirectory) {
             // TODO: Record the mod signature.
             // TODO: Don't always delete all.

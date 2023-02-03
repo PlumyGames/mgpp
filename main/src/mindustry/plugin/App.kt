@@ -100,11 +100,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 dependsOn(resolveClient)
                 group = R.taskGroup.mindustry
                 startupArgs.addAll(client.startupArgs)
-                dataDir.set(project.dirProv {
-                    project.buildDir.resolve("mindustryClientData").resolve(
-                        client.name.ifBlank { "Default" }
-                    )
-                })
+                dataDir.set(client.dataDir)
                 mindustryFile.set(proj.provider {
                     resolveClient.get().outputs.files.singleFile
                 })
@@ -141,11 +137,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 dependsOn(resolveServer)
                 group = R.taskGroup.mindustry
                 startupArgs.addAll(server.startupArgs)
-                dataDir.set(project.dirProv {
-                    project.buildDir.resolve("mindustryServerData").resolve(
-                        server.name.ifBlank { "Default" }
-                    )
-                })
+                dataDir.set(server.dataDir)
                 mindustryFile.set(proj.provider {
                     resolveServer.get().outputs.files.singleFile
                 })
