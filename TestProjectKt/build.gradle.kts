@@ -77,7 +77,7 @@ runMindustry {
     }
     addClient {
         // anonymous 1
-        official("v141.3")
+        official(version="v141.3")
     }
     addClient {
         // anonymous 2
@@ -85,10 +85,10 @@ runMindustry {
     }
     addClient {
         name = "old mindustry"
-        official("v126")
+        official(version="v126")
     }
     addServer {
-        official("v141.3")
+        official(version="v141.3")
     }
 }
 tasks.jar {

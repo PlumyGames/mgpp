@@ -2,7 +2,6 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.boolProp
 import io.github.liplum.dsl.stringProp
-import io.github.liplum.mindustry.task.RunMindustry
 import org.gradle.api.Project
 
 /**

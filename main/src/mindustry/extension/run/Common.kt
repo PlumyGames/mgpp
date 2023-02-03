@@ -18,7 +18,7 @@ open class Common {
     /** @see [AddCommonSpec.jvmArgs] */
     val jvmArgs = ArrayList<String>()
     /** @see [AddClientSpec.dataDir] */
-    var dataDir: String? = null
+    var dataDir: Any? = null
     var location: IGameLoc? = null
     var modpack: String? = null
 }
@@ -51,11 +51,11 @@ abstract class AddCommonSpec<T : Common> {
     val jvmArgs get() = backend.jvmArgs
     /**
      * *Optional*
-     * The name of Mindustry's data directory where to put saves.
      *
+     * Where Mindustry's data directory to put saves.
      * The default [dataDir] is the same as [name].
      */
-    var dataDir: String?
+    var dataDir: Any?
         get() = backend.dataDir
         set(value) {
             backend.dataDir = value
