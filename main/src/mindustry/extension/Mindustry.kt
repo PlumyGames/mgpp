@@ -210,6 +210,7 @@ open class MindustryExtension(
         displayName: String = ModMeta.default("displayName"),
         author: String = ModMeta.default("author"),
         description: String = ModMeta.default("description"),
+        /** since Mindustry v136 */
         subtitle: String = ModMeta.default("subtitle"),
         version: String = ModMeta.default("version"),
         main: String? = ModMeta.default("main"),
@@ -218,7 +219,12 @@ open class MindustryExtension(
         dependencies: List<String> = ModMeta.default("dependencies"),
         hidden: Boolean = ModMeta.default("hidden"),
         java: Boolean = ModMeta.default("java"),
+        /** since Mindustry v136 */
         keepOutlines: Boolean = ModMeta.default("keepOutlines"),
+        /** since Mindustry v138 */
+        texturescale: Float = ModMeta.default("texturescale"),
+        /** since Mindustry v138 */
+        pregenerated: Boolean = ModMeta.default("pregenerated"),
     ) = io.github.liplum.mindustry.ModMeta(
         name = name,
         displayName = displayName,
@@ -232,6 +238,8 @@ open class MindustryExtension(
         dependencies = dependencies,
         hidden = hidden,
         java = java,
-        keepOutlines = keepOutlines
+        keepOutlines = keepOutlines,
+        texturescale = texturescale,
+        pregenerated = pregenerated,
     )
 }

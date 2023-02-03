@@ -34,6 +34,10 @@ data class ModMeta(
         hideBrowser: Boolean = default("hideBrowser"),
         /** since Mindustry v136 */
         keepOutlines: Boolean = default("keepOutlines"),
+        /** since Mindustry v138 */
+        texturescale: Float = default("texturescale"),
+        /** since Mindustry v138 */
+        pregenerated: Boolean = default("pregenerated"),
     ) : this(
         HashMap(
             mapOf(
@@ -51,6 +55,8 @@ data class ModMeta(
                 "java" to java,
                 "hideBrowser" to hideBrowser,
                 "keepOutlines" to keepOutlines,
+                "texturescale" to texturescale,
+                "pregenerated" to pregenerated,
             )
         )
     )
@@ -130,6 +136,8 @@ data class ModMeta(
             "java" to true,
             "hideBrowser" to false,
             "keepOutlines" to false,
+            "texturescale" to 1.0f,
+            "pregenerated" to false,
         )
         @Suppress("UNCHECKED_CAST")
         @JvmStatic
@@ -180,6 +188,8 @@ var ModMeta.java: Boolean by meta()
 var ModMeta.hideBrowser: Boolean by meta()
 /** since Mindustry v136 */
 var ModMeta.keepOutlines: Boolean by meta()
+var ModMeta.texturescale: Float by meta()
+var ModMeta.pregenerated: Boolean by meta()
 inline fun <reified T : Any?> meta(): ReadWriteProperty<ModMeta, T> =
     object : ReadWriteProperty<ModMeta, T> {
         override fun getValue(thisRef: ModMeta, property: KProperty<*>): T {
