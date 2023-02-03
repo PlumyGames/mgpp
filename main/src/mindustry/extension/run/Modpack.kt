@@ -122,4 +122,7 @@ class AddModpackSpec(
             path = props["path"] ?: ""
         )
     }
+
+    val `testingUtilities`: Unit
+        get() = jvm(repo = "MEEPofFaith/testing-utilities-java")
 }

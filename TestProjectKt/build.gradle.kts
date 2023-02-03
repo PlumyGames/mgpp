@@ -70,6 +70,9 @@ mindustry {
     }
 }
 runMindustry {
+    addModpack("for debugging") {
+        `testingUtilities`
+    }
     addModpack {
         jvm(repo = "liplum/CyberIO")
         json(repo = "BlueWolf3682/Exotic-Mod", branch = "0.8")
@@ -81,6 +84,10 @@ runMindustry {
     addClient {
         // anonymous 1
         official(version = "v141.3")
+    }
+    addClient("debugging") {
+        official(version = "v141.3")
+        modpack = "for debugging"
     }
     addClient {
         // anonymous 2
