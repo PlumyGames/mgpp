@@ -15,8 +15,6 @@ open class DexJar : DefaultTask() {
         get
     val classpath = project.configurationFileCollection()
         @InputFiles get
-    val sdkRoot = project.stringProp()
-        @Input @Optional get
     val workingDir = project.fileProp()
         @Optional @Input get
     val dexedJar = project.fileProp()
@@ -27,7 +25,6 @@ open class DexJar : DefaultTask() {
     init {
         dexedJar.convention(temporaryDir.resolve("dexed.jar"))
         workingDir.convention(temporaryDir)
-        sdkRoot.convention(System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: "")
     }
     @TaskAction
     fun dex() {
@@ -42,9 +39,11 @@ open class DexJar : DefaultTask() {
         for (jarPath in jarToDexPaths) {
             if (" " in jarPath) throw GradleException("d8 doesn't allow a path with any space but the path of a jar to be dexed is \"$jarPath\" .")
         }
-        val sdkPath = sdkRoot.get()
-        val sdkRootDir = File(sdkPath)
-        if (!sdkRootDir.exists()) throw GradleException("No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.")
+        val sdkRoot = System.getenv("ANDROID_HOME")
+            ?: System.getenv("ANDROID_SDK_ROOT")
+            ?: throw GradleException("Android SDK not found. Ensure ANDROID_HOME or ANDROID_SDK_ROOT is in your environment.")
+        val sdkRootDir = File(sdkRoot)
+        if (!sdkRootDir.isDirectory) throw GradleException("Android SDK not found. Ensure ANDROID_HOME or ANDROID_SDK_ROOT is set to a valid directory.")
         val androidJarFile = run {
             // searching for the `android.jar` in Android SDK Path
             (sdkRootDir.resolve("platforms").listFiles() ?: emptyArray()).sorted().reversed()

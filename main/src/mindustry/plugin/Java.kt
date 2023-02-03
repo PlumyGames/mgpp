@@ -35,7 +35,6 @@ class MindustryJavaPlugin : Plugin<Project> {
                 configurations.runtimeClasspath
             )
             jarFiles.from(tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME))
-            sdkRoot.set(ex._deploy._androidSdkRoot)
         }
         val deploy = tasks.register<Jar>("deploy") {
             group = R.taskGroup.mindustry
