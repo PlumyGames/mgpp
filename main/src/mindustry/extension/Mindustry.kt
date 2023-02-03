@@ -99,35 +99,6 @@ open class MindustryExtension(
         _dependency.func()
     }
     @JvmField
-    val _client = ClientSpec(target)
-    /**
-     * Configure the client to run and debug your mod on
-     */
-    fun client(func: Action<ClientSpec>) {
-        func.execute(_client)
-    }
-    /**
-     * Configure the client to run and debug your mod on
-     */
-    inline fun client(func: ClientSpec.() -> Unit) {
-        _client.func()
-    }
-    @JvmField
-    val _server = ServerSpec(target)
-    /**
-     * Configure the server to run and debug your mod on
-     */
-    fun server(func: Action<ServerSpec>) {
-        func.execute(_server)
-    }
-    /**
-     * Configure the server to run and debug your mod on
-     */
-    inline fun server(func: ServerSpec.() -> Unit) {
-        _server.func()
-    }
-
-    @JvmField
     val _run = RunSpec(target)
     /**
      * Configure how to run and debug the game.

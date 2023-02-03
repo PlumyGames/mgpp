@@ -57,7 +57,6 @@ class MindustryAppPlugin : Plugin<Project> {
                     logger.info("Data directory of $name is $resolvedDataDir .")
                     dataDir.set(resolvedDataDir)
                     dataModsPath.set("mods")
-                    startupArgs.set(ex._client.startupArgs)
                 }
                 val runServer = tasks.register<RunMindustry>(
                     "runServer",
@@ -69,7 +68,6 @@ class MindustryAppPlugin : Plugin<Project> {
                     forciblyClear.set(doForciblyClear)
                     mainClass.convention(R.mainClass.server)
                     dataModsPath.convention("config/mods")
-                    startupArgs.set(ex._server.startupArgs)
                 }
             }
         }

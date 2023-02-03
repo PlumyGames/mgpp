@@ -33,28 +33,6 @@ mindustry {
         // mindustryMirror version: latest
         arc version: 'v141.3'
     }
-    client {
-        official version: 'v141.3'
-        //be version: latest named 'Test.jar'
-        /*
-        from GameLocation(
-            'mindustry-antigrief',
-            'mindustry-client',
-            'v8.0.0',
-            'erekir-client.jar'
-        )
-        */
-        // fromLocal "F:/Mindustry/Mindustry-BE-Desktop-22799.jar" named "22799.jar"
-        // from localProperties
-        // be version: '22714'
-        // `clearUp` as default, it will delete other versions when download a new one
-        // `keepOthers` will keep them
-    }
-    server {
-        official version: 'v141.3'
-
-        // be version: '22714'
-    }
     run {
         // set Mindustry's data directory to "./temp"
         //dataDir = 'temp'
