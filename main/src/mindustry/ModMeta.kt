@@ -9,16 +9,14 @@ import java.io.Serializable
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-typealias MetaConfig = HashMap<String, Any>
-
 /**
  * It represents the `mod.(h)json`.
  */
 data class ModMeta(
-    val info: MetaConfig,
+    val info: HashMap<String, Any?>,
 ) : Serializable {
-    constructor() : this(HashMap<String, Any>().setDefaultValue())
-    constructor(info: Map<String, Any>) : this(HashMap(info).setDefaultValue())
+    constructor() : this(HashMap<String, Any?>().setDefaultValue())
+    constructor(info: Map<String, Any?>) : this(HashMap(info).setDefaultValue())
     constructor(
         name: String = default("name"),
         displayName: String = default("displayName"),
@@ -27,9 +25,9 @@ data class ModMeta(
         /** since Mindustry v136 */
         subtitle: String = default("subtitle"),
         version: String = default("version"),
-        main: String = default("main"),
+        main: String? = default("main"),
         minGameVersion: String = default("minGameVersion"),
-        repo: String = default("repo"),
+        repo: String? = default("repo"),
         dependencies: List<String> = default("dependencies"),
         hidden: Boolean = default("hidden"),
         java: Boolean = default("java"),
@@ -60,21 +58,21 @@ data class ModMeta(
     operator fun get(key: String): Any? =
         info[key]
     // For Kotlin
-    operator fun set(key: String, meta: Any) {
+    operator fun set(key: String, meta: Any?) {
         info[key] = meta
     }
     // For Groovy
     fun getAt(key: String): Any? =
         info[key]
     // For Groovy
-    fun putAt(key: String, meta: Any) {
+    fun putAt(key: String, meta: Any?) {
         info[key] = meta
     }
     // For Groovy
     fun propertyMissing(property: String): Any? =
         info[property]
     // For Groovy
-    fun propertyMissing(property: String, value: Any) {
+    fun propertyMissing(property: String, value: Any?) {
         info[property] = value
     }
     /**
@@ -95,16 +93,16 @@ data class ModMeta(
         }
     }
     /**
+     * ### Kotlin DSL
      * [ModMeta.append]
      */
-    // For Kotlin
     operator fun plusAssign(addition: ModMeta) {
         append(addition)
     }
     /**
+     * ### Groovy DSL
      * [ModMeta.append]
      */
-    // For Groovy
     fun leftShift(addition: ModMeta) {
         append(addition)
     }
@@ -118,15 +116,15 @@ data class ModMeta(
     companion object {
         @JvmStatic
         val defaultMeta = mapOf(
-            "name" to "name",
-            "displayName" to "",
-            "author" to "",
-            "description" to "",
-            "subtitle" to "",
+            "name" to "example",
+            "displayName" to "Example Mod",
+            "author" to "You",
+            "description" to "It's an example mod.",
+            "subtitle" to "I'm subtitle.",
             "version" to "1.0",
-            "main" to "",
+            "main" to null,
             "minGameVersion" to R.modMeta.defaultMinGameVersion,
-            "repo" to "",
+            "repo" to null,
             "dependencies" to emptyList<String>(),
             "hidden" to false,
             "java" to true,
@@ -157,7 +155,7 @@ data class ModMeta(
         fun ModMeta.toHjson(formatter: Stringify = Stringify.HJSON): String =
             JsonObject.readHjson(JsonOutput.toJson(info)).toString(formatter)
         @JvmStatic
-        fun MetaConfig.setDefaultValue(): MetaConfig {
+        fun HashMap<String, Any?>.setDefaultValue(): HashMap<String, Any?> {
             for ((dk, dv) in defaultMeta) {
                 this.putIfAbsent(dk, dv)
             }
@@ -173,16 +171,16 @@ var ModMeta.description: String by meta()
 /** since Mindustry v136 */
 var ModMeta.subtitle: String by meta()
 var ModMeta.version: String by meta()
-var ModMeta.main: String by meta()
+var ModMeta.main: String? by meta()
 var ModMeta.minGameVersion: String by meta()
-var ModMeta.repo: String by meta()
+var ModMeta.repo: String? by meta()
 var ModMeta.dependencies: List<String> by meta()
 var ModMeta.hidden: Boolean by meta()
 var ModMeta.java: Boolean by meta()
 var ModMeta.hideBrowser: Boolean by meta()
 /** since Mindustry v136 */
 var ModMeta.keepOutlines: Boolean by meta()
-inline fun <reified T : Any> meta(): ReadWriteProperty<ModMeta, T> =
+inline fun <reified T : Any?> meta(): ReadWriteProperty<ModMeta, T> =
     object : ReadWriteProperty<ModMeta, T> {
         override fun getValue(thisRef: ModMeta, property: KProperty<*>): T {
             val meta = thisRef.info[property.name] ?: return ModMeta.default(property.name)
@@ -198,8 +196,3 @@ inline fun <reified T : Any> meta(): ReadWriteProperty<ModMeta, T> =
             thisRef.info[property.name] = value as Any
         }
     }
-@Suppress("UNCHECKED_CAST")
-internal
-operator fun <T> Map<String, Any>.get(key: String, default: T): T {
-    return this.getOrDefault(key, default) as T
-}

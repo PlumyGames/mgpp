@@ -81,8 +81,7 @@ data class GitHubMod(
      */
     val repo: String,
 ) : IDownloadableMod {
-    override val fileName: String
-        get() = repo.repo2Path() + ".zip"
+    override val fileName = repo.repo2Path() + ".zip"
 
     override fun resolveFile(writeIn: File) {
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
@@ -100,8 +99,7 @@ data class GitHubMod(
 data class GitHubJvmMod(
     val repo: String,
 ) : IDownloadableMod {
-    override val fileName: String
-        get() = repo.repo2Path() + ".jar"
+    override val fileName = repo.repo2Path() + ".jar"
 
     override fun resolveFile(writeIn: File) {
         importJvmMod(repo, writeIn)
@@ -111,8 +109,7 @@ data class GitHubJvmMod(
 data class GitHubPlainMod(
     val repo: String, val branch: String? = null,
 ) : IDownloadableMod {
-    override val fileName: String
-        get() = linkString(separator = "-", repo.repo2Path(), branch) + ".zip"
+    override val fileName = linkString(separator = "-", repo.repo2Path(), branch) + ".zip"
 
     override fun resolveFile(writeIn: File) {
         val jsonText = URL("https://api.github.com/repos/$repo").readText()

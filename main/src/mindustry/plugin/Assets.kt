@@ -30,7 +30,8 @@ class MindustryAssetPlugin : Plugin<Project> {
                 val name = assets.qualifiedName.get()
                 if (name == "default") {
                     val modMeta = main._modMeta.get()
-                    val (packageName, _) = modMeta.main.packageAndClassName()
+                    // TODO: If main is empty
+                    val (packageName, _) = (modMeta.main ?: "").packageAndClassName()
                     qualifiedName.set("$packageName.R")
                 } else {
                     qualifiedName.set(name)
