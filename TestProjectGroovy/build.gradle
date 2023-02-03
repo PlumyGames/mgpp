@@ -63,8 +63,7 @@ runMindustry {
         // anonymous 2
         fooClient tag: "v8.0.0", file: "erekir-client.jar"
     }
-    addClient {
-        name = "Old Mindustry"
+    addClient("Old Mindustry") {
         official version: "v126"
     }
     addServer {

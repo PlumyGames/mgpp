@@ -11,8 +11,7 @@ import org.gradle.api.logging.LogLevel
 import org.gradle.api.plugins.ExtensionAware
 import java.io.File
 
-class Server : Common() {
-}
+class Server(name: String) : Common(name)
 
 class AddServerSpec(
     override val proj: Project,

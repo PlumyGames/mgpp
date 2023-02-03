@@ -5,13 +5,10 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.mindustry.*
-import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
-import org.gradle.api.plugins.ExtensionAware
-import java.io.File
 
-class Client : Common()
+class Client(name: String) : Common(name)
 
 class AddClientSpec(
     override val proj: Project,

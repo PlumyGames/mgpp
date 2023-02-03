@@ -38,10 +38,9 @@ open class RunMindustryExtension(
      * ### Kotlin DSL
      * ```kotlin
      * addClient {
-     *    name = "" // optional
      *    official(version="v141")
      * }
-     * addClient {
+     * addClient("my name") {
      *    be latest
      * }
      * addClient {
@@ -59,9 +58,19 @@ open class RunMindustryExtension(
      *    )
      * }
      */
-    inline fun addClient(config: AddClientSpec.() -> Unit) {
-        val client = Client()
+    inline fun addClient(name: String = "", config: AddClientSpec.() -> Unit) {
+        var clientName = formatValidGradleName(name)
+        if (clientName.isBlank()) {
+            val anonymousCount = clients.count { it.name.isBlank() }
+            clientName = (if (anonymousCount == 0) ""
+            else (anonymousCount + 1).toString())
+        }
+        val client = Client(clientName)
         client.modpack = defaultModpackName
+        client.dataDir = ProjBuildDataDirLoc(
+            namespace = "mindustryClientData",
+            name = name.ifBlank { "Default" },
+        )
         AddClientSpec(proj, client).config()
         clients.add(client)
     }
@@ -69,7 +78,6 @@ open class RunMindustryExtension(
      * ### Groovy DSL
      * ```groovy
      * addClient {
-     *    name = "" // optional
      *    official version: "v141"
      * }
      * addClient {
@@ -97,19 +105,42 @@ open class RunMindustryExtension(
         }
     }
     /**
+     * ### Groovy DSL
+     * ```groovy
+     * addClient("my name") {
+     *    name = "" // optional
+     *    official version: "v141"
+     * }
+     * ```
+     */
+    fun addClient(name: String, config: Action<AddClientSpec>) {
+        addClient(name) {
+            config.execute(this)
+        }
+    }
+    /**
      * ### Kotlin DSL
      * ```kotlin
-     * addServer {
-     *    name = "" // optional
+     * addServer("my server") {
      *    official(version="v141")
      * }
      * addServer {
      *    be latest
      * }
      */
-    inline fun addServer(config: AddServerSpec.() -> Unit) {
-        val server = Server()
+    inline fun addServer(name: String = "", config: AddServerSpec.() -> Unit) {
+        var serverName = formatValidGradleName(name)
+        if (serverName.isBlank()) {
+            val anonymousCount = servers.count { it.name.isBlank() }
+            serverName = (if (anonymousCount == 0) ""
+            else (anonymousCount + 1).toString())
+        }
+        val server = Server(serverName)
         server.modpack = defaultModpackName
+        server.dataDir = ProjBuildDataDirLoc(
+            namespace = "mindustryServerData",
+            name = name.ifBlank { "Default" },
+        )
         AddServerSpec(proj, server).config()
         servers.add(server)
     }
@@ -117,7 +148,6 @@ open class RunMindustryExtension(
      * ### Groovy DSL
      * ```groovy
      * addServer {
-     *    name = "" // optional
      *    official version: "v141"
      * }
      * addServer {
@@ -127,6 +157,20 @@ open class RunMindustryExtension(
      */
     fun addServer(config: Action<AddServerSpec>) {
         addServer {
+            config.execute(this)
+        }
+    }
+    /**
+     * ### Groovy DSL
+     * ```groovy
+     * addServer("my name") {
+     *    name = "" // optional
+     *    official version: "v141"
+     * }
+     * ```
+     */
+    fun addServer(name: String, config: Action<AddServerSpec>) {
+        addServer(name) {
             config.execute(this)
         }
     }

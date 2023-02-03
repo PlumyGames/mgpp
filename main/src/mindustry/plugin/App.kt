@@ -87,17 +87,8 @@ class MindustryAppPlugin : Plugin<Project> {
     }
 
     private fun addRunClient(proj: Project, x: RunMindustryExtension) {
-        var anonymous = 0
         for (client in x.clients) {
-            val name = client.name.ifEmpty {
-                if (anonymous == 0) {
-                    anonymous++
-                    ""
-                } else {
-                    (anonymous++ + 1).toString()
-                }
-            }
-            val resolveClient = proj.tasks.register<ResolveGame>("resolveClient$name") {
+            val resolveClient = proj.tasks.register<ResolveGame>("resolveClient${client.name}") {
                 group = R.taskGroup.mindustryStuff
                 val modpackName = client.modpack
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
@@ -105,7 +96,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 }
                 location.set(client.location)
             }
-            proj.tasks.register<RunClient>("runClient$name") {
+            proj.tasks.register<RunClient>("runClient${client.name}") {
                 dependsOn(resolveClient)
                 group = R.taskGroup.mindustry
                 startupArgs.addAll(client.startupArgs)
@@ -137,17 +128,8 @@ class MindustryAppPlugin : Plugin<Project> {
     }
 
     private fun addRunServer(proj: Project, x: RunMindustryExtension) {
-        var anonymous = 0
         for (server in x.servers) {
-            val name = server.name.ifEmpty {
-                if (anonymous == 0) {
-                    anonymous++
-                    ""
-                } else {
-                    (anonymous++ + 1).toString()
-                }
-            }
-            val resolveServer = proj.tasks.register<ResolveGame>("resolveServer$name") {
+            val resolveServer = proj.tasks.register<ResolveGame>("resolveServer$${server.name}") {
                 group = R.taskGroup.mindustryStuff
                 val modpackName = server.modpack
                 if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
@@ -155,7 +137,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 }
                 location.set(server.location)
             }
-            proj.tasks.register<RunServer>("runServer$name") {
+            proj.tasks.register<RunServer>("runServer${server.name}") {
                 dependsOn(resolveServer)
                 group = R.taskGroup.mindustry
                 startupArgs.addAll(server.startupArgs)

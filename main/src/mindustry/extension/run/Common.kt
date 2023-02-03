@@ -10,15 +10,26 @@ import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 import java.io.File
 
-open class Common {
-    /** @see [AddCommonSpec.name] */
-    var name = ""
+open class Common(
+    /**
+     * *Optional*
+     * An empty String as default.
+     * It affects gradle task names.
+     * ```
+     * runClient // if it's anonymous
+     * runClient2 // if second name is still anonymous
+     * runClientFooClient // if [name] is "FooClient"
+     * runServer // if it's anonymous
+     * ```
+     */
+    val name:String
+) {
     /** @see [AddCommonSpec.startupArgs] */
     val startupArgs = ArrayList<String>()
     /** @see [AddCommonSpec.jvmArgs] */
     val jvmArgs = ArrayList<String>()
     /** @see [AddClientSpec.dataDir] */
-    var dataDir: Any? = null
+    var dataDir: IDataDirLoc = MindustryDefaultDataDirLoc
     var location: IGameLoc? = null
     var modpack: String? = null
 }
@@ -27,21 +38,6 @@ abstract class AddCommonSpec<T : Common> {
     protected abstract val proj: Project
     protected abstract val backend: T
     val latest: Notation get() = Notation.latest
-    /**
-     * *Optional*
-     * An empty String as default.
-     * It affects gradle task names.
-     * ```
-     * runClient // if it's empty
-     * runClient2 // if second name is still empty
-     * runClientFooClient // if [name] is "FooClient"
-     * ```
-     */
-    var name: Any
-        get() = backend.name
-        set(value) {
-            backend.name = formatValidGradleName(value.toString())
-        }
     val startupArgs get() = backend.startupArgs
     /**
      * The arguments of JVM.
@@ -56,9 +52,18 @@ abstract class AddCommonSpec<T : Common> {
      * The default [dataDir] is the same as [name].
      */
     var dataDir: Any?
-        get() = backend.dataDir
+        get() = when (val dir = backend.dataDir) {
+            is MindustryDefaultDataDirLoc -> null
+            is ProjBuildDataDirLoc -> dir.name
+            is LocalDataDirLoc -> dir.dir
+            else -> null
+        }
         set(value) {
-            backend.dataDir = value
+            when (value) {
+                is File -> backend.dataDir = LocalDataDirLoc(value)
+                is String -> backend.dataDir = LocalDataDirLoc(File(value))
+                is IDataDirLoc -> backend.dataDir = value
+            }
         }
     var modpack: String?
         get() = backend.modpack
