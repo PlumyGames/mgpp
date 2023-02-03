@@ -24,6 +24,10 @@ object R {
          */
         const val mindustry = "mindustry"
         /**
+         * The name of [DeployModExtension]
+         */
+        const val deployMod = "deployMod"
+        /**
          * The name of [MindustryExtension]
          */
         const val runMindustry = "runMindustry"

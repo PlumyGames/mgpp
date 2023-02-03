@@ -60,11 +60,13 @@ mindustry {
     meta["version"] = "Kotlin 666"
     meta.minGameVersion = "136"
     deploy {
-        baseName = "KotlinMod"
-        version = "666"
         // fatJar is default option unless you use another tool like shadowJar
         // fatJar
     }
+}
+deployMod {
+    baseName = "KotlinMod"
+    version = "666"
 }
 runMindustry {
     addModpack("for debugging") {
@@ -98,9 +100,6 @@ runMindustry {
     addServer {
         official(version = "v141.3")
     }
-}
-tasks.jar {
-    archiveBaseName.set("TestRenamed")
 }
 
 tasks.dexJar {

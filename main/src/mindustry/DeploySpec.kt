@@ -11,48 +11,6 @@ import org.gradle.api.Project
 class DeploySpec(
     target: Project,
 ) {
-    @JvmField
-    val _baseName = target.stringProp().apply {
-        convention("")
-    }
-    /**
-     * The deploy jar name: "[baseName]-[version]-[classifier].jar".
-     *
-     * [ModMeta.name] in [mindustry] as default
-     */
-    var baseName: String
-        get() = _baseName.getOrElse("")
-        set(value) {
-            _baseName.set(value)
-        }
-    @JvmField
-    val _version = target.stringProp().apply {
-        convention("")
-    }
-    /**
-     * The deploy jar name: "[baseName]-[version]-[classifier].jar"
-     *
-     * [ModMeta.version] in [mindustry] as default
-     */
-    var version: String
-        get() = _version.getOrElse("")
-        set(value) {
-            _version.set(value)
-        }
-    @JvmField
-    val _classifier = target.stringProp().apply {
-        convention("")
-    }
-    /**
-     * The deploy jar name: "[baseName]-[version]-[classifier].jar"
-     *
-     * An empty string as default
-     */
-    var classifier: String
-        get() = _classifier.getOrElse("")
-        set(value) {
-            _classifier.set(value)
-        }
     @InheritFromParent
     val _androidSdkRoot = target.stringProp().apply {
         convention(System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: "")

@@ -40,11 +40,13 @@ mindustry {
     meta.version = 'groovy 3000'
     meta.minGameVersion = '136'
     deploy {
-        baseName = 'TestGroovyMod'
-        version = '3.14159'
         // fatJar is default option unless you use another tool like shadowJar
         fatJar
     }
+}
+deployMod {
+    baseName = 'TestGroovyMod'
+    version = '3.14159'
 }
 runMindustry {
     addModpack("for debugging") {

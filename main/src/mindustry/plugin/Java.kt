@@ -22,7 +22,9 @@ class MindustryJavaPlugin : Plugin<Project> {
         val ex = extensions.getOrCreate<MindustryExtension>(
             R.x.mindustry
         )
-        val jar = tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME)
+        val deployX = extensions.getOrCreate<DeployModExtension>(
+            R.x.deployMod
+        )
         @DisableIfWithout("java")
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")
@@ -32,22 +34,23 @@ class MindustryJavaPlugin : Plugin<Project> {
                 configurations.compileClasspath,
                 configurations.runtimeClasspath
             )
-            jarFiles.from(jar)
+            jarFiles.from(tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME))
             sdkRoot.set(ex._deploy._androidSdkRoot)
         }
         val deploy = tasks.register<Jar>("deploy") {
             group = R.taskGroup.mindustry
-            dependsOn(jar)
+            dependsOn(tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME))
             dependsOn(dexJar)
             destinationDirectory.set(temporaryDir)
-            archiveBaseName.set(ex._deploy._baseName)
-            archiveVersion.set(ex._deploy._version)
-            archiveClassifier.set(ex._deploy._classifier)
+            archiveBaseName.set(deployX._baseName)
+            archiveVersion.set(deployX._version)
+            archiveClassifier.set(deployX._classifier)
         }
         target.afterEvaluateThis {
             deploy.configure { deploy ->
                 deploy.from(
-                    *jar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
+                    *tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME).get().outputs.files.map { project.zipTree(it) }
+                        .toTypedArray(),
                     *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
                 )
             }
@@ -63,10 +66,10 @@ class MindustryJavaPlugin : Plugin<Project> {
             }
         }
         // Set the convention to ex._deploy
-        ex._deploy._baseName.convention(provider {
+        deployX._baseName.convention(provider {
             ex._modMeta.get().name
         })
-        ex._deploy._version.convention(provider {
+        deployX._version.convention(provider {
             ex._modMeta.get().version
         })
     }

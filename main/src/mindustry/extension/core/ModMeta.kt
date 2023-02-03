@@ -60,54 +60,30 @@ data class ModMeta(
             )
         )
     )
-    // For Kotlin
-    operator fun get(key: String): Any? =
-        info[key]
-    // For Kotlin
+    /** For Kotlin */
+    operator fun get(key: String): Any? = info[key]
+
+    /** For Kotlin */
     operator fun set(key: String, meta: Any?) {
         info[key] = meta
     }
-    // For Groovy
-    fun getAt(key: String): Any? =
-        info[key]
-    // For Groovy
+
+    /** For Groovy */
+    fun getAt(key: String): Any? = info[key]
+
+    /** For Groovy */
     fun putAt(key: String, meta: Any?) {
         info[key] = meta
     }
-    // For Groovy
-    fun propertyMissing(property: String): Any? =
-        info[property]
-    // For Groovy
+
+    /** For Groovy */
+    fun propertyMissing(property: String): Any? = info[property]
+
+    /** For Groovy */
     fun propertyMissing(property: String, value: Any?) {
         info[property] = value
     }
-    /**
-     * Append the [addition].
-     * It will only append any pair that's not default.
-     */
-    infix fun append(addition: ModMeta) {
-        // TODO: Redesign this!
-        for ((k, newV) in addition.info) {
-            val default = defaultMeta[k]
-            if (newV != default) {
-                this.info[k] = newV
-            }
-        }
-    }
-    /**
-     * ### Kotlin DSL
-     * [ModMeta.append]
-     */
-    operator fun plusAssign(addition: ModMeta) {
-        append(addition)
-    }
-    /**
-     * ### Groovy DSL
-     * [ModMeta.append]
-     */
-    fun leftShift(addition: ModMeta) {
-        append(addition)
-    }
+
     /**
      * [ModMeta.toHjson]
      */
