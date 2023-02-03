@@ -71,16 +71,6 @@ mindustry {
         //mindustry be "22728"
         mindustry official "v141.3"
     }
-    mods {
-        worksWith {
-            add kotlin "liplum/cyberio"
-            //add folder "$buildDir/mods"
-            //add folder "$buildDir/fakeMods"
-            add hjson "BlueWolf3682/Exotic-Mod"// branch "0.8"
-            add fromTask "iconMaker"
-            add localProperties "extraModPath"
-        }
-    }
     meta += ModMeta(
         name = "mgpp-kt",
         displayName = "MGPP Kotlin Test",
@@ -103,6 +93,7 @@ runMindustry {
     addModpack {
         jvm(repo = "liplum/CyberIO")
         json(repo = "BlueWolf3682/Exotic-Mod", branch = "0.8")
+        fromTask(path = "iconMaker")
     }
     addClient {
         // anonymous 1

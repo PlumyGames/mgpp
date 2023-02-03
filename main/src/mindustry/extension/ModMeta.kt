@@ -86,6 +86,7 @@ data class ModMeta(
      * It will only append any pair that's not default.
      */
     infix fun append(addition: ModMeta) {
+        // TODO: It doesn't work with nullable key. Redesign this!
         for ((k, newV) in addition.info) {
             val default = defaultMeta[k]
             if (default == null) {

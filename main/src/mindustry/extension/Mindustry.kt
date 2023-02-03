@@ -126,20 +126,7 @@ open class MindustryExtension(
     inline fun server(func: ServerSpec.() -> Unit) {
         _server.func()
     }
-    @JvmField
-    val _mods = ModsSpec(target)
-    /**
-     * Configure what mod you want to work with.
-     */
-    fun mods(func: Action<ModsSpec>) {
-        func.execute(_mods)
-    }
-    /**
-     * Configure what mod you want to work with.
-     */
-    inline fun mods(func: ModsSpec.() -> Unit) {
-        _mods.func()
-    }
+
     @JvmField
     val _run = RunSpec(target)
     /**

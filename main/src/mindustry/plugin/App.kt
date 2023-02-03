@@ -23,12 +23,6 @@ class MindustryAppPlugin : Plugin<Project> {
         val ex = target.extensions.getOrCreate<MindustryExtension>(
             R.x.mindustry
         )
-        val resolveMods = target.tasks.register<ResolveMods>(
-            "resolveMods"
-        ) {
-            group = R.taskGroup.mindustry
-            mods.set(ex._mods.worksWith)
-        }
         target.tasks.register<CleanMindustrySharedCache>("cleanMindustrySharedCache") {
             group = BasePlugin.BUILD_GROUP
         }
@@ -62,12 +56,8 @@ class MindustryAppPlugin : Plugin<Project> {
 
                     logger.info("Data directory of $name is $resolvedDataDir .")
                     dataDir.set(resolvedDataDir)
-                    modsWorkWith.from(resolveMods)
                     dataModsPath.set("mods")
                     startupArgs.set(ex._client.startupArgs)
-                    ex._mods._extraModsFromTask.get().forEach {
-                        outputtedMods.from(tasks.getByPath(it))
-                    }
                 }
                 val runServer = tasks.register<RunMindustry>(
                     "runServer",
@@ -78,13 +68,8 @@ class MindustryAppPlugin : Plugin<Project> {
                     } ?: ex._run._forciblyClear.get()
                     forciblyClear.set(doForciblyClear)
                     mainClass.convention(R.mainClass.server)
-                    modsWorkWith.from(resolveMods)
                     dataModsPath.convention("config/mods")
                     startupArgs.set(ex._server.startupArgs)
-                    ex._mods._extraModsFromTask.get().forEach {
-                        dependsOn(tasks.getByPath(it))
-                        outputtedMods.from(tasks.getByPath(it))
-                    }
                 }
             }
         }
@@ -143,12 +128,15 @@ class MindustryAppPlugin : Plugin<Project> {
                     val resolveModpackTask = proj.tasks.named("resolveModpack${modpack.name}")
                     dependsOn(resolveModpackTask)
                     mods.from(resolveModpackTask)
-                    for (task in modpack.fromTaskPath) {
-                        mods.from(proj.tasks.findByPath(task))
+                    for (taskPath in modpack.fromTaskPath) {
+                        val task = proj.tasks.findByPath(taskPath)
+                        if (task != null) {
+                            mods.from(task)
+                        }
                     }
-                    if(proj.plugins.hasPlugin<JavaPlugin>()) {
-                        mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
-                    }
+                }
+                if (proj.plugins.hasPlugin<JavaPlugin>()) {
+                    mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
                 }
             }
         }
@@ -190,12 +178,15 @@ class MindustryAppPlugin : Plugin<Project> {
                     val resolveModpackTask = proj.tasks.named("resolveModpack${modpack.name}")
                     dependsOn(resolveModpackTask)
                     mods.from(resolveModpackTask)
-                    for (task in modpack.fromTaskPath) {
-                        mods.from(proj.tasks.findByPath(task))
+                    for (taskPath in modpack.fromTaskPath) {
+                        val task = proj.tasks.findByPath(taskPath)
+                        if (task != null) {
+                            mods.from(task)
+                        }
                     }
-                    if(proj.plugins.hasPlugin<JavaPlugin>()) {
-                        mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
-                    }
+                }
+                if (proj.plugins.hasPlugin<JavaPlugin>()) {
+                    mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
                 }
             }
         }

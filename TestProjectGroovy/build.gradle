@@ -55,11 +55,6 @@ mindustry {
 
         // be version: '22714'
     }
-    mods {
-        worksWith {
-            github 'liplum/cyberio'
-        }
-    }
     run {
         // set Mindustry's data directory to "./temp"
         //dataDir = 'temp'
