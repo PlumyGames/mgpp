@@ -1,5 +1,5 @@
 import io.github.liplum.dsl.toMap
-import io.github.liplum.mindustry.ModMeta
+import io.github.liplum.mindustry.*
 import org.hjson.JsonObject
 import org.junit.jupiter.api.Test
 
@@ -10,12 +10,8 @@ class TestModMeta {
             name = "Test Name",
             main = "net.liplum.MainClz"
         )
-        println(a)
-        a += ModMeta(
-            name = "Overwritten name",
-            version = "111111.0"
-        )
-        println(a)
+        assert(a.name == "Test Name")
+        assert(a.main == "net.liplum.MainClz")
     }
     @Test
     fun `load from json`() {
