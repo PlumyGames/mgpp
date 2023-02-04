@@ -55,7 +55,7 @@ open class MindustryAssetsExtension(
      */
     @JvmField
     val assetsRoot = target.fileProp().apply {
-        convention(MindustryPlugin.DefaultEmptyFile)
+        convention(null as File?)
     }
     /**
      * The qualified name of generated class,

@@ -40,11 +40,8 @@ class MindustryAssetPlugin : Plugin<Project> {
             }
         }
         afterEvaluateThis {
-            val assetsRoot = assets.assetsRoot.get()
-            if (assetsRoot != MindustryPlugin.DefaultEmptyFile) {
-                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                    from(assetsRoot)
-                }
+            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                from(assets.assetsRoot)
             }
             // TODO: Redesign this
             if (deployX.outputMod) {
@@ -52,8 +49,8 @@ class MindustryAssetPlugin : Plugin<Project> {
                     from(assets._icon)
                 }
                 tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                    dependsOn("genModHjson")
-                    from(tasks.getByPath("genModHjson"))
+                    dependsOn(R.task.genModHjson)
+                    from(tasks.getByPath(R.task.genModHjson))
                 }
             }
             // Resolve all batches

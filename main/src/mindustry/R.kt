@@ -51,6 +51,7 @@ object R {
 
     object task {
         const val packModZip = "packModZip"
+        const val genModHjson = "genModHjson"
     }
 
     /**

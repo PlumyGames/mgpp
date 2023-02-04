@@ -5,6 +5,7 @@ import arc.scene.ui.Image
 import arc.scene.ui.layout.Table
 import arc.util.Log
 import mindustry.Vars
+import mindustry.game.EventType
 import mindustry.game.EventType.ClientLoadEvent
 import mindustry.mod.Mod
 import mindustry.ui.dialogs.BaseDialog
@@ -38,6 +39,11 @@ class TestModKt : Mod() {
 
     override fun loadContent() {
         Log.info("TestMod content loaded.")
+        Events.on(EventType.UnitDestroyEvent::class.java) {
+            if (Vars.player.unit().isNull) {
+                Vars.ui.hudfrag.showToast("Your unit is killed...")
+            }
+        }
     }
 }
 

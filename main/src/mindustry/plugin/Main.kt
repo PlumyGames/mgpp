@@ -36,7 +36,7 @@ class MindustryPlugin : Plugin<Project> {
         tasks.register<AntiAlias>("antiAlias") {
             group = R.taskGroup.mindustry
         }.get()
-        tasks.register<ModHjsonGenerate>("genModHjson") {
+        tasks.register<ModHjsonGenerate>(R.task.genModHjson) {
             group = R.taskGroup.mindustry
             modMeta.set(ex._modMeta)
             outputHjson.set(temporaryDir.resolve("mod.hjson"))
@@ -137,7 +137,7 @@ val TaskContainer.`antiAlias`: TaskProvider<AntiAlias>
  * Provides the existing `genModHjson`: [ModHjsonGenerate] task.
  */
 val TaskContainer.`genModHjson`: TaskProvider<ModHjsonGenerate>
-    get() = named<ModHjsonGenerate>("genModHjson")
+    get() = named<ModHjsonGenerate>(R.task.genModHjson)
 
 fun String?.addAngleBracketsIfNeed(): String? =
     if (this == null) null
