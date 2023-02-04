@@ -104,20 +104,7 @@ tasks.dexJar {
     }
 }
 mindustryAssets {
-    sprites {
-        dir = rootDir.resolve("sprites")
-        dependsOn("antiAlias")
-    }
-    sprites {
-        dir = rootDir.resolve("sprites/data")
-        rootAt(rootDir.resolve("sprites"))
-        dependsOn("antiAlias")
-        genClass
-    }
-    sounds {
-        dir = rootDir.resolve("sounds")
-        genClass
-    }
+
 }
 
 tasks.named<AntiAlias>("antiAlias") {

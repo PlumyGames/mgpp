@@ -24,16 +24,13 @@
 
 <br>
 
-<kbd>   <br>   Resource Class Generation   <br>   </kbd>   
-<kbd>   <br>   Debugging Tools   <br>   </kbd>   
-<kbd>   <br>   Download the Game   <br>   </kbd>
+<kbd>   <br>   Debug Your Mod   <br>   </kbd>
 
-<kbd>   <br>   Work with other Mods   <br>   </kbd>   
+<kbd>   <br>   Saves & Modpack Isolation   <br>   </kbd>   
 <kbd>   <br>   Android Deployment   <br>   </kbd>   
-<kbd>   <br>   Manage Dependencies   <br>   </kbd>
+<kbd>   <br>   Dependency Management   <br>   </kbd>
 
 <kbd>   <br>   Asset Management   <br>   </kbd>   
-<kbd>   <br>   Separated Working Space   <br>   </kbd>
 
 <br>
 <br>

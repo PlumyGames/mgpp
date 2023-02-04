@@ -85,11 +85,6 @@ dexJar {
 }
 mindustryAssets {
     rootAt "$rootDir/assets"
-    // There is no need to create a batch, if you use `rootAt 'foo/bar'`.
-    /*sprites {
-        dir = new File(rootDir, "assets/sprites")
-        genClass // noGenClass is default
-    }*/
 }
 antiAlias {
     sourceDirectory = new File(rootDir, 'assets/sprites')
