@@ -8,7 +8,7 @@
 
 <br>
 
-### ***Plumy*** *the **[Mindustry]** Gradle plugin V2.*
+### ***Plum,*** *the **[Mindustry]** Gradle plugin V2.*
 *The next generation of Mindustry modding.*
 <br>
 <br>

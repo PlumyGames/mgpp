@@ -57,13 +57,21 @@ class AddModpackSpec(
     /**
      * Add a java mod by its repo name on GitHub.
      * @param repo like "PlumyGames/mgpp"
+     * @param tag like "v1.0"
      */
-    fun java(repo: String) = addMod(GitHubJvmMod(repo))
+    fun java(
+        repo: String,
+        tag: String? = null,
+    ) = addMod(GitHubJvmMod(repo = repo, tag = tag))
     /**
      * Add a jvm mod by its repo name on GitHub.
      * @param repo like "PlumyGames/mgpp"
+     * @param tag like "v1.0"
      */
-    fun jvm(repo: String) = addMod(GitHubJvmMod(repo))
+    fun jvm(
+        repo: String,
+        tag: String? = null,
+    ) = addMod(GitHubJvmMod(repo = repo, tag = tag))
     /**
      * Add a local mod form disk.
      *
@@ -94,9 +102,15 @@ class AddModpackSpec(
         repo = props["repo"] ?: "",
         branch = props["branch"]
     )
-    /** @see [js]  */
+    /** @see [java]  */
+    fun java(props: Map<String, String>) = java(
+        repo = props["repo"] ?: "",
+        tag = props["tag"],
+    )
+    /** @see [jvm]  */
     fun jvm(props: Map<String, String>) = jvm(
-        repo = props["repo"] ?: ""
+        repo = props["repo"] ?: "",
+        tag = props["tag"],
     )
 
     /** @see [local]  */

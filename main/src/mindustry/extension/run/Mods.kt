@@ -46,31 +46,6 @@ data class UrlMod(
     }
 }
 
-fun String.isJvmMod() = this == "Java" || this == "Kotlin" ||
-    this == "Groovy" || this == "Scala" ||
-    this == "Clojure"
-
-fun importJvmMod(repo: String, dest: File) {
-    val releaseJson = URL("https://api.github.com/repos/$repo/releases/latest").readText()
-    val json = Jval.read(releaseJson)
-    val assets = json["assets"].asArray()
-    val dexedAsset = assets.find {
-        it.getString("name").startsWith("dexed") &&
-            it.getString("name").endsWith(".jar")
-    }
-    val asset = dexedAsset ?: assets.find { it.getString("name").endsWith(".jar") }
-    if (asset != null) {
-        val url = asset.getString("browser_download_url")
-        URL(url).copyTo(dest)
-    } else {
-        throw GradleException("Can't find the mod.")
-    }
-}
-
-fun importPlainMod(repo: String, branch: String, dest: File) {
-    val url = "https://api.github.com/repos/$repo/zipball/$branch"
-    URL(url).copyTo(dest)
-}
 
 fun String.repo2Path() = this.replace("/", "-")
 /**
@@ -89,7 +64,7 @@ data class GitHubMod(
         val json = Jval.read(jsonText)
         val lan = json.getString("language")
         if (lan.isJvmMod()) {
-            importJvmMod(repo, writeIn)
+            importJvmMod(repo, writeIn = writeIn)
         } else {
             val mainBranch = json.getString("default_branch")
             importPlainMod(repo, mainBranch, writeIn)
@@ -99,12 +74,50 @@ data class GitHubMod(
 
 data class GitHubJvmMod(
     val repo: String,
+    val tag: String? = null,
 ) : IDownloadableMod {
     override val fileName = repo.repo2Path() + ".jar"
 
     override fun resolveFile(writeIn: File) {
-        importJvmMod(repo, writeIn)
+        if (tag == null) {
+            importJvmMod(repo, writeIn = writeIn)
+        } else {
+            val releaseJson = URL("https://api.github.com/repos/$repo/releases").readText()
+            val json = Jval.read(releaseJson)
+            val releases = json.asArray()
+            val release = releases.find { it.getString("tag_name") == tag }
+                ?: throw GradleException("Tag<$tag> of $repo not found.")
+            val url = release.getString("url")
+            importJvmMod(url, writeIn)
+        }
     }
+}
+
+private
+fun String.isJvmMod() = this == "Java" || this == "Kotlin" ||
+    this == "Groovy" || this == "Scala" ||
+    this == "Clojure"
+
+private
+fun importJvmMod(releaseEntryUrl: String, writeIn: File) {
+    val releaseJson = URL(releaseEntryUrl).readText()
+    val json = Jval.read(releaseJson)
+    val assets = json["assets"].asArray()
+    val dexedAsset = assets.find {
+        it.getString("name").startsWith("dexed") &&
+            it.getString("name").endsWith(".jar")
+    }
+    val asset = dexedAsset ?: assets.find { it.getString("name").endsWith(".jar") }
+    if (asset != null) {
+        val url = asset.getString("browser_download_url")
+        URL(url).copyTo(writeIn)
+    } else {
+        throw GradleException("Can't find the mod.")
+    }
+}
+private
+fun importJvmMod(repo: String, tag: String = "latest", writeIn: File) {
+    importJvmMod(releaseEntryUrl = "https://api.github.com/repos/$repo/releases/$tag", writeIn)
 }
 
 data class GitHubPlainMod(
@@ -119,4 +132,10 @@ data class GitHubPlainMod(
         else json.getString("default_branch")
         importPlainMod(repo, branch, writeIn)
     }
+}
+
+internal
+fun importPlainMod(repo: String, branch: String, dest: File) {
+    val url = "https://api.github.com/repos/$repo/zipball/$branch"
+    URL(url).copyTo(dest)
 }
