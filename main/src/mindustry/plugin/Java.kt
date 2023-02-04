@@ -25,7 +25,7 @@ class MindustryJavaPlugin : Plugin<Project> {
         val deployX = extensions.getOrCreate<DeployModExtension>(
             R.x.deployMod
         )
-        target.parent?.let {
+        parent?.let {
             deployX.enableFatJar = false
             deployX.outputMod = false
         }
@@ -49,7 +49,7 @@ class MindustryJavaPlugin : Plugin<Project> {
             archiveVersion.set(deployX._version)
             archiveClassifier.set(deployX._classifier)
         }
-        target.afterEvaluateThis {
+        afterEvaluateThis {
             deploy.configure { deploy ->
                 deploy.from(
                     *tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME).get().outputs.files.map { project.zipTree(it) }

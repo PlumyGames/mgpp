@@ -49,6 +49,10 @@ object R {
         const val mindustryAsset = "mindustry assets"
     }
 
+    object task {
+        const val packModZip = "packModZip"
+    }
+
     /**
      * The environment variables.
      */

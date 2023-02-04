@@ -72,8 +72,11 @@ class MindustryAppPlugin : Plugin<Project> {
                         }
                     }
                 }
-                if (proj.plugins.hasPlugin<JavaPlugin>()) {
+                if (proj.plugins.hasPlugin<MindustryJavaPlugin>()) {
                     mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
+                }
+                if (proj.plugins.hasPlugin<MindustryJsonPlugin>()) {
+                    mods.from(proj.tasks.getByPath(R.task.packModZip))
                 }
             }
         }
@@ -110,8 +113,11 @@ class MindustryAppPlugin : Plugin<Project> {
                         }
                     }
                 }
-                if (proj.plugins.hasPlugin<JavaPlugin>()) {
+                if (proj.plugins.hasPlugin<MindustryJavaPlugin>()) {
                     mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
+                }
+                if (proj.plugins.hasPlugin<MindustryJsonPlugin>()) {
+                    mods.from(proj.tasks.getByPath(R.task.packModZip))
                 }
             }
         }

@@ -17,15 +17,15 @@ typealias Mgpp = MindustryPlugin
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         LocalProperties.clearCache(this)
-        val ex = target.extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
+        val ex = extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(R.x.mindustryAssets)
         val run = extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)
         /**
          * Handle [InheritFromParent].
          * Because they're initialized at the [Plugin.apply] phase, the user-code will overwrite them if it's possible.
          */
-        target.parent?.let {
-            it.plugins.whenHas<MindustryPlugin> {
+        parent?.let {
+            if (it.plugins.hasPlugin<MindustryPlugin>()) {
                 val parentEx = it.extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
                 ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
                 ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
@@ -41,11 +41,14 @@ class MindustryPlugin : Plugin<Project> {
             modMeta.set(ex._modMeta)
             outputHjson.set(temporaryDir.resolve("mod.hjson"))
         }
-        plugins.apply<MindustryAppPlugin>()
-        plugins.whenHas<JavaPlugin> {
+        // TODO: Redesign this
+        if (plugins.hasPlugin<JavaPlugin>()) {
             plugins.apply<MindustryAssetPlugin>()
             plugins.apply<MindustryJavaPlugin>()
+        } else {
+            plugins.apply<MindustryJsonPlugin>()
         }
+        plugins.apply<MindustryAppPlugin>()
         GroovyBridge.attach(target)
     }
 

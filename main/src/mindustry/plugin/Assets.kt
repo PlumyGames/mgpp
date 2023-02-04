@@ -39,7 +39,7 @@ class MindustryAssetPlugin : Plugin<Project> {
                 }
             }
         }
-        target.afterEvaluateThis {
+        afterEvaluateThis {
             val assetsRoot = assets.assetsRoot.get()
             if (assetsRoot != MindustryPlugin.DefaultEmptyFile) {
                 tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {

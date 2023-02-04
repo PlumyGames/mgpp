@@ -72,21 +72,8 @@ internal inline
 fun <reified T : Plugin<*>> PluginContainer.apply(
 ): T = this.apply(T::class.java)
 internal inline
-fun <reified T : Plugin<*>> PluginContainer.whenHas(
-    func: () -> Unit,
-) {
-    if (hasPlugin(T::class.java)) func()
-}
-internal inline
 fun <reified T : Plugin<*>> PluginContainer.hasPlugin() =
     hasPlugin(T::class.java)
-internal inline
-fun PluginContainer.whenHas(
-    pluginID: String,
-    func: () -> Unit,
-) {
-    if (hasPlugin(pluginID)) func()
-}
 internal
 fun Project.dirProv(file: File): Provider<Directory> {
     return layout.dir(provider { file })

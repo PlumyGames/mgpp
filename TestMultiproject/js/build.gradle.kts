@@ -16,6 +16,11 @@ mindustry {
         minGameVersion = "136"
     }
 }
+runMindustry {
+    addClient {
+        official(version = "v141.3")
+    }
+}
 mindustryAssets {
     root at "$projectDir/assets"
 }
