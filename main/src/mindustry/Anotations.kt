@@ -52,19 +52,3 @@ annotation class PropertyAsDefault(
      */
     val default: String,
 )
-/**
- * It indicates this task won't be registered when [plugin] isn't applied.
- */
-@Retention(AnnotationRetention.SOURCE)
-@Target(
-    AnnotationTarget.LOCAL_VARIABLE,
-    AnnotationTarget.FIELD,
-    AnnotationTarget.PROPERTY, AnnotationTarget.EXPRESSION, AnnotationTarget.CLASS, AnnotationTarget.FUNCTION
-)
-@MustBeDocumented
-annotation class DisableIfWithout(
-    /**
-     * When which plugin isn't applied, the task won't be registered.
-     */
-    val plugin: String,
-)

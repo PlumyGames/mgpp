@@ -7,11 +7,9 @@ import io.github.liplum.mindustry.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
-import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.jvm.tasks.Jar
 
 
-@DisableIfWithout("java")
 class MindustryAssetPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
         val main = extensions.getOrCreate<MindustryExtension>(

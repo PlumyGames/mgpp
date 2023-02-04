@@ -5,6 +5,7 @@ package io.github.liplum.mindustry
 import io.github.liplum.dsl.*
 import io.github.liplum.mindustry.*
 import io.github.liplum.mindustry.task.DexJar
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.DuplicatesStrategy
@@ -16,9 +17,11 @@ import org.gradle.jvm.tasks.Jar
 /**
  * For deployment.
  */
-@DisableIfWithout("java")
 class MindustryJavaPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
+        if (!plugins.hasPlugin<JavaPlugin>()) {
+            throw GradleException("${MindustryJavaPlugin::class.java} requires `java` plugin applied.")
+        }
         val ex = extensions.getOrCreate<MindustryExtension>(
             R.x.mindustry
         )
@@ -26,10 +29,10 @@ class MindustryJavaPlugin : Plugin<Project> {
             R.x.deployMod
         )
         parent?.let {
+            // disable those if current project is subproject.
             deployX.enableFatJar = false
             deployX.outputMod = false
         }
-        @DisableIfWithout("java")
         val dexJar = tasks.register<DexJar>("dexJar") {
             dependsOn("jar")
             group = R.taskGroup.mindustry
@@ -40,22 +43,23 @@ class MindustryJavaPlugin : Plugin<Project> {
             )
             jarFiles.from(tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME))
         }
-        val deploy = tasks.register<Jar>("deploy") {
+        val deploy = tasks.register<Jar>(R.task.deployMod) {
             group = R.taskGroup.mindustry
             dependsOn(tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME))
             dependsOn(dexJar)
-            destinationDirectory.set(temporaryDir)
+            destinationDirectory.set(buildDir.resolve(R.task.deployMod))
             archiveBaseName.set(deployX._baseName)
             archiveVersion.set(deployX._version)
             archiveClassifier.set(deployX._classifier)
         }
         afterEvaluateThis {
-            deploy.configure { deploy ->
-                deploy.from(
-                    *tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME).get().outputs.files.map { project.zipTree(it) }
-                        .toTypedArray(),
-                    *dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray(),
+            deploy.configure { task ->
+                task.from(
+                    *tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME).get().outputs.files.map {
+                        project.zipTree(it)
+                    }.toTypedArray()
                 )
+                task.from(*dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray())
             }
             if (deployX.enableFatJar) {
                 tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
@@ -81,12 +85,12 @@ class MindustryJavaPlugin : Plugin<Project> {
  * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
  */
 val TaskContainer.`dexJar`: TaskProvider<DexJar>
-    get() = named<DexJar>("dexJar")
+    get() = named<DexJar>(R.task.dexJar)
 /**
  * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
  */
 val TaskContainer.`deploy`: TaskProvider<Jar>
-    get() = named<Jar>("deploy")
+    get() = named<Jar>(R.task.deployMod)
 /**
  * For generating resource class.
  */

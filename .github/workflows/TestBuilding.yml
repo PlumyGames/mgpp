@@ -34,7 +34,7 @@ jobs:
         run: |
           cd TestProjectKt
           chmod +x gradlew
-          ./gradlew :deploy --info
+          ./gradlew :deployMod --info
           ./gradlew :antiAlias --info
           cd ..
 
@@ -42,7 +42,7 @@ jobs:
         run: |
           cd TestProjectGroovy
           chmod +x gradlew
-          ./gradlew :deploy --info
+          ./gradlew :deployMod --info
           ./gradlew :antiAlias --info
           cd ..
 
@@ -50,7 +50,7 @@ jobs:
         run: |
           cd TestMultiproject
           chmod +x gradlew
-          ./gradlew :main:deploy --info
+          ./gradlew :main:deployMod --info
           cd ..
 
       - uses: actions/upload-artifact@v3
@@ -58,9 +58,9 @@ jobs:
           name: mgpp-snapshot-build
           path: |
             main/build/libs/*.jar
-            TestProjectGroovy/build/tmp/deploy/*.jar
-            TestProjectKt/build/tmp/deploy/*.jar
-            TestMultiproject/main/build/tmp/deploy/*.jar
+            TestProjectGroovy/build/deployMod/*.jar
+            TestProjectKt/build/deployMod/*.jar
+            TestMultiproject/main/build/deployMod/*.jar
 
   build-mac:
     runs-on: macos-latest

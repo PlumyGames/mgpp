@@ -94,7 +94,7 @@ open class DeployModExtension(
         convention(true)
     }
     /**
-     * Whether this project could output a mod file,
+     * Whether this project could output a mod file in `:jar` task,
      * its jar will contain something a mod needs. such as `mod.hjson`.
      *
      * If current [proj] is a subproject, it'll be `false` as default,

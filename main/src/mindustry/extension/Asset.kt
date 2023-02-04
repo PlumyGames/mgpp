@@ -33,18 +33,6 @@ open class MindustryAssetsExtension(
         convention(proj.projectDir.resolve("assets"))
     }
     /**
-     * The qualified name of generated class,
-     * such as `io.github.liplum.Mindustry`
-     */
-    val qualifiedName = proj.stringProp().apply {
-        convention("default")
-    }
-    /**
-     * The arguments used for generating.
-     * @see GenerateResourceClass.args
-     */
-    val args = HashMap<String, String>()
-    /**
      * Set the [assetsRoot] to [path]
      */
     fun rootAt(path: String) {
@@ -84,14 +72,14 @@ open class MindustryAssetsExtension(
         _icon.set(File(path))
     }
     /**
+     * ### Kotlin DSL
      * A spec for configuring [assetsRoot].
      */
-    // For Kotlin
     val root = AssetRootSpec()
     /**
+     * ### Kotlin DSL
      * A spec for configuring [icon].
      */
-    // For Kotlin
     val icon = IconSpec()
 
     /**
@@ -126,34 +114,4 @@ open class MindustryAssetsExtension(
             _icon.set(File(path))
         }
     }
-    /**
-     * @see NameRule.Pascal
-     */
-    @JvmField
-    val Pascal = NameRule.Pascal
-    /**
-     * @see NameRule.Camel
-     */
-    @JvmField
-    val Camel = NameRule.Camel
-    /**
-     * @see NameRule.Snake
-     */
-    @JvmField
-    val Snake = NameRule.Snake
-    /**
-     * @see NameRule.AllCaps
-     */
-    @JvmField
-    val AllCaps = NameRule.AllCaps
-    /**
-     * @see NameRule.Kebab
-     */
-    @JvmField
-    val Kebab = NameRule.Kebab
-    /**
-     * @see NameRule.Domain
-     */
-    @JvmField
-    val Domain = NameRule.Domain
 }
