@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 package io.github.liplum.mindustry
 
 import org.gradle.api.Project
@@ -122,7 +124,14 @@ class AddModpackSpec(
             path = props["path"] ?: ""
         )
     }
-
+    /**
+     * Link: [Testing Utilities](https://github.com/MEEPofFaith/testing-utilities-java)
+     */
     val `testingUtilities`: Unit
         get() = jvm(repo = "MEEPofFaith/testing-utilities-java")
+    /**
+     * Link: [Informatis](https://github.com/sharlottes/informatis)
+     */
+    val `informatis`: Unit
+        get() = jvm(repo = "sharlottes/informatis")
 }

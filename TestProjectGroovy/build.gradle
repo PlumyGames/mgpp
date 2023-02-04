@@ -45,9 +45,6 @@ deployMod {
     version = '3.14159'
 }
 runMindustry {
-    addModpack("for debugging") {
-        testingUtilities
-    }
     addModpack {
         // default modpack
         jvm repo: "liplum/CyberIO"
@@ -55,6 +52,10 @@ runMindustry {
     }
     def modpack2nd = addModpack("number 2") {
         json repo: "sk7725/TimeControl"
+    }
+    addModpack("for debugging") {
+        testingUtilities
+        informatis
     }
     addClient {
         // anonymous 1
