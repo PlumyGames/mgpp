@@ -4,6 +4,7 @@
 
 package io.github.liplum.mindustry
 
+import io.github.liplum.dsl.boolProp
 import io.github.liplum.dsl.prop
 import io.github.liplum.dsl.stringProp
 import org.gradle.api.Action
@@ -71,7 +72,6 @@ open class DeployModExtension(
             _classifier.set(value)
         }
 
-    @InheritFromParent
     val _enableFatJar = proj.prop<Boolean>().apply {
         convention(true)
     }
@@ -80,7 +80,8 @@ open class DeployModExtension(
      * `true` as default.
      *
      * If current [proj] is a subproject, it'll be `false` as default,
-     * which avoids other subprojects to output a fat jar.
+     * which avoids all subprojects to output a fat jar.
+     *
      * Therefore, you should manually set this to `true` when working with multi-project.
      */
     var enableFatJar: Boolean
@@ -88,4 +89,20 @@ open class DeployModExtension(
         set(value) {
             _enableFatJar.set(value)
         }
+    @JvmField
+    val _outputMod = proj.boolProp().apply {
+        convention(true)
+    }
+    /**
+     * Whether this project could output a mod file,
+     * its jar will contain something a mod needs. such as `mod.hjson`.
+     *
+     * If current [proj] is a subproject, it'll be `false` as default,
+     * which avoids all subprojects to output a mod file.
+     *
+     * Therefore, you should manually set this to `true` when working with multi-project.
+     */
+    var outputMod: Boolean
+        get() = _outputMod.getOrElse(true)
+        set(value) = _outputMod.set(value)
 }

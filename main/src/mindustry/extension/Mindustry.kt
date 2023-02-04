@@ -72,17 +72,6 @@ open class MindustryExtension(
         get() = _projectType.getOrElse(ProjectType.Mod)
         set(value) = _projectType.set(value)
     @JvmField
-    val _isLib = target.boolProp().apply {
-        convention(false)
-    }
-    /**
-     * If this project is a library, its jar won't contain something a mod needs
-     */
-    @InheritFromParent
-    var isLib: Boolean
-        get() = _isLib.getOrElse(false)
-        set(value) = _isLib.set(value)
-    @JvmField
     val _dependency = DependencySpec(target)
     /**
      * Configure the mindustry and arc dependency.

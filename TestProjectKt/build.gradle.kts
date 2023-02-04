@@ -46,10 +46,8 @@ tasks.register<TestOutputTask>("iconMaker") {
 }
 mindustry {
     dependency {
-        //mindustry on "v136"
-        mindustry mirror "v141.2"
+        mindustry on "v141.3"
         arc on "v141.3"
-        // arc on latestRelease
     }
     modMeta {
         name = "mgpp-kt"

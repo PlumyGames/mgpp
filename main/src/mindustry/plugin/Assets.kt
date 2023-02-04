@@ -22,6 +22,7 @@ class MindustryAssetPlugin : Plugin<Project> {
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(
             R.x.mindustryAssets
         )
+        val deployX = extensions.getOrCreate<DeployModExtension>(R.x.deployMod)
         // Doesn't register the tasks if no resource needs to generate its class.
         @DisableIfWithout("java")
         val genResourceClass by lazy {
@@ -45,7 +46,8 @@ class MindustryAssetPlugin : Plugin<Project> {
                     from(assetsRoot)
                 }
             }
-            if (!main.isLib) {
+            // TODO: Redesign this
+            if (deployX.outputMod) {
                 tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
                     from(assets._icon)
                 }

@@ -27,7 +27,6 @@ class MindustryPlugin : Plugin<Project> {
         target.parent?.let {
             it.plugins.whenHas<MindustryPlugin> {
                 val parentEx = it.extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
-                ex._isLib.set(parentEx._isLib)
                 ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
                 ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
             }

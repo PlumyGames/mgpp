@@ -27,6 +27,7 @@ class MindustryJavaPlugin : Plugin<Project> {
         )
         target.parent?.let {
             deployX.enableFatJar = false
+            deployX.outputMod = false
         }
         @DisableIfWithout("java")
         val dexJar = tasks.register<DexJar>("dexJar") {

@@ -53,3 +53,7 @@ runMindustry {
 mindustryAssets {
     root at "$projectDir/assets"
 }
+deployMod {
+    outputMod = true
+}
+

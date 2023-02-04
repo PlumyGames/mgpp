@@ -19,6 +19,3 @@ runMindustry {
         official(version = "v141.3")
     }
 }
-mindustry {
-    isLib = true
-}
