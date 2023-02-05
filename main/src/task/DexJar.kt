@@ -62,7 +62,7 @@ open class DexJar : DefaultTask() {
                 // searching for the `android.jar` in Android SDK Path
                 (sdkRootDir.resolve("build-tools").listFiles() ?: emptyArray()).sorted().reversed()
                     .platformFindD8()
-                    ?: throw GradleException("No d8 found. Ensure that you have an Android build-tools installed.")
+                    ?: throw GradleException("d8 not found. Ensure that you have an Android build-tools installed.")
             }
             d8 = d8File.absolutePath
         }

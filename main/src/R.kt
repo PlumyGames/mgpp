@@ -98,42 +98,71 @@ object R {
         const val defaultArc = "v141.3"
     }
 
-    /**
-     * [Mindustry official release](https://github.com/Anuken/Mindustry/releases)
-     */
-    const val MindustryOfficialReleaseURL = "https://github.com/Anuken/Mindustry/releases"
-    /**
-     * GitHub API of [Mindustry official release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
-     */
-    const val APIMindustryOfficialReleaseURL = "https://api.github.com/repos/Anuken/Mindustry/releases"
-    /**
-     * GitHub API of [Latest Mindustry official release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
-     */
-    const val APIMindustryOfficialLatestReleaseURL = "https://api.github.com/repos/Anuken/Mindustry/releases/latest"
-    /**
-     * GitHub API of [Mindustry bleeding-edge release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
-     */
-    const val APIMindustryBEReleaseURL = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
-    /**
-     * GitHub API of [Latest Mindustry bleeding-edge release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
-     */
-    const val APIMindustryBELatestReleaseURL = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
-    /**
-     * [Arc tags](https://github.com/Anuken/Arc/tags)
-     */
-    const val ArcTagURL = "https://api.github.com/repos/Anuken/arc/tags"
-    /**
-     * [An *Anime* cat](https://github.com/Anuken)
-     */
-    const val anuken = "anuken"
-    /**
-     * [Mindustry game](https://github.com/Anuken/Mindustry)
-     */
-    const val mindustry = "Mindustry"
-    /**
-     * [Mindustry bleeding-edge](https://github.com/Anuken/MindustryBuilds)
-     */
-    const val mindustryBuilds = "MindustryBuilds"
+    object github {
+        /**
+         * [An *Anime* cat](https://github.com/Anuken)
+         */
+        const val anuken = "anuken"
+        /**
+         * [Mindustry game](https://github.com/Anuken/Mindustry)
+         */
+        const val mindustry = "Mindustry"
+        /**
+         * [Mindustry bleeding-edge](https://github.com/Anuken/MindustryBuilds)
+         */
+        const val mindustryBuilds = "MindustryBuilds"
+
+        object tag {
+            /**
+             * [Mindustry official release](https://github.com/Anuken/Mindustry/releases)
+             */
+            const val release = "https://github.com/Anuken/Mindustry/releases"
+            /**
+             * GitHub API of [Mindustry official release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+             */
+            const val releaseAPI = "https://api.github.com/repos/Anuken/Mindustry/releases"
+            /**
+             * GitHub API of [Latest Mindustry official release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+             */
+            const val latestReleaseAPI = "https://api.github.com/repos/Anuken/Mindustry/releases/latest"
+            /**
+             * GitHub API of [Mindustry bleeding-edge release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+             */
+            const val beReleaseAPI = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+            /**
+             * GitHub API of [Latest Mindustry bleeding-edge release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
+             */
+            const val beLatestReleaseAPI = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+            /**
+             * [Arc tags](https://github.com/Anuken/Arc/tags)
+             */
+            const val arc = "https://api.github.com/repos/Anuken/arc/tags"
+
+            /**
+             * [The GitHub API to fetch the latest commit of mirror](https://github.com/Anuken/MindustryJitpack/commits/main)
+             */
+            const val mirrorLatestCommit = "https://api.github.com/repos/Anuken/MindustryJitpack/commits/main"
+            /**
+             * [The GitHub API to fetch the latest commit of arc](https://github.com/Anuken/Arc/commits/master)
+             */
+            const val arcLatestCommit = "https://api.github.com/repos/Anuken/Arc/commits/master"
+        }
+
+        object jitpack {
+            /**
+             * [The Mindustry repo on Jitpack](https://github.com/anuken/mindustry)
+             */
+            const val official = "com.github.anuken.mindustry"
+            /**
+             * [The mirror repo of Mindustry on Jitpack](https://github.com/anuken/mindustryjitpack)
+             */
+            const val mirror = "com.github.anuken.mindustryjitpack"
+            /**
+             * [The Arc repo on Jitpack](https://github.com/anuken/arc)
+             */
+            const val arc = "com.github.anuken.arc"
+        }
+    }
 
     object officialRelease {
         /**
@@ -145,26 +174,6 @@ object R {
          */
         const val server = "server-release.jar"
     }
-    /**
-     * [The Mindustry repo on Jitpack](https://github.com/anuken/mindustry)
-     */
-    const val MindustryJitpackRepo = "com.github.anuken.mindustry"
-    /**
-     * [The mirror repo of Mindustry on Jitpack](https://github.com/anuken/mindustryjitpack)
-     */
-    const val MindustryJitpackMirrorRepo = "com.github.anuken.mindustryjitpack"
-    /**
-     * [The GitHub API to fetch the latest commit of mirror](https://github.com/Anuken/MindustryJitpack/commits/main)
-     */
-    const val MindustryJitpackLatestCommit = "https://api.github.com/repos/Anuken/MindustryJitpack/commits/main"
-    /**
-     * [The GitHub API to fetch the latest commit of arc](https://github.com/Anuken/Arc/commits/master)
-     */
-    const val ArcLatestCommit = "https://api.github.com/repos/Anuken/Arc/commits/master"
-    /**
-     * [The Arc repo on Jitpack](https://github.com/anuken/arc)
-     */
-    const val ArcJitpackRepo = "com.github.anuken.arc"
 
     object mainClass {
         /**

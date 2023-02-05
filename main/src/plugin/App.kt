@@ -7,13 +7,10 @@ import io.github.liplum.dsl.afterEvaluateThis
 import io.github.liplum.dsl.getOrCreate
 import io.github.liplum.dsl.register
 import io.github.liplum.mindustry.*
-import io.github.liplum.mindustry.LocalProperties.localProperties
-import io.github.liplum.mindustry.task.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.JavaPlugin
-import java.io.File
 
 /**
  * For downloading and running game.

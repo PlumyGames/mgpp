@@ -85,15 +85,12 @@ class MindustryJavaPlugin : Plugin<Project> {
     }
 }
 /**
- * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
+ * Provides the existing [dexJar][DexJar] task.
  */
 val TaskContainer.`dexJar`: TaskProvider<DexJar>
     get() = named<DexJar>(R.task.dexJar)
 /**
- * Provides the existing [compileGroovy][org.gradle.api.tasks.compile.GroovyCompile] task.
+ * Provides the existing [deployMod][Jar] task.
  */
 val TaskContainer.`deploy`: TaskProvider<Jar>
     get() = named<Jar>(R.task.deployMod)
-/**
- * For generating resource class.
- */

@@ -15,7 +15,7 @@ data class LatestCache(
 internal
 inline fun Project.fetchLatestVersion(
     type: String,
-    outOfDate: Long = Mgpp.outOfDataTime,
+    outOfDate: Long = R.outOfDataTime,
     fetch: () -> String,
 ): String {
     val mindustry = rootProject.buildDir.resolve("mindustry")

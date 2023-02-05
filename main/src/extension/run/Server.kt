@@ -5,11 +5,8 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.mindustry.*
-import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
-import org.gradle.api.plugins.ExtensionAware
-import java.io.File
 
 class Server(name: String, isAnonymous: Boolean) : Common(name, isAnonymous)
 
@@ -20,8 +17,8 @@ class AddServerSpec(
 
     override fun official(version: String) {
         github(
-            user = R.anuken,
-            repo = R.mindustry,
+            user = R.github.anuken,
+            repo = R.github.mindustry,
             tag = version,
             file = R.officialRelease.server,
         )
@@ -36,8 +33,8 @@ class AddServerSpec(
 
     override fun be(version: String) {
         github(
-            user = R.anuken,
-            repo = R.mindustryBuilds,
+            user = R.github.anuken,
+            repo = R.github.mindustryBuilds,
             tag = version,
             file = "Mindustry-BE-Server-$version.jar",
         )

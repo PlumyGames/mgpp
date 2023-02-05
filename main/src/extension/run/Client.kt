@@ -17,8 +17,8 @@ class AddClientSpec(
 
     override fun official(version: String) {
         github(
-            user = R.anuken,
-            repo = R.mindustry,
+            user = R.github.anuken,
+            repo = R.github.mindustry,
             tag = version,
             file = R.officialRelease.client,
         )
@@ -33,8 +33,8 @@ class AddClientSpec(
 
     override fun be(version: String) {
         github(
-            user = R.anuken,
-            repo = R.mindustryBuilds,
+            user = R.github.anuken,
+            repo = R.github.mindustryBuilds,
             tag = version,
             file = "Mindustry-BE-Desktop-$version.jar",
         )

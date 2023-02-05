@@ -4,7 +4,39 @@ import arc.util.serialization.Jval
 import io.github.liplum.dsl.prop
 import org.gradle.api.GradleException
 import org.gradle.api.Project
+import java.io.Serializable
 import java.net.URL
+
+interface IDependency : Serializable {
+    fun isAvailable(module: String): Boolean = true
+    fun resolve(module: String): String
+}
+
+inline fun IDependency.whenAvailable(
+    module: String, func: (String) -> Unit,
+) {
+    if (isAvailable(module))
+        func(resolve(module))
+}
+
+data class MirrorJitpackDependency(
+    var fullName: String = "",
+    var version: String = "",
+) : IDependency {
+    override fun isAvailable(module: String) =
+        module == "server" || module == "core"
+
+    override fun resolve(module: String) =
+        "$fullName:$module:$version"
+}
+
+data class Dependency(
+    var fullName: String = "",
+    var version: String = "",
+) : IDependency {
+    override fun resolve(module: String) =
+        "$fullName:$module:$version"
+}
 
 /**
  * You can configure the dependencies of Mindustry and Arc.
@@ -133,7 +165,7 @@ class DependencySpec(
     fun mindustryLatestRelease() {
         val latestVersion = target.fetchLatestVersion("mindustry-release-dependency") {
             try {
-                val url = URL(Mgpp.APIMindustryOfficialLatestReleaseURL)
+                val url = URL(R.github.tag.latestReleaseAPI)
                 val json = Jval.read(url.readText())
                 return@fetchLatestVersion json.getString("tag_name")
             } catch (e: Exception) {
@@ -151,7 +183,7 @@ class DependencySpec(
     fun mindustryMirrorLatestCommit() {
         val latestVersion = target.fetchLatestVersion("mindustry-mirror-commit-dependency") {
             try {
-                val url = URL(Mgpp.MindustryJitpackLatestCommit)
+                val url = URL(R.github.tag.mirrorLatestCommit)
                 val json = Jval.read(url.readText())
                 val fullSha = json.getString("sha")
                 return@fetchLatestVersion fullSha.subSequence(0, 10).toString()
@@ -170,7 +202,7 @@ class DependencySpec(
     fun arcLatestCommit() {
         val latestVersion = target.fetchLatestVersion("arc-commit-dependency") {
             try {
-                val url = URL(Mgpp.ArcLatestCommit)
+                val url = URL(R.github.tag.arcLatestCommit)
                 val json = Jval.read(url.readText())
                 val fullSha = json.getString("sha")
                 return@fetchLatestVersion fullSha.subSequence(0, 10).toString()
@@ -189,7 +221,7 @@ class DependencySpec(
     fun arcLatestTag() {
         val latestVersion = target.fetchLatestVersion("arc-tag-dependency") {
             try {
-                val url = URL(Mgpp.ArcTagURL)
+                val url = URL(R.github.tag.arc)
                 val json = Jval.read(url.readText())
                 val all = json.asArray()
                 val latestTag = all.get(0) // the latest tag
@@ -202,21 +234,21 @@ class DependencySpec(
         arc(latestVersion)
     }
 
-    val ArcRepo = Mgpp.ArcJitpackRepo
-    val MindustryMirrorRepo = Mgpp.MindustryJitpackMirrorRepo
-    val MindustryRepo = Mgpp.MindustryJitpackRepo
+    val arcRepo get() = R.github.jitpack.arc
+    val mindustryMirrorRepo get() = R.github.jitpack.mirror
+    val mindustryRepo get() = R.github.jitpack.official
     /**
      * Declare an Arc dependency from [arc jitpack](https://github.com/Anuken/Arc).
      */
     fun ArcDependency(
         version: String = R.version.defaultOfficial,
-    ) = Dependency(Mgpp.ArcJitpackRepo, version)
+    ) = Dependency(arcRepo, version)
     /**
      * Declare a Mindustry dependency from [mindustry jitpack](https://github.com/Anuken/Mindustry).
      */
     fun MindustryDependency(
         version: String = R.version.defaultOfficial,
-    ) = Dependency(Mgpp.MindustryJitpackRepo, version)
+    ) = Dependency(mindustryRepo, version)
     /**
      * Declare a dependency.
      */
@@ -229,7 +261,7 @@ class DependencySpec(
      */
     fun MirrorDependency(
         version: String = "",
-    ) = MirrorJitpackDependency(Mgpp.MindustryJitpackMirrorRepo, version)
+    ) = MirrorJitpackDependency(mindustryMirrorRepo, version)
     /**
      * To configure Arc dependency
      */
@@ -248,7 +280,7 @@ class DependencySpec(
          * - [latestTag]: set the [arcDependency] to the latest tag
          */
         infix fun on(notation: Notation) {
-            when(notation) {
+            when (notation) {
                 Notation.latest -> arcLatestCommit()
                 Notation.latestRelease -> arcLatestTag()
                 else -> throw GradleException("Unknown dependency notation of arc $notation")
@@ -291,7 +323,7 @@ class DependencySpec(
          * - [latest]: set the [mindustryDependency] to the latest jitpack mirror commit
          */
         infix fun mirror(notation: Notation) {
-            when(notation) {
+            when (notation) {
                 Notation.latest -> mindustryMirrorLatestCommit()
                 else -> throw GradleException("Unknown dependency notation of mindustry mirror $notation")
             }

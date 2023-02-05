@@ -58,9 +58,9 @@ open class MindustryExtension(
      * 1 hour as default.
      */
     var outOfDateTime: Int
-        get() = (MindustryPlugin.outOfDataTime / 1000).toInt()
+        get() = (R.outOfDataTime / 1000).toInt()
         set(value) {
-            MindustryPlugin.outOfDataTime = value * 1000L
+            R.outOfDataTime = value * 1000L
         }
     val _projectType = target.prop<ProjectType>().apply {
         convention(ProjectType.Mod)
