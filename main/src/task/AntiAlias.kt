@@ -1,12 +1,10 @@
-package io.github.liplum.mindustry.task
+package io.github.liplum.mindustry
 
 import arc.files.Fi
 import arc.graphics.Color
 import arc.graphics.Pixmap
 import io.github.liplum.dsl.dirProp
 import io.github.liplum.dsl.new
-import io.github.liplum.mindustry.FileFilter
-import io.github.liplum.mindustry.R
 import org.gradle.api.Action
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection

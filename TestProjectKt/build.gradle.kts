@@ -1,5 +1,4 @@
 import io.github.liplum.mindustry.*
-import io.github.liplum.mindustry.task.AntiAlias
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -109,7 +108,7 @@ mindustryAssets {
 
 tasks.antiAlias {
     sourceDirectory.set(rootDir.resolve("sprites-raw"))
-    destinationDirectory.set(rootDir.resolve("sprites"))
+    destinationDirectory.set(mindustryAssets.assetsRoot.get().resolve("sprites"))
     addFilter {
         it.name != "sender.png"
     }

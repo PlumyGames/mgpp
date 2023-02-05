@@ -1,4 +1,4 @@
-package io.github.liplum.mindustry.task
+package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
 import io.github.liplum.mindustry.R

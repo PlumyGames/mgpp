@@ -86,7 +86,7 @@ dexJar {
 mindustryAssets {
     rootAt "$rootDir/assets"
 }
-antiAlias {
+tasks.register('antiAlias', io.github.liplum.mindustry.AntiAlias) {
     sourceDirectory = new File(rootDir, 'assets/sprites')
     destinationDirectory = new File(rootDir, 'AA')
     addFilter {

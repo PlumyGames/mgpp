@@ -1,6 +1,5 @@
-package io.github.liplum.mindustry.task
+package io.github.liplum.mindustry
 
-import io.github.liplum.mindustry.SharedCache
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 

@@ -4,7 +4,6 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
 import io.github.liplum.mindustry.*
-import io.github.liplum.mindustry.task.DexJar
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project

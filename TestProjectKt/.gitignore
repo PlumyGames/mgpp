@@ -1,5 +1,5 @@
 /build
 /.gradle
 /.idea
-/sprites
+/assets/sprites/
 /local.properties

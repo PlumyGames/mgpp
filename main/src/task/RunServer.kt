@@ -1,4 +1,4 @@
-package io.github.liplum.mindustry.task
+package io.github.liplum.mindustry
 
 import org.gradle.api.tasks.*
 
