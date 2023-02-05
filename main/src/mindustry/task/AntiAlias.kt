@@ -6,6 +6,7 @@ import arc.graphics.Pixmap
 import io.github.liplum.dsl.dirProp
 import io.github.liplum.dsl.new
 import io.github.liplum.mindustry.FileFilter
+import io.github.liplum.mindustry.R
 import org.gradle.api.Action
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.ConfigurableFileCollection
@@ -32,6 +33,10 @@ open class AntiAlias : DefaultTask() {
         @Internal get
     val options: AntiAliasingOptions = new()
         @Input @Optional get
+
+    init {
+        group = R.taskGroup.mindustry
+    }
     @TaskAction
     fun process(inputs: InputChanges) {
         if (options.isIncremental && inputs.isIncremental) {

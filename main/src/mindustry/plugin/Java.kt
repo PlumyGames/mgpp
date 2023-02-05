@@ -22,19 +22,11 @@ class MindustryJavaPlugin : Plugin<Project> {
         if (!plugins.hasPlugin<JavaPlugin>()) {
             throw GradleException("${MindustryJavaPlugin::class.java} requires `java` plugin applied.")
         }
-        val ex = extensions.getOrCreate<MindustryExtension>(
-            R.x.mindustry
-        )
-        val deployX = extensions.getOrCreate<DeployModExtension>(
-            R.x.deployMod
-        )
-        parent?.let {
-            // disable those if current project is subproject.
-            deployX.enableFatJar = false
-            deployX.outputMod = false
-        }
-        val dexJar = tasks.register<DexJar>("dexJar") {
-            dependsOn("jar")
+        val ex = extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
+        val deployX = extensions.getOrCreate<DeployModExtension>(R.x.deployMod)
+        val assets = extensions.getOrCreate<MindustryAssetsExtension>(R.x.mindustryAssets)
+        val dexJar = tasks.register<DexJar>(R.task.dexJar) {
+            dependsOn(JavaPlugin.JAR_TASK_NAME)
             group = R.taskGroup.mindustry
             dependsOn(JavaPlugin.JAR_TASK_NAME)
             classpath.from(
@@ -69,6 +61,18 @@ class MindustryJavaPlugin : Plugin<Project> {
                             if (it.isDirectory) it else zipTree(it)
                         }
                     )
+                }
+            }
+            if (deployX.outputMod) {
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    from(assets.assetsRoot)
+                }
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    from(assets._icon)
+                }
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    dependsOn(R.task.genModHjson)
+                    from(tasks.getByPath(R.task.genModHjson))
                 }
             }
         }

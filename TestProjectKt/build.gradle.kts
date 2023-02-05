@@ -107,7 +107,7 @@ mindustryAssets {
 
 }
 
-tasks.named<AntiAlias>("antiAlias") {
+tasks.antiAlias {
     sourceDirectory.set(rootDir.resolve("sprites-raw"))
     destinationDirectory.set(rootDir.resolve("sprites"))
     addFilter {

@@ -20,6 +20,13 @@ class MindustryPlugin : Plugin<Project> {
         val ex = extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(R.x.mindustryAssets)
         val run = extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)
+        val deployX = extensions.getOrCreate<DeployModExtension>(R.x.deployMod)
+
+        parent?.let {
+            // disable those if current project is subproject.
+            deployX.enableFatJar = false
+            deployX.outputMod = false
+        }
         /**
          * Handle [InheritFromParent].
          * Because they're initialized at the [Plugin.apply] phase, the user-code will overwrite them if it's possible.
@@ -33,17 +40,13 @@ class MindustryPlugin : Plugin<Project> {
         }
         // Register this for dynamically configure tasks without class reference in groovy.
         // Eagerly configure this task in order to be added into task group in IDE
-        tasks.register<AntiAlias>("antiAlias") {
-            group = R.taskGroup.mindustry
-        }.get()
+
         tasks.register<ModHjsonGenerate>(R.task.genModHjson) {
             group = R.taskGroup.mindustry
             modMeta.set(ex._modMeta)
             outputHjson.set(temporaryDir.resolve("mod.hjson"))
         }
-        // TODO: Redesign this
         if (plugins.hasPlugin<JavaPlugin>()) {
-            plugins.apply<MindustryAssetPlugin>()
             plugins.apply<MindustryJavaPlugin>()
         } else {
             plugins.apply<MindustryJsonPlugin>()
@@ -121,29 +124,22 @@ class MindustryPlugin : Plugin<Project> {
          * [The Arc repo on Jitpack](https://github.com/anuken/arc)
          */
         const val ArcJitpackRepo = "com.github.anuken.arc"
-        /**
-         * An empty folder for null-check
-         */
-        @JvmStatic
-        val DefaultEmptyFile = File("")
     }
 }
 /**
  * Provides the existing `antiAlias`: [AntiAlias] task.
  */
 val TaskContainer.`antiAlias`: TaskProvider<AntiAlias>
-    get() = named<AntiAlias>("antiAlias")
+    get() = runCatching {
+        named<AntiAlias>(R.task.antiAlias)
+    }.getOrElse {
+        register<AntiAlias>(R.task.antiAlias)
+    }
 /**
  * Provides the existing `genModHjson`: [ModHjsonGenerate] task.
  */
 val TaskContainer.`genModHjson`: TaskProvider<ModHjsonGenerate>
     get() = named<ModHjsonGenerate>(R.task.genModHjson)
-
-fun String?.addAngleBracketsIfNeed(): String? =
-    if (this == null) null
-    else if (startsWith("<") && endsWith(">")) this
-    else "<$this>"
-
 
 inline fun safeRun(func: () -> Unit) {
     try {

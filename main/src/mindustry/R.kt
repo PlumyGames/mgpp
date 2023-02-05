@@ -54,6 +54,7 @@ object R {
         const val genModHjson = "genModHjson"
         const val deployMod = "deployMod"
         const val dexJar = "dexJar"
+        const val antiAlias = "antiAlias"
     }
 
     /**
