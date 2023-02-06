@@ -75,13 +75,6 @@ class MindustryJavaPlugin : Plugin<Project> {
                 }
             }
         }
-        // Set the convention to ex._deploy
-        deployX._baseName.convention(provider {
-            ex._modMeta.get().name
-        })
-        deployX._version.convention(provider {
-            ex._modMeta.get().version
-        })
     }
 }
 /**

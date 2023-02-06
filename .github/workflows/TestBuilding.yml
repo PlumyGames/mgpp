@@ -61,6 +61,7 @@ jobs:
             TestProjectGroovy/build/deployMod/*.jar
             TestProjectKt/build/deployMod/*.jar
             TestMultiproject/main/build/deployMod/*.jar
+            TestMultiproject/main/build/libs/*.zip
 
   build-mac:
     runs-on: macos-latest

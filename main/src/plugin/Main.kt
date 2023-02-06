@@ -47,6 +47,13 @@ class MindustryPlugin : Plugin<Project> {
         } else {
             plugins.apply<MindustryJsonPlugin>()
         }
+        // Set the convention to ex._deploy
+        deployX._baseName.convention(provider {
+            ex._modMeta.get().name
+        })
+        deployX._version.convention(provider {
+            ex._modMeta.get().version
+        })
         plugins.apply<MindustryAppPlugin>()
         GroovyBridge.attach(target)
     }
