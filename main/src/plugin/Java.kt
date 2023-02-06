@@ -70,7 +70,6 @@ class MindustryJavaPlugin : Plugin<Project> {
                     from(assets._icon)
                 }
                 tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                    dependsOn(R.task.genModHjson)
                     from(tasks.getByPath(R.task.genModHjson))
                 }
             }

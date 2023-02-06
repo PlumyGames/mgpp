@@ -45,6 +45,7 @@ mindustry {
 runMindustry {
     addModpack {
         fromTask(path = ":core:jar")
+        fromTask(path = ":js:zipMod")
     }
     addClient {
         official(version = "v141.3")

@@ -175,6 +175,6 @@ inline fun <reified T : Any?> meta(): ReadWriteProperty<ModMeta, T> =
         }
 
         override fun setValue(thisRef: ModMeta, property: KProperty<*>, value: T) {
-            thisRef.info[property.name] = value as Any
+            thisRef.info[property.name] = value
         }
     }

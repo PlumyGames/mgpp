@@ -13,9 +13,10 @@ import org.gradle.api.tasks.bundling.Zip
  */
 class MindustryJsonPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
+        val x = extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(R.x.mindustryAssets)
         val deployX = extensions.getOrCreate<DeployModExtension>(R.x.deployMod)
-        tasks.register<Zip>(R.task.packModZip) {
+        tasks.register<Zip>(R.task.zipMod) {
             this.group = R.taskGroup.mindustry
             from(assets.assetsRoot)
             from(assets._icon)
@@ -25,10 +26,15 @@ class MindustryJsonPlugin : Plugin<Project> {
             archiveClassifier.set(deployX._classifier)
             destinationDirectory.set(layout.buildDirectory.dir("libs"))
         }
+        x.modMeta {
+            // json or js mod doesn't have a main class
+            main = null
+            java = false
+        }
     }
 }
 /**
- * Provides the existing [packModZip][Zip] task.
+ * Provides the existing [zipMod][Zip] task.
  */
-val TaskContainer.`packModZip`: TaskProvider<Zip>
-    get() = named<Zip>(R.task.packModZip)
+val TaskContainer.`zipMod`: TaskProvider<Zip>
+    get() = named<Zip>(R.task.zipMod)

@@ -73,7 +73,7 @@ class MindustryAppPlugin : Plugin<Project> {
                     mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
                 }
                 if (proj.plugins.hasPlugin<MindustryJsonPlugin>()) {
-                    mods.from(proj.tasks.getByPath(R.task.packModZip))
+                    mods.from(proj.tasks.getByPath(R.task.zipMod))
                 }
             }
         }
@@ -114,7 +114,7 @@ class MindustryAppPlugin : Plugin<Project> {
                     mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
                 }
                 if (proj.plugins.hasPlugin<MindustryJsonPlugin>()) {
-                    mods.from(proj.tasks.getByPath(R.task.packModZip))
+                    mods.from(proj.tasks.getByPath(R.task.zipMod))
                 }
             }
         }

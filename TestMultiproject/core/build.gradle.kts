@@ -10,7 +10,15 @@ repositories {
     mindustryRepo()
     mavenCentral()
 }
-
+mindustry {
+    modMeta {
+        displayName = "Core Mod"
+        main = "plumy.test.CoreMod"
+    }
+}
+deployMod {
+    outputMod = true
+}
 dependencies {
     importMindustry()
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
