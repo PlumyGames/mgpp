@@ -1,7 +1,9 @@
+@file:Suppress("SpellCheckingInspection")
+
 package io.github.liplum.mindustry
 
 import groovy.json.JsonOutput
-import io.github.liplum.dsl.toMap
+import io.github.liplum.dsl.toMutableMap
 import org.hjson.JsonObject
 import org.hjson.Stringify
 import java.io.File
@@ -12,11 +14,10 @@ import kotlin.reflect.KProperty
 /**
  * It represents the `mod.(h)json`.
  */
-data class ModMeta(
-    val info: HashMap<String, Any?>,
+class ModMeta private constructor(
+    val info: MutableMap<String, Any?>,
 ) : Serializable {
-    constructor() : this(HashMap<String, Any?>().setDefaultValue())
-    constructor(info: Map<String, Any?>) : this(HashMap(info).setDefaultValue())
+
     constructor(
         name: String = default("name"),
         displayName: String = default("displayName"),
@@ -39,25 +40,23 @@ data class ModMeta(
         /** since Mindustry v138 */
         pregenerated: Boolean = default("pregenerated"),
     ) : this(
-        HashMap(
-            mapOf(
-                "name" to name,
-                "displayName" to displayName,
-                "author" to author,
-                "description" to description,
-                "subtitle" to subtitle,
-                "version" to version,
-                "main" to main,
-                "minGameVersion" to minGameVersion,
-                "repo" to repo,
-                "dependencies" to dependencies,
-                "hidden" to hidden,
-                "java" to java,
-                "hideBrowser" to hideBrowser,
-                "keepOutlines" to keepOutlines,
-                "texturescale" to texturescale,
-                "pregenerated" to pregenerated,
-            )
+        mutableMapOf(
+            "name" to name,
+            "displayName" to displayName,
+            "author" to author,
+            "description" to description,
+            "subtitle" to subtitle,
+            "version" to version,
+            "main" to main,
+            "minGameVersion" to minGameVersion,
+            "repo" to repo,
+            "dependencies" to dependencies,
+            "hidden" to hidden,
+            "java" to java,
+            "hideBrowser" to hideBrowser,
+            "keepOutlines" to keepOutlines,
+            "texturescale" to texturescale,
+            "pregenerated" to pregenerated,
         )
     )
     /** For Kotlin */
@@ -116,15 +115,15 @@ data class ModMeta(
         fun <T> default(key: String): T =
             defaultMeta[key] as T
         @JvmStatic
-        fun by(vararg metas: Map.Entry<String, Any>) =
-            ModMeta(metas.associate { Pair(it.key, it.value) })
+        fun by(vararg metas: Map.Entry<String, Any?>) =
+            ModMeta(HashMap(metas.associate { Pair(it.key, it.value) }).fillDefaultValue())
         @JvmStatic
-        fun by(vararg metas: Pair<String, Any>) =
-            ModMeta(metas.toMap())
+        fun by(vararg metas: Pair<String, Any?>) =
+            ModMeta(mutableMapOf(*metas).fillDefaultValue())
         @Suppress("UNCHECKED_CAST")
         @JvmStatic
         fun fromHjson(hjson: String): ModMeta =
-            ModMeta(JsonObject.readHjson(hjson).toMap() as Map<String, Any>)
+            ModMeta(JsonObject.readHjson(hjson).toMutableMap().fillDefaultValue())
         @JvmStatic
         fun fromHjson(file: File): ModMeta =
             runCatching {
@@ -135,7 +134,8 @@ data class ModMeta(
         fun ModMeta.toHjson(formatter: Stringify = Stringify.HJSON): String =
             JsonObject.readHjson(JsonOutput.toJson(info)).toString(formatter)
         @JvmStatic
-        fun HashMap<String, Any?>.setDefaultValue(): HashMap<String, Any?> {
+        internal
+        fun <T> T.fillDefaultValue(): T where T : MutableMap<String, Any?> {
             for ((dk, dv) in defaultMeta) {
                 this.putIfAbsent(dk, dv)
             }
@@ -160,7 +160,9 @@ var ModMeta.java: Boolean by meta()
 var ModMeta.hideBrowser: Boolean by meta()
 /** since Mindustry v136 */
 var ModMeta.keepOutlines: Boolean by meta()
+/** since Mindustry v138 */
 var ModMeta.texturescale: Float by meta()
+/** since Mindustry v138 */
 var ModMeta.pregenerated: Boolean by meta()
 inline fun <reified T : Any?> meta(): ReadWriteProperty<ModMeta, T> =
     object : ReadWriteProperty<ModMeta, T> {

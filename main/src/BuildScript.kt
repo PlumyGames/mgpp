@@ -35,11 +35,11 @@ fun Project.importMindustry() = afterEvaluateThis {
     val ex = extensions.getOrCreate<MindustryExtension>(
         R.x.mindustry
     )
-    val mdt = ex._dependency.mindustryDependency.get()
+    val mindustry = ex._dependency.mindustryDependency.get()
     val arc = ex._dependency.arcDependency.get()
     // Mindustry core
-    mdt.whenAvailable("core", ::addMindustry)
-    mdt.whenAvailable("server", ::addMindustry)
+    mindustry.whenAvailable("core", ::addMindustry)
+    mindustry.whenAvailable("server", ::addMindustry)
     // Arc
     arc.whenAvailable("arc-core", ::addMindustry)
 }
@@ -56,14 +56,14 @@ fun Project.importMindustry(configurationName: String) = afterEvaluateThis {
     val ex = extensions.getOrCreate<MindustryExtension>(
         R.x.mindustry
     )
-    val mdt = ex._dependency.mindustryDependency.get()
+    val mindustry = ex._dependency.mindustryDependency.get()
     val arc = ex._dependency.arcDependency.get()
     fun addSpecificDependency(dependencyNotation: String) {
         addDependency(configurationName, dependencyNotation)
     }
     // Mindustry core
-    mdt.whenAvailable("core", ::addSpecificDependency)
-    mdt.whenAvailable("server", ::addSpecificDependency)
+    mindustry.whenAvailable("core", ::addSpecificDependency)
+    mindustry.whenAvailable("server", ::addSpecificDependency)
     // Arc
     arc.whenAvailable("arc-core", ::addSpecificDependency)
 }

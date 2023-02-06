@@ -9,9 +9,17 @@ import kotlin.math.roundToInt
 
 fun JsonValue.toList(): List<Any?> =
     this.convert() as? List<Any?> ?: emptyList()
+
+@Suppress("UNCHECKED_CAST")
+fun JsonValue.toMutableList(): MutableList<Any?> =
+    this.convert() as? MutableList<Any?> ?: mutableListOf()
 @Suppress("UNCHECKED_CAST")
 fun JsonValue.toMap(): Map<String, Any?> =
     this.convert() as? Map<String, Any?> ?: emptyMap()
+
+@Suppress("UNCHECKED_CAST")
+fun JsonValue.toMutableMap(): MutableMap<String, Any?> =
+    this.convert() as? MutableMap<String, Any?> ?: mutableMapOf()
 
 fun JsonValue.convert(): Any? {
     return when (this.type) {
