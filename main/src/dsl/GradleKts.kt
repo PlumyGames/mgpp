@@ -8,6 +8,7 @@ import org.gradle.api.*
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.Directory
+import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.api.plugins.PluginContainer
 import org.gradle.api.provider.*
@@ -58,6 +59,9 @@ fun <reified T> Project.prop(): Property<T> =
 internal
 fun Project.dirProp(): DirProp =
     objects.directoryProperty()
+internal
+fun Project.sourceDirectorySet(name: String, displayName: String): SourceDirectorySet =
+    objects.sourceDirectorySet(name, displayName)
 internal
 fun Project.fileProp(): FileProp =
     objects.property(File::class.java)
