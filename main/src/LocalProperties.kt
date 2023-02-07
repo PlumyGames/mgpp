@@ -17,23 +17,9 @@ object LocalProperties {
     }
 
     val initialText = """
-        # Whether to keep all projects generate a fat jar
-        # options: `true`, `false` 
-        # mgpp.run.enableFatJar=false
-        
         # Overwrite the data directory when running Mindustry client
         # options: `default`, `temp` or a local folder 
         # mgpp.run.dataDir=
-        
-        # Whether to clear other files in your "Mindustry/mods" folder
-        # options: `true`, `false` 
-        # mgpp.run.forciblyClear=true
-        
-        # Overwrite your Mindustry client location to a local file
-        # mgpp.client.location=
-        
-        # Overwrite your Mindustry server location to a local file
-        # mgpp.server.location=
     """.trimIndent()
 
     private fun Project.load(): Properties {
