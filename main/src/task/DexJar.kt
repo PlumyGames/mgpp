@@ -15,8 +15,6 @@ open class DexJar : DefaultTask() {
         get
     val classpath = project.configurationFileCollection()
         @InputFiles get
-    val workingDir = project.fileProp()
-        @Optional @Input get
     val dexedJar = project.fileProp()
         @OutputFile get
     val options: DexJarOptions = new()
@@ -24,7 +22,6 @@ open class DexJar : DefaultTask() {
 
     init {
         dexedJar.convention(temporaryDir.resolve("dexed.jar"))
-        workingDir.convention(temporaryDir)
     }
     @TaskAction
     fun dex() {
@@ -33,7 +30,7 @@ open class DexJar : DefaultTask() {
         val dexedJarPath = dexedJarFile.absolutePath
         val jars = jarFiles.files
         // Check space in absolute path
-        val jarToDexPaths = jars.map { it.absolutePath }.toList()
+        val jarToDexPaths = jars.map { it.path }.toList()
         // TODO: Escape the space instead of exception
         if (" " in dexedJarPath) throw GradleException("d8 doesn't allow a path with any space but the dexed jar's path is \"$dexedJarFile\" .")
         for (jarPath in jarToDexPaths) {
@@ -81,7 +78,6 @@ open class DexJar : DefaultTask() {
         params.addAll(jarToDexPaths)
         project.exec {
             it.commandLine = params
-            it.workingDir = workingDir.get()
             it.standardOutput = System.out
             it.errorOutput = System.err
         }

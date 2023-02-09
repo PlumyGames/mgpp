@@ -17,9 +17,6 @@ object LocalProperties {
     }
 
     val initialText = """
-        # Overwrite the data directory when running Mindustry client
-        # options: `default`, `temp` or a local folder 
-        # mgpp.run.dataDir=
     """.trimIndent()
 
     private fun Project.load(): Properties {

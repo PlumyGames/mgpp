@@ -83,5 +83,5 @@ inline fun safeRun(func: () -> Unit) {
  * Provides the existing [resolveMods][ResolveMods] task.
  */
 val TaskContainer.`resolveMods`: TaskProvider<ResolveMods>
-    get() = named<ResolveMods>("resolveMods")
+    get() = named<ResolveMods>(R.task.resolveMods)
 

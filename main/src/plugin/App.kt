@@ -17,7 +17,7 @@ import org.gradle.api.plugins.JavaPlugin
  */
 class MindustryAppPlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        target.tasks.register<CleanMindustrySharedCache>("cleanMindustrySharedCache") {
+        target.tasks.register<CleanMindustrySharedCache>(R.task.cleanMindustrySharedCache) {
             group = BasePlugin.BUILD_GROUP
         }
         val runX = target.extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)

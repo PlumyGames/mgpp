@@ -22,8 +22,8 @@ import kotlin.math.min
 
 open class AntiAlias : DefaultTask() {
     val sourceDirectory = project.dirProp()
-        @InputDirectory get
-    val inputs: ConfigurableFileCollection = project.files()
+        @Incremental @InputDirectory get
+    val sourceFiles: ConfigurableFileCollection = project.files()
         @Incremental @InputFiles get
     val destinationDirectory = project.dirProp()
         @OutputDirectory get
@@ -75,7 +75,7 @@ open class AntiAlias : DefaultTask() {
         val destDir = destinationDirectory.asFile.get()
         this.stream().parallel().forEach {
             if (!it.extension.equals("png", ignoreCase = true)) {
-                logger.info("$it isn't a png.")
+                logger.info("$it is skipped.")
                 return@forEach
             }
             val relative = it.normalize().relativeTo(sourceRoot)
@@ -84,15 +84,15 @@ open class AntiAlias : DefaultTask() {
             if (!filters.isAccept(it)) {
                 if (to.exists()) {
                     to.delete()
-                    logger.info("${to.absolutePath} will be deleted due to filter.")
+                    logger.info("Deleted an ignored file ${to.absolutePath}.")
                 }
                 return@forEach
             }
-            logger.info("AntiAlias:${it.absolutePath} -> ${to.absolutePath}")
+            logger.info("[AntiAlias]${it.absolutePath} -> ${to.absolutePath}")
             try {
                 antiAliasing(it, to)
             } catch (e: Exception) {
-                logger.info("Can't anti alias ${it.absolutePath}", e)
+                logger.info("Can't anti-alias ${it.absolutePath}", e)
             }
         }
     }
@@ -108,11 +108,15 @@ open class AntiAlias : DefaultTask() {
     fun addFilter(filter: FileFilter) {
         filters += filter
     }
-    //For Kotlin
+    /**
+     * ### For Kotlin
+     */
     inline fun options(config: AntiAliasingOptions.() -> Unit) {
         options.config()
     }
-    // For Groovy
+    /**
+     * ### For Groovy
+     */
     fun options(config: Action<AntiAliasingOptions>) {
         config.execute(options)
     }
@@ -121,7 +125,6 @@ open class AntiAlias : DefaultTask() {
 open class AntiAliasingOptions : AbstractOptions() {
     var isIncremental = true
 }
-
 
 private fun Pixmap.getRGB(ix: Int, iy: Int): Int =
     getRaw(max(min(ix, width - 1), 0), max(min(iy, height - 1), 0))

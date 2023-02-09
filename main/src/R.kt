@@ -55,6 +55,8 @@ object R {
         const val deployMod = "deployMod"
         const val dexJar = "dexJar"
         const val antiAlias = "antiAlias"
+        const val cleanMindustrySharedCache = "cleanMindustrySharedCache"
+        const val resolveMods = "resolveMods"
     }
 
     /**
