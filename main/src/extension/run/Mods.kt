@@ -15,6 +15,7 @@ sealed interface IMod : Serializable
 sealed interface IDownloadableMod : IMod {
     val fileName: String
     fun resolveFile(writeIn: File)
+    fun isUpdateToDate(modFile: File): Boolean
 }
 
 /**
@@ -44,6 +45,11 @@ data class UrlMod(
     override fun resolveFile(writeIn: File) {
         url.copyTo(writeIn)
     }
+
+    override fun isUpdateToDate(modFile: File): Boolean {
+        if (!modFile.exists()) return false
+        return true
+    }
 }
 
 
@@ -70,6 +76,11 @@ data class GitHubMod(
             importPlainMod(repo, mainBranch, writeIn)
         }
     }
+
+    override fun isUpdateToDate(modFile: File): Boolean {
+        if (!modFile.exists()) return false
+        return true
+    }
 }
 
 data class GitHubJvmMod(
@@ -90,6 +101,11 @@ data class GitHubJvmMod(
             val url = release.getString("url")
             importJvmMod(url, writeIn)
         }
+    }
+
+    override fun isUpdateToDate(modFile: File): Boolean {
+        if (!modFile.exists()) return false
+        return true
     }
 }
 
@@ -131,6 +147,11 @@ data class GitHubPlainMod(
         val branch = if (!branch.isNullOrBlank()) branch
         else json.getString("default_branch")
         importPlainMod(repo, branch, writeIn)
+    }
+
+    override fun isUpdateToDate(modFile: File): Boolean {
+        if (!modFile.exists()) return false
+        return true
     }
 }
 

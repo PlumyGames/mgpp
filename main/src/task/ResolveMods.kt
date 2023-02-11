@@ -30,8 +30,7 @@ open class ResolveMods : DefaultTask() {
             if (mod is LocalMod) continue
             if (mod is IDownloadableMod) {
                 val modFile = getModFileOf(mod)
-                // TODO: skip if up-to-date
-                if(modFile.exists()) continue
+                if (mod.isUpdateToDate(modFile)) continue
                 try {
                     mod.resolveFile(writeIn = modFile)
                     logger.info("resolved $mod into ${modFile.absolutePath} .")
