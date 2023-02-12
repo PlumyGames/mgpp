@@ -32,7 +32,7 @@ fun URL.copyTo(file: File): File {
 }
 
 internal
-fun File.ensure(): File {
+fun File.ensureParentDir(): File {
     parentFile?.mkdirs()
     return this
 }

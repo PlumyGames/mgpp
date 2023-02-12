@@ -8,6 +8,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
 import java.io.File
+import kotlin.math.log
 
 open class ResolveMods : DefaultTask() {
     val mods = project.listProp<IMod>()
@@ -30,10 +31,10 @@ open class ResolveMods : DefaultTask() {
             if (mod is LocalMod) continue
             if (mod is IDownloadableMod) {
                 val modFile = getModFileOf(mod)
-                if (mod.isUpdateToDate(modFile)) continue
+                if (mod.isUpdateToDate(modFile, logger = logger)) continue
                 try {
-                    mod.resolveFile(writeIn = modFile)
-                    logger.info("resolved $mod into ${modFile.absolutePath} .")
+                    mod.resolveFile(writeIn = modFile, logger = logger)
+                    logger.info("resolved $mod into ${modFile.absolutePath}.")
                 } catch (e: Exception) {
                     // now mod is corrupted, delete it.
                     modFile.delete()

@@ -3,10 +3,14 @@ package io.github.liplum.mindustry
 import arc.util.serialization.Jval
 import io.github.liplum.dsl.*
 import org.gradle.api.GradleException
+import org.gradle.api.logging.Logger
 import java.io.File
 import java.io.Serializable
 import java.net.URL
+import kotlin.math.absoluteValue
 
+internal
+const val infoX = "info.json"
 /**
  * An abstract mod file.
  */
@@ -14,8 +18,8 @@ sealed interface IMod : Serializable
 
 sealed interface IDownloadableMod : IMod {
     val fileName: String
-    fun resolveFile(writeIn: File)
-    fun isUpdateToDate(modFile: File): Boolean
+    fun resolveFile(writeIn: File, logger: Logger? = null)
+    fun isUpdateToDate(modFile: File, logger: Logger? = null): Boolean
 }
 
 /**
@@ -42,18 +46,25 @@ data class UrlMod(
             return if (last.endsWith(".zip")) last else "$last.zip"
         }
 
-    override fun resolveFile(writeIn: File) {
+    override fun resolveFile(writeIn: File, logger: Logger?) {
         url.copyTo(writeIn)
     }
-
-    override fun isUpdateToDate(modFile: File): Boolean {
-        if (!modFile.exists()) return false
-        return true
+    /**
+     * It's impossible to validate up-to-date
+     */
+    override fun isUpdateToDate(modFile: File, logger: Logger?): Boolean {
+        return modFile.exists()
     }
 }
 
 
 fun String.repo2Path() = this.replace("/", "-")
+data class GihHubModDownloadMeta(
+    /**
+     * It's changed when the mod is updated or network error.
+     */
+    val lastUpdateTimestamp: Long
+)
 /**
  * A mod on GitHub.
  */
@@ -65,10 +76,11 @@ data class GitHubMod(
 ) : IDownloadableMod {
     override val fileName = repo.repo2Path() + ".zip"
 
-    override fun resolveFile(writeIn: File) {
+    override fun resolveFile(writeIn: File, logger: Logger?) {
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
         val json = Jval.read(jsonText)
         val lan = json.getString("language")
+        updateGitHubModUpdateToDate(modFile = writeIn, logger = logger)
         if (lan.isJvmMod()) {
             importJvmMod(repo, writeIn = writeIn)
         } else {
@@ -77,9 +89,67 @@ data class GitHubMod(
         }
     }
 
-    override fun isUpdateToDate(modFile: File): Boolean {
-        if (!modFile.exists()) return false
-        return true
+    override fun isUpdateToDate(modFile: File, logger: Logger?): Boolean {
+        return validateGitHubModUpdateToDate(modFile, logger = logger)
+    }
+}
+
+internal fun updateGitHubModUpdateToDate(
+    modFile: File,
+    newTimestamp: Long = System.currentTimeMillis(),
+    logger: Logger? = null,
+) {
+    val infoFi = File("$modFile.$infoX")
+    if (infoFi.isDirectory) {
+        infoFi.deleteRecursively()
+    }
+    val meta = GihHubModDownloadMeta(lastUpdateTimestamp = newTimestamp)
+    val json = gson.toJson(meta)
+    try {
+        infoFi.writeText(json)
+    } catch (e: Exception) {
+        logger?.warn("Can't write into \"info.json\"", e)
+    }
+}
+
+internal
+fun validateGitHubModUpdateToDate(
+    modFile: File,
+    logger: Logger? = null,
+): Boolean {
+    val infoFi = File("$modFile.$infoX")
+    if (!modFile.exists()) {
+        if (infoFi.exists()) infoFi.delete()
+        return false
+    }
+    val meta = tryReadGitHubModInfo(infoFi)
+    val curTime = System.currentTimeMillis()
+    // TODO: Configurable out-of-date time
+    return curTime - meta.lastUpdateTimestamp < R.outOfDataTime.absoluteValue
+}
+
+internal
+fun tryReadGitHubModInfo(infoFi: File, logger: Logger? = null): GihHubModDownloadMeta {
+    fun writeAndGetDefault(): GihHubModDownloadMeta {
+        val meta = GihHubModDownloadMeta(lastUpdateTimestamp = System.currentTimeMillis())
+        val infoContent = gson.toJson(meta)
+        try {
+            infoFi.ensureParentDir().writeText(infoContent)
+            logger?.info("[MGPP] $infoFi is created.")
+        } catch (e: Exception) {
+            logger?.warn("Can't write into \"info.json\"", e)
+        }
+        return meta
+    }
+    return if (infoFi.isFile) {
+        try {
+            val infoContent = infoFi.readText()
+            gson.fromJson(infoContent)
+        } catch (e: Exception) {
+            writeAndGetDefault()
+        }
+    } else {
+        writeAndGetDefault()
     }
 }
 
@@ -89,7 +159,8 @@ data class GitHubJvmMod(
 ) : IDownloadableMod {
     override val fileName = repo.repo2Path() + ".jar"
 
-    override fun resolveFile(writeIn: File) {
+    override fun resolveFile(writeIn: File, logger: Logger?) {
+        updateGitHubModUpdateToDate(modFile = writeIn, logger = logger)
         if (tag == null) {
             importJvmMod(repo, writeIn = writeIn)
         } else {
@@ -103,9 +174,8 @@ data class GitHubJvmMod(
         }
     }
 
-    override fun isUpdateToDate(modFile: File): Boolean {
-        if (!modFile.exists()) return false
-        return true
+    override fun isUpdateToDate(modFile: File, logger: Logger?): Boolean {
+        return validateGitHubModUpdateToDate(modFile, logger = logger)
     }
 }
 
@@ -141,7 +211,8 @@ data class GitHubPlainMod(
 ) : IDownloadableMod {
     override val fileName = linkString(separator = "-", repo.repo2Path(), branch) + ".zip"
 
-    override fun resolveFile(writeIn: File) {
+    override fun resolveFile(writeIn: File, logger: Logger?) {
+        updateGitHubModUpdateToDate(modFile = writeIn, logger = logger)
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
         val json = Jval.read(jsonText)
         val branch = if (!branch.isNullOrBlank()) branch
@@ -149,9 +220,8 @@ data class GitHubPlainMod(
         importPlainMod(repo, branch, writeIn)
     }
 
-    override fun isUpdateToDate(modFile: File): Boolean {
-        if (!modFile.exists()) return false
-        return true
+    override fun isUpdateToDate(modFile: File, logger: Logger?): Boolean {
+        return validateGitHubModUpdateToDate(modFile, logger = logger)
     }
 }
 

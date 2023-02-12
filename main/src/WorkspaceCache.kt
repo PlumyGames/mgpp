@@ -1,6 +1,6 @@
 package io.github.liplum.mindustry
 
-import io.github.liplum.dsl.ensure
+import io.github.liplum.dsl.ensureParentDir
 import io.github.liplum.dsl.fromJson
 import io.github.liplum.dsl.gson
 import org.gradle.api.Project
@@ -19,7 +19,7 @@ inline fun Project.fetchLatestVersion(
     fetch: () -> String,
 ): String {
     val mindustry = rootProject.buildDir.resolve("mindustry")
-    val jsonFile = mindustry.resolve("latest_cache.json").ensure()
+    val jsonFile = mindustry.resolve("latest_cache.json").ensureParentDir()
     val json = if (jsonFile.exists())
         jsonFile.readText()
     else "[]"
