@@ -26,19 +26,39 @@ open class ResolveMods : DefaultTask() {
     }
     @TaskAction
     fun resolve() {
-        // TODO: Expiration
         for (mod in mods.get()) {
             if (mod is LocalMod) continue
+            if (mod is IGitHubMod) {
+                val modFile = getModFileOf(mod)
+                if (modFile.exists()) {
+                    if (!mod.isUpdateToDate(modFile, logger = logger)) {
+                        try {
+                            mod.updateFile(modFile, logger = logger)
+                        } catch (e: Exception) {
+                            logger.warn("Failed to update $mod", e)
+                        }
+                    }
+                } else {
+                    // download the mod
+                    try {
+                        mod.resolveFile(writeIn = modFile, logger = logger)
+                        logger.info("resolved $mod at ${modFile.absolutePath}.")
+                    } catch (e: Exception) {
+                        // now mod is corrupted, delete it.
+                        modFile.delete()
+                        logger.warn("Failed to resolve $mod", e)
+                    }
+                }
+            }
             if (mod is IDownloadableMod) {
                 val modFile = getModFileOf(mod)
-                if (mod.isUpdateToDate(modFile, logger = logger)) continue
                 try {
                     mod.resolveFile(writeIn = modFile, logger = logger)
-                    logger.info("resolved $mod into ${modFile.absolutePath}.")
+                    logger.info("resolved $mod at ${modFile.absolutePath}.")
                 } catch (e: Exception) {
                     // now mod is corrupted, delete it.
                     modFile.delete()
-                    logger.warn("Can't resolve $mod", e)
+                    logger.warn("Failed to resolve $mod", e)
                 }
             }
         }

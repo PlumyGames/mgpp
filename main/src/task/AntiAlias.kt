@@ -92,7 +92,7 @@ open class AntiAlias : DefaultTask() {
             try {
                 antiAliasing(it, to)
             } catch (e: Exception) {
-                logger.info("Can't anti-alias ${it.absolutePath}", e)
+                logger.info("Failed to anti-alias ${it.absolutePath}", e)
             }
         }
     }

@@ -19,6 +19,10 @@ sealed interface IMod : Serializable
 sealed interface IDownloadableMod : IMod {
     val fileName: String
     fun resolveFile(writeIn: File, logger: Logger? = null)
+}
+
+sealed interface IGitHubMod : IDownloadableMod {
+    fun updateFile(writeIn: File, logger: Logger? = null)
     fun isUpdateToDate(modFile: File, logger: Logger? = null): Boolean
 }
 
@@ -49,12 +53,6 @@ data class UrlMod(
     override fun resolveFile(writeIn: File, logger: Logger?) {
         url.copyTo(writeIn)
     }
-    /**
-     * It's impossible to validate up-to-date
-     */
-    override fun isUpdateToDate(modFile: File, logger: Logger?): Boolean {
-        return modFile.exists()
-    }
 }
 
 
@@ -73,20 +71,26 @@ data class GitHubMod(
      * like "PlumyGames/mgpp"
      */
     val repo: String,
-) : IDownloadableMod {
+) : IGitHubMod {
     override val fileName = repo.repo2Path() + ".zip"
 
     override fun resolveFile(writeIn: File, logger: Logger?) {
+        updateGitHubModUpdateToDate(modFile = writeIn, logger = logger)
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
         val json = Jval.read(jsonText)
         val lan = json.getString("language")
-        updateGitHubModUpdateToDate(modFile = writeIn, logger = logger)
         if (lan.isJvmMod()) {
             importJvmMod(repo, writeIn = writeIn)
         } else {
             val mainBranch = json.getString("default_branch")
             importPlainMod(repo, mainBranch, writeIn)
         }
+    }
+
+    override fun updateFile(writeIn: File, logger: Logger?) {
+        val temp = File.createTempFile(repo.repo2Path(), "zip")
+        resolveFile(writeIn = temp, logger = logger)
+        temp.copyTo(writeIn)
     }
 
     override fun isUpdateToDate(modFile: File, logger: Logger?): Boolean {
@@ -108,7 +112,7 @@ internal fun updateGitHubModUpdateToDate(
     try {
         infoFi.writeText(json)
     } catch (e: Exception) {
-        logger?.warn("Can't write into \"info.json\"", e)
+        logger?.warn("Failed to write into \"info.json\"", e)
     }
 }
 
@@ -137,7 +141,7 @@ fun tryReadGitHubModInfo(infoFi: File, logger: Logger? = null): GihHubModDownloa
             infoFi.ensureParentDir().writeText(infoContent)
             logger?.info("[MGPP] $infoFi is created.")
         } catch (e: Exception) {
-            logger?.warn("Can't write into \"info.json\"", e)
+            logger?.warn("Failed to write into \"info.json\"", e)
         }
         return meta
     }
@@ -156,8 +160,9 @@ fun tryReadGitHubModInfo(infoFi: File, logger: Logger? = null): GihHubModDownloa
 data class GitHubJvmMod(
     val repo: String,
     val tag: String? = null,
-) : IDownloadableMod {
-    override val fileName = repo.repo2Path() + ".jar"
+) : IGitHubMod {
+    val fileNameWithoutExtension = linkString(separator = "-", repo.repo2Path(), tag)
+    override val fileName = "$fileNameWithoutExtension.jar"
 
     override fun resolveFile(writeIn: File, logger: Logger?) {
         updateGitHubModUpdateToDate(modFile = writeIn, logger = logger)
@@ -172,6 +177,12 @@ data class GitHubJvmMod(
             val url = release.getString("url")
             importJvmMod(url, writeIn)
         }
+    }
+
+    override fun updateFile(writeIn: File, logger: Logger?) {
+        val temp = File.createTempFile(fileNameWithoutExtension, "jar")
+        resolveFile(writeIn = temp, logger = logger)
+        temp.copyTo(writeIn)
     }
 
     override fun isUpdateToDate(modFile: File, logger: Logger?): Boolean {
@@ -198,7 +209,7 @@ fun importJvmMod(releaseEntryUrl: String, writeIn: File) {
         val url = asset.getString("browser_download_url")
         URL(url).copyTo(writeIn)
     } else {
-        throw GradleException("Can't find the mod.")
+        throw GradleException("Failed to find the mod.")
     }
 }
 private
@@ -208,8 +219,9 @@ fun importJvmMod(repo: String, tag: String = "latest", writeIn: File) {
 
 data class GitHubPlainMod(
     val repo: String, val branch: String? = null,
-) : IDownloadableMod {
-    override val fileName = linkString(separator = "-", repo.repo2Path(), branch) + ".zip"
+) : IGitHubMod {
+    val fileNameWithoutExtension = linkString(separator = "-", repo.repo2Path(), branch)
+    override val fileName = "$fileNameWithoutExtension.zip"
 
     override fun resolveFile(writeIn: File, logger: Logger?) {
         updateGitHubModUpdateToDate(modFile = writeIn, logger = logger)
@@ -218,6 +230,12 @@ data class GitHubPlainMod(
         val branch = if (!branch.isNullOrBlank()) branch
         else json.getString("default_branch")
         importPlainMod(repo, branch, writeIn)
+    }
+
+    override fun updateFile(writeIn: File, logger: Logger?) {
+        val temp = File.createTempFile(fileNameWithoutExtension, "zip")
+        resolveFile(writeIn = temp, logger = logger)
+        temp.copyTo(writeIn)
     }
 
     override fun isUpdateToDate(modFile: File, logger: Logger?): Boolean {

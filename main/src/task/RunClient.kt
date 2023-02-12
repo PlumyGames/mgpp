@@ -19,7 +19,7 @@ open class RunClient : RunMindustryAbstract() {
         } else {
             val default = resolveDefaultDataDir()
             if (default == null) {
-                logger.warn("Can't recognize your operation system and find corresponding Mindustry data directory.")
+                logger.warn("Failed to recognize your operation system and find corresponding Mindustry data directory.")
                 val temp = temporaryDir.resolve(name)
                 environment[R.env.mindustryDataDir] = temp.absoluteFile
                 temp

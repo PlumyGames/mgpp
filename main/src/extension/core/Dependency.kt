@@ -169,7 +169,7 @@ class DependencySpec(
                 val json = Jval.read(url.readText())
                 return@fetchLatestVersion json.getString("tag_name")
             } catch (e: Exception) {
-                target.logger.warn("Can't fetch the exact latest version of mindustry, so use ${R.version.defaultOfficial} instead")
+                target.logger.warn("Failed to fetch the exact latest version of mindustry, so use ${R.version.defaultOfficial} instead")
                 return@fetchLatestVersion R.version.defaultOfficial
             }
         }
@@ -188,7 +188,7 @@ class DependencySpec(
                 val fullSha = json.getString("sha")
                 return@fetchLatestVersion fullSha.subSequence(0, 10).toString()
             } catch (e: Exception) {
-                target.logger.warn("Can't fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
+                target.logger.warn("Failed to fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
                 return@fetchLatestVersion "-SNAPSHOT"
             }
         }
@@ -207,7 +207,7 @@ class DependencySpec(
                 val fullSha = json.getString("sha")
                 return@fetchLatestVersion fullSha.subSequence(0, 10).toString()
             } catch (e: Exception) {
-                target.logger.warn("Can't fetch the exact latest version of arc, so use -SNAPSHOT instead")
+                target.logger.warn("Failed to fetch the exact latest version of arc, so use -SNAPSHOT instead")
                 return@fetchLatestVersion "-SNAPSHOT"
             }
         }
@@ -227,7 +227,7 @@ class DependencySpec(
                 val latestTag = all.get(0) // the latest tag
                 return@fetchLatestVersion latestTag.getString("name")
             } catch (e: Exception) {
-                target.logger.warn("Can't fetch the exact latest version of arc, so use ${R.version.defaultArc} instead")
+                target.logger.warn("Failed to fetch the exact latest version of arc, so use ${R.version.defaultArc} instead")
                 return@fetchLatestVersion R.version.defaultArc
             }
         }

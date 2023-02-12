@@ -207,7 +207,7 @@ open class RunMindustryExtension(
         val modpackName = formatValidGradleName(name)
         if (modpackName.isBlank()) {
             proj.logger.warn(
-                "Modpack's name can't be blank, but \"$name\" is given. Any character other than [a-zA-Z0-9] will be ignored."
+                "Modpack's name Failed to be blank, but \"$name\" is given. Any character other than [a-zA-Z0-9] will be ignored."
             )
             return null
         }
