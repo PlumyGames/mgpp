@@ -180,9 +180,7 @@ data class GitHubJvmMod(
     }
 
     override fun updateFile(writeIn: File, logger: Logger?) {
-        val temp = File.createTempFile(fileNameWithoutExtension, "jar")
-        resolveFile(writeIn = temp, logger = logger)
-        temp.copyTo(writeIn)
+        resolveFile(writeIn = writeIn, logger = logger)
     }
 
     override fun isUpdateToDate(modFile: File, logger: Logger?): Boolean {
@@ -233,9 +231,7 @@ data class GitHubPlainMod(
     }
 
     override fun updateFile(writeIn: File, logger: Logger?) {
-        val temp = File.createTempFile(fileNameWithoutExtension, "zip")
-        resolveFile(writeIn = temp, logger = logger)
-        temp.copyTo(writeIn)
+        resolveFile(writeIn = writeIn, logger = logger)
     }
 
     override fun isUpdateToDate(modFile: File, logger: Logger?): Boolean {

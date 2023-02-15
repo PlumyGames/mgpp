@@ -32,11 +32,14 @@ open class ResolveMods : DefaultTask() {
                 val modFile = getModFileOf(mod)
                 if (modFile.exists()) {
                     if (!mod.isUpdateToDate(modFile, logger = logger)) {
+                        val temp = File.createTempFile(mod.fileName, null)
                         try {
-                            mod.updateFile(modFile, logger = logger)
+                            mod.updateFile(temp, logger = logger)
                         } catch (e: Exception) {
                             logger.warn("Failed to update $mod", e)
+                            continue
                         }
+                        temp.copyTo(modFile)
                     }
                 } else {
                     // download the mod
