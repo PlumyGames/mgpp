@@ -177,6 +177,13 @@ object R {
         const val server = "server-release.jar"
     }
 
+    object beRelease {
+        fun client(version: String) = "Mindustry-BE-Desktop-$version.jar"
+        fun client() = "Mindustry-BE-Desktop.jar"
+        fun server(version: String) = "Mindustry-BE-Server-$version.jar"
+        fun server() = "Mindustry-BE-Server.jar"
+    }
+
     object mainClass {
         /**
          * The main class of desktop launcher.

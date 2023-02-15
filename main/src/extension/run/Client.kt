@@ -26,7 +26,7 @@ class AddClientSpec(
 
     override fun official(version: Notation) {
         when (version) {
-            Notation.latest -> LatestOfficialMindustryLoc(file = R.officialRelease.client).checkAndSet()
+            Notation.latest -> LatestOfficialMindustryLoc(MindustryEnd.Client).checkAndSet()
             else -> proj.logger.log(LogLevel.WARN, "Version \"$version\" is unsupported")
         }
     }
@@ -42,7 +42,7 @@ class AddClientSpec(
 
     override fun be(version: Notation) {
         when (version) {
-            Notation.latest -> LatestBeMindustryLoc(file = "Mindustry-BE-Desktop-$version.jar").checkAndSet()
+            Notation.latest -> LatestMindustryBELoc(MindustryEnd.Client).checkAndSet()
             else -> proj.logger.log(LogLevel.WARN, "Version \"$version\" is unsupported")
         }
     }

@@ -1,5 +1,7 @@
 package io.github.liplum.mindustry
 
+import arc.util.serialization.Jval
+import org.gradle.api.GradleException
 import java.io.File
 import java.io.InputStream
 import java.io.Serializable
@@ -32,41 +34,75 @@ data class GitHubGameLoc(
     }
 }
 
+enum class MindustryEnd {
+    Client, Server
+}
+
 data class LatestOfficialMindustryLoc(
-    val file: String
+    val end: MindustryEnd
 ) : IGameLoc {
-    override val fileName: String
-        get() = TODO("Not yet implemented")
+    val fileBasename = when (end) {
+        MindustryEnd.Client -> R.officialRelease.client
+        MindustryEnd.Server -> R.officialRelease.server
+    }
+    override val fileName = "${R.github.anuken}-${R.github.mindustry}-latest-$fileBasename"
 
     override fun createDownloadLoc(): IDownloadLoc {
-        TODO("Not yet implemented")
+        val url = URL(R.github.tag.latestReleaseAPI)
+        val json = Jval.read(url.readText())
+        val version = json.getString("tag_name")
+            ?: throw GradleException("Failed to resolve latest version of official Mindustry.")
+        val delegate = GitHubGameLoc(
+            user = R.github.anuken,
+            repo = R.github.mindustry,
+            tag = version,
+            file = when (end) {
+                MindustryEnd.Client -> R.officialRelease.client
+                MindustryEnd.Server -> R.officialRelease.server
+            }
+        )
+        return delegate.createDownloadLoc()
     }
 
     override fun resolveOutputFile(): File {
-        TODO("Not yet implemented")
+        return SharedCache.gamesDir.resolve("github").resolve(fileName)
     }
 }
 
-data class LatestBeMindustryLoc(
-    val file: String
+data class LatestMindustryBELoc(
+    val end: MindustryEnd
 ) : IGameLoc {
-    override val fileName: String
-        get() = TODO("Not yet implemented")
+    val fileBasename = when (end) {
+        MindustryEnd.Client -> R.beRelease.client()
+        MindustryEnd.Server -> R.beRelease.server()
+    }
+    override val fileName = "${R.github.anuken}-${R.github.mindustryBuilds}-latest-$fileBasename"
 
     override fun createDownloadLoc(): IDownloadLoc {
-        TODO("Not yet implemented")
+        val url = URL(R.github.tag.beLatestReleaseAPI)
+        val json = Jval.read(url.readText())
+        val version = json.getString("tag_name")
+            ?: throw GradleException("Failed to resolve latest version of Mindustry Bleeding Edge.")
+        val delegate = GitHubGameLoc(
+            user = R.github.anuken,
+            repo = R.github.mindustryBuilds,
+            tag = version,
+            file = when (end) {
+                MindustryEnd.Client -> R.beRelease.client(version = version)
+                MindustryEnd.Server -> R.beRelease.server(version = version)
+            }
+        )
+        return delegate.createDownloadLoc()
     }
 
     override fun resolveOutputFile(): File {
-        TODO("Not yet implemented")
+        return SharedCache.gamesDir.resolve("github").resolve(fileName)
     }
 }
 
 data class LocalGameLoc(
     val file: File,
 ) : IGameLoc {
-    constructor(path: String) : this(File(path))
-
     override val fileName: String = file.name
     val localCopy = LocalCopy(file)
     override fun createDownloadLoc() = localCopy
