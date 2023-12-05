@@ -46,7 +46,7 @@ tasks.compileGroovy {
     classpath = sourceSets.main.get().compileClasspath
 }
 tasks.compileKotlin {
-    classpath += files(sourceSets.main.get().groovy.classesDirectory)
+    libraries.from(files(sourceSets.main.get().groovy.classesDirectory))
 }
 val pluginName: String by project
 sourceSets {
