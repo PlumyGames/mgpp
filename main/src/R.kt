@@ -81,23 +81,23 @@ object R {
     object version {
 
         /**
-         * [The default Mindustry version](https://github.com/Anuken/Mindustry/releases/tag/v141.3)
+         * [The default Mindustry version](https://github.com/Anuken/Mindustry/releases)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val defaultOfficial = "v141.3"
+        const val defaultOfficial = "v146"
         /**
-         * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases/tag/23786)
+         * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val defaultBE = "23786"
+        const val defaultBE = "24632"
         /**
-         * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v141.3)
+         * [The default Arc version](https://github.com/Anuken/Arc/releases/tag)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val defaultArc = "v141.3"
+        const val defaultArc = "v146"
     }
 
     object github {
