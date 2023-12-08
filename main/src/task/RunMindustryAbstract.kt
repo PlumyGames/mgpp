@@ -3,7 +3,6 @@ package io.github.liplum.mindustry
 import io.github.liplum.dsl.*
 import io.github.liplum.dsl.fileProp
 import io.github.liplum.dsl.stringsProp
-import io.github.liplum.mindustry.IDataDirLoc
 import org.gradle.api.tasks.*
 
 abstract class RunMindustryAbstract : JavaExec() {

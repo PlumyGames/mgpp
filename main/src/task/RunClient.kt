@@ -1,7 +1,6 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.R
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.*
 import java.io.File

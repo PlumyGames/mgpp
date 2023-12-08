@@ -1,11 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     kotlin("jvm")
     groovy
     `java-gradle-plugin`
     id("maven-publish")
-    id("com.gradle.plugin-publish") version "0.18.0"
+    id("com.gradle.plugin-publish") version "1.2.1"
     id("org.jetbrains.dokka") version "1.7.20"
 }
 group = "io.github.liplum.mgpp"
@@ -28,19 +26,17 @@ tasks.withType<Test>().configureEach {
     }
 }
 gradlePlugin {
+    website = "https://plumygames.github.io/mgpp/"
+    vcsUrl = "https://github.com/PlumyGames/mgpp"
     plugins {
         create("mgpp") {
             id = "io.github.liplum.mgpp"
             displayName = "mgpp"
             description = "For Mindustry modding in Java, kotlin and so on."
             implementationClass = "io.github.liplum.mindustry.MindustryPlugin"
+            tags = listOf("mindustry", "mindustry-mod", "mod")
         }
     }
-}
-pluginBundle {
-    website = "https://plumygames.github.io/mgpp/"
-    vcsUrl = "https://github.com/PlumyGames/mgpp"
-    tags = listOf("mindustry", "mindustry-mod", "mod")
 }
 tasks.compileGroovy {
     classpath = sourceSets.main.get().compileClasspath

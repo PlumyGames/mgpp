@@ -2,7 +2,6 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.fileProp
 import io.github.liplum.dsl.prop
-import io.github.liplum.mindustry.ModMeta
 import io.github.liplum.mindustry.ModMeta.Companion.toHjson
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input

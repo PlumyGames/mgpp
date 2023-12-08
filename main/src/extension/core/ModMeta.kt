@@ -120,7 +120,6 @@ class ModMeta private constructor(
         @JvmStatic
         fun by(vararg metas: Pair<String, Any?>) =
             ModMeta(mutableMapOf(*metas).fillDefaultValue())
-        @Suppress("UNCHECKED_CAST")
         @JvmStatic
         fun fromHjson(hjson: String): ModMeta =
             ModMeta(JsonObject.readHjson(hjson).toMutableMap().fillDefaultValue())

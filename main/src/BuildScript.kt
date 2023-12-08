@@ -10,7 +10,6 @@ import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
 import java.net.HttpURLConnection
 import java.net.URI
-import java.net.URL
 
 /**
  * Declare a maven repository of what Mindustry used.
@@ -72,7 +71,7 @@ fun Dependency.tryJitpackResolve(module: String): String? {
     // e.g.:com,github,anuken,arc
     // https://www.jitpack.io/com/github/anuken/arc/arc-core/v135.2/arc-core-v135.2.pom
     val pomUrl = "https://www.jitpack.io/${fullName.split(".").joinToString("/")}/$version/$module-$version.pom"
-    val u = URL(pomUrl)
+    val u = URI(pomUrl).toURL()
     val huc = u.openConnection() as HttpURLConnection
     huc.requestMethod = "GET"
     huc.connect()

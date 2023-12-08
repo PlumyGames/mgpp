@@ -1,14 +1,12 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.listProp
-import io.github.liplum.mindustry.*
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
 import java.io.File
-import kotlin.math.log
 
 open class ResolveMods : DefaultTask() {
     val mods = project.listProp<IMod>()
