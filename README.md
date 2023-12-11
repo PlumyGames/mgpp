@@ -14,6 +14,8 @@
 
 ### ***Plumy*** *the **[Mindustry]** Gradle plugin.*
 
+*MGPP (≥v1.3.0, <2.0.0) is under maintenance mode, no further feature updates.*
+
 <br>
 <br>
 <br>
