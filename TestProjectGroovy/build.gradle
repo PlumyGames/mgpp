@@ -29,12 +29,12 @@ dependencies {
 mindustry {
     dependency {
         //mindustry version: 'v136'
-        mindustryMirror version: 'v141.2'
+        mindustry version: 'v146'
         // mindustryMirror version: latest
-        arc version: 'v141.3'
+        arc version: 'v146'
     }
     client {
-        official version: 'v141.3'
+        official version: 'v146'
         //be version: latest named 'Test.jar'
         /*
         from GameLocation(
@@ -51,7 +51,7 @@ mindustry {
         // `keepOthers` will keep them
     }
     server {
-        official version: 'v141.3'
+        official version: 'v146'
 
         // be version: '22714'
     }
@@ -65,8 +65,8 @@ mindustry {
         //dataDir = 'temp'
     }
     meta << ModMeta(
-        name: 'mgpp-groovy',
-        displayName: 'MGPP Groovy Test',
+            name: 'mgpp-groovy',
+            displayName: 'MGPP Groovy Test',
     )
     meta.version = 'groovy 3000'
     meta.minGameVersion = '136'
@@ -103,4 +103,9 @@ antiAlias {
 
 test {
     useJUnitPlatform()
+}
+
+compileJava {
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
 }

@@ -4,7 +4,8 @@ import io.github.liplum.mindustry.*
 
 plugins {
     java
-    id("io.github.liplum.mgpp")
+    id("io.github.liplum.mgpp") version "1.3.0"
+
 }
 repositories {
     mindustryRepo()
@@ -33,6 +34,9 @@ group = "net.liplum"
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
 }
 mindustry {
     client {
