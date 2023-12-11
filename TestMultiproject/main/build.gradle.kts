@@ -4,7 +4,7 @@ import io.github.liplum.mindustry.*
 
 plugins {
     java
-    id("io.github.liplum.mgpp") version "1.3.0"
+    id("io.github.liplum.mgpp")
 
 }
 repositories {
@@ -35,9 +35,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
+
 mindustry {
     client {
         mindustry be latest
@@ -50,7 +48,7 @@ mindustry {
     meta += ModMeta(
         name = "main",
         displayName = "Main Mod",
-        minGameVersion = "136",
+        minGameVersion = "146",
         main = "plumy.test.MainMod"
     )
 }

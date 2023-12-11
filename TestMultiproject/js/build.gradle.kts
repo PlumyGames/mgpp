@@ -13,7 +13,7 @@ mindustry {
     meta += ModMeta(
         name = "js",
         displayName = "Js Mod",
-        minGameVersion = "136",
+        minGameVersion = "146",
     )
 }
 mindustryAssets {

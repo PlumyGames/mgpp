@@ -3,8 +3,9 @@ import io.github.liplum.mindustry.mindustry
 group = "plumy.test"
 version = "1.0"
 plugins {
-    id("io.github.liplum.mgpp")
+    id("io.github.liplum.mgpp") version "1.3.0"
 }
+
 mindustry {
     dependency {
         mindustry on "v146"
