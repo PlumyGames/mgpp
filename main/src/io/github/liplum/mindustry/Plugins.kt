@@ -293,6 +293,7 @@ class MindustryAppPlugin : Plugin<Project> {
                 }
 
                 logger.info("Data directory of $name is $resolvedDataDir .")
+                resolvedDataDir.getOrCreateDir()
                 dataDir.set(resolvedDataDir)
                 mindustryFile.from(downloadClient)
                 modsWorkWith.from(resolveMods)

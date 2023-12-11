@@ -10,7 +10,7 @@ open class RunMindustry : JavaExec() {
     val mindustryFile = project.configurationFileCollection()
         @InputFiles get
     val dataDir = project.dirProp()
-        @Optional @Input get
+        @Optional @InputDirectory get
     val forciblyClear = project.boolProp()
         @Optional @Input get
     val dataModsPath = project.stringProp()
@@ -26,7 +26,7 @@ open class RunMindustry : JavaExec() {
         mainClass.set("-jar")
         forciblyClear.convention(false)
         dataDir.convention(project.dirProv {
-            temporaryDir.resolve("data")
+            temporaryDir.resolve("data").getOrCreateDir()
         })
     }
     @TaskAction

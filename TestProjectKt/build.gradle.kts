@@ -3,8 +3,8 @@ import io.github.liplum.mindustry.task.AntiAlias
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.0"
-    id("io.github.liplum.mgpp") version "1.2.0"
+    kotlin("jvm") version "1.9.20"
+    id("io.github.liplum.mgpp") version "1.3.0"
 }
 
 sourceSets {
@@ -46,13 +46,12 @@ tasks.register<TestOutputTask>("iconMaker") {
 }
 mindustry {
     dependency {
-        //mindustry on "v136"
-        mindustry mirror "v141.2"
-        arc on "v141.3"
+        mindustry on "v146"
+        arc on "v146"
         // arc on latestRelease
     }
     client {
-        mindustry official "v141.3"
+        mindustry official "v146"
         //mindustry be latest
         /*
         mindustry from GameLocation(
@@ -69,14 +68,14 @@ mindustry {
     }
     server {
         //mindustry be "22728"
-        mindustry official "v141.3"
+        mindustry official "v146"
     }
     mods {
         worksWith {
             add kotlin "liplum/cyberio"
             add folder "$buildDir/mods"
             add folder "$buildDir/fakeMods"
-            add hjson "BlueWolf3682/Exotic-Mod" branch "0.8"
+            add hjson "BlueWolf3682/Exotic-Mod" branch "master"
             add fromTask "iconMaker"
             add localProperties "extraModPath"
         }
@@ -100,6 +99,7 @@ mindustry {
     }
 }
 tasks.jar {
+    dependsOn("iconMaker")
     archiveBaseName.set("TestRenamed")
 }
 
@@ -146,7 +146,10 @@ tasks.withType<Jar> {
 tasks.test {
     useJUnitPlatform()
 }
-
+tasks.withType<JavaCompile>{
+    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+    targetCompatibility = JavaVersion.VERSION_1_8.toString()
+}
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
