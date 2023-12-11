@@ -106,25 +106,25 @@ class MindustryPlugin : Plugin<Project> {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMinGameVersion = "141.3"
+        const val DefaultMinGameVersion = "146"
         /**
-         * [The default Mindustry version](https://github.com/Anuken/Mindustry/releases/tag/v141.3)
+         * [The default Mindustry version](https://github.com/Anuken/Mindustry/releases)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryVersion = "v141.3"
+        const val DefaultMindustryVersion = "v146"
         /**
-         * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases/tag/23770)
+         * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultMindustryBEVersion = "23770"
+        const val DefaultMindustryBEVersion = "24653"
         /**
          * [The default Arc version](https://github.com/Anuken/Arc/releases/tag/v141.3)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val DefaultArcVersion = "v141.3"
+        const val DefaultArcVersion = "v146"
         /**
          * [Mindustry official release](https://github.com/Anuken/Mindustry/releases)
          */
@@ -352,7 +352,7 @@ val TaskContainer.`runClient`: TaskProvider<RunMindustry>
 /**
  * Provides the existing `runServer`: [RunMindustry] task.
  *
- * Because it's registerd after project evaluating, please access it in [Project.afterEvaluate].
+ * Because it's registered after project evaluating, please access it in [Project.afterEvaluate].
  */
 val TaskContainer.`runServer`: TaskProvider<RunMindustry>
     get() = named<RunMindustry>("runServer")
