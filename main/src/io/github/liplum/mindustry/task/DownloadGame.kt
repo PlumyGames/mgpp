@@ -12,7 +12,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import java.io.File
+import java.nio.file.Files
 
 open class DownloadGame : DefaultTask() {
     val location = project.prop<IGameLoc<*>>()
@@ -31,6 +31,7 @@ open class DownloadGame : DefaultTask() {
             outputFile.exists()
         }
     }
+
     @TaskAction
     fun download() {
         val output = outputFile
@@ -53,7 +54,7 @@ open class DownloadGame : DefaultTask() {
             val downloadLoc = gameLoc.createDownloadLoc()
             val cacheFile = SharedCache.gamesDir.resolve("github").resolve(gameLoc.fileName).ensure()
             if (!cacheFile.exists()) {
-                logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName}...")
+                logger.lifecycle("Downloading $downloadLoc...")
                 try {
                     downloadLoc.openInputStream().use { it.copyTo(cacheFile) }
                     logger.lifecycle("Downloaded ${gameLoc.fileName} at ${cacheFile}.")
@@ -64,8 +65,15 @@ open class DownloadGame : DefaultTask() {
                 }
             }
             if (!outputFile.exists()) {
-                cacheFile.copyTo(outputFile)
-                logger.lifecycle("Copied game from cache $cacheFile to $outputFile.")
+                try {
+                    Files.createSymbolicLink(outputFile.toPath(),cacheFile.toPath())
+                    logger.lifecycle("Created symbolic link of game: $cacheFile -> $outputFile.")
+                } catch (error: Exception) {
+                    logger.warn("Cannot create symbolic link of game: $cacheFile -> $outputFile, because $error.")
+                    logger.warn("Fallback to copy file.")
+                    cacheFile.copyTo(outputFile)
+                    logger.lifecycle("Game was copied: $cacheFile -> $outputFile.")
+                }
             }
         } else {
             if (!outputFile.exists()) {
