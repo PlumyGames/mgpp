@@ -13,12 +13,17 @@ object SharedCache {
         }
     }
 
-    fun resolveCacheDir(): File {
-        return resolveGradleUserHome().resolve("mindustry-mgpp")
-    }
+    val cacheDir: File
+        get() = resolveGradleUserHome().resolve("mindustry-mgpp")
+
+    val modsDir: File
+        get() = cacheDir.resolve("mods")
+
+    val gamesDir: File
+        get() = cacheDir.resolve("games")
 
     fun cleanCache() {
-        val dir = resolveCacheDir()
+        val dir = cacheDir
         if (dir.isDirectory) {
             dir.deleteRecursively()
         }

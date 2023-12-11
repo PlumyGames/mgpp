@@ -51,7 +51,7 @@ open class DownloadGame : DefaultTask() {
         // Download is a very expensive task, it should detect whether the file exists.
         if (gameLoc is GitHubGameLoc) {
             val downloadLoc = gameLoc.createDownloadLoc()
-            val cacheFile = SharedCache.resolveCacheDir().resolve("github").resolve(gameLoc.fileName).ensure()
+            val cacheFile = SharedCache.gamesDir.resolve("github").resolve(gameLoc.fileName).ensure()
             if (!cacheFile.exists()) {
                 logger.lifecycle("Downloading $downloadLoc from ${gameLoc.fileName}...")
                 try {
