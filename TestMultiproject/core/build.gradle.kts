@@ -30,8 +30,16 @@ sourceSets {
 version = "1.0"
 group = "net.liplum"
 
+mindustry {
+    meta += ModMeta(
+        name = "core",
+        displayName = "Core Mod",
+        minGameVersion = "146",
+        main = "plumy.test.CoreMod"
+    )
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
-

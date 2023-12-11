@@ -18,6 +18,3 @@ mindustry {
         mindustry official "v146"
     }
 }
-mindustry {
-    isLib = true
-}
