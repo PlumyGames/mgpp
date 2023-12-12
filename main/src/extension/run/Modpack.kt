@@ -27,7 +27,7 @@ class AddModpackSpec(
      * **Not recommended:** Please use any more specific method, such as [java], [json] or [js]
      * @param repo like "PlumyGames/mgpp"
      */
-    fun github(repo: String) = addMod(GitHubMod(repo))
+    fun github(repo: String) = addMod(GitHubUntypedMod(repo))
     /**
      * Add a json mod by its repo name on GitHub.
      * @param repo like "PlumyGames/mgpp"

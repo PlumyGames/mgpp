@@ -3,9 +3,11 @@
 
 package io.github.liplum.dsl
 
+import org.gradle.api.Task
 import java.io.File
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.Files
 
 /**
  * Copy data from this input stream to [file].
@@ -18,6 +20,7 @@ fun InputStream.copyTo(file: File): File {
     }
     return file
 }
+
 /**
  * Copy data from this url to [file].
  * It will create the parent folder if it doesn't exist.
@@ -134,4 +137,17 @@ fun findFileInOrder(vararg files: () -> File): File {
         else continue
     }
     return files.last()()
+}
+
+fun Task.createSymbolicLinkOrCopyCache(link: File, target: File) {
+    if (link.exists()) return
+    try {
+        Files.createSymbolicLink(link.toPath(), target.toPath())
+        logger.lifecycle("Created symbolic link: $target -> $link.")
+    } catch (error: Exception) {
+        logger.lifecycle("Cannot create symbolic link: $target -> $link, because $error.")
+        logger.lifecycle("Fallback to copy file.")
+        target.copyTo(link)
+        logger.lifecycle("Copied: $target -> $link.")
+    }
 }
