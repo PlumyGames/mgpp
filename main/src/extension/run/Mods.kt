@@ -11,6 +11,7 @@ import kotlin.math.absoluteValue
 
 internal
 const val infoX = "info.json"
+
 /**
  * An abstract mod file.
  */
@@ -63,6 +64,7 @@ data class GihHubModDownloadMeta(
      */
     val lastUpdateTimestamp: Long
 )
+
 /**
  * A mod on GitHub.
  */
@@ -174,7 +176,7 @@ data class GitHubJvmMod(
             val releases = json.asArray()
             val release = releases.find { it.getString("tag_name") == tag }
                 ?: throw GradleException("Tag<$tag> of $repo not found.")
-            val url = release.getString("url")
+            val url = URL(release.getString("url"))
             importJvmMod(url, writeIn)
         }
     }
@@ -190,17 +192,17 @@ data class GitHubJvmMod(
 
 private
 fun String.isJvmMod() = this == "Java" || this == "Kotlin" ||
-    this == "Groovy" || this == "Scala" ||
-    this == "Clojure"
+        this == "Groovy" || this == "Scala" ||
+        this == "Clojure"
 
 private
-fun importJvmMod(releaseEntryUrl: String, writeIn: File) {
-    val releaseJson = URL(releaseEntryUrl).readText()
+fun importJvmMod(releaseEntryUrl: URL, writeIn: File) {
+    val releaseJson = releaseEntryUrl.readText()
     val json = Jval.read(releaseJson)
     val assets = json["assets"].asArray()
     val dexedAsset = assets.find {
         it.getString("name").startsWith("dexed") &&
-            it.getString("name").endsWith(".jar")
+                it.getString("name").endsWith(".jar")
     }
     val asset = dexedAsset ?: assets.find { it.getString("name").endsWith(".jar") }
     if (asset != null) {
@@ -210,9 +212,10 @@ fun importJvmMod(releaseEntryUrl: String, writeIn: File) {
         throw GradleException("Failed to find the mod.")
     }
 }
+
 private
 fun importJvmMod(repo: String, tag: String = "latest", writeIn: File) {
-    importJvmMod(releaseEntryUrl = "https://api.github.com/repos/$repo/releases/$tag", writeIn)
+    importJvmMod(releaseEntryUrl = URL("https://api.github.com/repos/$repo/releases/$tag"), writeIn)
 }
 
 data class GitHubPlainMod(
