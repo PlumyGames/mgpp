@@ -75,13 +75,6 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
-tasks.withType<JavaCompile>{
-    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-    targetCompatibility = JavaVersion.VERSION_1_8.toString()
-}
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-}
 
 tasks.named<Jar>("jar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
@@ -106,4 +99,16 @@ tasks.withType<Jar> {
 java {
     withSourcesJar()
     withJavadocJar()
+}
+
+// JDK 8+ supports
+tasks.withType<JavaCompile>().configureEach {
+    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+    targetCompatibility = JavaVersion.VERSION_1_8.toString()
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
