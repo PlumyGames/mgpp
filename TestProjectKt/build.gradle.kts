@@ -2,7 +2,7 @@ import io.github.liplum.mindustry.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.22"
+    kotlin("jvm") version "1.9.21"
     id("io.github.liplum.mgpp") version "2.0.0"
 }
 

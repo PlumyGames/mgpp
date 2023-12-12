@@ -11,13 +11,13 @@ import java.net.URL
  * An abstract Mindustry game file.
  */
 interface IGameLoc : Serializable {
-    val fileName: String
+    val fileName4Local: String
     /**
      * Generate an [IDownloadLoc] deterministically.
      */
     fun createDownloadLoc(): IDownloadLoc
 
-    fun resolveOutputFile(): File
+    fun resolveCacheFile(): File
 }
 
 data class GitHubGameLoc(
@@ -27,10 +27,10 @@ data class GitHubGameLoc(
     val file: String,
 ) : IGameLoc {
     val download = GitHubDownload.release(user, repo, tag, file)
-    override val fileName = "$user-$repo-$tag-${download.name}"
+    override val fileName4Local = "$user-$repo-$tag-${download.name}"
     override fun createDownloadLoc() = download
-    override fun resolveOutputFile(): File {
-        return SharedCache.gamesDir.resolve("github").resolve(fileName)
+    override fun resolveCacheFile(): File {
+        return SharedCache.gamesDir.resolve("github").resolve(fileName4Local)
     }
 }
 
@@ -45,7 +45,7 @@ data class LatestOfficialMindustryLoc(
         MindustryEnd.Client -> R.officialRelease.client
         MindustryEnd.Server -> R.officialRelease.server
     }
-    override val fileName = "${R.github.anuken}-${R.github.mindustry}-latest-$fileBasename"
+    override val fileName4Local = "${R.github.anuken}-${R.github.mindustry}-latest-$fileBasename"
 
     override fun createDownloadLoc(): IDownloadLoc {
         val url = URL(R.github.tag.latestReleaseAPI)
@@ -64,8 +64,8 @@ data class LatestOfficialMindustryLoc(
         return delegate.createDownloadLoc()
     }
 
-    override fun resolveOutputFile(): File {
-        return SharedCache.gamesDir.resolve("github").resolve(fileName)
+    override fun resolveCacheFile(): File {
+        return SharedCache.gamesDir.resolve("github").resolve(fileName4Local)
     }
 }
 
@@ -76,7 +76,7 @@ data class LatestMindustryBELoc(
         MindustryEnd.Client -> R.beRelease.client()
         MindustryEnd.Server -> R.beRelease.server()
     }
-    override val fileName = "${R.github.anuken}-${R.github.mindustryBuilds}-latest-$fileBasename"
+    override val fileName4Local = "${R.github.anuken}-${R.github.mindustryBuilds}-latest-$fileBasename"
 
     override fun createDownloadLoc(): IDownloadLoc {
         val url = URL(R.github.tag.beLatestReleaseAPI)
@@ -95,21 +95,21 @@ data class LatestMindustryBELoc(
         return delegate.createDownloadLoc()
     }
 
-    override fun resolveOutputFile(): File {
-        return SharedCache.gamesDir.resolve("github").resolve(fileName)
+    override fun resolveCacheFile(): File {
+        return SharedCache.gamesDir.resolve("github").resolve(fileName4Local)
     }
 }
 
 data class LocalGameLoc(
     val file: File,
 ) : IGameLoc {
-    override val fileName: String = file.name
+    override val fileName4Local: String = file.name
     val localCopy = LocalCopy(file)
     override fun createDownloadLoc() = localCopy
     /**
      * It points to a local file
      */
-    override fun resolveOutputFile(): File {
+    override fun resolveCacheFile(): File {
         return file
     }
 }

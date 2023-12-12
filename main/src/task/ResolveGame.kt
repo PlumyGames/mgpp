@@ -1,6 +1,7 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.copyTo
+import io.github.liplum.dsl.fileProp
 import io.github.liplum.dsl.listProp
 import io.github.liplum.dsl.prop
 import org.gradle.api.DefaultTask
@@ -8,6 +9,8 @@ import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
+import java.io.File
+import java.nio.file.Files
 
 
 open class ResolveGame : DefaultTask() {
@@ -15,42 +18,62 @@ open class ResolveGame : DefaultTask() {
         @Input get
     val mods = project.listProp<IMod>()
         @Input get
-    val gameFile
-        @OutputFile get() = location.get().resolveOutputFile()
+    val gameFile = project.fileProp()
+        @OutputFile get
 
     init {
+        gameFile.convention(project.provider {
+            temporaryDir.resolve(location.get().fileName4Local)
+        })
         outputs.upToDateWhen {
-            gameFile.exists()
-        }
-    }
-    @TaskAction
-    fun resolve() {
-        when (val loc = location.get()) {
-            is GitHubGameLoc -> resolveGitHubGameLoc(loc)
-            is LocalGameLoc -> resolveLocalGameLoc(loc)
+            gameFile.get().exists()
         }
     }
 
-    fun resolveGitHubGameLoc(loc: GitHubGameLoc) {
-        val output = loc.resolveOutputFile()
-        if (output.isFile) return
-        logger.lifecycle("Downloading $loc to $output...")
-        try {
-            loc.createDownloadLoc().openInputStream().use {
-                it.copyTo(output)
+    @TaskAction
+    fun resolve() {
+        val gameFile = gameFile.get()
+        val loc = location.get()
+        val cacheFile = loc.resolveCacheFile()
+        if (!cacheFile.exists()) {
+            when (loc) {
+                is GitHubGameLoc -> loc.downloadTo(cacheFile)
+                is LocalGameLoc -> loc.downloadTo(cacheFile)
             }
-            logger.lifecycle("${loc.fileName} is downloaded.")
+        }
+        createSymbolicLinkOrCopyCache(gameFile, cacheFile)
+    }
+
+    fun createSymbolicLinkOrCopyCache(gameFile: File, cacheFile: File) {
+        if (!gameFile.exists()) return
+        try {
+            Files.createSymbolicLink(gameFile.toPath(), cacheFile.toPath())
+            logger.lifecycle("Created symbolic link of game: $cacheFile -> $gameFile.")
+        } catch (error: Exception) {
+            logger.lifecycle("Cannot create symbolic link of game: $cacheFile -> $gameFile, because $error.")
+            logger.lifecycle("Fallback to copy file.")
+            cacheFile.copyTo(gameFile)
+            logger.lifecycle("Game was copied: $cacheFile -> $gameFile.")
+        }
+    }
+
+    fun GitHubGameLoc.downloadTo(cacheFile: File) {
+        logger.lifecycle("Downloading $this -> $cacheFile...")
+        try {
+            this.createDownloadLoc().openInputStream().use {
+                it.copyTo(cacheFile)
+            }
+            logger.lifecycle("${this.fileName4Local} was downloaded.")
         } catch (e: Exception) {
             // now output is corrupted, delete it
-            output.delete()
+            cacheFile.delete()
             throw e
         }
     }
 
-    fun resolveLocalGameLoc(loc: LocalGameLoc) {
-        val source = loc.resolveOutputFile()
-        if (!source.isFile) {
-            throw GradleException("Local game ($source) doesn't exists.")
+    fun LocalGameLoc.downloadTo(cacheFile: File) {
+        if (!cacheFile.isFile) {
+            throw GradleException("Local game $cacheFile doesn't exists.")
         }
     }
 }
