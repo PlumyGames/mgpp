@@ -16,7 +16,7 @@ open class GenerateRClass : DefaultTask() {
     init {
         generated.convention(project.provider {
             qualifiedName.get().qualified2FileName(
-                project.buildDir.resolve("generated").resolve(Mgpp.Mindustry)
+                project.layout.buildDirectory.asFile.get().resolve("generated").resolve(Mgpp.Mindustry)
             )
         })
     }

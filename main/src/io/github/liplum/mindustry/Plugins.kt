@@ -25,7 +25,7 @@ class MindustryPlugin : Plugin<Project> {
         val ex = target.extensions.getOrCreate<MindustryExtension>(
             Mgpp.MainExtensionName
         )
-        val assets = extensions.getOrCreate<MindustryAssetsExtension>(
+        extensions.getOrCreate<MindustryAssetsExtension>(
             Mgpp.AssetExtensionName
         )
         /**
@@ -267,7 +267,7 @@ class MindustryAppPlugin : Plugin<Project> {
                     location.set(LocalGameLoc(localOverwrite))
                 else location.set(ex._server.location)
             }
-            val runClient = tasks.register<RunMindustry>("runClient") {
+            tasks.register<RunMindustry>("runClient") {
                 group = Mgpp.MindustryTaskGroup
                 dependsOn(downloadClient)
                 mainClass.convention(Mgpp.MindustryDesktopMainClass)
@@ -303,7 +303,7 @@ class MindustryAppPlugin : Plugin<Project> {
                     outputtedMods.from(tasks.getByPath(it))
                 }
             }
-            val runServer = tasks.register<RunMindustry>(
+            tasks.register<RunMindustry>(
                 "runServer",
             ) {
                 group = Mgpp.MindustryTaskGroup

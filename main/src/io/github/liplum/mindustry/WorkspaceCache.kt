@@ -18,7 +18,7 @@ inline fun Project.fetchLatestVersion(
     outOfDate: Long = Mgpp.outOfDataTime,
     fetch: () -> String,
 ): String {
-    val mindustry = rootProject.buildDir.resolve("mindustry")
+    val mindustry = rootProject.layout.buildDirectory.asFile.get().resolve("mindustry")
     val jsonFile = mindustry.resolve("latest_cache.json").ensure()
     val json = if (jsonFile.exists())
         jsonFile.readText()
