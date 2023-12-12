@@ -18,7 +18,7 @@ mindustry {
 }
 runMindustry {
     addClient {
-        official(version = "v141.3")
+        official(version = "v146")
     }
 }
 mindustryAssets {

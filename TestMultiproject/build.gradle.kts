@@ -7,15 +7,15 @@ plugins {
 }
 mindustry {
     dependency {
-        mindustry on "v141.3"
-        arc on "v141.3"
+        mindustry on "v146"
+        arc on "v146"
     }
 }
 runMindustry {
     addClient {
-        official(version = "v141.3")
+        official(version = "v146")
     }
     addServer {
-        official(version = "v141.3")
+        official(version = "v146")
     }
 }
