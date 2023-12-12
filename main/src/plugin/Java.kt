@@ -37,7 +37,7 @@ class MindustryJavaPlugin : Plugin<Project> {
             group = R.taskGroup.mindustry
             dependsOn(tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME))
             dependsOn(dexJar)
-            destinationDirectory.set(buildDir.resolve(R.task.deployMod))
+            destinationDirectory.set(layout.buildDirectory.asFile.get().resolve(R.task.deployMod))
             archiveBaseName.set(deployX._baseName)
             archiveVersion.set(deployX._version)
             archiveClassifier.set(deployX._classifier)

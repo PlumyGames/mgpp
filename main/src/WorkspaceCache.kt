@@ -18,7 +18,7 @@ inline fun Project.fetchLatestVersion(
     outOfDate: Long = R.outOfDataTime,
     fetch: () -> String,
 ): String {
-    val mindustry = rootProject.buildDir.resolve("mindustry")
+    val mindustry = rootProject.layout.buildDirectory.asFile.get().resolve("mindustry")
     val jsonFile = mindustry.resolve("latest_cache.json").ensureParentDir()
     val json = if (jsonFile.exists())
         jsonFile.readText()

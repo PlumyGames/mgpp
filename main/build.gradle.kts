@@ -4,7 +4,7 @@ plugins {
     `java-gradle-plugin`
     id("maven-publish")
     id("com.gradle.plugin-publish") version "1.2.1"
-    id("org.jetbrains.dokka") version "1.7.20"
+    id("org.jetbrains.dokka") version "1.8.20"
 }
 group = "io.github.liplum.mgpp"
 val mgppVersion: String by project
@@ -32,15 +32,17 @@ gradlePlugin {
         create("mgpp") {
             id = "io.github.liplum.mgpp"
             displayName = "mgpp"
-            description = "For Mindustry modding in Java, kotlin and so on."
+            description = "For Mindustry modding in Java, an kotlin."
             implementationClass = "io.github.liplum.mindustry.MindustryPlugin"
             tags = listOf("mindustry", "mindustry-mod", "mod")
         }
     }
 }
+// Compile groovy first
 tasks.compileGroovy {
     classpath = sourceSets.main.get().compileClasspath
 }
+// Compile kotlin with groovy then
 tasks.compileKotlin {
     libraries.from(files(sourceSets.main.get().groovy.classesDirectory))
 }
@@ -66,7 +68,7 @@ dependencies {
     testImplementation("org.hjson:hjson:3.0.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.7.0")
+    dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.8.22")
 }
 
 tasks.test {
@@ -96,4 +98,14 @@ tasks.withType<Jar> {
 java {
     withSourcesJar()
     withJavadocJar()
+}
+
+// JDK 8+ supports
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
 }

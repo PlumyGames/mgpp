@@ -23,6 +23,6 @@ data class ProjBuildDataDirLoc(
     val name: String,
 ) : IDataDirLoc {
     override fun resolveDir(task: Task): File {
-        return task.project.buildDir.resolve(namespace).resolve(name)
+        return task.project.layout.buildDirectory.asFile.get().resolve(namespace).resolve(name)
     }
 }

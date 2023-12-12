@@ -2,7 +2,7 @@ import io.github.liplum.mindustry.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.0"
+    kotlin("jvm") version "1.8.22"
     id("io.github.liplum.mgpp") version "2.0.0"
 }
 
@@ -45,8 +45,8 @@ tasks.register<TestOutputTask>("iconMaker") {
 }
 mindustry {
     dependency {
-        mindustry on "v141.3"
-        arc on "v141.3"
+        mindustry on "v146"
+        arc on "v146"
     }
     modMeta {
         name = "mgpp-kt"
@@ -126,7 +126,10 @@ tasks.withType<Jar> {
 tasks.test {
     useJUnitPlatform()
 }
-
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
