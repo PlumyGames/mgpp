@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("jvm")
     groovy
@@ -88,6 +90,7 @@ tasks.named<Jar>("jar") {
         }
     )
 }
+
 // NOTE: All artifacts must have the same name.
 // If you are using multi-project for plugin publishing, please ensure all `Jar` tasks have the same name.
 tasks.withType<Jar> {
@@ -101,11 +104,13 @@ java {
 }
 
 // JDK 8+ supports
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+tasks.withType<JavaCompile>().configureEach {
+    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+    targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }
 
-tasks.compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
