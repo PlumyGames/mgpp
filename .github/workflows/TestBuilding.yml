@@ -2,7 +2,7 @@ name: Push Test Building
 on: [ push, pull_request ]
 
 jobs:
-  build-linux:
+  build-matrix:
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
@@ -20,12 +20,12 @@ jobs:
       - name: Test mgpp
         run: |
           chmod +x gradlew
-          ./gradlew :main:test
+          ./gradlew test --info
 
       - name: Build mgpp
         run: |
           chmod +x gradlew
-          ./gradlew :main:publishToMavenLocal --info
+          ./gradlew publishToMavenLocal --info
 
       - name: Set Android SDK tools
         run: echo "$ANDROID_HOME/build-tools/30.0.3" >> $GITHUB_PATH
@@ -34,16 +34,16 @@ jobs:
         run: |
           cd TestProjectKt
           chmod +x gradlew
-          ./gradlew :deployMod --info
-          ./gradlew :antiAlias --info
+          ./gradlew deployMod --info
+          ./gradlew antiAlias --info
           cd ..
 
       - name: Test Groovy DSL
         run: |
           cd TestProjectGroovy
           chmod +x gradlew
-          ./gradlew :deployMod --info
-          ./gradlew :antiAlias --info
+          ./gradlew deployMod --info
+          ./gradlew antiAlias --info
           cd ..
 
       - name: Test Multi-Project
