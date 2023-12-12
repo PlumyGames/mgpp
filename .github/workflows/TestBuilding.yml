@@ -57,7 +57,7 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: mgpp-snapshot-build
+          name: mgpp-snapshot-${{ matrix.os }}
           path: |
             main/build/libs/*.jar
             TestProjectKt/build/deployMod/*.jar
