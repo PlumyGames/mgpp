@@ -65,7 +65,7 @@ runMindustry {
     addModpack {
         // default modpack
         jvm(repo = "liplum/CyberIO")
-        json(repo = "BlueWolf3682/Exotic-Mod", branch = "0.8")
+        json(repo = "BlueWolf3682/Exotic-Mod", branch = "master")
         fromTask(path = "iconMaker")
     }
     val modpack2nd = addModpack("number 2") {
@@ -77,10 +77,10 @@ runMindustry {
     }
     addClient {
         // anonymous 1
-        official(version = "v141.3")
+        official(version = "v146")
     }
     addClient("debugging") {
-        official(version = "v141.3")
+        official(version = "v146")
         modpack = "for debugging"
     }
     addClient {
@@ -92,7 +92,7 @@ runMindustry {
         official(version = "v126")
     }
     addServer {
-        official(version = "v141.3")
+        official(version = "v146")
     }
 }
 

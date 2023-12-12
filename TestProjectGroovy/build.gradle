@@ -1,3 +1,5 @@
+import io.github.liplum.mindustry.AntiAlias
+
 plugins {
     id 'java'
     id "io.github.liplum.mgpp" version "2.0.0"
@@ -28,10 +30,9 @@ dependencies {
 
 mindustry {
     dependency {
-        //mindustry version: 'v136'
-        mindustryMirror version: 'v141.2'
+        mindustry version: 'v146'
         // mindustryMirror version: latest
-        arc version: 'v141.3'
+        arc version: 'v146'
     }
     modMeta {
         name = 'mgpp-groovy'
@@ -48,7 +49,7 @@ runMindustry {
     addModpack {
         // default modpack
         jvm repo: "liplum/CyberIO"
-        json repo: "BlueWolf3682/Exotic-Mod", branch: "0.8"
+        json repo: "BlueWolf3682/Exotic-Mod", branch: "master"
     }
     def modpack2nd = addModpack("number 2") {
         json repo: "sk7725/TimeControl"
@@ -59,10 +60,10 @@ runMindustry {
     }
     addClient {
         // anonymous 1
-        official version: "v141.3"
+        official version: "v146"
     }
     addClient("debugging") {
-        official version: "v141.3"
+        official version: "v146"
         modpack = "for debugging"
     }
     addClient {
@@ -74,7 +75,7 @@ runMindustry {
         official version: "v126"
     }
     addServer {
-        official version: "v141.3"
+        official version: "v146"
     }
 }
 dexJar {
@@ -86,9 +87,9 @@ dexJar {
 mindustryAssets {
     rootAt "$rootDir/assets"
 }
-tasks.register('antiAlias', io.github.liplum.mindustry.AntiAlias) {
-    sourceDirectory = new File(rootDir, 'assets/sprites')
-    destinationDirectory = new File(rootDir, 'AA')
+tasks.register('antiAlias', AntiAlias) {
+    sourceDirectory.set(new File(rootDir, 'assets/sprites'))
+    destinationDirectory.set(new File(rootDir, 'AA'))
     addFilter {
         it.name != 'sender.png'
     }
@@ -98,4 +99,9 @@ tasks.register('antiAlias', io.github.liplum.mindustry.AntiAlias) {
 
 test {
     useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
 }
