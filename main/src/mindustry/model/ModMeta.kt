@@ -30,6 +30,7 @@ class ModMeta private constructor(
         minGameVersion: String = default("minGameVersion"),
         repo: String? = default("repo"),
         dependencies: List<String> = default("dependencies"),
+        softDependencies: List<String> = default("softDependencies"),
         hidden: Boolean = default("hidden"),
         java: Boolean = default("java"),
         hideBrowser: Boolean = default("hideBrowser"),
@@ -51,6 +52,7 @@ class ModMeta private constructor(
             "minGameVersion" to minGameVersion,
             "repo" to repo,
             "dependencies" to dependencies,
+            "softDependencies" to softDependencies,
             "hidden" to hidden,
             "java" to java,
             "hideBrowser" to hideBrowser,
@@ -103,6 +105,7 @@ class ModMeta private constructor(
             "minGameVersion" to R.modMeta.defaultMinGameVersion,
             "repo" to null,
             "dependencies" to emptyList<String>(),
+            "softDependencies" to emptyList<String>(),
             "hidden" to false,
             "java" to true,
             "hideBrowser" to false,
@@ -154,6 +157,7 @@ var ModMeta.main: String? by meta()
 var ModMeta.minGameVersion: String by meta()
 var ModMeta.repo: String? by meta()
 var ModMeta.dependencies: List<String> by meta()
+var ModMeta.softDependencies: List<String> by meta()
 var ModMeta.hidden: Boolean by meta()
 var ModMeta.java: Boolean by meta()
 var ModMeta.hideBrowser: Boolean by meta()
