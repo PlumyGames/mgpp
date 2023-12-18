@@ -20,19 +20,6 @@ val Project.`mindustry`: MindustryExtension
 fun Project.`mindustry`(configure: Action<MindustryExtension>): Unit =
     (this as ExtensionAware).extensions.configure(R.x.mindustry, configure)
 /**
- * The project type.
- */
-enum class ProjectType {
-    /**
-     * For a mod, it will import all essential dependencies of Mindustry.
-     */
-    Mod,
-    /**
-     * For a plugin, it will only import server-related dependencies of Mindustry.
-     */
-    Plugin
-}
-/**
  * The main extension of [MindustryPlugin].
  * It provides many configurations for Mindustry modding development:
  * - [meta]: the `mod.(h)json` that will be included in the `:jar` task.
@@ -41,16 +28,6 @@ enum class ProjectType {
 open class MindustryExtension(
     target: Project,
 ) {
-    /**
-     * @see ProjectType.Mod
-     */
-    @JvmField
-    val Mod = ProjectType.Mod
-    /**
-     * @see ProjectType.Plugin
-     */
-    @JvmField
-    val Plugin = ProjectType.Plugin
     /**
      * The check time(sec) for latest version.
      *
@@ -61,15 +38,6 @@ open class MindustryExtension(
         set(value) {
             R.outOfDataTime = value * 1000L
         }
-    val _projectType = target.prop<ProjectType>().apply {
-        convention(ProjectType.Mod)
-    }
-    /**
-     * The project type will influence dependency resolution.
-     */
-    var projectType: ProjectType
-        get() = _projectType.getOrElse(ProjectType.Mod)
-        set(value) = _projectType.set(value)
     @JvmField
     val _dependency = DependencySpec(target)
     /**
