@@ -29,10 +29,12 @@ open class Common(
 ) {
     /** @see [AddCommonSpec.startupArgs] */
     val startupArgs = ArrayList<String>()
+
     /** @see [AddCommonSpec.jvmArgs] */
     val jvmArgs = ArrayList<String>()
+
     /** @see [AddClientSpec.dataDir] */
-    var dataDir: IDataDirLoc = MindustryDefaultDataDirLoc
+    var dataDir: IDataDirLoc? = null
     var location: IGameLoc? = null
     var modpack: String? = null
 }
@@ -42,12 +44,14 @@ abstract class AddCommonSpec<T : Common> {
     protected abstract val backend: T
     val latest: Notation get() = Notation.latest
     val startupArgs get() = backend.startupArgs
+
     /**
      * The arguments of JVM.
      *
      * Because Mindustry desktop is based on Lwjgl3, the `-XstartOnFirstThread` will be passed when run on macOS.
      */
     val jvmArgs get() = backend.jvmArgs
+
     /**
      * *Optional*
      *
@@ -64,7 +68,6 @@ abstract class AddCommonSpec<T : Common> {
      */
     var dataDir: Any?
         get() = when (val dir = backend.dataDir) {
-            is MindustryDefaultDataDirLoc -> null
             is ProjBuildDataDirLoc -> dir.name
             is LocalDataDirLoc -> dir.dir
             else -> null
@@ -115,6 +118,7 @@ abstract class AddCommonSpec<T : Common> {
             file = props["file"] ?: "",
         )
     }
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -122,6 +126,7 @@ abstract class AddCommonSpec<T : Common> {
      * ```
      */
     abstract fun official(version: String)
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -129,6 +134,7 @@ abstract class AddCommonSpec<T : Common> {
      * ```
      */
     abstract fun official(version: Notation)
+
     /**
      * ### Groovy DSL
      * ```groovy
@@ -143,6 +149,7 @@ abstract class AddCommonSpec<T : Common> {
             else -> official(version)
         }
     }
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -150,6 +157,7 @@ abstract class AddCommonSpec<T : Common> {
      * ```
      */
     abstract fun be(version: String)
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -159,6 +167,7 @@ abstract class AddCommonSpec<T : Common> {
     fun be(version: Int) {
         be(version = version.toString())
     }
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -166,6 +175,7 @@ abstract class AddCommonSpec<T : Common> {
      * ```
      */
     abstract fun be(version: Notation)
+
     /**
      * ### Groovy DSL
      * ```groovy

@@ -35,6 +35,7 @@ dependencies {
 open class TestOutputTask : DefaultTask() {
     val outputFile = project.objects.property<File>()
         @OutputFile get
+
     @TaskAction
     fun test() {
     }
@@ -92,6 +93,7 @@ runMindustry {
         official(version = "v126")
     }
     addServer {
+        modpack = null
         official(version = "v146")
     }
 }

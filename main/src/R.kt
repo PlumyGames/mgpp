@@ -217,7 +217,7 @@ object R {
          */
         const val user = "Jackson11500"
         /**
-         * The [CN-ARC client buildings](https://github.com/Jackson11500/Mindustry-CN-ARC)
+         * The [CN-ARC client buildings](https://github.com/Jackson11500/Mindustry-CN-ARC-Builds)
          */
         const val repo = "Mindustry-CN-ARC-Builds"
     }

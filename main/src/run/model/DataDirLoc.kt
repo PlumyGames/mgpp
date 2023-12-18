@@ -14,10 +14,6 @@ data class LocalDataDirLoc(
     override fun resolveDir(task: Task): File = dir
 }
 
-object MindustryDefaultDataDirLoc : IDataDirLoc {
-    override fun resolveDir(task: Task): File? = null
-}
-
 data class ProjBuildDataDirLoc(
     val namespace: String,
     val name: String,
