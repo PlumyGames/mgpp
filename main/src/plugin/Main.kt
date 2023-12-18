@@ -39,7 +39,7 @@ class MindustryPlugin : Plugin<Project> {
         tasks.register<ModHjsonGenerate>(R.task.genModHjson) {
             group = R.taskGroup.mindustry
             modMeta.set(ex._modMeta)
-            outputHjson.set(temporaryDir.resolve("mod.hjson"))
+            output.set(temporaryDir.resolve("mod.hjson"))
         }
         if (plugins.hasPlugin<JavaPlugin>()) {
             plugins.apply<MindustryJavaPlugin>()
