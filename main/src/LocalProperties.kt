@@ -5,16 +5,10 @@ import java.util.*
 
 object LocalProperties {
     @JvmStatic
-    private var all: Properties? = null
+    private var _properties: Properties? = null
     val Project.localProperties: Properties
-        get() = all ?: load()
-    val Project.local: PropertiesSpec
-        get() = PropertiesSpec(localProperties)
+        get() = _properties ?: load()
 
-    fun clearCache(project: Project? = null) {
-        all = null
-        project?.logger?.info("local.properties cache was cleared.")
-    }
 
     val initialText = """
     """.trimIndent()
@@ -29,10 +23,19 @@ object LocalProperties {
             file.writeText(initialText)
             logger.info("local.properties was created.")
         }
-        all = properties
+        _properties = properties
         return properties
     }
+
+    val Project.local: PropertiesSpec
+        get() = PropertiesSpec(localProperties)
+
+    fun clearCache(project: Project? = null) {
+        _properties = null
+        project?.logger?.info("local.properties cache was cleared.")
+    }
 }
+
 @JvmInline
 value class PropertiesSpec(
     val properties: Properties,

@@ -85,7 +85,7 @@ class AddClientSpec(
      * ### Kotlin DSL
      * ```kotlin
      * cnARC(
-     *   tag="30388",
+     *   tag="30729",
      *   file="Mindustry-CN-ARC-Desktop-$version.jar"
      * )
      * ```
@@ -104,7 +104,7 @@ class AddClientSpec(
     /**
      * ### Kotlin DSL
      * ```kotlin
-     * cnARC(version="30388")
+     * cnARC(version="30729")
      * ```
      */
     fun cnARC(version: String) {
@@ -118,7 +118,7 @@ class AddClientSpec(
     /**
      * ### Kotlin DSL
      * ```kotlin
-     * cnARC(version=30388)
+     * cnARC(version=30729)
      * ```
      */
     fun cnARC(version: Int) {
@@ -129,7 +129,7 @@ class AddClientSpec(
      * ```groovy
      * cnARC version: 30388
      * cnARC version: "30388"
-     * cnARC tag: "30388", file: "Mindustry-CN-ARC-Desktop-30388.jar"
+     * cnARC tag: "30388", file: "Mindustry-CN-ARC-Desktop-30729.jar"
      * ```
      */
     fun cnARC(props: Map<String, String>) {
