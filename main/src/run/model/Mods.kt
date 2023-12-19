@@ -3,12 +3,10 @@ package io.github.liplum.mindustry
 import arc.util.serialization.Jval
 import io.github.liplum.dsl.*
 import org.gradle.api.GradleException
-import org.gradle.api.logging.Logger
 import java.io.File
 import java.io.Serializable
 import java.net.URL
 import java.security.MessageDigest
-import kotlin.math.absoluteValue
 
 /**
  * An abstract mod file.
@@ -70,12 +68,6 @@ data class UrlMod(
 
 
 fun String.repo2Path() = this.replace("/", "-")
-data class GihHubModDownloadMeta(
-    /**
-     * It's changed when the mod is updated or network error.
-     */
-    val lastUpdateTimestamp: Long
-)
 
 /**
  * A mod on GitHub.
@@ -87,7 +79,7 @@ data class GitHubUntypedMod(
     val repo: String,
 ) : IGitHubMod {
     override fun resolveDownloadSrc(): URL {
-        updateGitHubModUpdateToDate(modFile = resolveCacheFile())
+        updateGitHubDownloadTrack(lockFile = resolveCacheFile())
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
         val json = Jval.read(jsonText)
         val lan = json.getString("language")
@@ -108,7 +100,7 @@ data class GitHubPlainMod(
 ) : IGitHubMod {
     val fileNameWithoutExtension = linkString(separator = "-", repo.repo2Path(), branch)
     override fun resolveDownloadSrc(): URL {
-        updateGitHubModUpdateToDate(modFile = resolveCacheFile())
+        updateGitHubDownloadTrack(lockFile = resolveCacheFile())
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
         val json = Jval.read(jsonText)
         val branch = if (!branch.isNullOrBlank()) branch
@@ -126,7 +118,7 @@ data class GitHubJvmMod(
 ) : IGitHubMod {
     val fileNameWithoutExtension = linkString(separator = "-", repo.repo2Path(), tag)
     override fun resolveDownloadSrc(): URL {
-        updateGitHubModUpdateToDate(modFile = resolveCacheFile())
+        updateGitHubDownloadTrack(lockFile = resolveCacheFile())
         return if (tag == null) {
             resolveJvmModSrc(repo)
         } else {
@@ -175,60 +167,3 @@ fun resolvePlainModSrc(repo: String, branch: String): URL {
     return URL(url)
 }
 
-
-internal
-fun updateGitHubModUpdateToDate(
-    modFile: File,
-    newTimestamp: Long = System.currentTimeMillis(),
-    logger: Logger? = null,
-) {
-    val infoFi = File("$modFile.$infoX")
-    if (infoFi.isDirectory) {
-        infoFi.deleteRecursively()
-    }
-    val meta = GihHubModDownloadMeta(lastUpdateTimestamp = newTimestamp)
-    val json = gson.toJson(meta)
-    try {
-        infoFi.writeText(json)
-    } catch (e: Exception) {
-        logger?.warn("Failed to write into \"info.json\"", e)
-    }
-}
-
-internal
-fun tryReadGitHubModInfo(infoFi: File, logger: Logger? = null): GihHubModDownloadMeta {
-    fun writeAndGetDefault(): GihHubModDownloadMeta {
-        val meta = GihHubModDownloadMeta(lastUpdateTimestamp = System.currentTimeMillis())
-        val infoContent = gson.toJson(meta)
-        try {
-            infoFi.ensureParentDir().writeText(infoContent)
-            logger?.info("$infoFi is created.")
-        } catch (e: Exception) {
-            logger?.warn("Failed to write into \"info.json\"", e)
-        }
-        return meta
-    }
-    return if (infoFi.isFile) {
-        try {
-            val infoContent = infoFi.readText()
-            gson.fromJson(infoContent)
-        } catch (e: Exception) {
-            writeAndGetDefault()
-        }
-    } else {
-        writeAndGetDefault()
-    }
-}
-
-fun IGitHubMod.isUpdateToDate(): Boolean {
-    val cacheFile = this.resolveCacheFile()
-    val infoFi = File("$cacheFile.$infoX")
-    if (!cacheFile.exists()) {
-        if (infoFi.exists()) infoFi.delete()
-        return false
-    }
-    val meta = tryReadGitHubModInfo(infoFi)
-    val curTime = System.currentTimeMillis()
-    // TODO: Configurable out-of-date time
-    return curTime - meta.lastUpdateTimestamp < R.outOfDataTime.absoluteValue
-}

@@ -31,12 +31,11 @@ open class ResolveGame : DefaultTask() {
         val gameFile = gameFile.get()
         val loc = location.get()
         val cacheFile = loc.resolveCacheFile()
-        if (!cacheFile.exists()) {
-            when (loc) {
-                is LocalGameLoc -> if (!cacheFile.isFile) throw GradleException("Local game $cacheFile doesn't exists.")
-                is IDownloadableGameLoc -> loc.download(cacheFile)
-                else -> throw Exception("Unhandled game loc $loc")
-            }
+        when (loc) {
+            is LocalGameLoc -> if (!cacheFile.isFile) throw GradleException("Local game $cacheFile doesn't exists.")
+            is ILatestDownloadableGameLoc -> if (!isUpdateToDate(cacheFile)) loc.download(cacheFile)
+            is IDownloadableGameLoc -> if (!cacheFile.exists()) loc.download(cacheFile)
+            else -> throw Exception("Unhandled game loc $loc")
         }
         createSymbolicLinkOrCopyCache(link = gameFile, target = cacheFile)
     }

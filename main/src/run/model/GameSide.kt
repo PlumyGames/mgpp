@@ -4,7 +4,6 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.plusAssign
 import io.github.liplum.mindustry.LocalProperties.local
-import io.github.liplum.mindustry.run.model.NamedModel
 import org.gradle.api.Action
 import org.gradle.api.Project
 import java.io.File

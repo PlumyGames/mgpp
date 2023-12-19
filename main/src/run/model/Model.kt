@@ -1,4 +1,4 @@
-package io.github.liplum.mindustry.run.model
+package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.getDuplicateName
 import io.github.liplum.mindustry.formatValidGradleName

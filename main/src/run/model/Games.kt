@@ -22,6 +22,8 @@ sealed interface IDownloadableGameLoc : IGameLoc {
     fun resolveDownloadSrc(): URL
 }
 
+sealed interface ILatestDownloadableGameLoc : IDownloadableGameLoc
+
 data class GitHubGameLoc(
     val user: String,
     val repo: String,
@@ -41,7 +43,7 @@ enum class MindustryEnd {
 
 data class LatestOfficialMindustryLoc(
     val end: MindustryEnd
-) : IDownloadableGameLoc {
+) : ILatestDownloadableGameLoc {
     val fileBasename = when (end) {
         MindustryEnd.Client -> R.officialRelease.client
         MindustryEnd.Server -> R.officialRelease.server
@@ -72,7 +74,7 @@ data class LatestOfficialMindustryLoc(
 
 data class LatestMindustryBELoc(
     val end: MindustryEnd
-) : IDownloadableGameLoc {
+) : ILatestDownloadableGameLoc {
     val fileBasename = when (end) {
         MindustryEnd.Client -> R.beRelease.client()
         MindustryEnd.Server -> R.beRelease.server()
@@ -105,6 +107,7 @@ data class LocalGameLoc(
     val file: File,
 ) : IGameLoc {
     override val fileName4Local: String = file.name
+
     /**
      * It points to a local file
      */

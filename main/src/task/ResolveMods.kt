@@ -9,9 +9,6 @@ import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-internal
-const val infoX = "info.json"
-
 open class ResolveMods : DefaultTask() {
     val mods = project.listProp<IMod>()
         @Input get
@@ -42,35 +39,23 @@ open class ResolveMods : DefaultTask() {
     fun resolve() {
         for (mod in mods.get()) {
             val cacheFile = mod.resolveCacheFile()
-            if (!cacheFile.exists()) {
-                when (mod) {
-                    is LocalMod -> if (!cacheFile.isFile) throw GradleException("Local mod $cacheFile not found.")
-                    is IGitHubMod -> {
-                        if (!mod.isUpdateToDate()) {
-                            logger.lifecycle("Updating $this -> $cacheFile...")
-                            try {
-                                mod.resolveDownloadSrc().openStream().copyToTmpAndMove(cacheFile)
-                                logger.info("$cacheFile was downloaded.")
-                            } catch (e: Exception) {
-                                logger.error("Failed to update $this", e)
-                            }
-                        }
-                    }
-
-                    is IDownloadableMod -> {
-                        logger.lifecycle("Downloading $this -> $cacheFile...")
-                        try {
-                            mod.resolveDownloadSrc().openStream().copyToTmpAndMove(cacheFile)
-                            logger.info("$cacheFile was downloaded.")
-                        } catch (e: Exception) {
-                            logger.error("Failed to download $this", e)
-                        }
-                    }
-
-                    else -> {}
-                }
+            when (mod) {
+                is LocalMod -> if (!cacheFile.isFile) throw GradleException("Local mod $cacheFile not found.")
+                is IGitHubMod -> if (!isUpdateToDate(cacheFile)) mod.download(cacheFile)
+                is IDownloadableMod -> if (!cacheFile.exists()) mod.download(cacheFile)
+                else -> {}
             }
             createSymbolicLinkOrCopyCache(link = mod.resolveOutputFile(), target = cacheFile)
+        }
+    }
+
+    fun IDownloadableMod.download(cacheFile: File) {
+        logger.lifecycle("Downloading $this -> $cacheFile...")
+        try {
+            this.resolveDownloadSrc().openStream().copyToTmpAndMove(cacheFile)
+            logger.info("$cacheFile was downloaded.")
+        } catch (e: Exception) {
+            logger.error("Failed to download $this", e)
         }
     }
 }
