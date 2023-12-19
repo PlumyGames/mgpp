@@ -176,7 +176,8 @@ fun resolvePlainModSrc(repo: String, branch: String): URL {
 }
 
 
-internal fun updateGitHubModUpdateToDate(
+internal
+fun updateGitHubModUpdateToDate(
     modFile: File,
     newTimestamp: Long = System.currentTimeMillis(),
     logger: Logger? = null,
@@ -201,7 +202,7 @@ fun tryReadGitHubModInfo(infoFi: File, logger: Logger? = null): GihHubModDownloa
         val infoContent = gson.toJson(meta)
         try {
             infoFi.ensureParentDir().writeText(infoContent)
-            logger?.info("[MGPP] $infoFi is created.")
+            logger?.info("$infoFi is created.")
         } catch (e: Exception) {
             logger?.warn("Failed to write into \"info.json\"", e)
         }

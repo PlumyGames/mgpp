@@ -85,6 +85,9 @@ runMindustry {
     addClient("Old Mindustry") {
         official version: "v126"
     }
+    addClient("latest") {
+        official latest
+    }
     addServer {
         official version: "v146"
     }

@@ -113,12 +113,19 @@ runMindustry {
     addClient(name = "Old Mindustry") {
         official(version = "v136")
     }
+    addClient(name = "latest") {
+        official(version = latest)
+    }
     addClient(name = "From local.properties") {
         localProperties("mgpp.local-client")
     }
     addServer {
         modpack = null
         official(version = "v146")
+    }
+    addServer("latest") {
+        modpack = null
+        official(version = latest)
     }
 }
 
