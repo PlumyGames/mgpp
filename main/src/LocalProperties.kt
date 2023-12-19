@@ -9,19 +9,12 @@ object LocalProperties {
     val Project.localProperties: Properties
         get() = _properties ?: load()
 
-
-    val initialText = """
-    """.trimIndent()
-
     private fun Project.load(): Properties {
         val properties = Properties()
         val file = rootDir.resolve("local.properties")
         if (file.exists()) {
             file.inputStream().use { properties.load(it) }
             logger.info("local.properties was found.")
-        } else {
-            file.writeText(initialText)
-            logger.info("local.properties was created.")
         }
         _properties = properties
         return properties

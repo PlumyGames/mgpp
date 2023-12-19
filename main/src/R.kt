@@ -2,8 +2,6 @@
 
 package io.github.liplum.mindustry
 
-import java.io.File
-
 object R {
     /**
      * The default check time(ms) for latest version.

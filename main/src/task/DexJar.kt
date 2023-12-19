@@ -23,6 +23,7 @@ open class DexJar : DefaultTask() {
     init {
         dexedJar.convention(temporaryDir.resolve("dexed.jar"))
     }
+
     @TaskAction
     fun dex() {
         val dexedJarFile = dexedJar.get()
@@ -36,6 +37,8 @@ open class DexJar : DefaultTask() {
         for (jarPath in jarToDexPaths) {
             if (" " in jarPath) throw GradleException("d8 doesn't allow a path with any space but the path of a jar to be dexed is \"$jarPath\" .")
         }
+        // Users should specify their SDK root in system env
+        // project.local["sdk.dir"] ?:
         val sdkRoot = System.getenv("ANDROID_HOME")
             ?: System.getenv("ANDROID_SDK_ROOT")
             ?: throw GradleException("Android SDK not found. Ensure ANDROID_HOME or ANDROID_SDK_ROOT is in your environment.")
@@ -82,10 +85,12 @@ open class DexJar : DefaultTask() {
             it.errorOutput = System.err
         }
     }
+
     //For Kotlin
     inline fun options(config: DexJarOptions.() -> Unit) {
         options.config()
     }
+
     // For Groovy
     fun options(config: Action<DexJarOptions>) {
         config.execute(options)
