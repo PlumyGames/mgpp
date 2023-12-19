@@ -30,11 +30,6 @@ fun Project.`runMindustry`(configure: Action<RunMindustryExtension>): Unit =
 open class RunMindustryExtension(
     val proj: Project,
 ) {
-    companion object {
-        const val defaultModpackName = ""
-        const val defaultClientName = ""
-        const val defaultServerName = ""
-    }
 
     val clients = ArrayList<Client>()
     val servers = ArrayList<Server>()
@@ -70,10 +65,10 @@ open class RunMindustryExtension(
     ): Client {
         val (newName, isAnonymous) = allocModelName(name, clients)
         val client = Client(name = newName, isAnonymous = isAnonymous)
-        client.modpack = defaultModpackName
+        client.modpack = ""
         client.dataDir = ProjBuildDataDirLoc(
             namespace = "mindustryClientData",
-            name = newName.ifBlank { defaultClientName },
+            name = newName.ifBlank { "__DEFAULT__" },
         )
         AddClientSpec(proj, client).config()
         if (client.location == null) {
@@ -149,10 +144,10 @@ open class RunMindustryExtension(
     ): Server {
         val (newName, isAnonymous) = allocModelName(name, servers)
         val server = Server(name = newName, isAnonymous = isAnonymous)
-        server.modpack = defaultModpackName
+        server.modpack = ""
         server.dataDir = ProjBuildDataDirLoc(
             namespace = "mindustryServerData",
-            name = newName.ifBlank { defaultServerName },
+            name = newName.ifBlank { "__DEFAULT__" },
         )
         AddServerSpec(proj, server).config()
         if (server.location == null) {
@@ -207,7 +202,7 @@ open class RunMindustryExtension(
      * }
      */
     inline fun addModpack(
-        name: String = defaultModpackName,
+        name: String = "",
         config: AddModpackSpec.() -> Unit
     ): Modpack {
         val (newName, isAnonymous) = allocModelName(name, modpacks)
@@ -249,7 +244,7 @@ open class RunMindustryExtension(
      * ```
      */
     fun addModpack(config: Action<AddModpackSpec>): Modpack {
-        return addModpack(defaultModpackName, config)
+        return addModpack("", config)
     }
 }
 

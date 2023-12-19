@@ -75,7 +75,7 @@ object R {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val defaultMinGameVersion = "141.3"
+        const val defaultMinGameVersion = "146"
     }
 
     object version {
@@ -194,11 +194,6 @@ object R {
          */
         const val server = "mindustry.server.ServerLauncher"
     }
-    /**
-     * An empty folder for null-check
-     */
-    @JvmStatic
-    val defaultEmptyFile = File("")
 
     object fooClient {
         /**
