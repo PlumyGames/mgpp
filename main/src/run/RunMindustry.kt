@@ -207,7 +207,7 @@ open class RunMindustryExtension(
      * }
      */
     inline fun addModpack(
-        name: String = "",
+        name: String = defaultModpackName,
         config: AddModpackSpec.() -> Unit
     ): Modpack {
         val (newName, isAnonymous) = allocModelName(name, modpacks)

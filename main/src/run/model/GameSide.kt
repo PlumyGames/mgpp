@@ -6,6 +6,7 @@ import io.github.liplum.dsl.plusAssign
 import io.github.liplum.mindustry.LocalProperties.local
 import io.github.liplum.mindustry.RunMindustryExtension.Companion.defaultModpackName
 import io.github.liplum.mindustry.run.model.NamedModel
+import org.gradle.api.Action
 import org.gradle.api.Project
 import java.io.File
 
@@ -102,6 +103,26 @@ abstract class AddGameSideSpec<T : GameSide> {
 
     fun useModpack(modpack: Modpack) {
         this.modpack = modpack.name
+    }
+
+    fun useModpack(
+        name: String = defaultModpackName,
+        config: AddModpackSpec.() -> Unit
+    ) {
+        useModpack(proj.runMindustry.addModpack(name, config))
+    }
+
+    fun useModpack(
+        name: String,
+        config: Action<AddModpackSpec>
+    ) {
+        useModpack(proj.runMindustry.addModpack(name, config))
+    }
+
+    fun useModpack(
+        config: Action<AddModpackSpec>
+    ) {
+        useModpack(proj.runMindustry.addModpack(defaultModpackName, config))
     }
 
     protected fun IGameLoc.checkAndSet() {

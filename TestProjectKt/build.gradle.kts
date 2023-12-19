@@ -83,6 +83,13 @@ runMindustry {
         // anonymous 1
         official(version = "v146")
     }
+    addClient("inline modpack") {
+        official(version = "v146")
+        useModpack {
+            `testingUtilities`
+            jvm(repo = "liplum/CyberIO")
+        }
+    }
     addClient("debugging") {
         official(version = "v146")
         useModpack(name = "for debugging")
