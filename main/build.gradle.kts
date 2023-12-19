@@ -62,7 +62,9 @@ sourceSets {
     }
 }
 val arcVersion: String by project
+val jarIncluding = configurations.create("including")
 dependencies {
+    jarIncluding("com.github.anuken.arc:arc-core:$arcVersion")
     compileOnly("com.github.anuken.arc:arc-core:$arcVersion")
     implementation("org.hjson:hjson:3.0.0")
     implementation("com.google.code.gson:gson:2.9.0")
@@ -80,15 +82,7 @@ tasks.test {
 tasks.named<Jar>("jar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     includeEmptyDirs = false
-    from(
-        configurations.compileClasspath.get().mapNotNull {
-            if (it.isFile && it.extension == "jar"
-                && ("arc-core" in it.name)
-            )
-                zipTree(it)
-            else null
-        }
-    )
+    from(jarIncluding.toList())
 }
 
 // NOTE: All artifacts must have the same name.
