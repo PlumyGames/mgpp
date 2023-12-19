@@ -34,14 +34,14 @@ open class ResolveGame : DefaultTask() {
         val cacheFile = loc.resolveCacheFile()
         if (!cacheFile.exists()) {
             when (loc) {
-                is GitHubGameLoc -> loc.download(cacheFile)
                 is LocalGameLoc -> if (!cacheFile.isFile) throw GradleException("Local game $cacheFile doesn't exists.")
+                else -> loc.download(cacheFile)
             }
         }
         createSymbolicLinkOrCopyCache(link = gameFile, target = cacheFile)
     }
 
-    fun GitHubGameLoc.download(cacheFile: File) {
+    fun IGameLoc.download(cacheFile: File) {
         logger.lifecycle("Downloading $this -> $cacheFile...")
         try {
             this.createDownloadLoc().openInputStream().use {
