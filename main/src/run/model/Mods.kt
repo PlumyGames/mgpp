@@ -2,6 +2,7 @@ package io.github.liplum.mindustry
 
 import arc.util.serialization.Jval
 import io.github.liplum.dsl.*
+import io.github.liplum.mindustry.SharedCache.updateGitHubDownloadTrack
 import org.gradle.api.GradleException
 import java.io.File
 import java.io.Serializable

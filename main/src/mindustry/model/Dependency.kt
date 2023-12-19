@@ -2,6 +2,7 @@ package io.github.liplum.mindustry
 
 import arc.util.serialization.Jval
 import io.github.liplum.dsl.prop
+import io.github.liplum.mindustry.SharedCache.fetchLatest
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import java.io.Serializable
@@ -213,14 +214,14 @@ class DependencySpec(
      */
     fun mindustryLatestRelease() {
         val latestVersion =
-            target.fetchLatestVersion("mindustry-release-dependency", namespace = "latest_dependencies") {
+            target.fetchLatest("mindustry-release-dependency", namespace = "latest_dependencies") {
                 try {
                     val url = URL(R.github.tag.latestReleaseAPI)
                     val json = Jval.read(url.readText())
-                    return@fetchLatestVersion json.getString("tag_name")
+                    return@fetchLatest json.getString("tag_name")
                 } catch (e: Exception) {
                     target.logger.warn("Failed to fetch the exact latest version of mindustry, so use ${R.version.defaultOfficial} instead")
-                    return@fetchLatestVersion R.version.defaultOfficial
+                    return@fetchLatest R.version.defaultOfficial
                 }
             }
         mindustry(latestVersion)
@@ -233,15 +234,15 @@ class DependencySpec(
      */
     fun mindustryMirrorLatestCommit() {
         val latestVersion =
-            target.fetchLatestVersion("mindustry-mirror-commit-dependency", namespace = "latest_dependencies") {
+            target.fetchLatest("mindustry-mirror-commit-dependency", namespace = "latest_dependencies") {
                 try {
                     val url = URL(R.github.tag.mirrorLatestCommit)
                     val json = Jval.read(url.readText())
                     val fullSha = json.getString("sha")
-                    return@fetchLatestVersion fullSha.subSequence(0, 10).toString()
+                    return@fetchLatest fullSha.subSequence(0, 10).toString()
                 } catch (e: Exception) {
                     target.logger.warn("Failed to fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
-                    return@fetchLatestVersion "-SNAPSHOT"
+                    return@fetchLatest "-SNAPSHOT"
                 }
             }
         mindustryMirror(latestVersion)
@@ -254,14 +255,14 @@ class DependencySpec(
      */
     fun mindustryMirrorLatestRelease() {
         val latestVersion =
-            target.fetchLatestVersion("mindustry-mirror-release-dependency", namespace = "latest_dependencies") {
+            target.fetchLatest("mindustry-mirror-release-dependency", namespace = "latest_dependencies") {
                 try {
                     val url = URL(R.github.tag.mirrorLatestCommit)
                     val json = Jval.read(url.readText())
-                    return@fetchLatestVersion json.getString("tag_name")
+                    return@fetchLatest json.getString("tag_name")
                 } catch (e: Exception) {
                     target.logger.warn("Failed to fetch the exact latest version of mindustry jitpack, so use ${R.version.defaultOfficial} instead")
-                    return@fetchLatestVersion R.version.defaultOfficial
+                    return@fetchLatest R.version.defaultOfficial
                 }
             }
         mindustryMirror(latestVersion)
@@ -273,15 +274,15 @@ class DependencySpec(
      * **Not Recommended** It may not work due to a network issue or jitpack not yet to build this version
      */
     fun arcLatestCommit() {
-        val latestVersion = target.fetchLatestVersion("arc-commit-dependency", namespace = "latest_dependencies") {
+        val latestVersion = target.fetchLatest("arc-commit-dependency", namespace = "latest_dependencies") {
             try {
                 val url = URL(R.github.tag.arcLatestCommit)
                 val json = Jval.read(url.readText())
                 val fullSha = json.getString("sha")
-                return@fetchLatestVersion fullSha.subSequence(0, 10).toString()
+                return@fetchLatest fullSha.subSequence(0, 10).toString()
             } catch (e: Exception) {
                 target.logger.warn("Failed to fetch the exact latest version of arc, so use -SNAPSHOT instead")
-                return@fetchLatestVersion "-SNAPSHOT"
+                return@fetchLatest "-SNAPSHOT"
             }
         }
         arc(latestVersion)
@@ -293,16 +294,16 @@ class DependencySpec(
      * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
      */
     fun arcLatestTag() {
-        val latestVersion = target.fetchLatestVersion("arc-tag-dependency", namespace = "latest_dependencies") {
+        val latestVersion = target.fetchLatest("arc-tag-dependency", namespace = "latest_dependencies") {
             try {
                 val url = URL(R.github.tag.arc)
                 val json = Jval.read(url.readText())
                 val all = json.asArray()
                 val latestTag = all.get(0) // the latest tag
-                return@fetchLatestVersion latestTag.getString("name")
+                return@fetchLatest latestTag.getString("name")
             } catch (e: Exception) {
                 target.logger.warn("Failed to fetch the exact latest version of arc, so use ${R.version.defaultArc} instead")
-                return@fetchLatestVersion R.version.defaultArc
+                return@fetchLatest R.version.defaultArc
             }
         }
         arc(latestVersion)

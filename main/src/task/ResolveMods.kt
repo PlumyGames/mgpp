@@ -2,6 +2,7 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
 import io.github.liplum.dsl.listProp
+import io.github.liplum.mindustry.SharedCache.isUpdateToDate
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
@@ -41,7 +42,7 @@ open class ResolveMods : DefaultTask() {
             val cacheFile = mod.resolveCacheFile()
             when (mod) {
                 is LocalMod -> if (!cacheFile.isFile) throw GradleException("Local mod $cacheFile not found.")
-                is IGitHubMod -> if (!isUpdateToDate(cacheFile)) mod.download(cacheFile)
+                is IGitHubMod -> if (!isUpdateToDate(lockFile = cacheFile)) mod.download(cacheFile)
                 is IDownloadableMod -> if (!cacheFile.exists()) mod.download(cacheFile)
                 else -> {}
             }
