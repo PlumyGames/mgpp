@@ -233,7 +233,7 @@ open class RunMindustryExtension(
     fun addModpack(
         name: String,
         config: Action<AddModpackSpec>
-    ): Modpack? {
+    ): Modpack {
         return addModpack(name) {
             config.execute(this)
         }
@@ -248,7 +248,7 @@ open class RunMindustryExtension(
      * }
      * ```
      */
-    fun addModpack(config: Action<AddModpackSpec>): Modpack? {
+    fun addModpack(config: Action<AddModpackSpec>): Modpack {
         return addModpack(defaultModpackName, config)
     }
 }

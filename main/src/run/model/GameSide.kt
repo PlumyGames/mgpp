@@ -52,19 +52,38 @@ abstract class AddGameSideSpec<T : GameSide> {
      *  ## Default data directory of Mindustry server
      *  `./config/`
      */
-    var dataDir: Any?
-        get() = when (val dir = backend.dataDir) {
-            is ProjBuildDataDirLoc -> dir.name
-            is LocalDataDirLoc -> dir.dir
-            else -> null
-        }
+    var dataDir: IDataDirLoc?
+        get() = backend.dataDir
         set(value) {
-            when (value) {
-                is File -> backend.dataDir = LocalDataDirLoc(value)
-                is String -> backend.dataDir = LocalDataDirLoc(File(value))
-                is IDataDirLoc -> backend.dataDir = value
-            }
+            backend.dataDir = value
         }
+
+    fun putDataAt(props: Map<String, Any>) {
+        val path = props["path"]
+        val file = props["file"]
+        if (path != null) {
+            putDataAt(path = path.toString())
+        } else if (file != null) {
+            putDataAt(file = proj.project.file(file))
+        } else {
+            proj.logger.error(
+                "Neither \"path\" nor \"file\" given in putDataAt(Map<String,Any>)"
+            )
+        }
+    }
+
+    fun putDataAt(path: String) {
+        dataDir = LocalDataDirLoc(File(path))
+    }
+
+    fun putDataAt(file: File) {
+        dataDir = LocalDataDirLoc(file)
+    }
+
+    fun putDataAt(loc: IDataDirLoc) {
+        dataDir = loc
+    }
+
     var modpack: String?
         get() = backend.modpack
         set(value) {
@@ -76,6 +95,7 @@ abstract class AddGameSideSpec<T : GameSide> {
             name = props["name"] ?: defaultModpackName,
         )
     }
+
     fun useModpack(name: String) {
         modpack = formatValidGradleName(name)
     }
@@ -199,12 +219,12 @@ abstract class AddGameSideSpec<T : GameSide> {
         val path = props["path"]
         val file = props["file"]
         if (path != null) {
-            LocalGameLoc(File(path as String)).checkAndSet()
+            localFile(path = path.toString())
         } else if (file != null) {
-            LocalGameLoc(file as File).checkAndSet()
+            localFile(file = file as File)
         } else {
             proj.logger.error(
-                "Neither \"path\" nor \"file\" given in fromLocalDisk(Map<String,Any>)"
+                "Neither \"path\" nor \"file\" given in localFile(Map<String,Any>)"
             )
         }
     }

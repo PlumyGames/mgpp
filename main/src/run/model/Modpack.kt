@@ -132,7 +132,7 @@ class AddModpackSpec(
         val path = props["path"]
         val file = props["file"]
         if (path != null) {
-            local(path as String)
+            local(path.toString())
         } else if (file != null) {
             local(file as File)
         } else {

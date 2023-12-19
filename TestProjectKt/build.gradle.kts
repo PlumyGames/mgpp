@@ -87,6 +87,10 @@ runMindustry {
         official(version = "v146")
         useModpack(name = "for debugging")
     }
+    addClient("custom data dir") {
+        official(version = "v146")
+        putDataAt(file = buildDir.resolve("customDataDir"))
+    }
     addClient("debugging") {
         official(version = "v146")
         useModpack(name = "for debugging 2")
