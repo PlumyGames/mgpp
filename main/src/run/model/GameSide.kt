@@ -9,8 +9,9 @@ import org.gradle.api.Project
 import java.io.File
 
 open class GameSide(
-    name: String, isAnonymous: Boolean
-) : NamedModel(name, isAnonymous) {
+    override val name: String,
+    override val isAnonymous: Boolean
+) : NamedModel {
     /** @see [AddGameSideSpec.startupArgs] */
     val startupArgs = ArrayList<String>()
 

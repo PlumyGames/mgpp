@@ -5,6 +5,7 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.getDuplicateName
+import io.github.liplum.mindustry.run.model.allocModelName
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -67,27 +68,19 @@ open class RunMindustryExtension(
         name: String = "",
         config: AddClientSpec.() -> Unit
     ): Client {
-        var clientName = formatValidGradleName(name)
-        val isAnonymous = clientName.isBlank()
-        if (isAnonymous) {
-            val anonymousCount = clients.count { it.isAnonymous }
-            clientName = if (anonymousCount == 0) ""
-            else (anonymousCount + 1).toString()
-        } else if (clients.any { it.name == clientName }) {
-            clientName = formatValidGradleName(name.getDuplicateName())
-        }
-        val client = Client(name = clientName, isAnonymous = isAnonymous)
+        val (newName, isAnonymous) = allocModelName(name, clients)
+        val client = Client(name = newName, isAnonymous = isAnonymous)
         client.modpack = defaultModpackName
         client.dataDir = ProjBuildDataDirLoc(
             namespace = "mindustryClientData",
-            name = clientName.ifBlank { defaultClientName },
+            name = newName.ifBlank { defaultClientName },
         )
         AddClientSpec(proj, client).config()
         if (client.location == null) {
-            proj.logger.warn("Client \"$clientName\" location not specified")
+            proj.logger.warn("Client \"$newName\" location not specified")
         }
         clients.add(client)
-        proj.logger.info("Client<$clientName> is added.", client)
+        proj.logger.info("Client<$newName> is added.", client)
         return client
     }
 
@@ -154,27 +147,19 @@ open class RunMindustryExtension(
         name: String = "",
         config: AddServerSpec.() -> Unit
     ): Server {
-        var serverName = formatValidGradleName(name)
-        val isAnonymous = serverName.isBlank()
-        if (isAnonymous) {
-            val anonymousCount = servers.count { it.isAnonymous }
-            serverName = if (anonymousCount == 0) ""
-            else (anonymousCount + 1).toString()
-        } else if (servers.any { it.name == serverName }) {
-            serverName = formatValidGradleName(name.getDuplicateName())
-        }
-        val server = Server(name = serverName, isAnonymous = isAnonymous)
+        val (newName, isAnonymous) = allocModelName(name, servers)
+        val server = Server(name = newName, isAnonymous = isAnonymous)
         server.modpack = defaultModpackName
         server.dataDir = ProjBuildDataDirLoc(
             namespace = "mindustryServerData",
-            name = serverName.ifBlank { defaultServerName },
+            name = newName.ifBlank { defaultServerName },
         )
         AddServerSpec(proj, server).config()
         if (server.location == null) {
-            proj.logger.warn("Server \"$serverName\" location not specified")
+            proj.logger.warn("Server \"$newName\" location not specified")
         }
         servers.add(server)
-        proj.logger.info("Server<$serverName> is added.", server)
+        proj.logger.info("Server<$newName> is added.", server)
         return server
     }
 
@@ -225,22 +210,14 @@ open class RunMindustryExtension(
         name: String = "",
         config: AddModpackSpec.() -> Unit
     ): Modpack {
-        var modpackName = formatValidGradleName(name)
-        val isAnonymous = modpackName.isBlank()
-        if (isAnonymous) {
-            val anonymousCount = modpacks.count { it.isAnonymous }
-            modpackName = if (anonymousCount == 0) ""
-            else (anonymousCount + 1).toString()
-        } else if (modpacks.any { it.name == modpackName }) {
-            modpackName = formatValidGradleName(name.getDuplicateName())
-        }
-        val modpack = Modpack(name = modpackName, isAnonymous = isAnonymous)
+        val (newName, isAnonymous) = allocModelName(name, modpacks)
+        val modpack = Modpack(name = newName, isAnonymous = isAnonymous)
         AddModpackSpec(proj, modpack).config()
         if (modpack.isEmpty()) {
-            proj.logger.warn("Modpack<$modpackName> contains no mods.")
+            proj.logger.warn("Modpack<$newName> contains no mods.")
         }
         modpacks.add(modpack)
-        proj.logger.info("Modepack<$modpackName> is added.", modpack)
+        proj.logger.info("Modepack<$newName> is added.", modpack)
         return modpack
     }
 

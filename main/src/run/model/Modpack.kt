@@ -8,8 +8,9 @@ import org.gradle.api.logging.LogLevel
 import java.io.File
 
 class Modpack(
-    name: String, isAnonymous: Boolean
-) : NamedModel(name, isAnonymous) {
+    override val name: String,
+    override val isAnonymous: Boolean
+) : NamedModel {
     val mods = ArrayList<IMod>()
     val fromTaskPath = ArrayList<String>()
     fun isEmpty() = mods.isEmpty() && fromTaskPath.isEmpty()

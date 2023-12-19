@@ -1,6 +1,9 @@
 package io.github.liplum.mindustry.run.model
 
-open class NamedModel(
+import io.github.liplum.dsl.getDuplicateName
+import io.github.liplum.mindustry.formatValidGradleName
+
+interface NamedModel {
     /**
      * *Optional*
      * An empty String as default.
@@ -12,10 +15,27 @@ open class NamedModel(
      * runServer // if it's anonymous
      * ```
      */
-    val name: String,
+    val name: String
+
     /**
      * Whether this is anonymous.
      */
-    val isAnonymous: Boolean,
-)
+    val isAnonymous: Boolean
+}
 
+/**
+ * Allocate a model name without name collision.
+ * @return (newName, isAnonymous)
+ */
+fun <T : NamedModel> allocModelName(name: String, all: List<T>): Pair<String, Boolean> {
+    var newName = formatValidGradleName(name)
+    val isAnonymous = newName.isBlank()
+    if (isAnonymous) {
+        val anonymousCount = all.count { it.isAnonymous }
+        newName = if (anonymousCount == 0) ""
+        else (anonymousCount + 1).toString()
+    } else if (all.any { it.name == newName }) {
+        newName = formatValidGradleName(name.getDuplicateName())
+    }
+    return Pair(newName, isAnonymous)
+}
