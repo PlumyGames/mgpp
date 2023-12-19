@@ -35,16 +35,17 @@ open class ResolveGame : DefaultTask() {
         if (!cacheFile.exists()) {
             when (loc) {
                 is LocalGameLoc -> if (!cacheFile.isFile) throw GradleException("Local game $cacheFile doesn't exists.")
-                else -> loc.download(cacheFile)
+                is IDownloadableGameLoc -> loc.download(cacheFile)
+                else -> throw Exception("Unhandled game loc $loc")
             }
         }
         createSymbolicLinkOrCopyCache(link = gameFile, target = cacheFile)
     }
 
-    fun IGameLoc.download(cacheFile: File) {
+    fun IDownloadableGameLoc.download(cacheFile: File) {
         logger.lifecycle("Downloading $this -> $cacheFile...")
         try {
-            this.createDownloadLoc().openInputStream().use {
+            this.resolveDownloadSrc().openStream().use {
                 it.copyTo(cacheFile)
             }
             logger.lifecycle("${this.fileName4Local} was downloaded.")
