@@ -31,9 +31,9 @@ open class RunMindustryExtension(
     val proj: Project,
 ) {
     companion object {
-        const val defaultModpackName = "Default"
-        const val defaultClientName = "Default"
-        const val defaultServerName = "Default"
+        const val defaultModpackName = ""
+        const val defaultClientName = ""
+        const val defaultServerName = ""
     }
 
     val clients = ArrayList<Client>()
