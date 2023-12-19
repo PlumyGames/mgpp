@@ -154,6 +154,7 @@ class DependencySpec(
         val version = map["version"]?.toString() ?: throw GradleException("No version specified for `mindustryMirror`")
         when (version) {
             Notation.latest.toString() -> mindustryMirrorLatestCommit()
+            Notation.latestRelease.toString() -> mindustryMirrorLatestCommit()
             else -> mindustryMirror(version)
         }
     }
@@ -190,6 +191,24 @@ class DependencySpec(
             } catch (e: Exception) {
                 target.logger.warn("Failed to fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
                 return@fetchLatestVersion "-SNAPSHOT"
+            }
+        }
+        mindustryMirror(latestVersion)
+    }
+    /**
+     * Fetch the latest Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
+     *
+     * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
+     */
+    fun mindustryMirrorLatestRelease() {
+        val latestVersion = target.fetchLatestVersion("mindustry-mirror-release-dependency") {
+            try {
+                val url = URL(R.github.tag.mirrorLatestCommit)
+                val json = Jval.read(url.readText())
+                return@fetchLatestVersion json.getString("tag_name")
+            } catch (e: Exception) {
+                target.logger.warn("Failed to fetch the exact latest version of mindustry jitpack, so use ${R.version.defaultOfficial} instead")
+                return@fetchLatestVersion R.version.defaultOfficial
             }
         }
         mindustryMirror(latestVersion)
@@ -325,6 +344,7 @@ class DependencySpec(
         infix fun mirror(notation: Notation) {
             when (notation) {
                 Notation.latest -> mindustryMirrorLatestCommit()
+                Notation.latestRelease -> mindustryMirrorLatestRelease()
                 else -> throw GradleException("Unknown dependency notation of mindustry mirror $notation")
             }
         }

@@ -143,6 +143,10 @@ object R {
              */
             const val mirrorLatestCommit = "https://api.github.com/repos/Anuken/MindustryJitpack/commits/main"
             /**
+             * [The GitHub API to fetch the latest release of mirror](https://github.com/Anuken/MindustryJitpack/releases/latest)
+             */
+            const val mirrorLatestRelase = "https://api.github.com/repos/Anuken/MindustryJitpack/releases/latest"
+            /**
              * [The GitHub API to fetch the latest commit of arc](https://github.com/Anuken/Arc/commits/master)
              */
             const val arcLatestCommit = "https://api.github.com/repos/Anuken/Arc/commits/master"
