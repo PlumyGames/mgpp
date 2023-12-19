@@ -26,7 +26,7 @@ class AddClientSpec(
     override fun official(version: Notation) {
         when (version) {
             Notation.latest -> LatestOfficialMindustryLoc(MindustryEnd.Client).checkAndSet()
-            else -> proj.logger.log(LogLevel.WARN, "Version \"$version\" is unsupported")
+            else -> proj.logger.error("Version \"$version\" is unsupported")
         }
     }
 
@@ -42,9 +42,10 @@ class AddClientSpec(
     override fun be(version: Notation) {
         when (version) {
             Notation.latest -> LatestMindustryBELoc(MindustryEnd.Client).checkAndSet()
-            else -> proj.logger.log(LogLevel.WARN, "Version \"$version\" is unsupported")
+            else -> proj.logger.error("Version \"$version\" is unsupported")
         }
     }
+
     /**
      * ### Kotlin DSL
      * [Foo's client](https://github.com/mindustry-antigrief/mindustry-client)
@@ -67,6 +68,7 @@ class AddClientSpec(
             file = file,
         )
     }
+
     /**
      * ### Groovy DSL
      * [Foo's client](https://github.com/mindustry-antigrief/mindustry-client)
@@ -81,6 +83,7 @@ class AddClientSpec(
             file = props["file"] ?: "",
         )
     }
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -101,6 +104,7 @@ class AddClientSpec(
             file = file,
         )
     }
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -115,6 +119,7 @@ class AddClientSpec(
             file = "Mindustry-CN-ARC-Desktop-$version.jar",
         )
     }
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -124,6 +129,7 @@ class AddClientSpec(
     fun cnARC(version: Int) {
         cnARC(version = version.toString())
     }
+
     /**
      * ### Groovy DSL
      * ```groovy

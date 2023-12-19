@@ -13,11 +13,13 @@ import org.gradle.api.plugins.ExtensionAware
  */
 val Project.`runMindustry`: RunMindustryExtension
     get() = (this as ExtensionAware).extensions.getByName(R.x.runMindustry) as RunMindustryExtension
+
 /**
  * Configures the [mindustry][RunMindustryExtension] extension.
  */
 fun Project.`runMindustry`(configure: Action<RunMindustryExtension>): Unit =
     (this as ExtensionAware).extensions.configure(R.x.runMindustry, configure)
+
 /**
  * [runMindustry] is used to create `runClient` and `runServer` tasks dynamically after build script is evaluated.
  *
@@ -33,6 +35,7 @@ open class RunMindustryExtension(
     val clients = ArrayList<Client>()
     val servers = ArrayList<Server>()
     val modpacks = ArrayList<Modpack>()
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -75,10 +78,14 @@ open class RunMindustryExtension(
             name = clientName.ifBlank { "Default" },
         )
         AddClientSpec(proj, client).config()
+        if (client.location == null) {
+            proj.logger.error("Client \"$clientName\" location not specified")
+        }
         clients.add(client)
         proj.logger.info("Client<$clientName> is added.", client)
         return client
     }
+
     /**
      * ### Groovy DSL
      * ```groovy
@@ -109,6 +116,7 @@ open class RunMindustryExtension(
             config.execute(this)
         }
     }
+
     /**
      * ### Groovy DSL
      * ```groovy
@@ -126,6 +134,7 @@ open class RunMindustryExtension(
             config.execute(this)
         }
     }
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -154,10 +163,14 @@ open class RunMindustryExtension(
             name = serverName.ifBlank { "Default" },
         )
         AddServerSpec(proj, server).config()
+        if (server.location == null) {
+            proj.logger.error("Server \"$serverName\" location not specified")
+        }
         servers.add(server)
         proj.logger.info("Server<$serverName> is added.", server)
         return server
     }
+
     /**
      * ### Groovy DSL
      * ```groovy
@@ -174,6 +187,7 @@ open class RunMindustryExtension(
             config.execute(this)
         }
     }
+
     /**
      * ### Groovy DSL
      * ```groovy
@@ -188,6 +202,7 @@ open class RunMindustryExtension(
             config.execute(this)
         }
     }
+
     /**
      * ### Kotlin DSL
      * ```kotlin
@@ -219,6 +234,7 @@ open class RunMindustryExtension(
         modpacks.add(modpack)
         return modpack
     }
+
     /**
      * ### Groovy DSL
      * ```groovy
@@ -236,6 +252,7 @@ open class RunMindustryExtension(
             config.execute(this)
         }
     }
+
     /**
      * Add to default modpack
      * ```groovy

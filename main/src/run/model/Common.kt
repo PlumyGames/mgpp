@@ -5,6 +5,7 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.plusAssign
+import io.github.liplum.mindustry.LocalProperties.local
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 import java.io.File
@@ -145,7 +146,7 @@ abstract class AddCommonSpec<T : Common> {
     fun official(props: Map<String, Any>) {
         when (val version = props["version"]?.toString()) {
             Notation.latest.toString() -> official(version = latest)
-            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in official(Map<String,Any>)")
+            null -> proj.logger.error("No \"version\" given in official(Map<String,Any>)")
             else -> official(version)
         }
     }
@@ -187,20 +188,20 @@ abstract class AddCommonSpec<T : Common> {
     fun be(props: Map<String, Any>) {
         when (val version = props["version"]?.toString()) {
             Notation.latest.toString() -> be(version = latest)
-            null -> proj.logger.log(LogLevel.WARN, "No \"version\" given in be(Map<String,Any>)")
+            null -> proj.logger.error("No \"version\" given in be(Map<String,Any>)")
             else -> be(version)
         }
     }
 
-    fun fromLocalDisk(path: String) {
+    fun localFile(path: String) {
         LocalGameLoc(File(path)).checkAndSet()
     }
 
-    fun fromLocalDisk(file: File) {
+    fun localFile(file: File) {
         LocalGameLoc(file).checkAndSet()
     }
 
-    fun fromLocalDisk(props: Map<String, Any>) {
+    fun localFile(props: Map<String, Any>) {
         val path = props["path"]
         val file = props["file"]
         if (path != null) {
@@ -208,10 +209,18 @@ abstract class AddCommonSpec<T : Common> {
         } else if (file != null) {
             LocalGameLoc(file as File).checkAndSet()
         } else {
-            proj.logger.log(
-                LogLevel.WARN,
+            proj.logger.error(
                 "Neither \"path\" nor \"file\" given in fromLocalDisk(Map<String,Any>)"
             )
+        }
+    }
+
+    fun localProperties(key: String) {
+        val path = proj.local[key]
+        if (path == null) {
+            proj.logger.error("\"$key\" not found for \"${backend.name}\" in local proprieties.")
+        } else {
+            localFile(path = path)
         }
     }
 }
