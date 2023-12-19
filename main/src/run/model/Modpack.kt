@@ -7,7 +7,8 @@ import org.gradle.api.logging.LogLevel
 import java.io.File
 
 class Modpack(
-    val name: String
+    val name: String,
+    val isAnonymous: Boolean,
 ) {
     val mods = ArrayList<IMod>()
     val fromTaskPath = ArrayList<String>()
@@ -21,6 +22,7 @@ class AddModpackSpec(
     fun addMod(mod: IMod) {
         modpack.mods.add(mod)
     }
+
     /**
      * Add a mod by its repo name on GitHub, and detect its mode type automatically.
      *
@@ -28,6 +30,7 @@ class AddModpackSpec(
      * @param repo like "PlumyGames/mgpp"
      */
     fun github(repo: String) = addMod(GitHubUntypedMod(repo))
+
     /**
      * Add a json mod by its repo name on GitHub.
      * @param repo like "PlumyGames/mgpp"
@@ -41,6 +44,7 @@ class AddModpackSpec(
             branch = branch
         )
     )
+
     /**
      * Add a javascript mod by its repo name on GitHub.
      * @param repo like "PlumyGames/mgpp"
@@ -54,6 +58,7 @@ class AddModpackSpec(
             branch = branch
         )
     )
+
     /**
      * Add a java mod by its repo name on GitHub.
      * @param repo like "PlumyGames/mgpp"
@@ -63,6 +68,7 @@ class AddModpackSpec(
         repo: String,
         tag: String? = null,
     ) = addMod(GitHubJvmMod(repo = repo, tag = tag))
+
     /**
      * Add a jvm mod by its repo name on GitHub.
      * @param repo like "PlumyGames/mgpp"
@@ -72,6 +78,7 @@ class AddModpackSpec(
         repo: String,
         tag: String? = null,
     ) = addMod(GitHubJvmMod(repo = repo, tag = tag))
+
     /**
      * Add a local mod form disk.
      *
@@ -80,6 +87,7 @@ class AddModpackSpec(
      * @param path of that mod
      */
     fun local(path: String) = addMod(LocalMod(path))
+
     /**
      * Add a local mod form disk.
      *
@@ -88,25 +96,30 @@ class AddModpackSpec(
      * @param file of that mod
      */
     fun local(file: File) = addMod(LocalMod(file))
+
     /** @see [github]  */
     fun github(props: Map<String, String>) = github(
         repo = props["repo"] ?: ""
     )
+
     /** @see [json]  */
     fun json(props: Map<String, String>) = json(
         repo = props["repo"] ?: "",
         branch = props["branch"]
     )
+
     /** @see [js]  */
     fun js(props: Map<String, String>) = js(
         repo = props["repo"] ?: "",
         branch = props["branch"]
     )
+
     /** @see [java]  */
     fun java(props: Map<String, String>) = java(
         repo = props["repo"] ?: "",
         tag = props["tag"],
     )
+
     /** @see [jvm]  */
     fun jvm(props: Map<String, String>) = jvm(
         repo = props["repo"] ?: "",
@@ -138,11 +151,13 @@ class AddModpackSpec(
             path = props["path"] ?: ""
         )
     }
+
     /**
      * Link: [Testing Utilities](https://github.com/MEEPofFaith/testing-utilities-java)
      */
     val `testingUtilities`: Unit
         get() = jvm(repo = "MEEPofFaith/testing-utilities-java")
+
     /**
      * Link: [Informatis](https://github.com/sharlottes/informatis)
      */

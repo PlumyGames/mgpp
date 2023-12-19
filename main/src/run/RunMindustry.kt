@@ -31,6 +31,8 @@ open class RunMindustryExtension(
 ) {
     companion object {
         const val defaultModpackName = "Default"
+        const val defaultClientName = "Default"
+        const val defaultServerName = "Default"
     }
 
     val clients = ArrayList<Client>()
@@ -78,7 +80,7 @@ open class RunMindustryExtension(
         client.modpack = defaultModpackName
         client.dataDir = ProjBuildDataDirLoc(
             namespace = "mindustryClientData",
-            name = clientName.ifBlank { "Default" },
+            name = clientName.ifBlank { defaultClientName },
         )
         AddClientSpec(proj, client).config()
         if (client.location == null) {
@@ -165,7 +167,7 @@ open class RunMindustryExtension(
         server.modpack = defaultModpackName
         server.dataDir = ProjBuildDataDirLoc(
             namespace = "mindustryServerData",
-            name = serverName.ifBlank { "Default" },
+            name = serverName.ifBlank { defaultServerName },
         )
         AddServerSpec(proj, server).config()
         if (server.location == null) {
@@ -220,23 +222,25 @@ open class RunMindustryExtension(
      * }
      */
     inline fun addModpack(
-        name: String = defaultModpackName,
+        name: String = "",
         config: AddModpackSpec.() -> Unit
-    ): Modpack? {
-        val modpackName = formatValidGradleName(name)
-        if (modpackName.isBlank()) {
-            proj.logger.error(
-                "The modpack name will ignore any characters other than [a-zA-Z0-9]. Therefore, its name (\"$name\") is blank and invalid."
-            )
-            return null
+    ): Modpack {
+        var modpackName = formatValidGradleName(name)
+        val isAnonymous = modpackName.isBlank()
+        if (isAnonymous) {
+            val anonymousCount = modpacks.count { it.isAnonymous }
+            modpackName = if (anonymousCount == 0) ""
+            else (anonymousCount + 1).toString()
+        } else if (modpacks.any { it.name == modpackName }) {
+            modpackName = formatValidGradleName(name.getDuplicateName())
         }
-        val modpack = Modpack(modpackName)
+        val modpack = Modpack(name = modpackName, isAnonymous = isAnonymous)
         AddModpackSpec(proj, modpack).config()
         if (modpack.isEmpty()) {
-            proj.logger.warn("Modpack<$modpackName> doesn't contains any mod, and it will be ignored.")
-            return null
+            proj.logger.warn("Modpack<$modpackName> contains no mods.")
         }
         modpacks.add(modpack)
+        proj.logger.info("Modepack<$modpackName> is added.", modpack)
         return modpack
     }
 

@@ -76,6 +76,9 @@ runMindustry {
         `testingUtilities`
         `informatis`
     }
+    addModpack("for debugging") {
+        github("EB-wilson/TooManyItems")
+    }
     addClient {
         // anonymous 1
         official(version = "v146")
@@ -83,6 +86,10 @@ runMindustry {
     addClient("debugging") {
         official(version = "v146")
         modpack = "for debugging"
+    }
+    addClient("debugging") {
+        official(version = "v146")
+        modpack = "for debugging 2"
     }
     addClient {
         // anonymous 2
@@ -95,7 +102,7 @@ runMindustry {
     addClient(name = "Old Mindustry") {
         official(version = "v136")
     }
-    addClient(name = "From local.properties"){
+    addClient(name = "From local.properties") {
         localProperties("mgpp.local-client")
     }
     addServer {
