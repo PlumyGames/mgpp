@@ -34,9 +34,9 @@ open class MindustryExtension(
      * 1 hour as default.
      */
     var outOfDateTime: Int
-        get() = (R.outOfDataTime / 1000).toInt()
+        get() = (R.outOfDataDuration / 1000).toInt()
         set(value) {
-            R.outOfDataTime = value * 1000L
+            R.outOfDataDuration = value * 1000L
         }
     @JvmField
     val _dependency = DependencySpec(target)

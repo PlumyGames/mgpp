@@ -12,14 +12,16 @@ data class LatestCache(
     var lastValue: String,
     var lastUpdatedTimeStamp: Long,
 )
+
 internal
 inline fun Project.fetchLatestVersion(
     type: String,
-    outOfDate: Long = R.outOfDataTime,
+    namespace: String,
+    outOfDate: Long = R.outOfDataDuration,
     fetch: () -> String,
 ): String {
     val mindustry = rootProject.layout.buildDirectory.asFile.get().resolve("mindustry")
-    val jsonFile = mindustry.resolve("latest_cache.json").ensureParentDir()
+    val jsonFile = mindustry.resolve("$namespace.json").ensureParentDir()
     val json = if (jsonFile.exists())
         jsonFile.readText()
     else "[]"

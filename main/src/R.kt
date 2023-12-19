@@ -6,29 +6,31 @@ object R {
     /**
      * The default check time(ms) for latest version.
      *
-     * 1 hour as default.
+     * 24 hour as default.
      */
-    const val defaultOutOfDataTime = 1000L * 60 * 60
+    const val defaultOutOfDataTime = 24 * 60 * 60 * 1000L
+
     /**
      * The check time(ms) for latest version.
-     *
-     * 1 hour as default.
      */
-    var outOfDataTime = defaultOutOfDataTime
+    var outOfDataDuration = defaultOutOfDataTime
 
     object x {
         /**
          * The name of [MindustryExtension]
          */
         const val mindustry = "mindustry"
+
         /**
          * The name of [DeployModExtension]
          */
         const val deployMod = "deployMod"
+
         /**
          * The name of [MindustryExtension]
          */
         const val runMindustry = "runMindustry"
+
         /**
          * The name of [MindustryAssetsExtension]
          */
@@ -41,6 +43,7 @@ object R {
          */
         const val mindustry = "mindustry"
         const val mindustryStuff = "mindustry stuff"
+
         /**
          * A task group for tasks related to [MindustryAssetsExtension], named `mindustry assets`
          */
@@ -84,12 +87,14 @@ object R {
          * **Note:** You shouldn't pretend this version and work based on it.
          */
         const val defaultOfficial = "v146"
+
         /**
          * [The default bleeding edge version](https://github.com/Anuken/MindustryBuilds/releases)
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
         const val defaultBE = "24632"
+
         /**
          * [The default Arc version](https://github.com/Anuken/Arc/releases/tag)
          *
@@ -103,10 +108,12 @@ object R {
          * [An *Anime* cat](https://github.com/Anuken)
          */
         const val anuken = "anuken"
+
         /**
          * [Mindustry game](https://github.com/Anuken/Mindustry)
          */
         const val mindustry = "Mindustry"
+
         /**
          * [Mindustry bleeding-edge](https://github.com/Anuken/MindustryBuilds)
          */
@@ -117,22 +124,27 @@ object R {
              * [Mindustry official release](https://github.com/Anuken/Mindustry/releases)
              */
             const val release = "https://github.com/Anuken/Mindustry/releases"
+
             /**
              * GitHub API of [Mindustry official release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
              */
             const val releaseAPI = "https://api.github.com/repos/Anuken/Mindustry/releases"
+
             /**
              * GitHub API of [Latest Mindustry official release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
              */
             const val latestReleaseAPI = "https://api.github.com/repos/Anuken/Mindustry/releases/latest"
+
             /**
              * GitHub API of [Mindustry bleeding-edge release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
              */
             const val beReleaseAPI = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+
             /**
              * GitHub API of [Latest Mindustry bleeding-edge release](https://api.github.com/repos/Anuken/Mindustry/releases/latest)
              */
             const val beLatestReleaseAPI = "https://api.github.com/repos/Anuken/MindustryBuilds/releases/latest"
+
             /**
              * [Arc tags](https://github.com/Anuken/Arc/tags)
              */
@@ -142,10 +154,12 @@ object R {
              * [The GitHub API to fetch the latest commit of mirror](https://github.com/Anuken/MindustryJitpack/commits/main)
              */
             const val mirrorLatestCommit = "https://api.github.com/repos/Anuken/MindustryJitpack/commits/main"
+
             /**
              * [The GitHub API to fetch the latest release of mirror](https://github.com/Anuken/MindustryJitpack/releases/latest)
              */
             const val mirrorLatestRelase = "https://api.github.com/repos/Anuken/MindustryJitpack/releases/latest"
+
             /**
              * [The GitHub API to fetch the latest commit of arc](https://github.com/Anuken/Arc/commits/master)
              */
@@ -157,10 +171,12 @@ object R {
              * [The Mindustry repo on Jitpack](https://github.com/anuken/mindustry)
              */
             const val official = "com.github.anuken.mindustry"
+
             /**
              * [The mirror repo of Mindustry on Jitpack](https://github.com/anuken/mindustryjitpack)
              */
             const val mirror = "com.github.anuken.mindustryjitpack"
+
             /**
              * [The Arc repo on Jitpack](https://github.com/anuken/arc)
              */
@@ -173,6 +189,7 @@ object R {
          * [The name convention of client release](https://github.com/Anuken/Mindustry/releases)
          */
         const val client = "Mindustry.jar"
+
         /**
          * [The name convention of server release](https://github.com/Anuken/Mindustry/releases)
          */
@@ -191,6 +208,7 @@ object R {
          * The main class of desktop launcher.
          */
         const val desktop = "mindustry.desktop.DesktopLauncher"
+
         /**
          * The main class of server launcher.
          */
@@ -202,6 +220,7 @@ object R {
          * The [organization](https://github.com/mindustry-antigrief) of Foo's Client
          */
         const val user = "mindustry-antigrief"
+
         /**
          * The [Foo's Client repo](https://github.com/mindustry-antigrief/mindustry-client)
          */
@@ -213,6 +232,7 @@ object R {
          * The [maintainer](https://github.com/Jackson11500) of CN-ARC Client
          */
         const val user = "Jackson11500"
+
         /**
          * The [CN-ARC client buildings](https://github.com/Jackson11500/Mindustry-CN-ARC-Builds)
          */

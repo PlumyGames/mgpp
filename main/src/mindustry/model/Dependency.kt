@@ -54,6 +54,7 @@ class DependencySpec(
     val arcDependency = target.prop<IDependency>().apply {
         convention(ArcDependency())
     }
+
     /**
      * The dependency notation of Mindustry.
      *
@@ -64,6 +65,7 @@ class DependencySpec(
     val mindustryDependency = target.prop<IDependency>().apply {
         convention(MindustryDependency())
     }
+
     /**
      * A notation represents the latest version.
      * ## Usages
@@ -75,6 +77,7 @@ class DependencySpec(
      */
     val latest: Notation
         get() = Notation.latest
+
     /**
      * A notation represents the latest release.
      * ## Usages
@@ -85,6 +88,7 @@ class DependencySpec(
      */
     val latestRelease: Notation
         get() = Notation.latestRelease
+
     /**
      * A notation represents the latest tag.
      * ## Usages
@@ -102,6 +106,7 @@ class DependencySpec(
     fun mindustry(version: String) {
         mindustryDependency.set(MindustryDependency(version))
     }
+
     /**
      * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
      * ## Supported notations:
@@ -115,6 +120,7 @@ class DependencySpec(
             else -> throw GradleException("Unknown dependency notation of mindustry $version")
         }
     }
+
     /**
      * Fetch the Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
      * ## Supported notations:
@@ -136,6 +142,7 @@ class DependencySpec(
     fun mindustryMirror(version: String) {
         mindustryDependency.set(MirrorDependency(version))
     }
+
     /**
      * Fetch the Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
      * ## Supported notations:
@@ -148,6 +155,7 @@ class DependencySpec(
             else -> throw GradleException("Unknown dependency notation of mindustry mirror $version")
         }
     }
+
     /**
      * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
      * ## Supported notations:
@@ -168,6 +176,7 @@ class DependencySpec(
     fun arc(version: String) {
         arcDependency.set(ArcDependency(version))
     }
+
     /**
      * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
      * ## Supported notations:
@@ -181,6 +190,7 @@ class DependencySpec(
             else -> throw GradleException("Unknown dependency notation of arc $version")
         }
     }
+
     /**
      * Fetch the Arc from [arc jitpack](https://github.com/Anuken/Arc).
      * ## Supported notations:
@@ -202,62 +212,68 @@ class DependencySpec(
      * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
      */
     fun mindustryLatestRelease() {
-        val latestVersion = target.fetchLatestVersion("mindustry-release-dependency") {
-            try {
-                val url = URL(R.github.tag.latestReleaseAPI)
-                val json = Jval.read(url.readText())
-                return@fetchLatestVersion json.getString("tag_name")
-            } catch (e: Exception) {
-                target.logger.warn("Failed to fetch the exact latest version of mindustry, so use ${R.version.defaultOfficial} instead")
-                return@fetchLatestVersion R.version.defaultOfficial
+        val latestVersion =
+            target.fetchLatestVersion("mindustry-release-dependency", namespace = "latest_dependencies") {
+                try {
+                    val url = URL(R.github.tag.latestReleaseAPI)
+                    val json = Jval.read(url.readText())
+                    return@fetchLatestVersion json.getString("tag_name")
+                } catch (e: Exception) {
+                    target.logger.warn("Failed to fetch the exact latest version of mindustry, so use ${R.version.defaultOfficial} instead")
+                    return@fetchLatestVersion R.version.defaultOfficial
+                }
             }
-        }
         mindustry(latestVersion)
     }
+
     /**
      * Fetch the latest [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
      *
      * **Not Recommended** It may not work due to a network issue or jitpack not yet to build this version
      */
     fun mindustryMirrorLatestCommit() {
-        val latestVersion = target.fetchLatestVersion("mindustry-mirror-commit-dependency") {
-            try {
-                val url = URL(R.github.tag.mirrorLatestCommit)
-                val json = Jval.read(url.readText())
-                val fullSha = json.getString("sha")
-                return@fetchLatestVersion fullSha.subSequence(0, 10).toString()
-            } catch (e: Exception) {
-                target.logger.warn("Failed to fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
-                return@fetchLatestVersion "-SNAPSHOT"
+        val latestVersion =
+            target.fetchLatestVersion("mindustry-mirror-commit-dependency", namespace = "latest_dependencies") {
+                try {
+                    val url = URL(R.github.tag.mirrorLatestCommit)
+                    val json = Jval.read(url.readText())
+                    val fullSha = json.getString("sha")
+                    return@fetchLatestVersion fullSha.subSequence(0, 10).toString()
+                } catch (e: Exception) {
+                    target.logger.warn("Failed to fetch the exact latest version of mindustry jitpack, so use -SNAPSHOT instead")
+                    return@fetchLatestVersion "-SNAPSHOT"
+                }
             }
-        }
         mindustryMirror(latestVersion)
     }
+
     /**
      * Fetch the latest Mindustry from [mindustry jitpack](https://github.com/Anuken/Mindustry).
      *
      * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
      */
     fun mindustryMirrorLatestRelease() {
-        val latestVersion = target.fetchLatestVersion("mindustry-mirror-release-dependency") {
-            try {
-                val url = URL(R.github.tag.mirrorLatestCommit)
-                val json = Jval.read(url.readText())
-                return@fetchLatestVersion json.getString("tag_name")
-            } catch (e: Exception) {
-                target.logger.warn("Failed to fetch the exact latest version of mindustry jitpack, so use ${R.version.defaultOfficial} instead")
-                return@fetchLatestVersion R.version.defaultOfficial
+        val latestVersion =
+            target.fetchLatestVersion("mindustry-mirror-release-dependency", namespace = "latest_dependencies") {
+                try {
+                    val url = URL(R.github.tag.mirrorLatestCommit)
+                    val json = Jval.read(url.readText())
+                    return@fetchLatestVersion json.getString("tag_name")
+                } catch (e: Exception) {
+                    target.logger.warn("Failed to fetch the exact latest version of mindustry jitpack, so use ${R.version.defaultOfficial} instead")
+                    return@fetchLatestVersion R.version.defaultOfficial
+                }
             }
-        }
         mindustryMirror(latestVersion)
     }
+
     /**
      * Fetch the latest Arc from [arc jitpack](https://github.com/Anuken/Arc).
      *
      * **Not Recommended** It may not work due to a network issue or jitpack not yet to build this version
      */
     fun arcLatestCommit() {
-        val latestVersion = target.fetchLatestVersion("arc-commit-dependency") {
+        val latestVersion = target.fetchLatestVersion("arc-commit-dependency", namespace = "latest_dependencies") {
             try {
                 val url = URL(R.github.tag.arcLatestCommit)
                 val json = Jval.read(url.readText())
@@ -270,13 +286,14 @@ class DependencySpec(
         }
         arc(latestVersion)
     }
+
     /**
      * Fetch the latest Arc from [arc jitpack](https://github.com/Anuken/Arc).
      *
      * **Potential Issue** It has a very small chance that it won't work when the new version was just released.
      */
     fun arcLatestTag() {
-        val latestVersion = target.fetchLatestVersion("arc-tag-dependency") {
+        val latestVersion = target.fetchLatestVersion("arc-tag-dependency", namespace = "latest_dependencies") {
             try {
                 val url = URL(R.github.tag.arc)
                 val json = Jval.read(url.readText())
@@ -294,18 +311,21 @@ class DependencySpec(
     val arcRepo get() = R.github.jitpack.arc
     val mindustryMirrorRepo get() = R.github.jitpack.mirror
     val mindustryRepo get() = R.github.jitpack.official
+
     /**
      * Declare an Arc dependency from [arc jitpack](https://github.com/Anuken/Arc).
      */
     fun ArcDependency(
         version: String = R.version.defaultOfficial,
     ) = Dependency(arcRepo, version)
+
     /**
      * Declare a Mindustry dependency from [mindustry jitpack](https://github.com/Anuken/Mindustry).
      */
     fun MindustryDependency(
         version: String = R.version.defaultOfficial,
     ) = Dependency(mindustryRepo, version)
+
     /**
      * Declare a dependency.
      */
@@ -313,6 +333,7 @@ class DependencySpec(
         fullName: String = "",
         version: String = "",
     ) = io.github.liplum.mindustry.Dependency(fullName, version)
+
     /**
      * Declare a Mindustry dependency from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
      */
