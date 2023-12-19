@@ -16,7 +16,8 @@ sealed interface IGameLoc : Serializable {
 
 sealed interface IDownloadableGameLoc : IGameLoc {
     /**
-     * Generate a [URL] deterministically.
+     * Generate a deterministic URL.
+     * It can be an expensive task if it requests any data.
      */
     fun resolveDownloadSrc(): URL
 }
