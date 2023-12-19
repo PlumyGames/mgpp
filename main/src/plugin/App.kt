@@ -41,10 +41,6 @@ class MindustryAppPlugin : Plugin<Project> {
         for (client in x.clients) {
             val resolveClient = proj.tasks.register<ResolveGame>("resolveClient${client.name}") {
                 group = R.taskGroup.mindustryStuff
-                val modpackName = client.modpack
-                if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
-                    dependsOn("resolveModpack$modpackName")
-                }
                 location.set(client.location)
             }
             proj.tasks.register<RunClient>("runClient${client.name}") {
@@ -82,10 +78,6 @@ class MindustryAppPlugin : Plugin<Project> {
         for (server in x.servers) {
             val resolveServer = proj.tasks.register<ResolveGame>("resolveServer${server.name}") {
                 group = R.taskGroup.mindustryStuff
-                val modpackName = server.modpack
-                if (modpackName != null && x.modpacks.any { it.name == modpackName }) {
-                    dependsOn("resolveModpack$modpackName")
-                }
                 location.set(server.location)
             }
             proj.tasks.register<RunServer>("runServer${server.name}") {
