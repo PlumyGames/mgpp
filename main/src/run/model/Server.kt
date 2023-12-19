@@ -1,18 +1,17 @@
-@file:JvmMultifileClass
-@file:JvmName("ExtensionKt")
 @file:Suppress("RemoveRedundantBackticks")
 
 package io.github.liplum.mindustry
 
 import org.gradle.api.Project
-import org.gradle.api.logging.LogLevel
 
-class Server(name: String, isAnonymous: Boolean) : Common(name, isAnonymous)
+class Server(
+    name: String, isAnonymous: Boolean,
+) : GameSide(name, isAnonymous)
 
 class AddServerSpec(
     override val proj: Project,
     override val backend: Server
-) : AddCommonSpec<Server>() {
+) : AddGameSideSpec<Server>() {
 
     override fun official(version: String) {
         github(

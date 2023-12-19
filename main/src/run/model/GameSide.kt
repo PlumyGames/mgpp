@@ -1,37 +1,20 @@
-@file:JvmMultifileClass
-@file:JvmName("ExtensionKt")
 @file:Suppress("RemoveRedundantBackticks")
 
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.plusAssign
 import io.github.liplum.mindustry.LocalProperties.local
+import io.github.liplum.mindustry.run.model.NamedModel
 import org.gradle.api.Project
-import org.gradle.api.logging.LogLevel
 import java.io.File
 
-open class Common(
-    /**
-     * *Optional*
-     * An empty String as default.
-     * It affects gradle task names.
-     * ```
-     * runClient // if it's anonymous
-     * runClient2 // if second name is still anonymous
-     * runClientFooClient // if [name] is "FooClient"
-     * runServer // if it's anonymous
-     * ```
-     */
-    val name: String,
-    /**
-     * Whether this is anonymous.
-     */
-    val isAnonymous: Boolean,
-) {
-    /** @see [AddCommonSpec.startupArgs] */
+open class GameSide(
+    name: String, isAnonymous: Boolean
+) : NamedModel(name, isAnonymous) {
+    /** @see [AddGameSideSpec.startupArgs] */
     val startupArgs = ArrayList<String>()
 
-    /** @see [AddCommonSpec.jvmArgs] */
+    /** @see [AddGameSideSpec.jvmArgs] */
     val jvmArgs = ArrayList<String>()
 
     /** @see [AddClientSpec.dataDir] */
@@ -40,7 +23,7 @@ open class Common(
     var modpack: String? = null
 }
 
-abstract class AddCommonSpec<T : Common> {
+abstract class AddGameSideSpec<T : GameSide> {
     protected abstract val proj: Project
     protected abstract val backend: T
     val latest: Notation get() = Notation.latest

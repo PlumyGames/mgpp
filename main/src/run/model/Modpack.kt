@@ -2,14 +2,14 @@
 
 package io.github.liplum.mindustry
 
+import io.github.liplum.mindustry.run.model.NamedModel
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 import java.io.File
 
 class Modpack(
-    val name: String,
-    val isAnonymous: Boolean,
-) {
+    name: String, isAnonymous: Boolean
+) : NamedModel(name, isAnonymous) {
     val mods = ArrayList<IMod>()
     val fromTaskPath = ArrayList<String>()
     fun isEmpty() = mods.isEmpty() && fromTaskPath.isEmpty()

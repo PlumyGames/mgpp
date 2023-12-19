@@ -6,12 +6,14 @@ package io.github.liplum.mindustry
 
 import org.gradle.api.Project
 
-class Client(name: String, isAnonymous: Boolean) : Common(name, isAnonymous)
+class Client(
+    name: String, isAnonymous: Boolean,
+) : GameSide(name, isAnonymous)
 
 class AddClientSpec(
     override val proj: Project,
     override val backend: Client,
-) : AddCommonSpec<Client>() {
+) : AddGameSideSpec<Client>() {
 
     override fun official(version: String) {
         github(
