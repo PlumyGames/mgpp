@@ -4,6 +4,7 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.plusAssign
 import io.github.liplum.mindustry.LocalProperties.local
+import io.github.liplum.mindustry.RunMindustryExtension.Companion.defaultModpackName
 import io.github.liplum.mindustry.run.model.NamedModel
 import org.gradle.api.Project
 import java.io.File
@@ -64,15 +65,24 @@ abstract class AddGameSideSpec<T : GameSide> {
                 is IDataDirLoc -> backend.dataDir = value
             }
         }
-    var modpack: Any?
+    var modpack: String?
         get() = backend.modpack
         set(value) {
-            backend.modpack = when (value) {
-                is Modpack -> value.name
-                null -> null
-                else -> value.toString().let(::formatValidGradleName)
-            }
+            backend.modpack = value
         }
+
+    fun useModpack(props: Map<String, String>) {
+        useModpack(
+            name = props["name"] ?: defaultModpackName,
+        )
+    }
+    fun useModpack(name: String) {
+        modpack = formatValidGradleName(name)
+    }
+
+    fun useModpack(modpack: Modpack) {
+        this.modpack = modpack.name
+    }
 
     protected fun IGameLoc.checkAndSet() {
         if (backend.location != null) {

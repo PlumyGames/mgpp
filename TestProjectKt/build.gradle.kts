@@ -85,16 +85,16 @@ runMindustry {
     }
     addClient("debugging") {
         official(version = "v146")
-        modpack = "for debugging"
+        useModpack(name = "for debugging")
     }
     addClient("debugging") {
         official(version = "v146")
-        modpack = "for debugging 2"
+        useModpack(name = "for debugging 2")
     }
     addClient {
         // anonymous 2
         fooClient(tag = "v8.0.0", file = "erekir-client.jar")
-        modpack = modpack2nd
+        useModpack(modpack2nd)
     }
     addClient(name = "Old Mindustry") {
         official(version = "v126")
