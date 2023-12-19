@@ -1,5 +1,6 @@
 package io.github.liplum.mindustry
 
+import io.github.liplum.dsl.createSymbolicLinkOrCopy
 import org.gradle.api.tasks.*
 
 open class RunServer : RunMindustryAbstract() {
@@ -16,7 +17,7 @@ open class RunServer : RunMindustryAbstract() {
         val modsFolder = dataDir.resolve("config").resolve("mods")
         for (modFile in mods) {
             if (modFile.isFile) {
-                modFile.copyTo(modsFolder.resolve(modFile.name), overwrite = true)
+                createSymbolicLinkOrCopy(link = modsFolder.resolve(modFile.name), target = modFile)
             } else {
                 logger.warn("Mod<$modFile> doesn't exist.")
             }

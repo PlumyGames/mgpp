@@ -36,7 +36,7 @@ open class RunClient : RunMindustryAbstract() {
         val modsFolder = dataDir.resolve("mods")
         for (modFile in mods) {
             if (modFile.isFile) {
-                modFile.copyTo(modsFolder.resolve(modFile.name), overwrite = true)
+                createSymbolicLinkOrCopy(link = modsFolder.resolve(modFile.name), target = modFile)
             } else {
                 logger.warn("Mod<$modFile> doesn't exist.")
             }

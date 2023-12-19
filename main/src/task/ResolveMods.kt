@@ -46,7 +46,7 @@ open class ResolveMods : DefaultTask() {
                 is IDownloadableMod -> if (!cacheFile.exists()) mod.download(cacheFile)
                 else -> {}
             }
-            createSymbolicLinkOrCopyCache(link = mod.resolveOutputFile(), target = cacheFile)
+            createSymbolicLinkOrCopy(link = mod.resolveOutputFile(), target = cacheFile)
         }
     }
 

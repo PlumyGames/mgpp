@@ -122,7 +122,6 @@ object SharedCache {
         }
         val meta = tryReadGitHubDownloadTrack(infoFi)
         val curTime = System.currentTimeMillis()
-        // TODO: Configurable out-of-date time
         return curTime - meta.lastUpdateTimestamp < outOfDate
     }
 
