@@ -1,7 +1,6 @@
 package io.github.liplum.mindustry
 
-import io.github.liplum.dsl.copyTo
-import io.github.liplum.dsl.createSymbolicLinkOrCopyCache
+import io.github.liplum.dsl.*
 import io.github.liplum.dsl.fileProp
 import io.github.liplum.dsl.prop
 import org.gradle.api.DefaultTask
@@ -45,14 +44,10 @@ open class ResolveGame : DefaultTask() {
     fun IDownloadableGameLoc.download(cacheFile: File) {
         logger.lifecycle("Downloading $this -> $cacheFile...")
         try {
-            this.resolveDownloadSrc().openStream().use {
-                it.copyTo(cacheFile)
-            }
-            logger.lifecycle("${this.fileName4Local} was downloaded.")
+            this.resolveDownloadSrc().openStream().copyToTmpAndMove(cacheFile)
+            logger.info("$cacheFile was downloaded.")
         } catch (e: Exception) {
-            // now output is corrupted, delete it
-            cacheFile.delete()
-            throw e
+            logger.error("Failed to download $this", e)
         }
     }
 }

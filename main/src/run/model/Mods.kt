@@ -8,6 +8,7 @@ import java.io.File
 import java.io.Serializable
 import java.net.URL
 import java.security.MessageDigest
+import kotlin.math.absoluteValue
 
 /**
  * An abstract mod file.
@@ -216,4 +217,17 @@ fun tryReadGitHubModInfo(infoFi: File, logger: Logger? = null): GihHubModDownloa
     } else {
         writeAndGetDefault()
     }
+}
+
+fun IGitHubMod.isUpdateToDate(): Boolean {
+    val cacheFile = this.resolveCacheFile()
+    val infoFi = File("$cacheFile.$infoX")
+    if (!cacheFile.exists()) {
+        if (infoFi.exists()) infoFi.delete()
+        return false
+    }
+    val meta = tryReadGitHubModInfo(infoFi)
+    val curTime = System.currentTimeMillis()
+    // TODO: Configurable out-of-date time
+    return curTime - meta.lastUpdateTimestamp < R.outOfDataTime.absoluteValue
 }

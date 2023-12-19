@@ -7,6 +7,7 @@ import org.gradle.api.Task
 import java.io.File
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.FileSystem
 import java.nio.file.Files
 
 /**
@@ -14,24 +15,23 @@ import java.nio.file.Files
  * @receiver Caller has responsibility to close this stream
  */
 internal
-fun InputStream.copyTo(file: File): File {
+fun InputStream.copyTo(file: File) {
     file.outputStream().use {
         this.copyTo(it)
     }
-    return file
 }
 
-/**
- * Copy data from this url to [file].
- * It will create the parent folder if it doesn't exist.
- */
 internal
-fun URL.copyTo(file: File): File {
-    file.parentFile.mkdirs()
-    this.openStream().use {
-        it.copyTo(file)
+fun InputStream.copyToTmpAndMove(file: File) {
+    val tmp = Files.createTempFile(file.name, null).toFile()
+    this.use {
+        it.copyTo(tmp)
     }
-    return file
+    tmp.renameTo(file)
+    // ignore the error when deleting the temp file
+    runCatching {
+        tmp.delete()
+    }
 }
 
 internal
