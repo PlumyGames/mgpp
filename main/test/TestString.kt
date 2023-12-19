@@ -16,9 +16,11 @@ class TestString {
         "." match empty
     }
 
+    private
     infix fun String.match(b: QN) =
         assert(this.packageAndClassName() == b)
 
+    private
     infix fun String.o(clz: String): QN =
         QN(this, clz)
 

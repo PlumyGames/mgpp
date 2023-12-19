@@ -4,6 +4,7 @@
 
 package io.github.liplum.mindustry
 
+import io.github.liplum.dsl.getDuplicateName
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -70,6 +71,8 @@ open class RunMindustryExtension(
             val anonymousCount = clients.count { it.isAnonymous }
             clientName = if (anonymousCount == 0) ""
             else (anonymousCount + 1).toString()
+        } else if (clients.any { it.name == clientName }) {
+            clientName = formatValidGradleName(name.getDuplicateName())
         }
         val client = Client(name = clientName, isAnonymous = isAnonymous)
         client.modpack = defaultModpackName
@@ -79,7 +82,7 @@ open class RunMindustryExtension(
         )
         AddClientSpec(proj, client).config()
         if (client.location == null) {
-            proj.logger.error("Client \"$clientName\" location not specified")
+            proj.logger.warn("Client \"$clientName\" location not specified")
         }
         clients.add(client)
         proj.logger.info("Client<$clientName> is added.", client)
@@ -155,6 +158,8 @@ open class RunMindustryExtension(
             val anonymousCount = servers.count { it.isAnonymous }
             serverName = if (anonymousCount == 0) ""
             else (anonymousCount + 1).toString()
+        } else if (servers.any { it.name == serverName }) {
+            serverName = formatValidGradleName(name.getDuplicateName())
         }
         val server = Server(name = serverName, isAnonymous = isAnonymous)
         server.modpack = defaultModpackName
@@ -164,7 +169,7 @@ open class RunMindustryExtension(
         )
         AddServerSpec(proj, server).config()
         if (server.location == null) {
-            proj.logger.error("Server \"$serverName\" location not specified")
+            proj.logger.warn("Server \"$serverName\" location not specified")
         }
         servers.add(server)
         proj.logger.info("Server<$serverName> is added.", server)
@@ -220,8 +225,8 @@ open class RunMindustryExtension(
     ): Modpack? {
         val modpackName = formatValidGradleName(name)
         if (modpackName.isBlank()) {
-            proj.logger.warn(
-                "Modpack's name Failed to be blank, but \"$name\" is given. Any character other than [a-zA-Z0-9] will be ignored."
+            proj.logger.error(
+                "The modpack name will ignore any characters other than [a-zA-Z0-9]. Therefore, its name (\"$name\") is blank and invalid."
             )
             return null
         }

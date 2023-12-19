@@ -92,6 +92,9 @@ runMindustry {
     addClient(name = "Old Mindustry") {
         official(version = "v126")
     }
+    addClient(name = "Old Mindustry") {
+        official(version = "v136")
+    }
     addClient(name = "From local.properties"){
         localProperties("mgpp.local-client")
     }

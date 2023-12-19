@@ -22,10 +22,12 @@ class TestNamingRule {
         NameRule.Domain.rename(test) match "test.the.name.rule"
     }
 
+    private
     infix fun List<String>.match(pattern: List<String>) {
         assert(this == pattern) { this.toString() }
     }
 
+    private
     infix fun String.match(equal: String) {
         assert(this == equal) { this }
     }

@@ -13,6 +13,7 @@ fun Any?.atLeastEqualsOne(vararg possibilities: Any?): Boolean {
     }
     return false
 }
+
 internal
 operator fun Appendable.plusAssign(s: String) {
     this.append(s)
@@ -96,4 +97,16 @@ fun linkString(separator: String, strings: List<String?>): String {
         sb.append(str)
     }
     return sb.toString()
+}
+
+internal
+val trailingIntRe = Regex("""(.*\s+)(\d+)$""")
+
+fun String.getDuplicateName(): String {
+    val matched = trailingIntRe.matchEntire(this) ?: return "$this 2";
+    val prefix = matched.groups[1]
+    val number = matched.groups[2]
+    if (prefix == null || number == null) return "$this 2"
+    val integer = number.value.toIntOrNull(radix = 10) ?: return "$this 2"
+    return "${prefix.value}${integer + 1}"
 }
