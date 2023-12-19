@@ -82,7 +82,7 @@ tasks.test {
 tasks.named<Jar>("jar") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     includeEmptyDirs = false
-    from(jarIncluding.toList())
+    from(jarIncluding.map { zipTree(it) })
 }
 
 // NOTE: All artifacts must have the same name.
