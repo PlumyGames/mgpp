@@ -46,8 +46,8 @@ tasks.register<TestOutputTask>("iconMaker") {
 }
 mindustry {
     dependency {
-        mindustry on latest
-        arc on latestRelease
+        mindustry(version = latest)
+        arc(version = latestTag)
     }
     modMeta {
         name = "mgpp-kt"

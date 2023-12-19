@@ -7,8 +7,8 @@ plugins {
 }
 mindustry {
     dependency {
-        mindustry on "v146"
-        arc on "v146"
+        mindustry(version = latest)
+        arc(version = latestTag)
     }
 }
 runMindustry {
