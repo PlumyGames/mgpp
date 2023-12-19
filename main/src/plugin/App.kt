@@ -32,6 +32,7 @@ class MindustryAppPlugin : Plugin<Project> {
             val name = modpack.name
             proj.tasks.register<ResolveMods>("resolveModpack$name") {
                 group = R.taskGroup.mindustryStuff
+                dependsOn(*modpack.fromTaskPath.toArray())
                 mods.addAll(modpack.mods)
             }
         }

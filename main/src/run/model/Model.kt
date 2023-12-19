@@ -2,8 +2,9 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.getDuplicateName
 import io.github.liplum.mindustry.formatValidGradleName
+import java.io.Serializable
 
-interface NamedModel {
+interface NamedModel : Serializable {
     /**
      * *Optional*
      * An empty String as default.

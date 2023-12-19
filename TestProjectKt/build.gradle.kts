@@ -41,8 +41,8 @@ open class TestOutputTask : DefaultTask() {
     }
 }
 // Only for testing TaskMod(taskName)
-tasks.register<TestOutputTask>("iconMaker") {
-    outputFile.set(rootDir.resolve("icon.png"))
+tasks.register<TestOutputTask>("anyTask") {
+    outputFile.set(rootDir.resolve(".gitignore"))
 }
 mindustry {
     dependency {
@@ -67,7 +67,7 @@ runMindustry {
         // default modpack
         jvm(repo = "liplum/CyberIO")
         json(repo = "BlueWolf3682/Exotic-Mod", branch = "master")
-        fromTask(path = "iconMaker")
+        fromTask(path = "anyTask")
     }
     val modpack2nd = addModpack("number 2") {
         json(repo = "sk7725/TimeControl")
