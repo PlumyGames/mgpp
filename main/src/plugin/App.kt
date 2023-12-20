@@ -39,15 +39,15 @@ class MindustryAppPlugin : Plugin<Project> {
     }
 
     private fun addRunClient(proj: Project, x: RunMindustryExtension) {
+        proj.logger.info("Clients: ${x.clients.map { it.name }}")
         for (client in x.clients) {
             val resolveClient = proj.tasks.register<ResolveGame>("resolveClient${client.name}") {
                 group = R.taskGroup.mindustryStuff
                 location.set(client.location)
             }
             proj.tasks.register<RunClient>("runClient${client.name}") {
-                dependsOn(resolveClient)
-                mainClass.convention(R.mainClass.desktop)
                 group = R.taskGroup.mindustry
+                dependsOn(resolveClient)
                 startupArgs.addAll(client.startupArgs)
                 dataDir.set(client.dataDir)
                 mindustryFile.set(proj.provider {
@@ -58,12 +58,6 @@ class MindustryAppPlugin : Plugin<Project> {
                     val resolveModpackTask = proj.tasks.named("resolveModpack${modpack.name}")
                     dependsOn(resolveModpackTask)
                     mods.from(resolveModpackTask)
-                    for (taskPath in modpack.fromTaskPath) {
-                        val task = proj.tasks.findByPath(taskPath)
-                        if (task != null) {
-                            mods.from(task)
-                        }
-                    }
                 }
                 if (proj.plugins.hasPlugin<MindustryJavaPlugin>()) {
                     mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
@@ -76,15 +70,15 @@ class MindustryAppPlugin : Plugin<Project> {
     }
 
     private fun addRunServer(proj: Project, x: RunMindustryExtension) {
+        proj.logger.info("Servers: ${x.servers.map { it.name }}")
         for (server in x.servers) {
             val resolveServer = proj.tasks.register<ResolveGame>("resolveServer${server.name}") {
                 group = R.taskGroup.mindustryStuff
                 location.set(server.location)
             }
             proj.tasks.register<RunServer>("runServer${server.name}") {
-                dependsOn(resolveServer)
-                mainClass.convention(R.mainClass.server)
                 group = R.taskGroup.mindustry
+                dependsOn(resolveServer)
                 startupArgs.addAll(server.startupArgs)
                 dataDir.set(server.dataDir)
                 mindustryFile.set(proj.provider {
@@ -95,12 +89,6 @@ class MindustryAppPlugin : Plugin<Project> {
                     val resolveModpackTask = proj.tasks.named("resolveModpack${modpack.name}")
                     dependsOn(resolveModpackTask)
                     mods.from(resolveModpackTask)
-                    for (taskPath in modpack.fromTaskPath) {
-                        val task = proj.tasks.findByPath(taskPath)
-                        if (task != null) {
-                            mods.from(task)
-                        }
-                    }
                 }
                 if (proj.plugins.hasPlugin<MindustryJavaPlugin>()) {
                     mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))

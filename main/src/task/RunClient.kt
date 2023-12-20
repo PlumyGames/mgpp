@@ -5,6 +5,9 @@ import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.tasks.*
 
 open class RunClient : RunMindustryAbstract() {
+    init {
+        mainClass.convention(R.mainClass.desktop)
+    }
 
     @TaskAction
     override fun exec() {

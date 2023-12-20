@@ -4,6 +4,10 @@ import io.github.liplum.dsl.createSymbolicLinkOrCopy
 import org.gradle.api.tasks.*
 
 open class RunServer : RunMindustryAbstract() {
+    init {
+        mainClass.convention(R.mainClass.server)
+    }
+
     @TaskAction
     override fun exec() {
         val dataDir = dataDir.get().resolveDir(this, GameSideType.Server) ?: temporaryDir.resolve(name)
