@@ -2,9 +2,11 @@
 
 package io.github.liplum.mindustry
 
+import io.github.liplum.dsl.prop
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
+import org.gradle.api.plugins.JavaPlugin
 
 /**
  * Retrieves the `runMindustry`: [RunMindustryExtension] extension.
@@ -30,6 +32,22 @@ open class RunMindustryExtension(
     val clients = ArrayList<Client>()
     val servers = ArrayList<Server>()
     val modpacks = ArrayList<Modpack>()
+    val _includeMyMod = proj.prop<Boolean>().apply {
+        convention(true)
+    }
+
+    /**
+     * Whether to include the mod that this project output in [R.task.zipMod] and [JavaPlugin.JAR_TASK_NAME].
+     * `true` by default.
+     *
+     *  TODO: maybe configurable for each client/server?
+     */
+    @InheritFromParent
+    var includeMyMod: Boolean
+        get() = _includeMyMod.getOrElse(true)
+        set(value) {
+            _includeMyMod.set(value)
+        }
 
     /**
      * ### Kotlin DSL
@@ -38,7 +56,7 @@ open class RunMindustryExtension(
      *    official(version="v141")
      * }
      * addClient("my name") {
-     *    be latest
+     *    be(latest)
      * }
      * addClient {
      *    github(

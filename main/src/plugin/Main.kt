@@ -29,8 +29,10 @@ class MindustryPlugin : Plugin<Project> {
         parent?.let {
             if (it.plugins.hasPlugin<MindustryPlugin>()) {
                 val parentEx = it.extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
+                val parentRun = it.extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)
                 ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
                 ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
+                run._includeMyMod.set(parentRun._includeMyMod)
             }
         }
         // Register this for dynamically configure tasks without class reference in groovy.
@@ -53,7 +55,7 @@ class MindustryPlugin : Plugin<Project> {
         deployX._version.convention(provider {
             ex._modMeta.get().version
         })
-        plugins.apply<MindustryAppPlugin>()
+        plugins.apply<MindustryRunPlugin>()
         GroovyBridge.attach(target)
     }
 }

@@ -14,7 +14,7 @@ import org.gradle.api.plugins.JavaPlugin
 /**
  * For downloading and running game.
  */
-class MindustryAppPlugin : Plugin<Project> {
+class MindustryRunPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.tasks.register<CleanMindustrySharedCache>(R.task.cleanMindustrySharedCache) {
             group = BasePlugin.BUILD_GROUP
@@ -59,11 +59,13 @@ class MindustryAppPlugin : Plugin<Project> {
                     dependsOn(resolveModpackTask)
                     mods.from(resolveModpackTask)
                 }
-                if (proj.plugins.hasPlugin<MindustryJavaPlugin>()) {
-                    mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
-                }
-                if (proj.plugins.hasPlugin<MindustryJsonPlugin>()) {
-                    mods.from(proj.tasks.getByPath(R.task.zipMod))
+                if (x.includeMyMod) {
+                    if (proj.plugins.hasPlugin<MindustryJavaPlugin>()) {
+                        mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
+                    }
+                    if (proj.plugins.hasPlugin<MindustryJsonPlugin>()) {
+                        mods.from(proj.tasks.getByPath(R.task.zipMod))
+                    }
                 }
             }
         }
@@ -90,11 +92,13 @@ class MindustryAppPlugin : Plugin<Project> {
                     dependsOn(resolveModpackTask)
                     mods.from(resolveModpackTask)
                 }
-                if (proj.plugins.hasPlugin<MindustryJavaPlugin>()) {
-                    mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
-                }
-                if (proj.plugins.hasPlugin<MindustryJsonPlugin>()) {
-                    mods.from(proj.tasks.getByPath(R.task.zipMod))
+                if (x.includeMyMod) {
+                    if (proj.plugins.hasPlugin<MindustryJavaPlugin>()) {
+                        mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
+                    }
+                    if (proj.plugins.hasPlugin<MindustryJsonPlugin>()) {
+                        mods.from(proj.tasks.getByPath(R.task.zipMod))
+                    }
                 }
             }
         }
