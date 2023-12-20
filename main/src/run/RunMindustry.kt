@@ -59,6 +59,7 @@ open class RunMindustryExtension(
         name: String = "",
         config: AddClientSpec.() -> Unit
     ): Client {
+        proj.logger.quiet("Client<$name> was added.")
         val (newName, isAnonymous) = allocModelName(name, clients)
         val client = Client(name = newName, isAnonymous = isAnonymous)
         client.modpack = ""
@@ -138,6 +139,7 @@ open class RunMindustryExtension(
         name: String = "",
         config: AddServerSpec.() -> Unit
     ): Server {
+        proj.logger.quiet("Server<$name> was added.")
         val (newName, isAnonymous) = allocModelName(name, servers)
         val server = Server(name = newName, isAnonymous = isAnonymous)
         server.modpack = ""

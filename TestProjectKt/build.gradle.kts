@@ -86,8 +86,7 @@ runMindustry {
     addClient("inline modpack") {
         official(version = "v146")
         useModpack {
-            `testingUtilities`
-            jvm(repo = "liplum/CyberIO")
+            jvm(repo = "liplum/MultiCrafterLib")
         }
     }
     addClient("debugging") {
@@ -106,7 +105,7 @@ runMindustry {
     addClient("from url") {
         url("https://github.com/Anuken/Mindustry/releases/download/v146/Mindustry.jar")
         useModpack("from url") {
-            url("https://github.com/liplum/MultiCrafterLib/releases/download/v1.8/MultiCrafterLib-1.8.jar")
+           url("https://github.com/liplum/MultiCrafterLib/releases/download/v1.8/MultiCrafterLib-1.8.jar")
         }
     }
     addClient("debugging") {

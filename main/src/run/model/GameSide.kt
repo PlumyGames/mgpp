@@ -97,10 +97,11 @@ abstract class AddGameSideSpec<T : GameSide> {
 
     fun useModpack(name: String) {
         modpack = formatValidGradleName(name)
+        proj.logger.quiet("Modpack<$name> was used in game<${name}>.")
     }
 
     fun useModpack(modpack: Modpack) {
-        this.modpack = modpack.name
+        useModpack(modpack.name)
     }
 
     fun useModpack(
