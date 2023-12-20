@@ -1,5 +1,3 @@
-@file:JvmMultifileClass
-@file:JvmName("DslKt")
 @file:Suppress("RemoveRedundantBackticks")
 
 package io.github.liplum.dsl

@@ -1,5 +1,3 @@
-@file:JvmMultifileClass
-@file:JvmName("ExtensionKt")
 @file:Suppress("RemoveRedundantBackticks")
 
 package io.github.liplum.mindustry
