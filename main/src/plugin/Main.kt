@@ -3,7 +3,6 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.LocalProperties.localProperties
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
@@ -20,7 +19,7 @@ class MindustryPlugin : Plugin<Project> {
 
         parent?.let {
             // disable those if current project is subproject.
-            deployX.enableFatJar = false
+            deployX.fatJar = false
             deployX.outputMod = false
         }
         /**

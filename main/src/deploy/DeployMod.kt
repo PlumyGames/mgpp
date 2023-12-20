@@ -70,7 +70,7 @@ open class DeployModExtension(
             _classifier.set(value)
         }
 
-    val _enableFatJar = proj.prop<Boolean>().apply {
+    val _fatJar = proj.prop<Boolean>().apply {
         convention(true)
     }
     /**
@@ -82,10 +82,10 @@ open class DeployModExtension(
      *
      * Therefore, you should manually set this to `true` when working with multi-project.
      */
-    var enableFatJar: Boolean
-        get() = _enableFatJar.getOrElse(true)
+    var fatJar: Boolean
+        get() = _fatJar.getOrElse(true)
         set(value) {
-            _enableFatJar.set(value)
+            _fatJar.set(value)
         }
     @JvmField
     val _outputMod = proj.boolProp().apply {

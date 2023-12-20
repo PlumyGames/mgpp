@@ -52,7 +52,7 @@ class MindustryJavaPlugin : Plugin<Project> {
                 task.from(*dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray())
             }
             tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                if (deployX.enableFatJar) {
+                if (deployX.fatJar) {
                     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                     from(
                         configurations.runtimeClasspath.get().map {
