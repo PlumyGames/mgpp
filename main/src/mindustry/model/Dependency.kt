@@ -20,7 +20,7 @@ inline fun IDependency.whenAvailable(
         func(resolve(module))
 }
 
-data class MirrorJitpackDependency(
+data class MindustryMirrorJitpackDependency(
     var fullName: String = "",
     var version: String = "",
 ) : IDependency {
@@ -141,7 +141,7 @@ class DependencySpec(
      * Fetch the dependency of Mindustry from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
      */
     fun mindustryMirror(version: String) {
-        mindustryDependency.set(MirrorDependency(version))
+        mindustryDependency.set(MindustryMirrorDependency(version))
     }
 
     /**
@@ -338,7 +338,7 @@ class DependencySpec(
     /**
      * Declare a Mindustry dependency from [mindustry jitpack mirror](https://github.com/Anuken/MindustryJitpack).
      */
-    fun MirrorDependency(
+    fun MindustryMirrorDependency(
         version: String = "",
-    ) = MirrorJitpackDependency(mindustryMirrorRepo, version)
+    ) = MindustryMirrorJitpackDependency(mindustryMirrorRepo, version)
 }

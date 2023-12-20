@@ -93,7 +93,7 @@ object R {
          *
          * **Note:** You shouldn't pretend this version and work based on it.
          */
-        const val defaultBE = "24632"
+        const val defaultBE = "24664"
 
         /**
          * [The default Arc version](https://github.com/Anuken/Arc/releases/tag)
