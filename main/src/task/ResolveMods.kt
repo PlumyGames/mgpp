@@ -45,9 +45,13 @@ open class ResolveMods : DefaultTask() {
                 is LocalMod -> if (!cacheFile.isFile) throw GradleException("Local mod $cacheFile not found.")
                 is IGitHubMod -> if (!isUpdateToDate(lockFile = cacheFile)) mod.download(cacheFile)
                 is IDownloadableMod -> if (!cacheFile.exists()) mod.download(cacheFile)
-                else -> {}
+                else -> throw Exception("Unhandled mod $mod")
             }
-            createSymbolicLinkOrCopy(link = mod.resolveOutputFile(), target = cacheFile)
+            if (cacheFile.exists()) {
+                createSymbolicLinkOrCopy(link = mod.resolveOutputFile(), target = cacheFile)
+            } else {
+                logger.error("$cacheFile doesn't exist.")
+            }
         }
     }
 

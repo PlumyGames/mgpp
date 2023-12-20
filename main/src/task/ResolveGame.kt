@@ -39,7 +39,11 @@ open class ResolveGame : DefaultTask() {
             is IDownloadableGameLoc -> if (!cacheFile.exists()) loc.download(cacheFile)
             else -> throw Exception("Unhandled game loc $loc")
         }
-        createSymbolicLinkOrCopy(link = gameFile, target = cacheFile)
+        if (cacheFile.exists()) {
+            createSymbolicLinkOrCopy(link = gameFile, target = cacheFile)
+        } else {
+            logger.error("$cacheFile doesn't exist.")
+        }
     }
 
     fun IDownloadableGameLoc.download(cacheFile: File) {

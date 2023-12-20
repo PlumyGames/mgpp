@@ -49,8 +49,10 @@ data class LocalMod(
  */
 data class UrlMod(
     val url: URL,
-) : IMod {
+) : IDownloadableMod {
     constructor(url: String) : this(URL(url))
+
+    override fun resolveDownloadSrc() = url
 
     override val fileName4Local: String = "${url.resolve4FileName()}.zip"
 

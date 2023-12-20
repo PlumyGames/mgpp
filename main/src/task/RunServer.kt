@@ -7,6 +7,7 @@ open class RunServer : RunMindustryAbstract() {
     @TaskAction
     override fun exec() {
         val dataDir = dataDir.get().resolveDir(this, GameSideType.Server) ?: temporaryDir.resolve(name)
+        logger.lifecycle("Run server in $dataDir.")
         if (dataDir.isDirectory) {
             // TODO: Record the mod signature.
             // TODO: Don't always delete all.
@@ -15,10 +16,10 @@ open class RunServer : RunMindustryAbstract() {
         dataDir.mkdirs()
         val modsFolder = dataDir.resolve("config").resolve("mods")
         for (modFile in mods) {
-            if (modFile.isFile) {
+            if (modFile.exists()) {
                 createSymbolicLinkOrCopy(link = modsFolder.resolve(modFile.name), target = modFile)
             } else {
-                logger.warn("Mod<$modFile> doesn't exist.")
+                logger.error("Mod<$modFile> doesn't exist.")
             }
         }
         standardInput = System.`in`

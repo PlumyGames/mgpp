@@ -154,11 +154,10 @@ fun Task.createSymbolicLinkOrCopy(
     if (!overwrite && link.exists()) return
     try {
         Files.createSymbolicLink(link.toPath(), target.toPath())
-        logger.lifecycle("Created symbolic link: $target -> $link.")
+        logger.info("Created symbolic link: $target -> $link.")
     } catch (error: Exception) {
-        logger.lifecycle("Cannot create symbolic link: $target -> $link, because $error.")
-        logger.lifecycle("Fallback to copy file.")
+        logger.error("Cannot create symbolic link: $target -> $link, because $error. Fallback to copy file.")
         target.copyTo(link, overwrite)
-        logger.lifecycle("Copied: $target -> $link.")
+        logger.info("Copied: $target -> $link.")
     }
 }

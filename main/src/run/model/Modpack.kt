@@ -21,7 +21,7 @@ class AddModpackSpec(
     private val modpack: Modpack
 ) {
     fun addMod(mod: IMod) {
-        proj.logger.quiet("$mod was added in modpack<${modpack.name}>")
+        proj.logger.info("$mod was added in modpack<${modpack.name}>")
         modpack.mods.add(mod)
     }
 

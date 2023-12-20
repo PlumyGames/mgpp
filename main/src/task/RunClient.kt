@@ -9,6 +9,8 @@ open class RunClient : RunMindustryAbstract() {
     @TaskAction
     override fun exec() {
         val dataDir = dataDir.get().resolveDir(this, GameSideType.Client) ?: temporaryDir.resolve(name)
+        logger.lifecycle("Run client in $dataDir.")
+        environment[R.env.mindustryDataDir] = dataDir.absoluteFile
         workingDir = dataDir
         if (dataDir.isDirectory) {
             // TODO: Record the mod signature.
@@ -21,7 +23,7 @@ open class RunClient : RunMindustryAbstract() {
             if (modFile.isFile) {
                 createSymbolicLinkOrCopy(link = modsFolder.resolve(modFile.name), target = modFile)
             } else {
-                logger.warn("Mod<$modFile> doesn't exist.")
+                logger.error("Mod<$modFile> doesn't exist.")
             }
         }
         standardInput = System.`in`
