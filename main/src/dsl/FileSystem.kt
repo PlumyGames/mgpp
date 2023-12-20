@@ -18,13 +18,13 @@ fun InputStream.copyTo(file: File) {
 }
 
 internal
-fun InputStream.copyToTmpAndMove(file: File) {
-    val tmp = Files.createTempFile(file.name, null).toFile()
+fun InputStream.copyToTmpAndMove(dest: File) {
+    val tmp = Files.createTempFile(dest.name, null).toFile()
     this.use {
         it.copyTo(tmp)
     }
-    file.ensureParentDir()
-    tmp.renameTo(file)
+    dest.ensureParentDir()
+    tmp.renameTo(dest)
     // ignore the error when deleting the temp file
     runCatching {
         tmp.delete()

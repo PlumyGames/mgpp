@@ -32,6 +32,7 @@ open class ResolveGame : DefaultTask() {
         val gameFile = gameFile.get()
         val loc = location.get()
         val cacheFile = loc.resolveCacheFile()
+        cacheFile.ensureParentDir()
         when (loc) {
             is LocalGameLoc -> if (!cacheFile.isFile) throw GradleException("Local game $cacheFile doesn't exists.")
             is ILatestDownloadableGameLoc -> if (!isUpdateToDate(lockFile = cacheFile)) loc.download(cacheFile)

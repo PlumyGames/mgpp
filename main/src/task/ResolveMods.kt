@@ -40,6 +40,7 @@ open class ResolveMods : DefaultTask() {
     fun resolve() {
         for (mod in mods.get()) {
             val cacheFile = mod.resolveCacheFile()
+            cacheFile.ensureParentDir()
             when (mod) {
                 is LocalMod -> if (!cacheFile.isFile) throw GradleException("Local mod $cacheFile not found.")
                 is IGitHubMod -> if (!isUpdateToDate(lockFile = cacheFile)) mod.download(cacheFile)

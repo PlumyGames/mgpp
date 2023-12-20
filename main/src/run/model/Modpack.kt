@@ -5,6 +5,7 @@ package io.github.liplum.mindustry
 import org.gradle.api.Project
 import org.gradle.api.logging.LogLevel
 import java.io.File
+import java.net.URL
 
 class Modpack(
     override val name: String,
@@ -30,6 +31,14 @@ class AddModpackSpec(
      * @param repo like "PlumyGames/mgpp"
      */
     fun github(repo: String) = addMod(GitHubUntypedMod(repo))
+
+    fun url(url: URL) {
+        addMod(UrlMod(url))
+    }
+
+    fun url(url: String) {
+        this.url(URL(url))
+    }
 
     /**
      * Add a json mod by its repo name on GitHub.

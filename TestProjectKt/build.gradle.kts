@@ -105,6 +105,9 @@ runMindustry {
     }
     addClient("from url") {
         url("https://github.com/Anuken/Mindustry/releases/download/v146/Mindustry.jar")
+        useModpack("from url") {
+            url("https://github.com/liplum/MultiCrafterLib/releases/download/v1.8/MultiCrafterLib-1.8.jar")
+        }
     }
     addClient("debugging") {
         official(version = "v146")
