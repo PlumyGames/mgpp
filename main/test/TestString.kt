@@ -1,5 +1,6 @@
 import io.github.liplum.dsl.linkString
 import io.github.liplum.dsl.packageAndClassName
+import io.github.liplum.mindustry.formatValidGradleName
 import org.junit.jupiter.api.Test
 
 typealias QN = Pair<String, String>
@@ -31,4 +32,9 @@ class TestString {
 
     infix fun String.match(strings: List<String>) =
         assert(this == linkString("-", strings))
+
+    @Test
+    fun `test format valid gradle name`(){
+        assert(formatValidGradleName("I'm invalid name") == "IMInvalidName" )
+    }
 }

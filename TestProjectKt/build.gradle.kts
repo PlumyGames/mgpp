@@ -122,7 +122,7 @@ runMindustry {
         official(version = latest)
     }
     addClient(name = "From local.properties") {
-        localProperties("mgpp.local-client")
+//        localProperties("mgpp.local-client")
     }
     addServer {
         modpack = null

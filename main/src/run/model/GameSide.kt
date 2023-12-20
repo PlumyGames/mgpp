@@ -246,17 +246,13 @@ abstract class AddGameSideSpec<T : GameSide> {
             )
         }
     }
-
-    fun localProperties(key: String) {
-        val path = proj.local[key]
-        if (path == null) {
-            proj.logger.error("\"$key\" not found for \"${backend.name}\" in local proprieties.")
-        } else {
-            localFile(path = path)
-        }
-    }
 }
 
+/**
+ * Convert strings to a valid gradle task name, refer to [NameRule.Camel].
+ * For examples:
+ * - "I'm invalid name" -> "IMInvalidName"
+ */
 fun formatValidGradleName(raw: String): String {
     val s = StringBuilder()
     var nextUpper = true
