@@ -3,7 +3,6 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.plusAssign
-import io.github.liplum.mindustry.LocalProperties.local
 import org.gradle.api.Action
 import org.gradle.api.Project
 import java.io.File
@@ -96,7 +95,7 @@ abstract class AddGameSideSpec<T : GameSide> {
         }
 
     fun useModpack(name: String) {
-        modpack = formatValidGradleName(name)
+        modpack = normalizeName4Gradle(name)
         proj.logger.info("Modpack<$name> was used in game<${name}>.")
     }
 
@@ -263,7 +262,7 @@ abstract class AddGameSideSpec<T : GameSide> {
  * For examples:
  * - "I'm invalid name" -> "IMInvalidName"
  */
-fun formatValidGradleName(raw: String): String {
+fun normalizeName4Gradle(raw: String): String {
     val s = StringBuilder()
     var nextUpper = true
     for (c in raw) {

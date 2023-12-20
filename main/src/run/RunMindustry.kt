@@ -61,6 +61,7 @@ open class RunMindustryExtension(
     ): Client {
         proj.logger.info("Client<$name> was added.")
         val (newName, isAnonymous) = allocModelName(name, clients)
+        if (name.isNotBlank() && newName.isBlank()) proj.logger.warn("Client name,\"${name}\", becomes blank after normalization.")
         val client = Client(name = newName, isAnonymous = isAnonymous)
         client.modpack = ""
         client.dataDir = ProjBuildDataDirLoc(
@@ -69,10 +70,10 @@ open class RunMindustryExtension(
         )
         AddClientSpec(proj, client).config()
         if (client.location == null) {
-            proj.logger.warn("Client \"$newName\" location not specified")
+            proj.logger.warn("Client<${client.name}> location not specified")
         }
         clients.add(client)
-        proj.logger.info("Client<$newName> is added.", client)
+        proj.logger.info("Client<${client.name}> is added.", client)
         return client
     }
 
@@ -141,6 +142,7 @@ open class RunMindustryExtension(
     ): Server {
         proj.logger.info("Server<$name> was added.")
         val (newName, isAnonymous) = allocModelName(name, servers)
+        if (name.isNotBlank() && newName.isBlank()) proj.logger.warn("Server name,\"${name}\", becomes blank after normalization.")
         val server = Server(name = newName, isAnonymous = isAnonymous)
         server.modpack = ""
         server.dataDir = ProjBuildDataDirLoc(
@@ -149,10 +151,10 @@ open class RunMindustryExtension(
         )
         AddServerSpec(proj, server).config()
         if (server.location == null) {
-            proj.logger.warn("Server \"$newName\" location not specified")
+            proj.logger.warn("Server<${server.name}> location not specified")
         }
         servers.add(server)
-        proj.logger.info("Server<$newName> is added.", server)
+        proj.logger.info("Server<${server.name}> is added.", server)
         return server
     }
 
@@ -204,13 +206,14 @@ open class RunMindustryExtension(
         config: AddModpackSpec.() -> Unit
     ): Modpack {
         val (newName, isAnonymous) = allocModelName(name, modpacks)
+        if (name.isNotBlank() && newName.isBlank()) proj.logger.warn("Modpack name,\"${name}\", becomes blank after normalization.")
         val modpack = Modpack(name = newName, isAnonymous = isAnonymous)
         AddModpackSpec(proj, modpack).config()
         if (modpack.isEmpty()) {
-            proj.logger.warn("Modpack<$newName> contains no mods.")
+            proj.logger.warn("Modpack<${modpack.name}> contains no mods.")
         }
         modpacks.add(modpack)
-        proj.logger.info("Modepack<$newName> is added.", modpack)
+        proj.logger.info("Modpack<${modpack.name}> is added.", modpack)
         return modpack
     }
 

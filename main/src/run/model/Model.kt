@@ -1,7 +1,6 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.getDuplicateName
-import io.github.liplum.mindustry.formatValidGradleName
 import java.io.Serializable
 
 interface NamedModel : Serializable {
@@ -29,14 +28,14 @@ interface NamedModel : Serializable {
  * @return (newName, isAnonymous)
  */
 fun <T : NamedModel> allocModelName(name: String, all: List<T>): Pair<String, Boolean> {
-    var newName = formatValidGradleName(name)
+    var newName = normalizeName4Gradle(name)
     val isAnonymous = newName.isBlank()
     if (isAnonymous) {
         val anonymousCount = all.count { it.isAnonymous }
         newName = if (anonymousCount == 0) ""
         else (anonymousCount + 1).toString()
     } else if (all.any { it.name == newName }) {
-        newName = formatValidGradleName(name.getDuplicateName())
+        newName = normalizeName4Gradle(name.getDuplicateName())
     }
     return Pair(newName, isAnonymous)
 }
