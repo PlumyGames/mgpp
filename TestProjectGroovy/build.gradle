@@ -72,7 +72,8 @@ runMindustry {
     }
     addClient("inline modpack") {
         official version: "v146"
-        useModpack { it
+        useModpack {
+            it
             it.testingUtilities
             it.jvm repo: "liplum/CyberIO"
         }
@@ -99,7 +100,7 @@ dexJar {
     }
 }
 mindustryAssets {
-    rootAt "$rootDir/assets"
+    assets.from("$rootDir/assets")
 }
 tasks.register('antiAlias', AntiAlias) {
     sourceDirectory.set(new File(rootDir, 'assets/sprites'))

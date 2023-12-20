@@ -22,5 +22,5 @@ runMindustry {
     }
 }
 mindustryAssets {
-    root at "$projectDir/assets"
+    assets.from("$projectDir/assets")
 }
