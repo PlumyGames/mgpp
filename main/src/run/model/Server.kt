@@ -6,7 +6,7 @@ import org.gradle.api.Project
 
 class Server(
     name: String, isAnonymous: Boolean,
-) : GameSide(name, isAnonymous)
+) : GameSide(name, isAnonymous, GameSideType.Client)
 
 class AddServerSpec(
     override val proj: Project,

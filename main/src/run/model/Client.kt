@@ -6,12 +6,15 @@ import org.gradle.api.Project
 
 class Client(
     name: String, isAnonymous: Boolean,
-) : GameSide(name, isAnonymous)
+) : GameSide(name, isAnonymous, GameSideType.Client)
 
 class AddClientSpec(
     override val proj: Project,
     override val backend: Client,
 ) : AddGameSideSpec<Client>() {
+    fun useDefaultDataDir() {
+        dataDir = MindustryDefaultDataDirLoc
+    }
 
     override fun official(version: String) {
         github(

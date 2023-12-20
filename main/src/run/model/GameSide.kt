@@ -8,9 +8,14 @@ import org.gradle.api.Action
 import org.gradle.api.Project
 import java.io.File
 
+enum class GameSideType {
+    Client, Server
+}
+
 open class GameSide(
     override val name: String,
-    override val isAnonymous: Boolean
+    override val isAnonymous: Boolean,
+    val type: GameSideType,
 ) : NamedModel {
     /** @see [AddGameSideSpec.startupArgs] */
     val startupArgs = ArrayList<String>()
@@ -88,12 +93,6 @@ abstract class AddGameSideSpec<T : GameSide> {
         set(value) {
             backend.modpack = value
         }
-
-    fun useModpack(props: Map<String, String>) {
-        useModpack(
-            name = props["name"] ?: "",
-        )
-    }
 
     fun useModpack(name: String) {
         modpack = formatValidGradleName(name)

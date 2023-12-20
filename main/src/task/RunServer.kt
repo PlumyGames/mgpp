@@ -4,10 +4,9 @@ import io.github.liplum.dsl.createSymbolicLinkOrCopy
 import org.gradle.api.tasks.*
 
 open class RunServer : RunMindustryAbstract() {
-
     @TaskAction
     override fun exec() {
-        val dataDir = dataDir.get().resolveDir(this) ?: temporaryDir.resolve(name)
+        val dataDir = dataDir.get().resolveDir(this, GameSideType.Server) ?: temporaryDir.resolve(name)
         if (dataDir.isDirectory) {
             // TODO: Record the mod signature.
             // TODO: Don't always delete all.
