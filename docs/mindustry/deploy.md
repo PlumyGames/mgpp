@@ -13,7 +13,7 @@ ___
 The `deploy` task will output the deployment jar, which contains `classes.dex` and your stuffs
 
 #### Destination Directory
-As default, `deploy` task outputs into its temporary directory, `buildDir/tmp/deploy`.
+By default, `deploy` task outputs into its temporary directory, `buildDir/tmp/deploy`.
 
 You can customize its destination to fit your CI, vice versa.
 
@@ -74,7 +74,7 @@ It's useful when you utilize other library or make a Kotlin mod.
         noFatJar
     }
     ```
-MGPP will apply `fatJar` as default.
+MGPP will apply `fatJar` by default.
 
 ### Android SDK
 

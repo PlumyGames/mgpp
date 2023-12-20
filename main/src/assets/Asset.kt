@@ -15,6 +15,7 @@ import java.io.File
  */
 val Project.`mindustryAssets`: MindustryAssetsExtension
     get() = (this as ExtensionAware).extensions.getByName(R.x.mindustryAssets) as MindustryAssetsExtension
+
 /**
  * Configures the [mindustry][MindustryExtension] extension.
  */
@@ -25,92 +26,40 @@ open class MindustryAssetsExtension(
     proj: Project,
 ) {
     /**
-     * The assets root of a mod only including a single `assets` folder
+     * The assets of a mod.
+     * It includes the `assets/` folder under current project by default.
      */
-    @JvmField
-    val assetsRoot = proj.fileProp().apply {
-        convention(proj.projectDir.resolve("assets"))
-    }
-    /**
-     * Set the [assetsRoot] to [path]
-     */
-    fun rootAt(path: String) {
-        assetsRoot.set(File(path))
-    }
-    /**
-     * Set the [assetsRoot] to [file]
-     */
-    fun rootAt(file: File) {
-        assetsRoot.set(file)
+    val assets = proj.configurationFileCollection().apply {
+        from(proj.projectDir.resolve("assets"))
     }
 
     /**
      * The icon of this mod to be included in `:jar` task.
      *
-     * [Project.getRootDir]/icon.png as default
+     * [Project.getRootDir]/icon.png by default
      */
     @JvmField
     val _icon = proj.fileProp().apply {
         convention(
             findFileInOrder(
-                proj.projDir("icon.png"),
-                proj.rootDir("icon.png")
+                proj.layout.projectDirectory.file("icon.png").asFile,
+                proj.layout.projectDirectory.file("icon.png").asFile,
             )
         )
+
     }
+
     /**
      * Set the [_icon] to [file]
      */
     fun iconAt(file: File) {
         _icon.set(file)
     }
+
     /**
      * Set the [_icon] to [path]
      */
     fun iconAt(path: String) {
         _icon.set(File(path))
-    }
-    /**
-     * ### Kotlin DSL
-     * A spec for configuring [assetsRoot].
-     */
-    val root = AssetRootSpec()
-    /**
-     * ### Kotlin DSL
-     * A spec for configuring [icon].
-     */
-    val icon = IconSpec()
-
-    /**
-     * For configuring [assetsRoot]
-     */
-    inner class AssetRootSpec {
-        /**
-         * Set [assetsRoot] to [folder]
-         */
-        infix fun at(folder: File) {
-            assetsRoot.set(folder)
-        }
-        /**
-         * Set [assetsRoot] to [path]
-         */
-        infix fun at(path: String) {
-            assetsRoot.set(File(path))
-        }
-    }
-
-    inner class IconSpec {
-        /**
-         * Set [assetsRoot] to [file]
-         */
-        infix fun at(file: File) {
-            _icon.set(file)
-        }
-        /**
-         * Set [_icon] to [path]
-         */
-        infix fun at(path: String) {
-            _icon.set(File(path))
-        }
     }
 }

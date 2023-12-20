@@ -99,7 +99,7 @@ open class DexJar : DefaultTask() {
 
 open class DexJarOptions : AbstractOptions() {
     /**
-     * --min-api 14 as default
+     * --min-api 14 by default
      */
     var minApi = "14"
 }

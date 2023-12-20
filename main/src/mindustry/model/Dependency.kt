@@ -47,7 +47,7 @@ class DependencySpec(
     val target: Project,
 ) {
     /**
-     * Import v135 as default for now.
+     * Import v135 by default for now.
      * DO NOT trust this behavior, it may change later.
      */
     @InheritFromParent

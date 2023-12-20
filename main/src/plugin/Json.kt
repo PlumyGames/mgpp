@@ -18,7 +18,7 @@ class MindustryJsonPlugin : Plugin<Project> {
         val deployX = extensions.getOrCreate<DeployModExtension>(R.x.deployMod)
         tasks.register<Zip>(R.task.zipMod) {
             this.group = R.taskGroup.mindustry
-            from(assets.assetsRoot)
+            from(assets.assets)
             from(assets._icon)
             from(tasks.getByPath(R.task.genModHjson))
             archiveBaseName.set(deployX._baseName)

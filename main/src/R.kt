@@ -6,7 +6,7 @@ object R {
     /**
      * The default check time(ms) for latest version.
      *
-     * 24 hour as default.
+     * 24 hour by default.
      */
     const val defaultOutOfDataTime = 24 * 60 * 60 * 1000L
 

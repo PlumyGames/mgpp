@@ -16,19 +16,6 @@ import org.gradle.api.tasks.*
 import java.io.File
 import kotlin.reflect.KClass
 
-internal
-fun Task.deleteTempDir() {
-    project.delete(temporaryDir.listFiles())
-}
-internal
-fun Task.tempFi(name: String) =
-    temporaryDir.resolve(name)
-internal
-fun Project.projDir(name: String) =
-    projectDir.resolve(name)
-internal
-fun Project.rootDir(name: String) =
-    rootDir.resolve(name)
 internal inline
 fun <reified T> ExtensionContainer.getOrCreate(
     extensionName: String,

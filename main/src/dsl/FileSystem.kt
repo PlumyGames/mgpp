@@ -4,6 +4,7 @@
 package io.github.liplum.dsl
 
 import org.gradle.api.Task
+import org.gradle.api.file.RegularFile
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Files
@@ -105,13 +106,23 @@ fun File.findFileInOrder(vararg files: File): File {
 }
 
 internal
-fun findFileInOrder(vararg files: File): File {
+fun <T> findFileInOrder(getFile: T.() -> File, vararg files: T): T {
     for ((i, file) in files.withIndex()) {
-        return if (file.exists()) file
+        return if (getFile(file).exists()) file
         else if (i >= files.size - 1) file
         else continue
     }
     return files.last()
+}
+
+internal
+fun findFileInOrder(vararg files: RegularFile): RegularFile {
+    return findFileInOrder({ asFile }, *files)
+}
+
+internal
+fun findFileInOrder(vararg files: File): File {
+    return findFileInOrder({ this }, *files)
 }
 
 internal

@@ -36,7 +36,7 @@ open class DeployModExtension(
     /**
      * The deploy jar name: "[baseName]-[version]-[classifier].jar".
      *
-     * [ModMeta.name] in [mindustry] as default
+     * [ModMeta.name] in [mindustry] by default
      */
     var baseName: String
         get() = _baseName.getOrElse("")
@@ -50,7 +50,7 @@ open class DeployModExtension(
     /**
      * The deploy jar name: "[baseName]-[version]-[classifier].jar"
      *
-     * [ModMeta.version] in [mindustry] as default
+     * [ModMeta.version] in [mindustry] by default
      */
     var version: String
         get() = _version.getOrElse("")
@@ -64,7 +64,7 @@ open class DeployModExtension(
     /**
      * The deploy jar name: "[baseName]-[version]-[classifier].jar"
      *
-     * An empty string as default
+     * An empty string by default
      */
     var classifier: String
         get() = _classifier.getOrElse("")
@@ -77,9 +77,9 @@ open class DeployModExtension(
     }
     /**
      * Whether to make a fat jar, which contains all dependencies from classpath.
-     * `true` as default.
+     * `true` by default.
      *
-     * If current [proj] is a subproject, it'll be `false` as default,
+     * If current [proj] is a subproject, it'll be `false` by default,
      * which avoids all subprojects to output a fat jar.
      *
      * Therefore, you should manually set this to `true` when working with multi-project.
@@ -97,7 +97,7 @@ open class DeployModExtension(
      * Whether this project could output a mod file in `:jar` task,
      * its jar will contain something a mod needs. such as `mod.hjson`.
      *
-     * If current [proj] is a subproject, it'll be `false` as default,
+     * If current [proj] is a subproject, it'll be `false` by default,
      * which avoids all subprojects to output a mod file.
      *
      * Therefore, you should manually set this to `true` when working with multi-project.

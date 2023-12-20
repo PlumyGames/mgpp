@@ -14,11 +14,13 @@ import org.gradle.api.plugins.ExtensionAware
  */
 val Project.`mindustry`: MindustryExtension
     get() = (this as ExtensionAware).extensions.getByName(R.x.mindustry) as MindustryExtension
+
 /**
  * Configures the [mindustry][MindustryExtension] extension.
  */
 fun Project.`mindustry`(configure: Action<MindustryExtension>): Unit =
     (this as ExtensionAware).extensions.configure(R.x.mindustry, configure)
+
 /**
  * The main extension of [MindustryPlugin].
  * It provides many configurations for Mindustry modding development:
@@ -31,15 +33,17 @@ open class MindustryExtension(
     /**
      * The check time(sec) for latest version.
      *
-     * 1 hour as default.
+     * 1 hour by default.
      */
     var outOfDateTime: Int
         get() = (R.outOfDataDuration / 1000).toInt()
         set(value) {
             R.outOfDataDuration = value * 1000L
         }
+
     @JvmField
     val _dependency = DependencySpec(target)
+
     /**
      * Configure the mindustry and arc dependency.
      * You should call [mindustryRepo] and [importMindustry] to apply the configuration.
@@ -47,6 +51,7 @@ open class MindustryExtension(
     fun dependency(func: Action<DependencySpec>) {
         func.execute(_dependency)
     }
+
     /**
      * Configure the mindustry and arc dependency.
      * You should call [mindustryRepo] and [importMindustry] to apply the configuration.
@@ -54,21 +59,23 @@ open class MindustryExtension(
     inline fun dependency(func: DependencySpec.() -> Unit) {
         _dependency.func()
     }
+
     @JvmField
     val _modMeta = target.prop<ModMeta>().apply {
         target.run {
             convention(
                 ModMeta.fromHjson(
                     findFileInOrder(
-                        projDir("mod.hjson"),
-                        projDir("mod.json"),
-                        rootDir("mod.hjson"),
-                        rootDir("mod.json")
+                        project.layout.projectDirectory.file("mod.hjson").asFile,
+                        project.layout.projectDirectory.file("mod.json").asFile,
+                        project.rootProject.layout.projectDirectory.file("mod.hjson").asFile,
+                        project.rootProject.layout.projectDirectory.file("mod.json").asFile,
                     )
                 )
             )
         }
     }
+
     /**
      * Configure `mod.hjson` for output purpose.
      * It will automatically fetch the `mod.(h)json` from the following paths in order:

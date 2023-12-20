@@ -3,7 +3,7 @@ package io.github.liplum.mindustry
 import org.gradle.api.Project
 
 /**
- * It indicates this property will inherit value from its parent project as default.
+ * It indicates this property will inherit value from its parent project by default.
  */
 @Target(
     AnnotationTarget.FIELD,

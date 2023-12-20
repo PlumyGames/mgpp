@@ -51,8 +51,8 @@ class MindustryJavaPlugin : Plugin<Project> {
                 )
                 task.from(*dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray())
             }
-            if (deployX.enableFatJar) {
-                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                if (deployX.enableFatJar) {
                     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                     from(
                         configurations.runtimeClasspath.get().map {
@@ -61,25 +61,23 @@ class MindustryJavaPlugin : Plugin<Project> {
                     )
                 }
             }
-            if (deployX.outputMod) {
-                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                    from(assets.assetsRoot)
-                }
-                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                if (deployX.outputMod) {
+                    from(assets.assets)
                     from(assets._icon)
-                }
-                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
                     from(tasks.getByPath(R.task.genModHjson))
                 }
             }
         }
     }
 }
+
 /**
  * Provides the existing [dexJar][DexJar] task.
  */
 val TaskContainer.`dexJar`: TaskProvider<DexJar>
     get() = named<DexJar>(R.task.dexJar)
+
 /**
  * Provides the existing [deployMod][Jar] task.
  */

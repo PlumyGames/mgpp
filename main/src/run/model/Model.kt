@@ -7,7 +7,7 @@ import java.io.Serializable
 interface NamedModel : Serializable {
     /**
      * *Optional*
-     * An empty String as default.
+     * An empty String by default.
      * It affects gradle task names.
      * ```
      * runClient // if it's anonymous

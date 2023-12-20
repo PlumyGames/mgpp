@@ -141,7 +141,7 @@ mindustryAssets {
 
 tasks.antiAlias {
     sourceDirectory.set(rootDir.resolve("sprites-raw"))
-    destinationDirectory.set(mindustryAssets.assetsRoot.get().resolve("sprites"))
+    destinationDirectory.set(projectDir.resolve("assets").resolve("sprites"))
     addFilter {
         it.name != "sender.png"
     }

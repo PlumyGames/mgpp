@@ -21,7 +21,7 @@ ___
 > Starting the game with your mod and others to test the compatibility or interaction.
 
 - Separate Working Space
-> The configurable data directory of Mindustry Client located in a temporary folder as default to separate the environments of your all projects.
+> The configurable data directory of Mindustry Client located in a temporary folder by default to separate the environments of your all projects.
 
 - Manage your Assets
 > Assets will be copied into the output jar file with configuration.

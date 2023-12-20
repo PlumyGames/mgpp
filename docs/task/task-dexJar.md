@@ -4,7 +4,7 @@
 - **TYPE** `io.github.liplum.mindustry.task.DexJar`
 
 ### DexJarOptions
-- `minApi`: `14` as default
+- `minApi`: `14` by default
 
 
 === "Groovy"

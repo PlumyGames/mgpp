@@ -50,7 +50,7 @@ To download the game from [Mindustry official release](https://github.com/Anuken
     }
     ```
 
-As default, mgpp will download `v136`.
+By default, mgpp will download `v136`.
 
 ##### Notations
 - latest: To download the latest official Mindustry from [Mindustry official release](https://github.com/Anuken/Mindustry/releases), such as `v126.2`.
@@ -92,7 +92,7 @@ To download the bleeding-edge from [Mindustry bleeding-edge release](https://git
     }
     ```
 
-As default, mgpp will download a certain version to prevent errors when gradle configuring,
+By default, mgpp will download a certain version to prevent errors when gradle configuring,
 but you shouldn't except this behavior.
 
 ##### Notations

@@ -58,7 +58,7 @@ MGPP allows you to customize the location of data directory:
     }
     ```
 
-MGPP will apply the `useTempDataDir` as default.
+MGPP will apply the `useTempDataDir` by default.
 
 #### Overwrite from local properties
 You can declare the `mgpp.run.dataDir` in `local.properties` file to
@@ -97,7 +97,7 @@ ensure you have backed up your mods if it's on.
     }
     ```
 
-MGPP will apply the `keepOtherMods` as default.
+MGPP will apply the `keepOtherMods` by default.
 
 #### Overwrite from local properties
 You can declare the `mgpp.run.forciblyClear` in `local.properties` file to overwrite this behavior. 
