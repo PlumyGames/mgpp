@@ -52,18 +52,10 @@ data class UrlMod(
 ) : IMod {
     constructor(url: String) : this(URL(url))
 
-    override val fileName4Local: String = run {
-        val path: String = url.path
-        val last = path.substring(path.lastIndexOf('/') + 1)
-        if (last.endsWith(".zip")) last else "$last.zip"
-    }
+    override val fileName4Local: String = "${url.resolve4FileName()}.zip"
 
     override fun resolveCacheFile(): File {
-        val urlInBytes = MessageDigest
-            .getInstance("SHA-1")
-            .digest(url.toString().toByteArray())
-        val urlHashed = urlInBytes.toString()
-        return SharedCache.modsDir.resolve("url").resolve(urlHashed)
+        return SharedCache.modsDir.resolve("url").resolve(fileName4Local)
     }
 }
 

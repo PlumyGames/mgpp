@@ -98,10 +98,13 @@ runMindustry {
         official(version = "v146")
         putDataAt(file = buildDir.resolve("customDataDir"))
     }
-    addClient("default data dir"){
+    addClient("default data dir") {
         official(version = "v146")
         modpack = null
         useDefaultDataDir()
+    }
+    addClient("from url") {
+        url("https://github.com/Anuken/Mindustry/releases/download/v146/Mindustry.jar")
     }
     addClient("debugging") {
         official(version = "v146")

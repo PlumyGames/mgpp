@@ -7,6 +7,7 @@ import io.github.liplum.mindustry.LocalProperties.local
 import org.gradle.api.Action
 import org.gradle.api.Project
 import java.io.File
+import java.net.URL
 
 enum class GameSideType {
     Client, Server
@@ -225,8 +226,16 @@ abstract class AddGameSideSpec<T : GameSide> {
         }
     }
 
+    fun url(url: URL) {
+        UrlGameLoc(url).checkAndSet()
+    }
+
+    fun url(url: String) {
+        this.url(URL(url))
+    }
+
     fun localFile(path: String) {
-        LocalGameLoc(File(path)).checkAndSet()
+        this.localFile(File(path))
     }
 
     fun localFile(file: File) {

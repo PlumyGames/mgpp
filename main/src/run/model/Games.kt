@@ -24,6 +24,18 @@ sealed interface IDownloadableGameLoc : IGameLoc {
 
 sealed interface ILatestDownloadableGameLoc : IDownloadableGameLoc
 
+data class UrlGameLoc(
+    val url: URL
+) : IDownloadableGameLoc {
+    override fun resolveDownloadSrc(): URL = url
+
+    override val fileName4Local: String = "${url.resolve4FileName()}.jar"
+
+    override fun resolveCacheFile(): File {
+        return SharedCache.gamesDir.resolve("url").resolve(fileName4Local)
+    }
+}
+
 data class GitHubGameLoc(
     val user: String,
     val repo: String,

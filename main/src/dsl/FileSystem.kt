@@ -23,6 +23,7 @@ fun InputStream.copyToTmpAndMove(file: File) {
     this.use {
         it.copyTo(tmp)
     }
+    file.ensureParentDir()
     tmp.renameTo(file)
     // ignore the error when deleting the temp file
     runCatching {
