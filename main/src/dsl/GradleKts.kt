@@ -6,6 +6,7 @@ import org.gradle.api.*
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.Directory
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.api.plugins.PluginContainer
@@ -27,47 +28,47 @@ fun <reified T> ExtensionContainer.getOrNull(): T? {
 }
 
 internal
-fun Project.stringProp() =
+fun Project.stringProp(): Property<String> =
     objects.property(String::class.java)
 
 internal
-fun Project.boolProp() =
+fun Project.boolProp(): Property<Boolean> =
     objects.property(Boolean::class.java)
 
 internal
-fun Project.stringsProp() =
+fun Project.stringsProp(): ListProperty<String> =
     objects.listProperty(String::class.java)
 
 internal inline
-fun <reified T> Project.listProp() =
+fun <reified T> Project.listProp(): ListProperty<T> =
     objects.listProperty(T::class.java)
 
 internal inline
-fun <reified TK, reified TV> Project.mapProp() =
+fun <reified TK, reified TV> Project.mapProp(): MapProperty<TK, TV> =
     project.objects.mapProperty(TK::class.java, TV::class.java)
 
 internal inline
-fun <reified T> Project.setProp() =
+fun <reified T> Project.setProp(): SetProperty<T> =
     objects.setProperty(T::class.java)
 
 internal inline
-fun <reified T> Project.prop() =
+fun <reified T> Project.prop(): Property<T> =
     objects.property(T::class.java)
 
 internal
-fun Project.dirProp() =
+fun Project.dirProp(): DirectoryProperty =
     objects.directoryProperty()
 
 internal
-fun Project.sourceDirectorySet(name: String, displayName: String) =
+fun Project.sourceDirectorySet(name: String, displayName: String): SourceDirectorySet =
     objects.sourceDirectorySet(name, displayName)
 
 internal
-fun Project.fileProp() =
+fun Project.fileProp(): Property<File> =
     objects.property(File::class.java)
 
 internal
-fun Project.configurationFileCollection() =
+fun Project.configurationFileCollection(): ConfigurableFileCollection =
     objects.fileCollection()
 
 internal inline

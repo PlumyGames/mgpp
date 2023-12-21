@@ -38,13 +38,14 @@ open class MindustryAssetsExtension(
      */
     @JvmField
     val _icon = proj.fileProp().apply {
+        val inProj = proj.layout.projectDirectory.file("icon.png").asFile
+        val inRoot = proj.rootProject.layout.projectDirectory.file("icon.png").asFile
         convention(
             findFileInOrder(
-                proj.layout.projectDirectory.file("icon.png").asFile,
-                proj.layout.projectDirectory.file("icon.png").asFile,
-            )
+                inProj,
+                inRoot,
+            ) ?: inRoot
         )
-
     }
 
     /**

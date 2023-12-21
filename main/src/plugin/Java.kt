@@ -79,7 +79,7 @@ class MindustryJavaPlugin : Plugin<Project> {
                     if (deployX.outputMod) {
                         from(assets.assets)
                         from(assets._icon)
-                        from(tasks.getByPath(R.task.genModHjson))
+                        from(tasks.findByPath(R.task.genModHjson))
                     }
                 }
             }
