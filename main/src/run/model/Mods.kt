@@ -2,12 +2,11 @@ package io.github.liplum.mindustry
 
 import arc.util.serialization.Jval
 import io.github.liplum.dsl.*
-import io.github.liplum.mindustry.SharedCache.updateGitHubDownloadTrack
+import io.github.liplum.mindustry.SharedCache.updateDownloadLock
 import org.gradle.api.GradleException
 import java.io.File
 import java.io.Serializable
 import java.net.URL
-import java.security.MessageDigest
 
 /**
  * An abstract mod file.
@@ -74,7 +73,7 @@ data class GitHubUntypedMod(
     val repo: String,
 ) : IGitHubMod {
     override fun resolveDownloadSrc(): URL {
-        updateGitHubDownloadTrack(lockFile = resolveCacheFile())
+        updateDownloadLock(lockFile = resolveCacheFile())
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
         val json = Jval.read(jsonText)
         val lan = json.getString("language")
@@ -95,7 +94,7 @@ data class GitHubPlainMod(
 ) : IGitHubMod {
     val fileNameWithoutExtension = linkString(separator = "-", repo.repo2Path(), branch)
     override fun resolveDownloadSrc(): URL {
-        updateGitHubDownloadTrack(lockFile = resolveCacheFile())
+        updateDownloadLock(lockFile = resolveCacheFile())
         val jsonText = URL("https://api.github.com/repos/$repo").readText()
         val json = Jval.read(jsonText)
         val branch = if (!branch.isNullOrBlank()) branch
@@ -113,7 +112,7 @@ data class GitHubJvmMod(
 ) : IGitHubMod {
     val fileNameWithoutExtension = linkString(separator = "-", repo.repo2Path(), tag)
     override fun resolveDownloadSrc(): URL {
-        updateGitHubDownloadTrack(lockFile = resolveCacheFile())
+        updateDownloadLock(lockFile = resolveCacheFile())
         return if (tag == null) {
             resolveJvmModSrc(repo)
         } else {

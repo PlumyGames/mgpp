@@ -12,7 +12,7 @@ import kotlin.math.absoluteValue
 private
 const val lockFileEx = "lock.json"
 
-data class GihHubDownloadTrack(
+data class DownloadLock(
     /**
      * It's changed when the mod is updated or network error.
      */
@@ -92,7 +92,7 @@ object SharedCache {
     }
 
     internal
-    fun updateGitHubDownloadTrack(
+    fun updateDownloadLock(
         lockFile: File,
         newTimestamp: Long = System.currentTimeMillis(),
         logger: Logger? = null,
@@ -101,7 +101,7 @@ object SharedCache {
         if (infoFi.isDirectory) {
             infoFi.deleteRecursively()
         }
-        val meta = GihHubDownloadTrack(lastUpdateTimestamp = newTimestamp)
+        val meta = DownloadLock(lastUpdateTimestamp = newTimestamp)
         val json = gson.toJson(meta)
         try {
             infoFi.writeText(json)
@@ -120,18 +120,18 @@ object SharedCache {
             if (infoFi.exists()) infoFi.delete()
             return false
         }
-        val meta = tryReadGitHubDownloadTrack(infoFi)
+        val meta = tryReadDownloadTrack(infoFi)
         val curTime = System.currentTimeMillis()
         return curTime - meta.lastUpdateTimestamp < outOfDate
     }
 
     internal
-    fun tryReadGitHubDownloadTrack(
+    fun tryReadDownloadTrack(
         infoFile: File,
         logger: Logger? = null,
-    ): GihHubDownloadTrack {
-        fun writeAndGetDefault(): GihHubDownloadTrack {
-            val meta = GihHubDownloadTrack(lastUpdateTimestamp = System.currentTimeMillis())
+    ): DownloadLock {
+        fun writeAndGetDefault(): DownloadLock {
+            val meta = DownloadLock(lastUpdateTimestamp = System.currentTimeMillis())
             val infoContent = gson.toJson(meta)
             try {
                 infoFile.ensureParentDir().writeText(infoContent)
