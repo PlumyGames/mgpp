@@ -6,9 +6,9 @@ import io.github.liplum.dsl.*
 import io.github.liplum.dsl.afterEvaluateThis
 import io.github.liplum.dsl.getOrCreate
 import io.github.liplum.dsl.register
+import io.github.liplum.mindustry.LocalProperties.localProp
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.JavaPlugin
 
 /**
@@ -47,13 +47,21 @@ class MindustryRunPlugin : Plugin<Project> {
         for (client in x.clients) {
             val resolveClient = proj.tasks.register<ResolveGame>("resolveClient${client.name}") {
                 group = R.taskGroup.mindustryStuff
-                location.set(client.location)
+                val gameLocalProp = proj.localProp[client.locationLocalPropKey]
+                location.set(
+                    if (gameLocalProp != null) LocalGameLoc(gameLocalProp)
+                    else client.location
+                )
             }
             proj.tasks.register<RunClient>("runClient${client.name}") {
                 group = R.taskGroup.mindustry
                 dependsOn(resolveClient)
                 startupArgs.addAll(client.startupArgs)
-                dataDir.set(client.dataDir)
+                val dataDirLocalProp = proj.localProp[client.dataDirLocalPropKey]
+                dataDir.set(
+                    if (dataDirLocalProp != null) LocalDataDirLoc(dataDirLocalProp)
+                    else client.dataDir
+                )
                 mindustryFile.set(proj.provider {
                     resolveClient.get().outputs.files.singleFile
                 })
@@ -82,13 +90,21 @@ class MindustryRunPlugin : Plugin<Project> {
         for (server in x.servers) {
             val resolveServer = proj.tasks.register<ResolveGame>("resolveServer${server.name}") {
                 group = R.taskGroup.mindustryStuff
-                location.set(server.location)
+                val gameLocalProp = project.localProp[server.locationLocalPropKey]
+                location.set(
+                    if (gameLocalProp != null) LocalGameLoc(gameLocalProp)
+                    else server.location
+                )
             }
             proj.tasks.register<RunServer>("runServer${server.name}") {
                 group = R.taskGroup.mindustry
                 dependsOn(resolveServer)
                 startupArgs.addAll(server.startupArgs)
-                dataDir.set(server.dataDir)
+                val dataDirLocalProp = proj.localProp[server.dataDirLocalPropKey]
+                dataDir.set(
+                    if (dataDirLocalProp != null) LocalDataDirLoc(dataDirLocalProp)
+                    else server.dataDir
+                )
                 mindustryFile.set(proj.provider {
                     resolveServer.get().outputs.files.singleFile
                 })

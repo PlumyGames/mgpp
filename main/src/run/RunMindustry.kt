@@ -3,6 +3,7 @@
 package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.prop
+import io.github.liplum.mindustry.LocalProperties.localProp
 import org.gradle.api.Action
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
@@ -87,7 +88,11 @@ open class RunMindustryExtension(
             name = newName.ifBlank { "__DEFAULT__" },
         )
         AddClientSpec(proj, client).config()
-        if (client.location == null) {
+        val locationLocalPropKey = client.locationLocalPropKey
+        val gameFromLocalProp = proj.localProp[locationLocalPropKey]
+        if (gameFromLocalProp != null) {
+            proj.logger.warn("Client<${client.name}> game location will be overridden by local properties at $locationLocalPropKey.")
+        } else if (client.location == null) {
             proj.logger.warn("Client<${client.name}> location not specified")
         }
         clients.add(client)
@@ -168,7 +173,11 @@ open class RunMindustryExtension(
             name = newName.ifBlank { "__DEFAULT__" },
         )
         AddServerSpec(proj, server).config()
-        if (server.location == null) {
+        val locationLocalPropKey = server.locationLocalPropKey
+        val gameFromLocalProp = proj.localProp[locationLocalPropKey]
+        if (gameFromLocalProp != null) {
+            proj.logger.warn("Server<${server.name}> game location will be overridden by local properties at $locationLocalPropKey.")
+        } else if (server.location == null) {
             proj.logger.warn("Server<${server.name}> location not specified")
         }
         servers.add(server)

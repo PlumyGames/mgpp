@@ -15,6 +15,8 @@ sealed interface IDataDirLoc : Serializable {
 data class LocalDataDirLoc(
     val dir: File
 ) : IDataDirLoc {
+    constructor(path: String) : this(File(path))
+
     override fun resolveDir(task: Task, type: GameSideType): File = dir
 }
 
