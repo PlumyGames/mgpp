@@ -18,23 +18,26 @@ class MindustryJsonPlugin : Plugin<Project> {
         val x = extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(R.x.mindustryAssets)
         val deployX = extensions.getOrCreate<DeployModExtension>(R.x.deployMod)
+        val zipMod = tasks.register<Zip>(R.task.zipMod) {
+            this.group = R.taskGroup.mindustry
+            archiveBaseName.set(deployX._baseName)
+            archiveVersion.set(deployX._version)
+            archiveClassifier.set(deployX._classifier)
+            destinationDirectory.set(layout.buildDirectory.dir("libs"))
+        }
         target.afterEvaluateThis {
-            if (x._modMeta.isPresent) {
-                tasks.register<Zip>(R.task.zipMod) {
-                    this.group = R.taskGroup.mindustry
-                    from(assets.assets)
-                    from(assets._icon)
-                    from(tasks.getByPath(R.task.genModHjson))
-                    archiveBaseName.set(deployX._baseName)
-                    archiveVersion.set(deployX._version)
-                    archiveClassifier.set(deployX._classifier)
-                    destinationDirectory.set(layout.buildDirectory.dir("libs"))
+            zipMod.configure {
+                it.enabled = x._modMeta.isPresent
+                if (x._modMeta.isPresent) {
+                    it.from(assets.assets)
+                    it.from(assets._icon)
+                    it.from(tasks.getByPath(R.task.genModHjson))
                 }
-                x._modMeta.get().apply {
-                    // json or js mod doesn't have a main class
-                    main = null
-                    java = false
-                }
+            }
+            x._modMeta.orNull?.apply {
+                // json or js mod doesn't have a main class
+                main = null
+                java = false
             }
         }
     }
