@@ -10,7 +10,7 @@ import kotlin.math.absoluteValue
 
 
 internal
-const val infoX = "info.json"
+const val lockFileEx = "lock.json"
 
 data class GihHubDownloadTrack(
     /**
@@ -97,7 +97,7 @@ object SharedCache {
         newTimestamp: Long = System.currentTimeMillis(),
         logger: Logger? = null,
     ) {
-        val infoFi = File("$lockFile.$infoX")
+        val infoFi = File("$lockFile.$lockFileEx")
         if (infoFi.isDirectory) {
             infoFi.deleteRecursively()
         }
@@ -115,7 +115,7 @@ object SharedCache {
         lockFile: File,
         outOfDate: Long = R.outOfDataDuration,
     ): Boolean {
-        val infoFi = File("$lockFile.$infoX")
+        val infoFi = File("$lockFile.$lockFileEx")
         if (!lockFile.exists()) {
             if (infoFi.exists()) infoFi.delete()
             return false
