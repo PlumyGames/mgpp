@@ -27,47 +27,47 @@ fun <reified T> ExtensionContainer.getOrNull(): T? {
 }
 
 internal
-fun Project.stringProp(): StringProp =
+fun Project.stringProp() =
     objects.property(String::class.java)
 
 internal
-fun Project.boolProp(): BoolProp =
+fun Project.boolProp() =
     objects.property(Boolean::class.java)
 
 internal
-fun Project.stringsProp(): StringsProp =
+fun Project.stringsProp() =
     objects.listProperty(String::class.java)
 
 internal inline
-fun <reified T> Project.listProp(): ListProperty<T> =
+fun <reified T> Project.listProp() =
     objects.listProperty(T::class.java)
 
 internal inline
-fun <reified TK, reified TV> Project.mapProp(): MapProperty<TK, TV> =
+fun <reified TK, reified TV> Project.mapProp() =
     project.objects.mapProperty(TK::class.java, TV::class.java)
 
 internal inline
-fun <reified T> Project.setProp(): SetProperty<T> =
+fun <reified T> Project.setProp() =
     objects.setProperty(T::class.java)
 
 internal inline
-fun <reified T> Project.prop(): Property<T> =
+fun <reified T> Project.prop() =
     objects.property(T::class.java)
 
 internal
-fun Project.dirProp(): DirProp =
+fun Project.dirProp() =
     objects.directoryProperty()
 
 internal
-fun Project.sourceDirectorySet(name: String, displayName: String): SourceDirectorySet =
+fun Project.sourceDirectorySet(name: String, displayName: String) =
     objects.sourceDirectorySet(name, displayName)
 
 internal
-fun Project.fileProp(): FileProp =
+fun Project.fileProp() =
     objects.property(File::class.java)
 
 internal
-fun Project.configurationFileCollection(): ConfigurableFileCollection =
+fun Project.configurationFileCollection() =
     objects.fileCollection()
 
 internal inline
