@@ -33,7 +33,7 @@ class MindustryPlugin : Plugin<Project> {
                 ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
             }
         }
-        target.tasks.register<CleanMindustrySharedCache>(R.task.cleanMindustrySharedCache) {
+        target.tasks.register<CleanSharedCache>(R.task.cleanMindustrySharedCache) {
             group = BasePlugin.BUILD_GROUP
         }
         val genModHjson = tasks.register<ModHjsonGenerate>(R.task.genModHjson) {
