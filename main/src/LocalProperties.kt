@@ -20,9 +20,12 @@ object LocalProperties {
         return properties
     }
 
-    val Project.local: PropertiesSpec
+    val Project.localProp: PropertiesSpec
         get() = PropertiesSpec(localProperties)
 
+    /**
+     * The cache should be clear when plugin starts being applied
+     */
     fun clearCache(project: Project? = null) {
         _properties = null
         project?.logger?.info("local.properties cache was cleared.")

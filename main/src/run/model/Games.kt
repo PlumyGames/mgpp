@@ -118,6 +118,8 @@ data class LatestMindustryBELoc(
 data class LocalGameLoc(
     val file: File,
 ) : IGameLoc {
+    constructor(path: String) : this(File(path))
+
     override val fileName4Local: String = file.name
 
     /**

@@ -8,8 +8,11 @@ import org.gradle.api.Project
 import java.io.File
 import java.net.URL
 
-enum class GameSideType {
-    Client, Server
+enum class GameSideType(
+    val gradleName: String
+) {
+    Client("client"),
+    Server("server")
 }
 
 open class GameSide(
@@ -27,6 +30,17 @@ open class GameSide(
     var dataDir: IDataDirLoc? = null
     var location: IGameLoc? = null
     var modpack: String? = null
+    val gradleName get() = normalizeName4Gradle(name)
+    fun localPropKey(key: String): String {
+        val gradleName = gradleName
+        return if (gradleName.isBlank())
+            "mgpp.${type.gradleName}.${key}"
+        else
+            "mgpp.${type.gradleName}.${gradleName}.${key}"
+    }
+
+    val locationLocalPropKey get() = localPropKey("game")
+    val dataDirLocalPropKey get() = localPropKey("dataDir")
 }
 
 abstract class AddGameSideSpec<T : GameSide> {

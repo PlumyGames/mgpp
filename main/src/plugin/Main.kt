@@ -12,6 +12,7 @@ import org.gradle.api.tasks.TaskProvider
 
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
+        LocalProperties.clearCache(project)
         GroovyBridge.attach(target)
         // Register this for dynamically configure tasks without class reference in groovy.
         if (plugins.hasPlugin<JavaPlugin>()) {
