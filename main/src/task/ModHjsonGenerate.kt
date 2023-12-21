@@ -12,7 +12,7 @@ import org.gradle.api.tasks.TaskAction
 
 open class ModHjsonGenerate : DefaultTask() {
     val modMeta = project.prop<ModMeta>()
-        @Input @Optional get
+        @Input get
     val output = project.fileProp()
         @OutputFile get
 

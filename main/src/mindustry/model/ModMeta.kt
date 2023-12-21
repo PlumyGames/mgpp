@@ -4,6 +4,7 @@ package io.github.liplum.mindustry
 
 import groovy.json.JsonOutput
 import io.github.liplum.dsl.toMutableMap
+import io.github.liplum.mindustry.ModMeta.Companion.fillMissingWithDefault
 import org.hjson.JsonObject
 import org.hjson.Stringify
 import java.io.File
@@ -86,9 +87,28 @@ class ModMeta private constructor(
         info[property] = value
     }
 
-    /**
-     * [ModMeta.toHjson]
-     */
+//    fun loadFrom(path: String) {
+//        loadFrom(File(path))
+//    }
+//
+//    fun loadFrom(file: File) {
+//        runCatching {
+//
+//        }.getOrElse { ModMeta() }
+//    }
+
+    fun fillMissingWith(other: ModMeta) {
+        this.info.fillMissingWith(other)
+    }
+
+    fun fillMissingWith(info: Map<String, Any?>) {
+        this.info.fillMissingWith(info)
+    }
+
+    fun fillMissingWithDefault() {
+        this.info.fillMissingWith(defaultMeta)
+    }
+
     override fun toString(): String {
         return toHjson()
     }
@@ -122,15 +142,15 @@ class ModMeta private constructor(
 
         @JvmStatic
         fun by(vararg metas: Map.Entry<String, Any?>) =
-            ModMeta(HashMap(metas.associate { Pair(it.key, it.value) }).fillDefaultValue())
+            ModMeta(HashMap(metas.associate { Pair(it.key, it.value) }).fillMissingWithDefault())
 
         @JvmStatic
         fun by(vararg metas: Pair<String, Any?>) =
-            ModMeta(mutableMapOf(*metas).fillDefaultValue())
+            ModMeta(mutableMapOf(*metas).fillMissingWithDefault())
 
         @JvmStatic
         fun fromHjson(hjson: String): ModMeta =
-            ModMeta(JsonObject.readHjson(hjson).toMutableMap().fillDefaultValue())
+            ModMeta(JsonObject.readHjson(hjson).toMutableMap().fillMissingWithDefault())
 
         @JvmStatic
         fun fromHjson(file: File): ModMeta =
@@ -145,8 +165,20 @@ class ModMeta private constructor(
 
         @JvmStatic
         internal
-        fun <T> T.fillDefaultValue(): T where T : MutableMap<String, Any?> {
-            for ((dk, dv) in defaultMeta) {
+        fun <T> T.fillMissingWithDefault(): T where T : MutableMap<String, Any?> {
+            return fillMissingWith(defaultMeta)
+        }
+
+        @JvmStatic
+        internal
+        fun <T> T.fillMissingWith(other: ModMeta): T where T : MutableMap<String, Any?> {
+            return fillMissingWith(other.info)
+        }
+
+        @JvmStatic
+        internal
+        fun <T> T.fillMissingWith(info: Map<String, Any?>): T where T : MutableMap<String, Any?> {
+            for ((dk, dv) in info) {
                 this.putIfAbsent(dk, dv)
             }
             return this
