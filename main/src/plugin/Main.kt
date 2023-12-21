@@ -35,15 +35,14 @@ class MindustryPlugin : Plugin<Project> {
         target.tasks.register<CleanMindustrySharedCache>(R.task.cleanMindustrySharedCache) {
             group = BasePlugin.BUILD_GROUP
         }
-
+        val genModHjson = tasks.register<ModHjsonGenerate>(R.task.genModHjson) {
+            group = R.taskGroup.mindustry
+            modMeta.set(ex._modMeta)
+            output.set(temporaryDir.resolve("mod.hjson"))
+        }
         target.afterEvaluateThis {
-            if (ex._modMeta.isPresent) {
-                tasks.register<ModHjsonGenerate>(R.task.genModHjson) {
-                    group = R.taskGroup.mindustry
-                    modMeta.set(ex._modMeta)
-                    output.set(temporaryDir.resolve("mod.hjson"))
-                }
-
+            genModHjson.configure {
+                it.enabled = ex._modMeta.isPresent
             }
         }
     }
