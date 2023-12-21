@@ -5,23 +5,22 @@ package io.github.liplum.mindustry
 import io.github.liplum.dsl.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.api.tasks.TaskProvider
 
 class MindustryPlugin : Plugin<Project> {
     override fun apply(target: Project) = target.func {
-        LocalProperties.clearCache(this)
-        val ex = extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
-        val assets = extensions.getOrCreate<MindustryAssetsExtension>(R.x.mindustryAssets)
-        val run = extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)
-        val deployX = extensions.getOrCreate<DeployModExtension>(R.x.deployMod)
-
-        parent?.let {
-            // disable those if current project is subproject.
-            deployX.fatJar = false
-            deployX.outputMod = false
+        GroovyBridge.attach(target)
+        // Register this for dynamically configure tasks without class reference in groovy.
+        if (plugins.hasPlugin<JavaPlugin>()) {
+            plugins.apply<MindustryJavaPlugin>()
+        } else {
+            plugins.apply<MindustryJsonPlugin>()
         }
+        plugins.apply<MindustryRunPlugin>()
+        val ex = extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
         /**
          * Handle [InheritFromParent].
          * Because they're initialized at the [Plugin.apply] phase, the user-code will overwrite them if it's possible.
@@ -29,36 +28,27 @@ class MindustryPlugin : Plugin<Project> {
         parent?.let {
             if (it.plugins.hasPlugin<MindustryPlugin>()) {
                 val parentEx = it.extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
-                val parentRun = it.extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)
                 ex._dependency.mindustryDependency.set(parentEx._dependency.mindustryDependency)
                 ex._dependency.arcDependency.set(parentEx._dependency.arcDependency)
-                run._includeMyMod.set(parentRun._includeMyMod)
             }
         }
-        // Register this for dynamically configure tasks without class reference in groovy.
-        // Eagerly configure this task in order to be added into task group in IDE
+        target.tasks.register<CleanMindustrySharedCache>(R.task.cleanMindustrySharedCache) {
+            group = BasePlugin.BUILD_GROUP
+        }
 
-        tasks.register<ModHjsonGenerate>(R.task.genModHjson) {
-            group = R.taskGroup.mindustry
-            modMeta.set(ex._modMeta)
-            output.set(temporaryDir.resolve("mod.hjson"))
+        target.afterEvaluateThis {
+            if (ex._modMeta.isPresent) {
+                tasks.register<ModHjsonGenerate>(R.task.genModHjson) {
+                    group = R.taskGroup.mindustry
+                    modMeta.set(ex._modMeta)
+                    output.set(temporaryDir.resolve("mod.hjson"))
+                }
+
+            }
         }
-        if (plugins.hasPlugin<JavaPlugin>()) {
-            plugins.apply<MindustryJavaPlugin>()
-        } else {
-            plugins.apply<MindustryJsonPlugin>()
-        }
-        // Set the convention to ex._deploy
-        deployX._baseName.convention(provider {
-            ex._modMeta.get().name
-        })
-        deployX._version.convention(provider {
-            ex._modMeta.get().version
-        })
-        plugins.apply<MindustryRunPlugin>()
-        GroovyBridge.attach(target)
     }
 }
+
 /**
  * Provides the existing `antiAlias`: [AntiAlias] task.
  */
@@ -68,6 +58,7 @@ val TaskContainer.`antiAlias`: TaskProvider<AntiAlias>
     }.getOrElse {
         register<AntiAlias>(R.task.antiAlias)
     }
+
 /**
  * Provides the existing `genModHjson`: [ModHjsonGenerate] task.
  */
@@ -80,6 +71,7 @@ inline fun safeRun(func: () -> Unit) {
     } catch (_: Throwable) {
     }
 }
+
 /**
  * Provides the existing [resolveMods][ResolveMods] task.
  */

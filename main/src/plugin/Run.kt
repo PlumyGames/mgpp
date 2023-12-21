@@ -16,10 +16,14 @@ import org.gradle.api.plugins.JavaPlugin
  */
 class MindustryRunPlugin : Plugin<Project> {
     override fun apply(target: Project) {
-        target.tasks.register<CleanMindustrySharedCache>(R.task.cleanMindustrySharedCache) {
-            group = BasePlugin.BUILD_GROUP
-        }
         val runX = target.extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)
+        /** Handle [InheritFromParent]. */
+        target.parent?.let {
+            if (it.plugins.hasPlugin<MindustryPlugin>()) {
+                val parentRunX = it.extensions.getOrCreate<RunMindustryExtension>(R.x.runMindustry)
+                runX._includeMyMod.set(parentRunX._includeMyMod)
+            }
+        }
         target.afterEvaluateThis {
             addResolveModpacks(target, runX)
             addRunClient(target, runX)
@@ -59,12 +63,14 @@ class MindustryRunPlugin : Plugin<Project> {
                     dependsOn(resolveModpackTask)
                     mods.from(resolveModpackTask)
                 }
-                if (x.includeMyMod) {
+                // Only when the project has mod meta
+                val hasModMeta = proj.extensions.getOrNull<MindustryExtension>()?._modMeta?.isPresent ?: false
+                if (x.includeMyMod && hasModMeta) {
                     if (proj.plugins.hasPlugin<MindustryJavaPlugin>()) {
-                        mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
+                        mods.from(proj.tasks.findByPath(JavaPlugin.JAR_TASK_NAME))
                     }
                     if (proj.plugins.hasPlugin<MindustryJsonPlugin>()) {
-                        mods.from(proj.tasks.getByPath(R.task.zipMod))
+                        mods.from(proj.tasks.findByPath(R.task.zipMod))
                     }
                 }
             }
@@ -92,12 +98,14 @@ class MindustryRunPlugin : Plugin<Project> {
                     dependsOn(resolveModpackTask)
                     mods.from(resolveModpackTask)
                 }
-                if (x.includeMyMod) {
+                // Only when the project has mod meta
+                val hasModMeta = proj.extensions.getOrNull<MindustryExtension>()?._modMeta?.isPresent ?: false
+                if (x.includeMyMod && hasModMeta) {
                     if (proj.plugins.hasPlugin<MindustryJavaPlugin>()) {
-                        mods.from(proj.tasks.getByPath(JavaPlugin.JAR_TASK_NAME))
+                        mods.from(proj.tasks.findByPath(JavaPlugin.JAR_TASK_NAME))
                     }
                     if (proj.plugins.hasPlugin<MindustryJsonPlugin>()) {
-                        mods.from(proj.tasks.getByPath(R.task.zipMod))
+                        mods.from(proj.tasks.findByPath(R.task.zipMod))
                     }
                 }
             }

@@ -1,3 +1,5 @@
+@file:Suppress("RemoveRedundantBackticks")
+
 package io.github.liplum.mindustry
 
 
@@ -16,23 +18,28 @@ class MindustryJsonPlugin : Plugin<Project> {
         val x = extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(R.x.mindustryAssets)
         val deployX = extensions.getOrCreate<DeployModExtension>(R.x.deployMod)
-        tasks.register<Zip>(R.task.zipMod) {
-            this.group = R.taskGroup.mindustry
-            from(assets.assets)
-            from(assets._icon)
-            from(tasks.getByPath(R.task.genModHjson))
-            archiveBaseName.set(deployX._baseName)
-            archiveVersion.set(deployX._version)
-            archiveClassifier.set(deployX._classifier)
-            destinationDirectory.set(layout.buildDirectory.dir("libs"))
-        }
-        x.modMeta {
-            // json or js mod doesn't have a main class
-            main = null
-            java = false
+        target.afterEvaluateThis {
+            if (x._modMeta.isPresent) {
+                tasks.register<Zip>(R.task.zipMod) {
+                    this.group = R.taskGroup.mindustry
+                    from(assets.assets)
+                    from(assets._icon)
+                    from(tasks.getByPath(R.task.genModHjson))
+                    archiveBaseName.set(deployX._baseName)
+                    archiveVersion.set(deployX._version)
+                    archiveClassifier.set(deployX._classifier)
+                    destinationDirectory.set(layout.buildDirectory.dir("libs"))
+                }
+                x._modMeta.get().apply {
+                    // json or js mod doesn't have a main class
+                    main = null
+                    java = false
+                }
+            }
         }
     }
 }
+
 /**
  * Provides the existing [zipMod][Zip] task.
  */

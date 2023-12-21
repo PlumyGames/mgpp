@@ -20,7 +20,6 @@ class MindustryJavaPlugin : Plugin<Project> {
         if (!plugins.hasPlugin<JavaPlugin>()) {
             throw GradleException("${MindustryJavaPlugin::class.java} requires `java` plugin applied.")
         }
-        val ex = extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
         val deployX = extensions.getOrCreate<DeployModExtension>(R.x.deployMod)
         val assets = extensions.getOrCreate<MindustryAssetsExtension>(R.x.mindustryAssets)
         val dexJar = tasks.register<DexJar>(R.task.dexJar) {
@@ -33,6 +32,19 @@ class MindustryJavaPlugin : Plugin<Project> {
             )
             jarFiles.from(tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME))
         }
+        parent?.let {
+            // disable those if current project is subproject.
+            deployX.fatJar = false
+            deployX.outputMod = false
+        }
+        val ex = extensions.getOrCreate<MindustryExtension>(R.x.mindustry)
+        // Set the convention to ex._deploy
+        deployX._baseName.convention(provider {
+            ex._modMeta.get().name
+        })
+        deployX._version.convention(provider {
+            ex._modMeta.get().version
+        })
         val deploy = tasks.register<Jar>(R.task.deployMod) {
             group = R.taskGroup.mindustry
             dependsOn(tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME))
@@ -41,31 +53,34 @@ class MindustryJavaPlugin : Plugin<Project> {
             archiveBaseName.set(deployX._baseName)
             archiveVersion.set(deployX._version)
             archiveClassifier.set(deployX._classifier)
+
         }
-        afterEvaluateThis {
-            deploy.configure { task ->
-                task.from(
-                    *tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME).get().outputs.files.map {
-                        project.zipTree(it)
-                    }.toTypedArray()
-                )
-                task.from(*dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray())
-            }
-            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                if (deployX.fatJar) {
-                    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-                    from(
-                        configurations.runtimeClasspath.get().map {
-                            if (it.isDirectory) it else zipTree(it)
-                        }
+        target.afterEvaluateThis {
+            if (ex._modMeta.isPresent) {
+                deploy.configure {
+                    it.from(
+                        *tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME).get().outputs.files.map {
+                            project.zipTree(it)
+                        }.toTypedArray()
                     )
+                    it.from(*dexJar.get().outputs.files.map { project.zipTree(it) }.toTypedArray())
                 }
-            }
-            tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
-                if (deployX.outputMod) {
-                    from(assets.assets)
-                    from(assets._icon)
-                    from(tasks.getByPath(R.task.genModHjson))
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    if (deployX.fatJar) {
+                        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+                        from(
+                            configurations.runtimeClasspath.get().map {
+                                if (it.isDirectory) it else zipTree(it)
+                            }
+                        )
+                    }
+                }
+                tasks.named<Jar>(JavaPlugin.JAR_TASK_NAME) {
+                    if (deployX.outputMod) {
+                        from(assets.assets)
+                        from(assets._icon)
+                        from(tasks.getByPath(R.task.genModHjson))
+                    }
                 }
             }
         }

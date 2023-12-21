@@ -93,57 +93,22 @@ fun File.forEachFilesRecursive(func: (File) -> Unit) {
 }
 
 internal
-fun File.findFileInOrder(vararg files: File): File {
-    if (this.exists()) return this
-    for ((i, file) in files.withIndex()) {
-        return if (file.exists()) file
-        else if (i >= files.size - 1) file
-        else continue
-    }
-    return files.last()
-}
-
-internal
-fun <T> findFileInOrder(getFile: T.() -> File, vararg files: T): T {
-    for ((i, file) in files.withIndex()) {
+fun <T> findFileInOrder(getFile: T.() -> File, vararg files: T): T? {
+    for (file in files) {
         return if (getFile(file).exists()) file
-        else if (i >= files.size - 1) file
         else continue
     }
-    return files.last()
+    return null
 }
 
 internal
-fun findFileInOrder(vararg files: RegularFile): RegularFile {
+fun findFileInOrder(vararg files: RegularFile): RegularFile? {
     return findFileInOrder({ asFile }, *files)
 }
 
 internal
-fun findFileInOrder(vararg files: File): File {
+fun findFileInOrder(vararg files: File): File? {
     return findFileInOrder({ this }, *files)
-}
-
-internal
-fun File.findFileInOrder(vararg files: () -> File): File {
-    if (this.exists()) return this
-    for ((i, file) in files.withIndex()) {
-        val f = file()
-        return if (f.exists()) f
-        else if (i >= files.size - 1) f
-        else continue
-    }
-    return files.last()()
-}
-
-internal
-fun findFileInOrder(vararg files: () -> File): File {
-    for ((i, file) in files.withIndex()) {
-        val f = file()
-        return if (f.exists()) f
-        else if (i >= files.size - 1) f
-        else continue
-    }
-    return files.last()()
 }
 
 fun Task.createSymbolicLinkOrCopy(
@@ -156,7 +121,7 @@ fun Task.createSymbolicLinkOrCopy(
         Files.createSymbolicLink(link.toPath(), target.toPath())
         logger.info("Created symbolic link: $target -> $link.")
     } catch (error: Exception) {
-        logger.error("Cannot create symbolic link: $target -> $link, because $error. Fallback to copy file.")
+        logger.error("Cannot create symbolic link: $target -> $link, because $error. Fallback to copy file.", error)
         target.copyTo(link, overwrite)
         logger.info("Copied: $target -> $link.")
     }

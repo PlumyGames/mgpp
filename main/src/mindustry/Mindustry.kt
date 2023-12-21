@@ -62,14 +62,14 @@ open class MindustryExtension(
     val _modMeta = target.prop<ModMeta>().apply {
         target.run {
             convention(
-                ModMeta.fromHjson(
-                    findFileInOrder(
-                        project.layout.projectDirectory.file("mod.hjson").asFile,
-                        project.layout.projectDirectory.file("mod.json").asFile,
-                        project.rootProject.layout.projectDirectory.file("mod.hjson").asFile,
-                        project.rootProject.layout.projectDirectory.file("mod.json").asFile,
-                    )
-                )
+                findFileInOrder(
+                    project.layout.projectDirectory.file("mod.hjson").asFile,
+                    project.layout.projectDirectory.file("mod.json").asFile,
+                    project.rootProject.layout.projectDirectory.file("mod.hjson").asFile,
+                    project.rootProject.layout.projectDirectory.file("mod.json").asFile,
+                )?.let {
+                    ModMeta.fromHjson(it)
+                }
             )
         }
     }
@@ -83,7 +83,10 @@ open class MindustryExtension(
      * 4. [Project.getRootProject]/mod.json
      */
     var meta: ModMeta
-        get() = _modMeta.get()
+        get() = if (_modMeta.isPresent) _modMeta.get()
+        else ModMeta().apply {
+            _modMeta.set(this)
+        }
         set(value) = _modMeta.set(value)
 
     fun modMeta(config: ModMeta.() -> Unit) {

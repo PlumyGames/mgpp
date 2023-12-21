@@ -61,6 +61,7 @@ class ModMeta private constructor(
             "pregenerated" to pregenerated,
         )
     )
+
     /** For Kotlin */
     operator fun get(key: String): Any? = info[key]
 
@@ -113,28 +114,35 @@ class ModMeta private constructor(
             "texturescale" to 1.0f,
             "pregenerated" to false,
         )
+
         @Suppress("UNCHECKED_CAST")
         @JvmStatic
         fun <T> default(key: String): T =
             defaultMeta[key] as T
+
         @JvmStatic
         fun by(vararg metas: Map.Entry<String, Any?>) =
             ModMeta(HashMap(metas.associate { Pair(it.key, it.value) }).fillDefaultValue())
+
         @JvmStatic
         fun by(vararg metas: Pair<String, Any?>) =
             ModMeta(mutableMapOf(*metas).fillDefaultValue())
+
         @JvmStatic
         fun fromHjson(hjson: String): ModMeta =
             ModMeta(JsonObject.readHjson(hjson).toMutableMap().fillDefaultValue())
+
         @JvmStatic
         fun fromHjson(file: File): ModMeta =
             runCatching {
                 fromHjson(file.readText())
-            }.getOrDefault(ModMeta())
+            }.getOrElse { ModMeta() }
+
         @JvmStatic
         @JvmOverloads
         fun ModMeta.toHjson(formatter: Stringify = Stringify.HJSON): String =
             JsonObject.readHjson(JsonOutput.toJson(info)).toString(formatter)
+
         @JvmStatic
         internal
         fun <T> T.fillDefaultValue(): T where T : MutableMap<String, Any?> {
@@ -150,6 +158,7 @@ var ModMeta.name: String by meta()
 var ModMeta.displayName: String by meta()
 var ModMeta.author: String by meta()
 var ModMeta.description: String by meta()
+
 /** since Mindustry v136 */
 var ModMeta.subtitle: String by meta()
 var ModMeta.version: String by meta()
@@ -161,10 +170,13 @@ var ModMeta.softDependencies: List<String> by meta()
 var ModMeta.hidden: Boolean by meta()
 var ModMeta.java: Boolean by meta()
 var ModMeta.hideBrowser: Boolean by meta()
+
 /** since Mindustry v136 */
 var ModMeta.keepOutlines: Boolean by meta()
+
 /** since Mindustry v138 */
 var ModMeta.texturescale: Float by meta()
+
 /** since Mindustry v138 */
 var ModMeta.pregenerated: Boolean by meta()
 inline fun <reified T : Any?> meta(): ReadWriteProperty<ModMeta, T> =
