@@ -4,7 +4,6 @@ package io.github.liplum.mindustry
 
 import groovy.json.JsonOutput
 import io.github.liplum.dsl.toMutableMap
-import io.github.liplum.mindustry.ModMeta.Companion.fillMissingWithDefault
 import org.hjson.JsonObject
 import org.hjson.Stringify
 import java.io.File

@@ -16,6 +16,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
+          cache-dependency-path: |
+            main/*.gradle*
+            main/**/gradle-wrapper.properties
+            TestProjectKt/*.gradle*
+            TestProjectKt/**/gradle-wrapper.properties
+            TestProjectGroovy/*.gradle*
+            TestProjectGroovy/**/gradle-wrapper.properties
+            TestMultiproject/*.gradle*
+            TestMultiproject/**/gradle-wrapper.properties
 
       - name: Test mgpp
         run: |
