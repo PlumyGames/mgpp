@@ -34,7 +34,7 @@ class MindustryRunPlugin : Plugin<Project> {
     private fun addResolveModpacks(proj: Project, x: RunMindustryExtension) {
         for (modpack in x.modpacks) {
             val name = modpack.name
-            proj.tasks.register<ResolveMods>("resolveModpack$name") {
+            proj.tasks.register<ResolveModpack>("resolveModpack$name") {
                 group = R.taskGroup.mindustryStuff
                 dependsOn(*modpack.fromTaskPath.toArray())
                 mods.addAll(modpack.mods)

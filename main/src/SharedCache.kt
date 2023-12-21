@@ -9,7 +9,7 @@ import org.gradle.api.logging.Logger
 import kotlin.math.absoluteValue
 
 
-internal
+private
 const val lockFileEx = "lock.json"
 
 data class GihHubDownloadTrack(

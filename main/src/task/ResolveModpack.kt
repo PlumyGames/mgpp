@@ -10,7 +10,10 @@ import org.gradle.api.tasks.OutputFiles
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
-open class ResolveMods : DefaultTask() {
+private
+const val lockFile = "lock.json"
+
+open class ResolveModpack : DefaultTask() {
     val mods = project.listProp<IMod>()
         @Input get
     val downloadedMods = project.listProp<File>()
@@ -55,6 +58,10 @@ open class ResolveMods : DefaultTask() {
         }
     }
 
+    fun lock() {
+        temporaryDir.resolve(lockFile)
+    }
+
     fun IDownloadableMod.download(cacheFile: File) {
         logger.lifecycle("Downloading $this -> $cacheFile...")
         try {
@@ -66,3 +73,6 @@ open class ResolveMods : DefaultTask() {
     }
 }
 
+data class ModLock(
+    val path: String,
+)
