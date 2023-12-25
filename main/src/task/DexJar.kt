@@ -108,7 +108,7 @@ fun List<File>.platformFindD8(): File? =
     when (getOs()) {
         OS.Windows -> find { File(it, "d8.bat").exists() }?.run { File(this, "d8.bat") }
         OS.Linux -> find { File(it, "d8").exists() }?.run { File(this, "d8") }
-        OS.Mac -> find { File(it, "d8").exists() }?.run { File(this, "d8") }
+        OS.MacOS -> find { File(it, "d8").exists() }?.run { File(this, "d8") }
         else -> null
     }
 

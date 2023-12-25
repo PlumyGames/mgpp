@@ -49,6 +49,6 @@ fun resolveDefaultClientDataDir(): File? {
         OS.Unknown -> null
         OS.Windows -> FileAt(System.getenv("AppData"), "Mindustry")
         OS.Linux -> FileAt(System.getenv("XDG_DATA_HOME") ?: System.getenv("HOME"), ".local", "share", "Mindustry")
-        OS.Mac -> FileAt(System.getenv("HOME"), "Library", "Application Support", "Mindustry")
+        OS.MacOS -> FileAt(System.getenv("HOME"), "Library", "Application Support", "Mindustry")
     }
 }

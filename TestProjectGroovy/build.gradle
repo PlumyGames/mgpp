@@ -30,9 +30,9 @@ dependencies {
 
 mindustry {
     dependency {
-        mindustry version: latest
+        mindustry version: "v146"
         // mindustryMirror version: latest
-        arc version: latest
+        arc version: "v146"
     }
     modMeta {
         name = 'mgpp-groovy'

@@ -46,8 +46,8 @@ tasks.register<TestOutputTask>("anyTask") {
 }
 mindustry {
     dependency {
-        mindustry(version = latest)
-        arc(version = latestTag)
+        mindustry(version = "v146")
+        arc(version = "v146")
     }
     modMeta {
         name = "mgpp-kt"
