@@ -62,7 +62,7 @@ class MindustryRunPlugin : Plugin<Project> {
                     if (dataDirLocalProp != null) LocalDataDirLoc(dataDirLocalProp)
                     else client.dataDir
                 )
-                mindustryFile.set(proj.provider {
+                gameFile.set(proj.provider {
                     resolveClient.get().outputs.files.singleFile
                 })
                 val modpack = x.findModpackByName(client.modpack)
@@ -105,7 +105,7 @@ class MindustryRunPlugin : Plugin<Project> {
                     if (dataDirLocalProp != null) LocalDataDirLoc(dataDirLocalProp)
                     else server.dataDir
                 )
-                mindustryFile.set(proj.provider {
+                gameFile.set(proj.provider {
                     resolveServer.get().outputs.files.singleFile
                 })
                 val modpack = x.findModpackByName(server.modpack)

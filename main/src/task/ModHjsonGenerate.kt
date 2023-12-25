@@ -6,7 +6,6 @@ import io.github.liplum.dsl.prop
 import io.github.liplum.mindustry.ModMeta.Companion.toHjson
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 

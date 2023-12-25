@@ -6,7 +6,7 @@ import io.github.liplum.dsl.stringsProp
 import org.gradle.api.tasks.*
 
 abstract class RunMindustryAbstract : JavaExec() {
-    val mindustryFile = project.fileProp()
+    val gameFile = project.fileProp()
         @InputFile get
     val dataDir = project.prop<IDataDirLoc>()
         @Optional @Input get

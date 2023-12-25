@@ -27,7 +27,7 @@ open class RunServer : RunMindustryAbstract() {
             }
         }
         standardInput = System.`in`
-        args = listOf(mindustryFile.get().absolutePath) + startupArgs.get()
+        args = listOf(gameFile.get().absolutePath) + startupArgs.get()
         workingDir = dataDir
         logger.lifecycle("Run server in $dataDir.")
         // run Mindustry

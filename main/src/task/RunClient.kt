@@ -30,7 +30,7 @@ open class RunClient : RunMindustryAbstract() {
             }
         }
         standardInput = System.`in`
-        args = listOf(mindustryFile.get().absolutePath) + startupArgs.get()
+        args = listOf(gameFile.get().absolutePath) + startupArgs.get()
         if (Os.isFamily(Os.FAMILY_MAC)) {
             // Lwjgl3 application requires it to run on macOS
             jvmArgs = (jvmArgs ?: mutableListOf()) + "-XstartOnFirstThread"
