@@ -2,7 +2,7 @@ package io.github.liplum.mindustry
 
 import io.github.liplum.dsl.*
 import io.github.liplum.dsl.listProp
-import io.github.liplum.mindustry.SharedCache.isUpdateToDate
+import io.github.liplum.mindustry.SharedCache.checkUpdateToDate
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
@@ -27,6 +27,9 @@ open class ResolveModpack : DefaultTask() {
                 }
             }
         )
+        outputs.upToDateWhen {
+            false
+        }
     }
 
     fun IMod.resolveOutputFile(): File {
@@ -45,9 +48,15 @@ open class ResolveModpack : DefaultTask() {
             val cacheFile = mod.resolveCacheFile()
             cacheFile.ensureParentDir()
             when (mod) {
-                is LocalMod -> if (!cacheFile.isFile) throw GradleException("Local mod $cacheFile not found.")
-                is IGitHubMod -> if (!isUpdateToDate(lockFile = cacheFile)) mod.download(cacheFile)
-                is IDownloadableMod -> if (!cacheFile.exists()) mod.download(cacheFile)
+                is LocalMod -> if (!cacheFile.isFile) {
+                    throw GradleException("Local mod $cacheFile not found.")
+                }
+                is IGitHubMod -> if (!checkUpdateToDate(lockFile = cacheFile, logger = logger)) {
+                    mod.download(cacheFile)
+                }
+                is IDownloadableMod -> if (!cacheFile.exists()) {
+                    mod.download(cacheFile)
+                }
                 else -> throw Exception("Unhandled mod $mod")
             }
             if (cacheFile.exists()) {

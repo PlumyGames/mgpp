@@ -3,7 +3,7 @@ package io.github.liplum.mindustry
 import io.github.liplum.dsl.*
 import io.github.liplum.dsl.fileProp
 import io.github.liplum.dsl.prop
-import io.github.liplum.mindustry.SharedCache.isUpdateToDate
+import io.github.liplum.mindustry.SharedCache.checkUpdateToDate
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
@@ -23,7 +23,7 @@ open class ResolveGame : DefaultTask() {
             temporaryDir.resolve(location.get().fileName4Local)
         })
         outputs.upToDateWhen {
-            gameFile.get().exists()
+            false
         }
     }
 
@@ -34,9 +34,15 @@ open class ResolveGame : DefaultTask() {
         val cacheFile = loc.resolveCacheFile()
         cacheFile.ensureParentDir()
         when (loc) {
-            is LocalGameLoc -> if (!cacheFile.isFile) throw GradleException("Local game $cacheFile doesn't exists.")
-            is ILatestDownloadableGameLoc -> if (!isUpdateToDate(lockFile = cacheFile)) loc.download(cacheFile)
-            is IDownloadableGameLoc -> if (!cacheFile.exists()) loc.download(cacheFile)
+            is LocalGameLoc -> if (!cacheFile.isFile) {
+                throw GradleException("Local game $cacheFile doesn't exists.")
+            }
+            is ILatestDownloadableGameLoc -> if (!checkUpdateToDate(lockFile = cacheFile, logger = logger)) {
+                loc.download(cacheFile)
+            }
+            is IDownloadableGameLoc -> if (!cacheFile.exists()) {
+                loc.download(cacheFile)
+            }
             else -> throw Exception("Unhandled game loc $loc")
         }
         if (cacheFile.exists()) {

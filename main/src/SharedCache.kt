@@ -7,6 +7,7 @@ import io.github.liplum.dsl.gson
 import org.gradle.api.Project
 import org.gradle.api.logging.Logger
 import kotlin.math.absoluteValue
+import kotlin.math.log
 
 
 private
@@ -111,22 +112,23 @@ object SharedCache {
     }
 
     internal
-    fun isUpdateToDate(
+    fun checkUpdateToDate(
         lockFile: File,
         outOfDate: Long = R.outOfDataDuration,
+        logger: Logger? = null,
     ): Boolean {
         val infoFi = File("$lockFile.$lockFileEx")
         if (!lockFile.exists()) {
             if (infoFi.exists()) infoFi.delete()
             return false
         }
-        val meta = tryReadDownloadTrack(infoFi)
+        val meta = tryReadAndUpdateDownloadLock(infoFi, logger = logger)
         val curTime = System.currentTimeMillis()
         return curTime - meta.lastUpdateTimestamp < outOfDate
     }
 
     internal
-    fun tryReadDownloadTrack(
+    fun tryReadAndUpdateDownloadLock(
         infoFile: File,
         logger: Logger? = null,
     ): DownloadLock {
