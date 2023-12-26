@@ -82,6 +82,6 @@ open class ResolveModpack : DefaultTask() {
     }
 }
 
-data class ModLock(
+private data class ModLock(
     val path: String,
 )

@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization") version "1.9.21"
     groovy
     `java-gradle-plugin`
     id("maven-publish")
@@ -65,11 +66,12 @@ val arcVersion: String by project
 val jarIncluding = configurations.create("including")
 dependencies {
     jarIncluding("com.github.anuken.arc:arc-core:$arcVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     compileOnly("com.github.anuken.arc:arc-core:$arcVersion")
-    implementation("org.hjson:hjson:3.0.0")
+    implementation("org.hjson:hjson:3.0.1")
     implementation("com.google.code.gson:gson:2.9.0")
     testCompileOnly("com.github.anuken.arc:arc-core:$arcVersion")
-    testImplementation("org.hjson:hjson:3.0.0")
+    testImplementation("org.hjson:hjson:3.0.1")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
     dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.8.22")
