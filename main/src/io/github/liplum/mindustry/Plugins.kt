@@ -172,7 +172,7 @@ class MindustryPlugin : Plugin<Project> {
         /**
          * [The Mindustry repo on Jitpack](https://github.com/anuken/mindustry)
          */
-        const val MindustryJitpackRepo = "com.github.anuken.mindustry"
+        const val MindustryJitpackRepo = "com.github.Anuken.Mindustry"
         /**
          * [The mirror repo of Mindustry on Jitpack](https://github.com/anuken/mindustryjitpack)
          */
@@ -188,7 +188,7 @@ class MindustryPlugin : Plugin<Project> {
         /**
          * [The Arc repo on Jitpack](https://github.com/anuken/arc)
          */
-        const val ArcJitpackRepo = "com.github.anuken.arc"
+        const val ArcJitpackRepo = "com.github.Anuken.Arc"
         /**
          * The main class of desktop launcher.
          */

@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.9.20"
-    id("io.github.liplum.mgpp") version "1.3.2"
+    id("io.github.liplum.mgpp") version "1.4.0"
 }
 
 sourceSets {
@@ -36,6 +36,7 @@ dependencies {
 open class TestOutputTask : DefaultTask() {
     val outputFile = project.objects.property<File>()
         @OutputFile get
+
     @TaskAction
     fun test() {
     }
@@ -146,7 +147,7 @@ tasks.withType<Jar> {
 tasks.test {
     useJUnitPlatform()
 }
-tasks.withType<JavaCompile>{
+tasks.withType<JavaCompile> {
     sourceCompatibility = JavaVersion.VERSION_1_8.toString()
     targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }

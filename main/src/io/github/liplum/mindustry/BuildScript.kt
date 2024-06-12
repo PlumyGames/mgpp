@@ -18,10 +18,20 @@ import java.net.URL
  * You can call this in [RepositoryHandler] closure
  */
 fun RepositoryHandler.mindustryRepo(
-): MavenArtifactRepository = maven { repo ->
-    repo.name = "mindustry-center"
-    repo.url = URI("https://www.jitpack.io")
+): MavenArtifactRepository = run {
+    val mindustryRepo = maven { repo ->
+        repo.name = "mindustry-maven"
+        //  Jitpack was broken for Mindustry and Arc
+        repo.url = URI("https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository")
+    }
+    // jitpack after Mindustry repo
+    maven { repo ->
+        repo.name = "jitpack"
+        repo.url = URI("https://www.jitpack.io")
+    }
+    mindustryRepo
 }
+
 /**
  * Import the dependencies of Mindustry.
  * It will take those into account:
@@ -43,6 +53,7 @@ fun Project.importMindustry() = afterEvaluateThis {
     // Arc
     arc.whenAvailable("arc-core", ::addMindustry)
 }
+
 /**
  * Import the dependencies of Mindustry.
  * It will take those into account:
@@ -67,6 +78,7 @@ fun Project.importMindustry(configurationName: String) = afterEvaluateThis {
     // Arc
     arc.whenAvailable("arc-core", ::addSpecificDependency)
 }
+
 internal
 fun Dependency.tryJitpackResolve(module: String): String? {
     // e.g.:com,github,anuken,arc
@@ -79,19 +91,23 @@ fun Dependency.tryJitpackResolve(module: String): String? {
     val code: Int = huc.responseCode
     return if (code == 404) null else resolve(module)
 }
+
 internal
 fun Project.addMindustry(dependencyNotation: String) {
     compileOnly(dependencyNotation)
     testImplementation(dependencyNotation)
 }
+
 internal
 fun Project.testImplementation(dependencyNotation: String) {
     addDependency("testImplementation", dependencyNotation)
 }
+
 internal
 fun Project.compileOnly(dependencyNotation: String) {
     addDependency("compileOnly", dependencyNotation)
 }
+
 internal
 fun Project.addDependency(configurationName: String, dependencyNotation: String) {
     configurations.getByName(configurationName).dependencies.add(
