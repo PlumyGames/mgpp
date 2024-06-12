@@ -3,7 +3,7 @@ import io.github.liplum.mindustry.mindustry
 group = "plumy.test"
 version = "1.0"
 plugins {
-    id("io.github.liplum.mgpp") version "1.3.2"
+    id("io.github.liplum.mgpp") version "1.4.0"
 }
 
 mindustry {
