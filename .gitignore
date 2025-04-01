@@ -2,3 +2,4 @@
 /.gradle
 /.idea
 /site
+.DS_Store
